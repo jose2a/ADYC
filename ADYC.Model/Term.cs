@@ -14,9 +14,10 @@ namespace ADYC.Model
         public DateTime EndDate { get; set; }
         public bool IsCurrentTerm { get; set; }
         public DateTime EnrollmentDeadLine { get; set; }
+        public DateTime EnrollmentDropDeadLine { get; set; }
 
-        public ICollection<PeriodDate> PeriodDates { get; set; }
-        public ICollection<Offering> Offerings { get; set; }
+        public virtual ICollection<PeriodDate> PeriodDates { get; set; }
+        public virtual ICollection<Offering> Offerings { get; set; }
 
         public Term()
         {

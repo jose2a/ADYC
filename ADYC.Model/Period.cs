@@ -11,8 +11,8 @@ namespace ADYC.Model
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public ICollection<PeriodDate> PeriodDates { get; set; }
-        public ICollection<Evaluation> Evaluations { get; set; }
+        public virtual ICollection<PeriodDate> PeriodDates { get; set; }
+        public virtual ICollection<Evaluation> Evaluations { get; set; }
 
         public Period()
         {

@@ -23,7 +23,7 @@ namespace ADYC.Model
         public int MajorId { get; set; }
         public Major Major { get; set; }
 
-        public List<Enrollment> Enrollments { get; set; }
+        public virtual List<Enrollment> Enrollments { get; set; }
         public int? CurrentEnrollmentId { get; set; }
 
         public Student()

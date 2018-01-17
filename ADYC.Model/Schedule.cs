@@ -13,7 +13,7 @@ namespace ADYC.Model
         public DateTime EndTime { get; set; }
 
         public int OfferingId { get; set; }
-        public Offering Offering { get; set; }
+        public virtual Offering Offering { get; set; }
 
         public Day Day { get; set; }
     }

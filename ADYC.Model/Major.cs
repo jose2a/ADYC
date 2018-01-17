@@ -12,7 +12,7 @@ namespace ADYC.Model
         public string Name { get; set; }
         public bool IsDeleted { get; set; }
 
-        public ICollection<Student> Students { get; set; }
+        public virtual ICollection<Student> Students { get; set; }
 
         public Major()
         {

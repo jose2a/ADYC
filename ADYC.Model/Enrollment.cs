@@ -16,7 +16,7 @@ namespace ADYC.Model
         public DateTime EnrollmentDate { get; set; }
 
         public Guid StudentId { get; set; }
-        public Student Student { get; set; }
+        public virtual Student Student { get; set; }
         public int OfferingId { get; set; }
         public Offering Offering { get; set; }
 

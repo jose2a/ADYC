@@ -15,7 +15,7 @@ namespace ADYC.Model
         public int CourseTypeId { get; set; }
         public CourseType CourseType { get; set; }
 
-        public ICollection<Offering> Offerings { get; set; }
+        public virtual ICollection<Offering> Offerings { get; set; }
 
         public Course()
         {

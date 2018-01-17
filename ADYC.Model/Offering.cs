@@ -22,7 +22,7 @@ namespace ADYC.Model
         public int TermId { get; set; }
         public Term Term { get; set; }
 
-        public ICollection<Enrollment> Enrollments { get; set; }
+        public virtual ICollection<Enrollment> Enrollments { get; set; }
 
         public ICollection<Schedule> Schedules { get; set; }
 

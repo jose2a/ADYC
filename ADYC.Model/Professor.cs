@@ -14,7 +14,7 @@ namespace ADYC.Model
         public string Email { get; set; }
         public bool IsDeleted { get; set; }
 
-        public ICollection<Offering> Offerings { get; set; }
+        public virtual ICollection<Offering> Offerings { get; set; }
 
         public Professor()
         {

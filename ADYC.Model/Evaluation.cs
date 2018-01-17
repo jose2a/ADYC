@@ -16,6 +16,6 @@ namespace ADYC.Model
         public string Notes { get; set; }
 
         public Period Period { get; set; }
-        public Enrollment Enrollment { get; set; }
+        public virtual Enrollment Enrollment { get; set; }
     }
 }

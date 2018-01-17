@@ -15,7 +15,7 @@ namespace ADYC.Model
         public DateTime EndDate { get; set; }
 
 
-        public Period Period { get; set; }
-        public Term Term { get; set; }
+        public virtual Period Period { get; set; }
+        public virtual Term Term { get; set; }
     }
 }
