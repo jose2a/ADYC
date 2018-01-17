@@ -49,6 +49,7 @@
     <Compile Include="GradeLetter.cs" />
     <Compile Include="Group.cs" />
     <Compile Include="Major.cs" />
+    <Compile Include="Offering.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
