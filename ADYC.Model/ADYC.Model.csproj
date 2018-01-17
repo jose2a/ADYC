@@ -50,7 +50,13 @@
     <Compile Include="Group.cs" />
     <Compile Include="Major.cs" />
     <Compile Include="Offering.cs" />
+    <Compile Include="Period.cs" />
+    <Compile Include="PeriodDate.cs" />
+    <Compile Include="Professor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Schedule.cs" />
+    <Compile Include="Student.cs" />
+    <Compile Include="Term.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
