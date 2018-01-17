@@ -46,6 +46,8 @@
     <Compile Include="Enrollment.cs" />
     <Compile Include="Evaluation.cs" />
     <Compile Include="Grade.cs" />
+    <Compile Include="GradeLetter.cs" />
+    <Compile Include="Group.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
