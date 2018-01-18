@@ -1,4 +1,5 @@
-﻿using ADYC.Model;
+﻿using ADYC.Data.EntityTypeConfigurations;
+using ADYC.Model;
 using System.Data.Entity;
 
 namespace ADYC.Data
@@ -25,5 +26,25 @@ namespace ADYC.Data
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<Term> Terms { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Configurations.Add(new CourseConfiguration());
+            modelBuilder.Configurations.Add(new CourseTypeConfiguration());
+            modelBuilder.Configurations.Add(new EnrollmentConfiguration());
+            modelBuilder.Configurations.Add(new EvaluationConfiguration());
+            modelBuilder.Configurations.Add(new GradeConfiguration());
+            modelBuilder.Configurations.Add(new GroupConfiguration());
+            modelBuilder.Configurations.Add(new MajorConfiguration());
+            modelBuilder.Configurations.Add(new OfferingConfiguration());
+            modelBuilder.Configurations.Add(new PeriodConfiguration());
+            modelBuilder.Configurations.Add(new PeriodDateConfiguration());
+            modelBuilder.Configurations.Add(new ProfessorConfiguration());
+            modelBuilder.Configurations.Add(new ScheduleConfiguration());
+            modelBuilder.Configurations.Add(new StudentConfiguration());
+            modelBuilder.Configurations.Add(new TermConfiguration());
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
