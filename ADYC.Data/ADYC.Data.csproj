@@ -50,6 +50,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdycDbContext.cs" />
+    <Compile Include="EntityTypeConfigurations\CourseConfiguration.cs" />
+    <Compile Include="EntityTypeConfigurations\CourseTypeConfiguration.cs" />
+    <Compile Include="EntityTypeConfigurations\EnrollmentConfiguration.cs" />
+    <Compile Include="EntityTypeConfigurations\EvaluationConfiguration.cs" />
+    <Compile Include="EntityTypeConfigurations\GradeConfiguration.cs" />
+    <Compile Include="EntityTypeConfigurations\GroupConfiguration.cs" />
+    <Compile Include="EntityTypeConfigurations\MajorConfiguration.cs" />
+    <Compile Include="EntityTypeConfigurations\OfferingConfiguration.cs" />
+    <Compile Include="EntityTypeConfigurations\PeriodConfiguration.cs" />
+    <Compile Include="EntityTypeConfigurations\PeriodDateConfiguration.cs" />
+    <Compile Include="EntityTypeConfigurations\ProfessorConfiguration.cs" />
+    <Compile Include="EntityTypeConfigurations\ScheduleConfiguration.cs" />
+    <Compile Include="EntityTypeConfigurations\StudentConfiguration.cs" />
+    <Compile Include="EntityTypeConfigurations\TermConfiguration.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -63,6 +77,7 @@
       <Name>ADYC.Model</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
