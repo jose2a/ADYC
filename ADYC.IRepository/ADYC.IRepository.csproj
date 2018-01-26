@@ -40,8 +40,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ICourseRepository.cs" />
+    <Compile Include="ICourseTypeRepository.cs" />
+    <Compile Include="IEnrollmentRepository.cs" />
+    <Compile Include="IEvaluationRepository.cs" />
+    <Compile Include="IGradeRepository.cs" />
+    <Compile Include="IGroupRepository.cs" />
+    <Compile Include="IMajorRepository.cs" />
+    <Compile Include="IOfferingRepository.cs" />
+    <Compile Include="IPeriodDateRepository.cs" />
+    <Compile Include="IPeriodRepository.cs" />
+    <Compile Include="IProfessorRepository.cs" />
     <Compile Include="IRepository.cs" />
+    <Compile Include="IScheduleRepository.cs" />
+    <Compile Include="IStudentRepository.cs" />
+    <Compile Include="ITermRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ADYC.Model\ADYC.Model.csproj">
+      <Project>{E6BCE3C0-8408-4206-BFA6-9C225B536FB7}</Project>
+      <Name>ADYC.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
