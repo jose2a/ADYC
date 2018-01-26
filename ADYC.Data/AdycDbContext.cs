@@ -12,7 +12,7 @@ namespace ADYC.Data
 
         }
 
-        public DbSet<Course> Courses { get; set; }
+        public virtual DbSet<Course> Courses { get; set; }
         public DbSet<CourseType> CourseTypes { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Evaluation> Evaluations { get; set; }

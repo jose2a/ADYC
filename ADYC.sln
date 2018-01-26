@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADYC.Repository", "ADYC.Rep
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADYC.IRepository", "ADYC.IRepository\ADYC.IRepository.csproj", "{B1F58032-6592-4FC5-853B-B426DB2DE120}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADYC.Repository.Tests", "ADYC.Repository.Tests\ADYC.Repository.Tests.csproj", "{F2D485CE-903E-467F-9E7E-771B4B556989}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{B1F58032-6592-4FC5-853B-B426DB2DE120}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1F58032-6592-4FC5-853B-B426DB2DE120}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1F58032-6592-4FC5-853B-B426DB2DE120}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2D485CE-903E-467F-9E7E-771B4B556989}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2D485CE-903E-467F-9E7E-771B4B556989}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2D485CE-903E-467F-9E7E-771B4B556989}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2D485CE-903E-467F-9E7E-771B4B556989}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -80,17 +80,10 @@ namespace ADYC.Repository
 
         public void Add(TEntity entity)
         {
-            try
-            {
-                Entity.Add(entity);
+            Entity.Add(entity);
 
-                Save();
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
+            Save();
+         }
 
         public void AddRange(IEnumerable<TEntity> entities)
         {
@@ -101,10 +94,10 @@ namespace ADYC.Repository
 
         public void Remove(TEntity entity)
         {
-            if (context.Entry(entity).State == EntityState.Detached)
-            {
-                Entity.Attach(entity);
-            }
+            //if (context.Entry(entity).State == EntityState.Detached)
+            //{
+            //    Entity.Attach(entity);
+            //}
 
             Entity.Remove(entity);
 
@@ -120,7 +113,7 @@ namespace ADYC.Repository
 
         public void Update(TEntity entity)
         {
-            Entity.Attach(entity);
+            //Entity.Attach(entity);
             context.Entry(entity).State = EntityState.Modified;
             Save();
         }
