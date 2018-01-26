@@ -64,6 +64,10 @@
     <Compile Include="EntityTypeConfigurations\ScheduleConfiguration.cs" />
     <Compile Include="EntityTypeConfigurations\StudentConfiguration.cs" />
     <Compile Include="EntityTypeConfigurations\TermConfiguration.cs" />
+    <Compile Include="Migrations\201801260128466_AddedCellphoneNumberToProfessorAndStudentTable.cs" />
+    <Compile Include="Migrations\201801260128466_AddedCellphoneNumberToProfessorAndStudentTable.Designer.cs">
+      <DependentUpon>201801260128466_AddedCellphoneNumberToProfessorAndStudentTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -76,7 +80,11 @@
       <Name>ADYC.Model</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201801260128466_AddedCellphoneNumberToProfessorAndStudentTable.resx">
+      <DependentUpon>201801260128466_AddedCellphoneNumberToProfessorAndStudentTable.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

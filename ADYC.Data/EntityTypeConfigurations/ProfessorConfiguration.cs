@@ -31,6 +31,10 @@ namespace ADYC.Data.EntityTypeConfigurations
                 .IsRequired()
                 .HasMaxLength(100);
 
+            Property(p => p.CellphoneNumber)
+                .IsRequired().
+                HasMaxLength(30);
+
             Property(p => p.IsDeleted)
                 .IsRequired();
         }
