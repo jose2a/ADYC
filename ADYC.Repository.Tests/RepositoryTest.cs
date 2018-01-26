@@ -147,7 +147,6 @@ namespace ADYC.Repository.Tests
             context.Setup(c => c.Set<Course>()).Returns(_set.Object);
             context.Setup(c => c.Set<Course>().Add(It.IsAny<Course>())).Callback(() => {
                 newCourse.Id = expectedId;
-                //_courses.Add(newCourse);
             });
 
             var repo = new Repository<Course>(context.Object);

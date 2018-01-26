@@ -12,6 +12,7 @@ namespace ADYC.Model
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
+        public string CellphoneNumber { get; set; }
         public bool IsDeleted { get; set; }
 
         public virtual ICollection<Offering> Offerings { get; set; }
