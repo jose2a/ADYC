@@ -52,7 +52,6 @@
     <Compile Include="IPeriodRepository.cs" />
     <Compile Include="IProfessorRepository.cs" />
     <Compile Include="IReadOnlyRepository.cs" />
-    <Compile Include="IRepository.cs" />
     <Compile Include="IScheduleRepository.cs" />
     <Compile Include="IStudentRepository.cs" />
     <Compile Include="ITermRepository.cs" />

@@ -14,6 +14,7 @@ namespace ADYC.Model
         public string Notes { get; set; }
         public bool IsCurrentEnrollment { get; set; }
         public DateTime EnrollmentDate { get; set; }
+        public DateTime? WithdropDate { get; set; }
 
         public Guid StudentId { get; set; }
         public virtual Student Student { get; set; }

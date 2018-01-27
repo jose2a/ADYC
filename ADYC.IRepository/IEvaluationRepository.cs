@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ADYC.IRepository
 {
-    public interface IEvaluationRepository : IRepository<Evaluation>
+    public interface IEvaluationRepository : IReadOnlyRepository<Evaluation>, IWriteOnlyRepository<Evaluation>
     {
     }
 }

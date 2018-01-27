@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ADYC.IRepository
 {
-    public interface IScheduleRepository : IRepository<Schedule>
+    public interface IScheduleRepository : IReadOnlyRepository<Schedule>, IWriteOnlyRepository<Schedule>
     {
     }
 }
