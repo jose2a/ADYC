@@ -7,7 +7,7 @@ using System.Data.Entity;
 
 namespace ADYC.Repository
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public class Repository<TEntity> : IReadOnlyRepository<TEntity>, IWriteOnlyRepository<TEntity> where TEntity : class
     {
         protected DbContext context;
         protected DbSet<TEntity> Entity;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ADYC.IRepository
 {
-    public interface ICourseRepository : IRepository<Course>
+    public interface ICourseRepository : IReadOnlyRepository<Course>, IWriteOnlyRepository<Course>
     {
     }
 }

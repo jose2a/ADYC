@@ -51,10 +51,12 @@
     <Compile Include="IPeriodDateRepository.cs" />
     <Compile Include="IPeriodRepository.cs" />
     <Compile Include="IProfessorRepository.cs" />
+    <Compile Include="IReadOnlyRepository.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="IScheduleRepository.cs" />
     <Compile Include="IStudentRepository.cs" />
     <Compile Include="ITermRepository.cs" />
+    <Compile Include="IWriteOnlyRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
