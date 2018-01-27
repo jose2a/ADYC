@@ -32,6 +32,9 @@ namespace ADYC.Data.EntityTypeConfigurations
             Property(e => e.EnrollmentDate)
                 .IsRequired();
 
+            Property(e => e.WithdropDate)
+                .IsOptional();
+
             // Relationships
             HasRequired(e => e.Offering)
                 .WithMany(o => o.Enrollments)

@@ -68,6 +68,10 @@
     <Compile Include="Migrations\201801260128466_AddedCellphoneNumberToProfessorAndStudentTable.Designer.cs">
       <DependentUpon>201801260128466_AddedCellphoneNumberToProfessorAndStudentTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201801271741329_AddedWithdropFieldToEnrollmentTable.cs" />
+    <Compile Include="Migrations\201801271741329_AddedWithdropFieldToEnrollmentTable.Designer.cs">
+      <DependentUpon>201801271741329_AddedWithdropFieldToEnrollmentTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -83,6 +87,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201801260128466_AddedCellphoneNumberToProfessorAndStudentTable.resx">
       <DependentUpon>201801260128466_AddedCellphoneNumberToProfessorAndStudentTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801271741329_AddedWithdropFieldToEnrollmentTable.resx">
+      <DependentUpon>201801271741329_AddedWithdropFieldToEnrollmentTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
