@@ -5,11 +5,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ADYC.Model;
+using ADYC.IRepository;
 
 namespace ADYC.Service
 {
     public class CourseService : ICourseService
     {
+        private ICourseRepository _courseRepository;
+
+        public CourseService(ICourseRepository courseRepository)
+        {
+            _courseRepository = courseRepository;
+        }
+
         public void Add(Course course)
         {
             throw new NotImplementedException();

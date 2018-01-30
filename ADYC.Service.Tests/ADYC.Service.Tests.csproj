@@ -80,6 +80,24 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ADYC.IRepository\ADYC.IRepository.csproj">
+      <Project>{B1F58032-6592-4FC5-853B-B426DB2DE120}</Project>
+      <Name>ADYC.IRepository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ADYC.Model\ADYC.Model.csproj">
+      <Project>{E6BCE3C0-8408-4206-BFA6-9C225B536FB7}</Project>
+      <Name>ADYC.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ADYC.Repository\ADYC.Repository.csproj">
+      <Project>{4344DE32-6B4E-46AC-BA55-341B96905F65}</Project>
+      <Name>ADYC.Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ADYC.Service\ADYC.Service.csproj">
+      <Project>{7D90ED45-D38E-40EC-8A6B-20C211318C98}</Project>
+      <Name>ADYC.Service</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
