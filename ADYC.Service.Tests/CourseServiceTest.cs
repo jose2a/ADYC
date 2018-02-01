@@ -7,6 +7,7 @@ using ADYC.IRepository;
 using ADYC.Util.Exceptions;
 using System.Collections;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace ADYC.Service.Tests
 {
@@ -44,7 +45,7 @@ namespace ADYC.Service.Tests
         }
 
         [Test]
-        public void Add_WhenAdded_CourseGetsNewId()
+        public void Add_WhenAdded_CourseWillGetNewId()
         {
             // arrange
             var expectedId = 10;
@@ -56,7 +57,6 @@ namespace ADYC.Service.Tests
             _courseRepositoryMock.Setup(m => m.Add(It.IsAny<Course>()))
                 .Callback((Course c) => {
                     c.Id = expectedId;
-                    _courses.Add(c);
                 });
 
             var courseService = new CourseService(_courseRepositoryMock.Object);
@@ -73,10 +73,7 @@ namespace ADYC.Service.Tests
         public void Add_CourseIsNull_ArgumentNullExceptionWillBeThrown()
         {
             // arrange
-            _courseRepositoryMock.Setup(m => m.Add(It.IsAny<Course>()))
-                .Callback((Course c) => {
-                    _courses.Add(c);
-                });
+            _courseRepositoryMock.Setup(m => m.Add(It.IsAny<Course>())).Callback(() => {});
 
             var courseService = new CourseService(_courseRepositoryMock.Object);
 
@@ -88,12 +85,14 @@ namespace ADYC.Service.Tests
         public void Add_CourseAlreadyExist_PreexistingEntityExceptionWillBeThrown()
         {
             // arrange
+            var courseToAdd = new Course() { Id = 5, Name = "Gym", CourseTypeId = _courseTypes[1].Id, CourseType = _courseTypes[1], IsDeleted = false };
+
             _courseRepositoryMock.Setup(m => m.GetAll(null, ""))
                 .Returns(_courses);
 
-            _courseRepositoryMock.Setup(m => m.Find(c => c.Name.Equals(It.IsAny<string>()), null, ""))
+            _courseRepositoryMock.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
                 .Returns(() => {
-                    return new List<Course>()
+                    return new List<Course>
                     {
                         new Course()
                     };
@@ -102,20 +101,20 @@ namespace ADYC.Service.Tests
             var courseService = new CourseService(_courseRepositoryMock.Object);
 
             // act and assert
-            Assert.Throws<PreexistingEntityException>(() => courseService.Add(null));
+            Assert.Throws<PreexistingEntityException>(() => courseService.Add(courseToAdd));
         }
 
         [Test]
         public void AddRange_ListOfCourses_CoursesGetNewIds()
         {
             // arrange
-            var expectedIds = new int[] { 10, 11, 12 };
-
             var newCourses = new List<Course> {
                 new Course() { Name = "Swimming", CourseType = _courseTypes[0], CourseTypeId = _courseTypes[0].Id, IsDeleted = false },
                 new Course() { Name = "Cards", CourseType = _courseTypes[0], CourseTypeId = _courseTypes[0].Id, IsDeleted = false },
                 new Course() { Name = "Hockey", CourseType = _courseTypes[1], CourseTypeId = _courseTypes[1].Id, IsDeleted = false }
             };
+
+            var expectedIds = new int[] { 10, 11, 12 };            
 
             var expectedNewCourses = new LinkedList<Course>(_courses);
             expectedNewCourses.AddLast(new Course { Id = 10, Name = "Swimming", CourseType = _courseTypes[0], CourseTypeId = _courseTypes[0].Id, IsDeleted = false });
@@ -123,7 +122,7 @@ namespace ADYC.Service.Tests
             expectedNewCourses.AddLast(new Course { Id = 12, Name = "Hockey", CourseType = _courseTypes[1], CourseTypeId = _courseTypes[1].Id, IsDeleted = false });
 
             _courseRepositoryMock.Setup(m => m.AddRange(It.IsAny<IEnumerable<Course>>()))
-                .Callback(() => {
+                .Callback((IEnumerable<Course> courses) => {
                     newCourses[0].Id = expectedIds[0];
                     _courses.Add(newCourses[0]);
 

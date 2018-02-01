@@ -8,7 +8,14 @@ namespace ADYC.Util.Exceptions
 {
     public class PreexistingEntityException : Exception
     {
-        public PreexistingEntityException(string message, Exception innerException) : base(message, innerException)
+        public PreexistingEntityException(string message) 
+            : base(message)
+        {
+
+        }
+
+        public PreexistingEntityException(string message, Exception innerException)
+            : base(message, innerException)
         {
         }
     }

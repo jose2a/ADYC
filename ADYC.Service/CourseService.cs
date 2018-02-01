@@ -23,7 +23,7 @@ namespace ADYC.Service
         {
             if (course == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("Course is necessary");
             }
 
             if (_courseRepository.Find(c => c.Name.Equals(course.Name)).Count() > 0)
@@ -36,7 +36,10 @@ namespace ADYC.Service
 
         public void AddRange(IEnumerable<Course> courses)
         {
-            throw new NotImplementedException();
+            if (courses == null)
+            {
+                throw new ArgumentNullException();
+            }
         }
 
         public IEnumerable<Course> FindByCourseType(CourseType courseType)
