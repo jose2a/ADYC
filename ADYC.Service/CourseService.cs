@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ADYC.Model;
 using ADYC.IRepository;
+using ADYC.Util.Exceptions;
 
 namespace ADYC.Service
 {
@@ -20,7 +21,17 @@ namespace ADYC.Service
 
         public void Add(Course course)
         {
-            throw new NotImplementedException();
+            if (course == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            if (_courseRepository.Find(c => c.Name.Equals(course.Name)).Count() > 0)
+            {
+                throw new PreexistingEntityException("A course with the same name already exists.", null);
+            }
+
+            _courseRepository.Add(course);
         }
 
         public void AddRange(IEnumerable<Course> courses)

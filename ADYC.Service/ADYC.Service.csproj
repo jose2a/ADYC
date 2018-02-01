@@ -56,6 +56,10 @@
       <Project>{e6bce3c0-8408-4206-bfa6-9c225b536fb7}</Project>
       <Name>ADYC.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ADYC.Util\ADYC.Util.csproj">
+      <Project>{8BB0EC84-5C07-408D-BF7C-FC7ECF3429B0}</Project>
+      <Name>ADYC.Util</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
