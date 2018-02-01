@@ -40,7 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\NonexistenEntityException.cs" />
+    <Compile Include="Exceptions\NonexistingEntityException.cs" />
     <Compile Include="Exceptions\PreexistingEntityException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
