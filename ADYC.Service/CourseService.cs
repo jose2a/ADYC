@@ -40,6 +40,15 @@ namespace ADYC.Service
             {
                 throw new ArgumentNullException();
             }
+
+            var courseNames = courses.Select(c => c.Name);
+
+            if (_courseRepository.Find(c => courseNames.Contains(c.Name)).Count() > 0)
+            {
+                throw new PreexistingEntityException("A course with the name of already exists.");
+            }
+
+            _courseRepository.AddRange(courses);
         }
 
         public IEnumerable<Course> FindByCourseType(CourseType courseType)

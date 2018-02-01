@@ -124,10 +124,10 @@ namespace ADYC.Service.Tests
             expectedNewCourses[2].Id = expectedIds[2];
 
             _courseRepositoryMock.Setup(m => m.AddRange(It.IsAny<IEnumerable<Course>>()))
-                .Callback((List<Course> courses) => {
-                    courses[0].Id = expectedIds[0];
-                    courses[1].Id = expectedIds[1];
-                    courses[2].Id = expectedIds[2];
+                .Callback((IEnumerable<Course> courses) => {
+                    ((List<Course>)courses)[0].Id = expectedIds[0];
+                    ((List<Course>)courses)[1].Id = expectedIds[1];
+                    ((List<Course>)courses)[2].Id = expectedIds[2];
                 });
             
             var courseService = new CourseService(_courseRepositoryMock.Object);
@@ -150,7 +150,6 @@ namespace ADYC.Service.Tests
             var courseService = new CourseService(_courseRepositoryMock.Object);
 
             // act and assert
-            Assert.Throws<ArgumentNullException>(() => courseService.AddRange(new List<Course>() { }));
             Assert.Throws<ArgumentNullException>(() => courseService.AddRange(null));
         }
 
