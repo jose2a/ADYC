@@ -53,17 +53,27 @@ namespace ADYC.Service
 
         public IEnumerable<Course> FindByCourseType(CourseType courseType)
         {
-            throw new NotImplementedException();
+            if (courseType == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            return _courseRepository.Find(c => c.CourseTypeId == courseType.Id);
         }
 
         public IEnumerable<Course> FindByName(string name)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("Name should not be emptied.");
+            }
+
+            return _courseRepository.Find(c => c.Name.Contains(name));
         }
 
         public IEnumerable<Course> FindDeletedCourses()
         {
-            throw new NotImplementedException();
+            return _courseRepository.Find(c => c.IsDeleted == true, c => c.OrderBy(i => i.Id));
         }
 
         public Course Get(int id)

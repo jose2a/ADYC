@@ -206,7 +206,7 @@ namespace ADYC.Service.Tests
         }
 
         [Test]
-        public void FindByCourseType_NotValidCourseType_ReturnsNull()
+        public void FindByCourseType_NotValidCourseType_ReturnsEmpty()
         {
             // arrange
             var newCourseType = new CourseType() { Id = 3, Name = "New type" };
@@ -222,7 +222,7 @@ namespace ADYC.Service.Tests
             var result = courseService.FindByCourseType(newCourseType);
 
             // assert
-            Assert.IsNull(result);
+            Assert.IsEmpty(result);
         }
 
         [Test]
@@ -263,7 +263,7 @@ namespace ADYC.Service.Tests
             var result = courseService.FindByName(courseNameToFind);
 
             // assert
-            Assert.Equals(expectedCourses, result);
+            Assert.AreEqual(expectedCourses, result);
         }
 
         [Test]
@@ -287,7 +287,7 @@ namespace ADYC.Service.Tests
         }
 
         [Test]
-        public void FindByName_CourseNameIsEmpty_ReturnsNull()
+        public void FindByName_CourseNameIsEmpty_ThrowsArgumentNullException()
         {
             // arrange
             _courseRepositoryMock.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
@@ -297,26 +297,23 @@ namespace ADYC.Service.Tests
 
             var courseService = new CourseService(_courseRepositoryMock.Object);
 
-            // act
-            var result = courseService.FindByName(string.Empty);
-
-            // assert
-            Assert.IsNull(result);
+            // act and assert
+            Assert.Throws<ArgumentNullException>(() => courseService.FindByName(string.Empty));
         }
 
         [Test]
         public void FindDeletedCourses_WhenCalled_ListOfCoursesWithIsDeletedEqualsTrue()
         {
             // arrange
-            var expectedCourses = new List<Course>()
+            var expectedCourses = new List<Course>
             {
                 _courses.SingleOrDefault(c => c.Id == 8),
                 _courses.SingleOrDefault(c => c.Id == 9)
             };
 
-            _courseRepositoryMock.Setup(m => m.Find(c => c.IsDeleted.Equals(It.IsAny<bool>()), null, ""))
+            _courseRepositoryMock.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), It.IsAny<Func<IQueryable<Course>, IOrderedQueryable<Course>>>(), ""))
                 .Returns(() => {
-                    return _courses.Where(c => c.IsDeleted == true);
+                    return _courses.Where(c => c.IsDeleted == true).OrderBy(c => c.Id);
                 });
 
             var courseService = new CourseService(_courseRepositoryMock.Object);
