@@ -364,9 +364,9 @@ namespace ADYC.Service.Tests
         public void GetAll_WhenCalled_ReturnsListOfAllCourses()
         {
             // arrange
-            var expectedCourses = new List<Course>(_courses.Where(c => c.IsDeleted == false).ToList());
+            var expectedCourses = _courses;
 
-            _courseRepositoryMock.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), It.IsAny<Func<IQueryable<Course>, IOrderedQueryable<Course>>>(), ""))
+            _courseRepositoryMock.Setup(m => m.GetAll(It.IsAny<Func<IQueryable<Course>, IOrderedQueryable<Course>>>(), ""))
                 .Returns(() => {
                     return _courses;
                 });

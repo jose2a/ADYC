@@ -76,7 +76,7 @@ namespace ADYC.Service
 
         public IEnumerable<Course> FindNotSoftDeletedCourses()
         {
-            throw new NotImplementedException();
+            return _courseRepository.Find(c => c.IsDeleted == false, c => c.OrderBy(i => i.Id));
         }
 
         public Course Get(int id)
@@ -93,10 +93,42 @@ namespace ADYC.Service
 
         public IEnumerable<Course> GetAll()
         {
-            return _courseRepository.Find(c => c.IsDeleted == false, c => c.OrderBy(cr => cr.Id));
+            return _courseRepository.GetAll();
         }
 
         public void Remove(Course course)
+        {
+            if (course == null)
+            {
+                throw new ArgumentNullException("course");
+            }
+
+            if (course.Offerings.Count > 0)
+            {
+
+            }
+
+            _courseRepository.Remove(course);
+        }
+
+        public void RemoveRange(IEnumerable<Course> courses)
+        {
+            if (courses.Count() == 0 || courses == null)
+            {
+                throw new ArgumentNullException("courses");
+            }
+
+            var hasOfferings = courses.Count(c => c.Offerings.Count > 0);
+
+            if (hasOfferings > 0)
+            {
+
+            }
+
+            _courseRepository.RemoveRange(courses);
+        }
+
+        public void SoftDelete(Course course)
         {
             if (course == null)
             {
@@ -108,7 +140,7 @@ namespace ADYC.Service
             _courseRepository.Update(course);
         }
 
-        public void RemoveRange(IEnumerable<Course> courses)
+        public void SoftDeleteRange(IEnumerable<Course> courses)
         {
             if (courses.Count() == 0 || courses == null)
             {
@@ -121,16 +153,6 @@ namespace ADYC.Service
 
                 _courseRepository.Update(course);
             }
-        }
-
-        public void SoftDelete(Course course)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SoftDeleteRange(IEnumerable<Course> courses)
-        {
-            throw new NotImplementedException();
         }
 
         public void Update(Course course)
