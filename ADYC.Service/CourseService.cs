@@ -74,7 +74,7 @@ namespace ADYC.Service
             return _courseRepository.Find(c => c.IsDeleted == true, c => c.OrderBy(i => i.Id));
         }
 
-        public IEnumerable<Course> FindNotDeletedCourses()
+        public IEnumerable<Course> FindNotSoftDeletedCourses()
         {
             throw new NotImplementedException();
         }

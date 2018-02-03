@@ -361,14 +361,14 @@ namespace ADYC.Service.Tests
         }
 
         [Test]
-        public void GetAll_WhenCalled_ReturnsListOfCoursesWithIsDeletedEqualsFalse()
+        public void GetAll_WhenCalled_ReturnsListOfAllCourses()
         {
             // arrange
             var expectedCourses = new List<Course>(_courses.Where(c => c.IsDeleted == false).ToList());
 
             _courseRepositoryMock.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), It.IsAny<Func<IQueryable<Course>, IOrderedQueryable<Course>>>(), ""))
                 .Returns(() => {
-                    return _courses.Where(c => c.IsDeleted == false);
+                    return _courses;
                 });
 
             var courseService = new CourseService(_courseRepositoryMock.Object);
@@ -381,7 +381,126 @@ namespace ADYC.Service.Tests
         }
 
         [Test]
-        public void Remove_WhenCalled_CourseIsDeletedPropertyWillBeSetToTrue()
+        public void FindNotSoftDeletedCourses_WhenCalled_ReturnsListOfCoursesWithIsDeletedEqualsFalse()
+        {
+            // arrange
+            var expectedCourses = new List<Course>(_courses.Where(c => c.IsDeleted == false).ToList());
+
+            _courseRepositoryMock.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), It.IsAny<Func<IQueryable<Course>, IOrderedQueryable<Course>>>(), ""))
+                .Returns(() => {
+                    return _courses.Where(c => c.IsDeleted == false);
+                });
+
+            var courseService = new CourseService(_courseRepositoryMock.Object);
+
+            // act 
+            var result = courseService.FindNotSoftDeletedCourses();
+
+            // assert
+            Assert.AreEqual(expectedCourses, result);
+        }
+
+        [Test]
+        public void Remove_WhenCalled_CourseIsRemovedFromTheList()
+        {
+            // arrange
+            var courseToRemove = _courses.SingleOrDefault(c => c.Id == 3);
+
+            var expectedCourses = new List<Course>()
+            {
+                _courses.SingleOrDefault(c => c.Id == 1),
+                _courses.SingleOrDefault(c => c.Id == 2),
+                _courses.SingleOrDefault(c => c.Id == 4),
+                _courses.SingleOrDefault(c => c.Id == 5),
+                _courses.SingleOrDefault(c => c.Id == 6),
+                _courses.SingleOrDefault(c => c.Id == 7),
+                _courses.SingleOrDefault(c => c.Id == 8),
+                _courses.SingleOrDefault(c => c.Id == 9)
+            };
+
+            _courseRepositoryMock.Setup(m => m.Remove(It.IsAny<Course>()))
+                .Callback((Course course) => {
+                    _courses.Remove(course);
+                });
+
+            var courseService = new CourseService(_courseRepositoryMock.Object);
+
+            // act 
+            courseService.Remove(courseToRemove);
+
+            // assert
+            Assert.AreEqual(expectedCourses, _courses);
+        }
+
+        [Test]
+        public void Remove_CourseIsNull_ArgumentNullExceptionWillBeThrown()
+        {
+            // arrange
+            _courseRepositoryMock.Setup(m => m.Remove(It.IsAny<Course>()))
+                .Callback(() => {
+                });
+
+            var courseService = new CourseService(_courseRepositoryMock.Object);
+
+            // act and assert
+            Assert.Throws<ArgumentNullException>(() => courseService.Remove(null));
+        }
+
+        [Test]
+        public void RemoveRange_WhenCalled_ListOfCoursesWillBeRemovedFromList()
+        {
+            // arrange
+            var expectedCourses = _courses = new List<Course>()
+            {
+                _courses.SingleOrDefault(c => c.Id == 1),
+                _courses.SingleOrDefault(c => c.Id == 2),
+                _courses.SingleOrDefault(c => c.Id == 4),
+                _courses.SingleOrDefault(c => c.Id == 7),
+                _courses.SingleOrDefault(c => c.Id == 8),
+                _courses.SingleOrDefault(c => c.Id == 9)
+            };
+
+            var IdsToRemove = new int[] { 3, 5, 6 };
+
+            var coursesToRemove = new List<Course> {
+                _courses.SingleOrDefault(c => c.Id == 3),
+                _courses.SingleOrDefault(c => c.Id == 5),
+                _courses.SingleOrDefault(c => c.Id == 6)
+            };
+
+            _courseRepositoryMock.Setup(m => m.RemoveRange(It.IsAny<IEnumerable<Course>>()))
+                .Callback((IEnumerable<Course> courses) => {
+                    _courses.RemoveAll(c => IdsToRemove.Contains(c.Id));
+                });
+
+            var courseService = new CourseService(_courseRepositoryMock.Object);
+
+            // act
+            courseService.RemoveRange(coursesToRemove);
+
+            // assert
+            Assert.AreEqual(expectedCourses, _courses);
+        }
+
+        [Test]
+        public void RemoveRange_ListIsNullOrEmpty_ArgumentNullExceptionWillBeThrown()
+        {
+            // arrange
+            var coursesToRemove = new List<Course>();
+
+            _courseRepositoryMock.Setup(m => m.RemoveRange(It.IsAny<IEnumerable<Course>>()))
+                .Callback((IEnumerable<Course> courses) => {
+                });
+
+            var courseService = new CourseService(_courseRepositoryMock.Object);
+
+            // act and assert
+            Assert.Throws<ArgumentNullException>(() => courseService.RemoveRange(coursesToRemove));
+            Assert.Throws<ArgumentNullException>(() => courseService.RemoveRange(null));
+        }
+
+        [Test]
+        public void SoftDelete_WhenCalled_CourseIsDeletedPropertyWillBeSetToTrue()
         {
             // arrange
             var courseToRemove = _courses.SingleOrDefault(c => c.Id == 3);
@@ -397,7 +516,7 @@ namespace ADYC.Service.Tests
             var courseService = new CourseService(_courseRepositoryMock.Object);
 
             // act 
-            courseService.Remove(courseToRemove);
+            courseService.SoftDelete(courseToRemove);
 
             // assert
             Assert.AreEqual(expectedCourse, courseToRemove);
@@ -405,7 +524,7 @@ namespace ADYC.Service.Tests
         }
 
         [Test]
-        public void Remove_CourseIsNull_ArgumentNullExceptionWillBeThrown()
+        public void SoftDelete_CourseIsNull_ArgumentNullExceptionWillBeThrown()
         {
             // arrange
             _courseRepositoryMock.Setup(m => m.Update(It.IsAny<Course>()))
@@ -415,11 +534,11 @@ namespace ADYC.Service.Tests
             var courseService = new CourseService(_courseRepositoryMock.Object);
 
             // act and assert
-            Assert.Throws<ArgumentNullException>(() => courseService.Remove(null));
+            Assert.Throws<ArgumentNullException>(() => courseService.SoftDelete(null));
         }
 
         [Test]
-        public void RemoveRange_WhenCalled_ListOfCoursesWillBeSetToTrue()
+        public void SoftDeleteRange_WhenCalled_ListOfCoursesWillBeSetToTrue()
         {
             // arrange
             var expectedCourses = new List<Course> {
@@ -448,14 +567,14 @@ namespace ADYC.Service.Tests
             var courseService = new CourseService(_courseRepositoryMock.Object);
 
             // act
-            courseService.RemoveRange(coursesToRemove);
+            courseService.SoftDeleteRange(coursesToRemove);
 
             // assert
             Assert.AreEqual(expectedCourses, coursesToRemove);
         }
 
         [Test]
-        public void RemoveRange_ListIsNullOrEmpty_ArgumentNullExceptionWillBeThrown()
+        public void SoftDeleteRange_ListIsNullOrEmpty_ArgumentNullExceptionWillBeThrown()
         {
             // arrange
             var coursesToRemove = new List<Course>();
@@ -468,8 +587,8 @@ namespace ADYC.Service.Tests
             var courseService = new CourseService(_courseRepositoryMock.Object);
 
             // act and assert
-            Assert.Throws<ArgumentNullException>(() => courseService.RemoveRange(coursesToRemove));
-            Assert.Throws<ArgumentNullException>(() => courseService.RemoveRange(null));
+            Assert.Throws<ArgumentNullException>(() => courseService.SoftDeleteRange(coursesToRemove));
+            Assert.Throws<ArgumentNullException>(() => courseService.SoftDeleteRange(null));
         }
 
         [Test]

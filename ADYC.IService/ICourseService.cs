@@ -7,7 +7,7 @@ namespace ADYC.IService
     {
         Course Get(int id);
         IEnumerable<Course> GetAll();
-        IEnumerable<Course> FindNotDeletedCourses();
+        IEnumerable<Course> FindNotSoftDeletedCourses();
         IEnumerable<Course> FindByName(string name);
         IEnumerable<Course> FindByCourseType(CourseType courseType);
         IEnumerable<Course> FindDeletedCourses();
