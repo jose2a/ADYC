@@ -5,7 +5,6 @@ using ADYC.Model;
 using Moq;
 using ADYC.IRepository;
 using ADYC.Util.Exceptions;
-using System.Collections;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -367,8 +366,8 @@ namespace ADYC.Service.Tests
             // arrange
             var expectedCourses = new List<Course>(_courses.Where(c => c.IsDeleted == false).ToList());
 
-            _courseRepositoryMock.Setup(m => m.Find(c => c.IsDeleted == false ,null, ""))
-                .Returns((IEnumerable<Course> courses) => {
+            _courseRepositoryMock.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), It.IsAny<Func<IQueryable<Course>, IOrderedQueryable<Course>>>(), ""))
+                .Returns(() => {
                     return _courses.Where(c => c.IsDeleted == false);
                 });
 
@@ -402,6 +401,7 @@ namespace ADYC.Service.Tests
 
             // assert
             Assert.AreEqual(expectedCourse, courseToRemove);
+            Assert.IsTrue(courseToRemove.IsDeleted);
         }
 
         [Test]

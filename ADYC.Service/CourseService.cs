@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ADYC.Model;
 using ADYC.IRepository;
 using ADYC.Util.Exceptions;
@@ -78,27 +76,61 @@ namespace ADYC.Service
 
         public Course Get(int id)
         {
-            throw new NotImplementedException();
+            var course = _courseRepository.Get(id);
+
+            if (course == null)
+            {
+                throw new NonexistingEntityException("Course with the given id does not exist.");
+            }
+
+            return course;
         }
 
         public IEnumerable<Course> GetAll()
         {
-            throw new NotImplementedException();
+            return _courseRepository.Find(c => c.IsDeleted == false, c => c.OrderBy(cr => cr.Id));
         }
 
         public void Remove(Course course)
         {
-            throw new NotImplementedException();
+            if (course == null)
+            {
+                throw new ArgumentNullException("course");
+            }
+
+            course.IsDeleted = true;
+
+            _courseRepository.Update(course);
         }
 
         public void RemoveRange(IEnumerable<Course> courses)
         {
-            throw new NotImplementedException();
+            if (courses.Count() == 0 || courses == null)
+            {
+                throw new ArgumentNullException("courses");
+            }
+
+            foreach (var course in courses)
+            {
+                course.IsDeleted = true;
+
+                _courseRepository.Update(course);
+            }
         }
 
         public void Update(Course course)
         {
-            throw new NotImplementedException();
+            if (course == null)
+            {
+                throw new ArgumentNullException("course");
+            }
+
+            if (_courseRepository.Get(course.Id) == null)
+            {
+                throw new NonexistingEntityException("Course does not currently exist.");
+            }
+
+            _courseRepository.Update(course);
         }
     }
 }
