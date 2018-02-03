@@ -74,6 +74,11 @@ namespace ADYC.Service
             return _courseRepository.Find(c => c.IsDeleted == true, c => c.OrderBy(i => i.Id));
         }
 
+        public IEnumerable<Course> FindNotDeletedCourses()
+        {
+            throw new NotImplementedException();
+        }
+
         public Course Get(int id)
         {
             var course = _courseRepository.Get(id);
@@ -116,6 +121,16 @@ namespace ADYC.Service
 
                 _courseRepository.Update(course);
             }
+        }
+
+        public void SoftDelete(Course course)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SoftDeleteRange(IEnumerable<Course> courses)
+        {
+            throw new NotImplementedException();
         }
 
         public void Update(Course course)
