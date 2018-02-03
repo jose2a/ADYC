@@ -301,7 +301,7 @@ namespace ADYC.Service.Tests
         }
 
         [Test]
-        public void FindDeletedCourses_WhenCalled_ListOfCoursesWithIsDeletedEqualsTrue()
+        public void FindSoftDeletedCourses_WhenCalled_ListOfCoursesWithIsDeletedEqualsTrue()
         {
             // arrange
             var expectedCourses = new List<Course>
@@ -318,7 +318,7 @@ namespace ADYC.Service.Tests
             var courseService = new CourseService(_courseRepositoryMock.Object);
 
             // act
-            var result = courseService.FindDeletedCourses();
+            var result = courseService.FindSoftDeletedCourses();
 
             // assert
             Assert.AreEqual(expectedCourses, result);
@@ -447,10 +447,27 @@ namespace ADYC.Service.Tests
         }
 
         [Test]
+        public void Remove_CourseHasOfferings_ForeignKeyExceptionWillBeThrown()
+        {
+            // arrange
+            var courseToRemove = _courses.SingleOrDefault(c => c.Id == 3);
+            courseToRemove.Offerings.Add(new Offering());
+
+            _courseRepositoryMock.Setup(m => m.Remove(It.IsAny<Course>()))
+                .Callback(() => {
+                });
+
+            var courseService = new CourseService(_courseRepositoryMock.Object);
+
+            // act and assert
+            Assert.Throws<ForeignKeyException>(() => courseService.Remove(courseToRemove));
+        }
+
+        [Test]
         public void RemoveRange_WhenCalled_ListOfCoursesWillBeRemovedFromList()
         {
             // arrange
-            var expectedCourses = _courses = new List<Course>()
+            var expectedCourses = new List<Course>()
             {
                 _courses.SingleOrDefault(c => c.Id == 1),
                 _courses.SingleOrDefault(c => c.Id == 2),
@@ -497,6 +514,29 @@ namespace ADYC.Service.Tests
             // act and assert
             Assert.Throws<ArgumentNullException>(() => courseService.RemoveRange(coursesToRemove));
             Assert.Throws<ArgumentNullException>(() => courseService.RemoveRange(null));
+        }
+
+        [Test]
+        public void RemoveRange_ListOfCoursesHaveOfferings_ForeignKeyExceptionWillBeThrown()
+        {
+            // arrange
+            var coursesToRemove = new List<Course> {
+                _courses.SingleOrDefault(c => c.Id == 3),
+                _courses.SingleOrDefault(c => c.Id == 5),
+                _courses.SingleOrDefault(c => c.Id == 6)
+            };
+
+            coursesToRemove[0].Offerings.Add(new Offering());
+
+            _courseRepositoryMock.Setup(m => m.RemoveRange(It.IsAny<IEnumerable<Course>>()))
+                .Callback((IEnumerable<Course> courses) => {
+                });
+
+            var courseService = new CourseService(_courseRepositoryMock.Object);
+
+            // act and assert
+            Assert.Throws<ForeignKeyException>(() => courseService.RemoveRange(coursesToRemove));
+            Assert.Throws<ForeignKeyException>(() => courseService.RemoveRange(coursesToRemove));
         }
 
         [Test]

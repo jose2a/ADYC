@@ -69,7 +69,7 @@ namespace ADYC.Service
             return _courseRepository.Find(c => c.Name.Contains(name));
         }
 
-        public IEnumerable<Course> FindDeletedCourses()
+        public IEnumerable<Course> FindSoftDeletedCourses()
         {
             return _courseRepository.Find(c => c.IsDeleted == true, c => c.OrderBy(i => i.Id));
         }
@@ -105,7 +105,7 @@ namespace ADYC.Service
 
             if (course.Offerings.Count > 0)
             {
-
+                throw new ForeignKeyException("A course could not be removed. It has offerings in current or previous terms.");
             }
 
             _courseRepository.Remove(course);
@@ -122,7 +122,7 @@ namespace ADYC.Service
 
             if (hasOfferings > 0)
             {
-
+                throw new ForeignKeyException("A course could not be removed. It has offerings in current or previous terms.");
             }
 
             _courseRepository.RemoveRange(courses);

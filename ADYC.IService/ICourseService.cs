@@ -10,7 +10,7 @@ namespace ADYC.IService
         IEnumerable<Course> FindNotSoftDeletedCourses();
         IEnumerable<Course> FindByName(string name);
         IEnumerable<Course> FindByCourseType(CourseType courseType);
-        IEnumerable<Course> FindDeletedCourses();
+        IEnumerable<Course> FindSoftDeletedCourses();
 
         void Add(Course course);
         void AddRange(IEnumerable<Course> courses);
