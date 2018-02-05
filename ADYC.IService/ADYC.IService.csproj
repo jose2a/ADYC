@@ -44,6 +44,7 @@
     <Compile Include="ICourseTypeService.cs" />
     <Compile Include="IGradeService.cs" />
     <Compile Include="IGroupService.cs" />
+    <Compile Include="IMajorService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
