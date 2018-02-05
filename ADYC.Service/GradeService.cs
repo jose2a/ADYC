@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ADYC.Model;
 using ADYC.IRepository;
+using ADYC.Util.Exceptions;
 
 namespace ADYC.Service
 {
@@ -20,37 +21,91 @@ namespace ADYC.Service
 
         public void Add(Grade grade)
         {
-            throw new NotImplementedException();
+            if (grade == null)
+            {
+                throw new ArgumentNullException("grade");
+            }
+
+            if (_gradeRepository.Find(c => c.Name.Equals(grade.Name)).Count() > 0)
+            {
+                throw new PreexistingEntityException("A grade with the same name already exists.", null);
+            }
+
+            _gradeRepository.Add(grade);
         }
 
         public IEnumerable<Grade> FindByName(string name)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("Name should not be empty.");
+            }
+
+            return _gradeRepository.Find(c => c.Name.Contains(name));
         }
 
         public Grade Get(int id)
         {
-            throw new NotImplementedException();
+            var grade = _gradeRepository.Get(id);
+
+            if (grade == null)
+            {
+                throw new NonexistingEntityException("A grade with the given id does not exist.");
+            }
+
+            return grade;
         }
 
         public IEnumerable<Grade> GetAll()
         {
-            throw new NotImplementedException();
+            return _gradeRepository.GetAll();
         }
 
         public void Remove(Grade grade)
         {
-            throw new NotImplementedException();
+            if (grade == null)
+            {
+                throw new ArgumentNullException("grade");
+            }
+
+            if (grade.Students.Count > 0)
+            {
+                throw new ForeignKeyException("A grade could not be removed. It has one or more students associated with it.");
+            }
+
+            _gradeRepository.Remove(grade);
         }
 
         public void RemoveRange(IEnumerable<Grade> grades)
         {
-            throw new NotImplementedException();
+            if (grades.Count() == 0 || grades == null)
+            {
+                throw new ArgumentNullException("grades");
+            }
+
+            var hasStudents = grades.Count(g => g.Students.Count > 0);
+
+            if (hasStudents > 0)
+            {
+                throw new ForeignKeyException("A grade could not be removed. It has one or more students associated wiht it.");
+            }
+
+            _gradeRepository.RemoveRange(grades);
         }
 
         public void Update(Grade grade)
         {
-            throw new NotImplementedException();
+            if (grade == null)
+            {
+                throw new ArgumentNullException("grade");
+            }
+
+            if (_gradeRepository.Get(grade.Id) == null)
+            {
+                throw new NonexistingEntityException("Grade does not currently exist.");
+            }
+
+            _gradeRepository.Update(grade);
         }
     }
 }

@@ -21,7 +21,7 @@ namespace ADYC.Service
         {
             if (course == null)
             {
-                throw new ArgumentNullException("Course is necessary");
+                throw new ArgumentNullException("course");
             }
 
             if (_courseRepository.Find(c => c.Name.Equals(course.Name)).Count() > 0)
@@ -53,7 +53,7 @@ namespace ADYC.Service
         {
             if (courseType == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("courseType");
             }
 
             return _courseRepository.Find(c => c.CourseTypeId == courseType.Id);
@@ -63,7 +63,7 @@ namespace ADYC.Service
         {
             if (string.IsNullOrEmpty(name))
             {
-                throw new ArgumentNullException("Name should not be emptied.");
+                throw new ArgumentNullException("Name should not be empty.");
             }
 
             return _courseRepository.Find(c => c.Name.Contains(name));
@@ -85,7 +85,7 @@ namespace ADYC.Service
 
             if (course == null)
             {
-                throw new NonexistingEntityException("Course with the given id does not exist.");
+                throw new NonexistingEntityException("A course with the given id does not exist.");
             }
 
             return course;
