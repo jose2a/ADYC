@@ -9,5 +9,6 @@ namespace ADYC.IRepository
 {
     public interface IStudentRepository : IReadOnlyRepository<Student>, IWriteOnlyRepository<Student>
     {
+        Student Get(Guid studentId);
     }
 }

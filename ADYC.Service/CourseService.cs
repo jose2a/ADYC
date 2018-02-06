@@ -36,14 +36,14 @@ namespace ADYC.Service
         {
             if (courses == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("courses");
             }
 
             var courseNames = courses.Select(c => c.Name);
 
             if (_courseRepository.Find(c => courseNames.Contains(c.Name)).Count() > 0)
             {
-                throw new PreexistingEntityException("A course with the name of already exists.");
+                throw new PreexistingEntityException("A course with the name already exists.");
             }
 
             _courseRepository.AddRange(courses);
@@ -63,7 +63,7 @@ namespace ADYC.Service
         {
             if (string.IsNullOrEmpty(name))
             {
-                throw new ArgumentNullException("Name should not be empty.");
+                throw new ArgumentNullException("name");
             }
 
             return _courseRepository.Find(c => c.Name.Contains(name));
@@ -71,12 +71,12 @@ namespace ADYC.Service
 
         public IEnumerable<Course> FindSoftDeletedCourses()
         {
-            return _courseRepository.Find(c => c.IsDeleted == true, c => c.OrderBy(i => i.Id));
+            return _courseRepository.Find(c => c.IsDeleted == true, o => o.OrderBy(c => c.Id));
         }
 
         public IEnumerable<Course> FindNotSoftDeletedCourses()
         {
-            return _courseRepository.Find(c => c.IsDeleted == false, c => c.OrderBy(i => i.Id));
+            return _courseRepository.Find(c => c.IsDeleted == false, o => o.OrderBy(c => c.Id));
         }
 
         public Course Get(int id)
