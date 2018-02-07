@@ -18,7 +18,7 @@ namespace ADYC.Repository
             Entity = context.Set<TEntity>();
         }
 
-        public TEntity Get(int id)
+        public virtual TEntity Get(int id)
         {
             return Entity.Find(id);
         }

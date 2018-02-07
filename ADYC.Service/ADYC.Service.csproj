@@ -49,6 +49,7 @@
     <Compile Include="ProfessorService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StudentService.cs" />
+    <Compile Include="TermService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ADYC.IRepository\ADYC.IRepository.csproj">
