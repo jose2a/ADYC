@@ -6,13 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 using ADYC.Model;
 using ADYC.IRepository;
+using ADYC.Util.Exceptions;
 
 namespace ADYC.Service
 {
     public class TermService : ITermService
     {
         private ITermRepository _termRepository;
-
+        private IPeriodRepository _periodRepository;
+        private IPeriodDateRepository _periodDateRepository;
 
         public TermService(ITermRepository termRepository)
         {
@@ -21,7 +23,45 @@ namespace ADYC.Service
 
         public void Add(Term term)
         {
-            throw new NotImplementedException();
+            if (term == null)
+            {
+                throw new ArgumentNullException("term");
+            }
+
+            if (term.StartDate >= term.EndDate)
+            {
+                throw new ArgumentException("Start date is after or the same day as the end date.");
+            }
+
+            if (term.EndDate <= term.StartDate)
+            {
+                throw new ArgumentException("End date is after or the same day as the start date.");
+            }
+
+            var startDateExist = _termRepository.Find(t => t.StartDate >= term.StartDate && t.EndDate <= term.StartDate).Count() > 0;
+            var endDateExist = _termRepository.Find(t => t.StartDate >= term.EndDate && t.EndDate <= term.EndDate).Count() > 0;
+
+            if (startDateExist && endDateExist)
+            {
+                throw new ArgumentException("An existing term that contains the start date already exists.");
+            }
+
+            if (startDateExist)
+            {
+                throw new ArgumentException("An existing term that contains the start date already exists.");
+            }
+
+            if (endDateExist)
+            {
+                throw new ArgumentException("An existing term that contains the end date already exists.");
+            }
+
+            _termRepository.Add(term);
+
+            foreach (var pd in term.PeriodDates)
+            {
+                _periodDateRepository.Add(pd);
+            }
         }
 
         public IEnumerable<Term> FindByBetweenDates(DateTime startDate, DateTime endDate)
