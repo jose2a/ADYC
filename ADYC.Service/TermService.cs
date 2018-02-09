@@ -42,17 +42,7 @@ namespace ADYC.Service
             return terms;
         }
 
-        public IEnumerable<Term> FindByEndDate(DateTime endDate)
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerable<Term> FindByName(string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Term> FindByStarDate(DateTime startDate)
         {
             throw new NotImplementedException();
         }
