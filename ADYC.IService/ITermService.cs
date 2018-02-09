@@ -8,7 +8,6 @@ namespace ADYC.IService
     {
         Term Get(int id);
         Term GetCurrentTerm();
-        int GetCurrentTermId();
 
         IEnumerable<Term> GetAll();
         IEnumerable<Term> FindByName(string name);

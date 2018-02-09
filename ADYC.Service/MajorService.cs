@@ -68,7 +68,7 @@ namespace ADYC.Service
 
             if (major.Students.Count > 0)
             {
-                throw new ForeignKeyException("This major could not be removed. It has one or more students associated with it.");
+                throw new ForeignKeyEntityException("This major could not be removed. It has one or more students associated with it.");
             }
 
             _majorRepository.Remove(major);
@@ -85,7 +85,7 @@ namespace ADYC.Service
 
             if (hasStudents > 0)
             {
-                throw new ForeignKeyException("This major could not be removed. It has one or more students associated with it.");
+                throw new ForeignKeyEntityException("This major could not be removed. It has one or more students associated with it.");
             }
 
             _majorRepository.RemoveRange(majors);

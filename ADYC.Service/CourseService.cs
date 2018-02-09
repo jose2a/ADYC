@@ -105,7 +105,7 @@ namespace ADYC.Service
 
             if (course.Offerings.Count > 0)
             {
-                throw new ForeignKeyException("A course could not be removed. It has offerings in current or previous terms.");
+                throw new ForeignKeyEntityException("A course could not be removed. It has offerings in current or previous terms.");
             }
 
             _courseRepository.Remove(course);
@@ -122,7 +122,7 @@ namespace ADYC.Service
 
             if (hasOfferings > 0)
             {
-                throw new ForeignKeyException("A course could not be removed. It has offerings in current or previous terms.");
+                throw new ForeignKeyEntityException("A course could not be removed. It has offerings in current or previous terms.");
             }
 
             _courseRepository.RemoveRange(courses);

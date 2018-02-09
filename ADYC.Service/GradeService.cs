@@ -70,7 +70,7 @@ namespace ADYC.Service
 
             if (grade.Students.Count > 0)
             {
-                throw new ForeignKeyException("A grade could not be removed. It has one or more students associated with it.");
+                throw new ForeignKeyEntityException("A grade could not be removed. It has one or more students associated with it.");
             }
 
             _gradeRepository.Remove(grade);
@@ -87,7 +87,7 @@ namespace ADYC.Service
 
             if (hasStudents > 0)
             {
-                throw new ForeignKeyException("A grade could not be removed. It has one or more students associated wiht it.");
+                throw new ForeignKeyEntityException("A grade could not be removed. It has one or more students associated wiht it.");
             }
 
             _gradeRepository.RemoveRange(grades);

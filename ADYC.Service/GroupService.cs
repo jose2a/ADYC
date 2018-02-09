@@ -70,7 +70,7 @@ namespace ADYC.Service
 
             if (group.Students.Count > 0)
             {
-                throw new ForeignKeyException("This group could not be removed. It has one or more students associated with it.");
+                throw new ForeignKeyEntityException("This group could not be removed. It has one or more students associated with it.");
             }
 
             _groupRepository.Remove(group);
@@ -87,7 +87,7 @@ namespace ADYC.Service
 
             if (hasStudents > 0)
             {
-                throw new ForeignKeyException("A group could not be removed. It has one or more students associated with it.");
+                throw new ForeignKeyEntityException("A group could not be removed. It has one or more students associated with it.");
             }
 
             _groupRepository.RemoveRange(groups);

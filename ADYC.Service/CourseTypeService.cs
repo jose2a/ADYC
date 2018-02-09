@@ -65,7 +65,7 @@ namespace ADYC.Service
 
             if (courseType.Courses.Count > 0)
             {
-                throw new ForeignKeyException("The course type can be removed. It has courses associated with it.");
+                throw new ForeignKeyEntityException("The course type can be removed. It has courses associated with it.");
             }
 
             _courseTypeRepository.Remove(courseType);
@@ -82,7 +82,7 @@ namespace ADYC.Service
 
             if (hasCourses > 0)
             {
-                throw new ForeignKeyException("A course type can be removed. It has courses associated with it.");
+                throw new ForeignKeyEntityException("A course type can be removed. It has courses associated with it.");
             }
 
             _courseTypeRepository.RemoveRange(courseTypes);

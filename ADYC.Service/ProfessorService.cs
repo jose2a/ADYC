@@ -149,7 +149,7 @@ namespace ADYC.Service
 
             if (professor.Offerings.Count > 0)
             {
-                throw new ForeignKeyException("This professor could not be removed. It has one or more offerings.");
+                throw new ForeignKeyEntityException("This professor could not be removed. It has one or more offerings.");
             }
 
             _professorRepository.Remove(professor);
@@ -166,7 +166,7 @@ namespace ADYC.Service
 
             if (hasOfferings > 0)
             {
-                throw new ForeignKeyException("A professor could not be removed. It has one or more offerings.");
+                throw new ForeignKeyEntityException("A professor could not be removed. It has one or more offerings.");
             }
 
             _professorRepository.RemoveRange(professors);

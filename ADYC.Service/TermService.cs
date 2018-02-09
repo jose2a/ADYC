@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ADYC.Model;
 using ADYC.IRepository;
 using ADYC.Util.Exceptions;
@@ -13,14 +11,10 @@ namespace ADYC.Service
     public class TermService : ITermService
     {
         private ITermRepository _termRepository;
-        private IPeriodRepository _periodRepository;
-        private IPeriodDateRepository _periodDateRepository;
 
-        public TermService(ITermRepository termRepository, IPeriodRepository periodRepository, IPeriodDateRepository periodDateRepository)
+        public TermService(ITermRepository termRepository)
         {
             _termRepository = termRepository;
-            _periodRepository = periodRepository;
-            _periodDateRepository = periodDateRepository;
         }
 
         public void Add(Term term)
@@ -44,47 +38,101 @@ namespace ADYC.Service
 
         public IEnumerable<Term> FindByName(string name)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            var terms = _termRepository.Find(t => t.Name.Contains(name));
+
+            if (terms == null || terms.Count() == 0)
+            {
+                throw new NonexistingEntityException("There are no terms that contain this name.");
+            }
+
+            return terms;
         }
 
         public Term Get(int id)
         {
-            throw new NotImplementedException();
+            var term = _termRepository.Get(id);
+
+            if (term == null)
+            {
+                throw new NonexistingEntityException("There is no a term with the specific id.");
+            }
+
+            return term;
         }
 
         public IEnumerable<Term> GetAll()
         {
-            throw new NotImplementedException();
+            return _termRepository.GetAll();
         }
 
         public Term GetCurrentTerm()
         {
-            throw new NotImplementedException();
-        }
+            DateTime today = DateTime.Today;
 
-        public int GetCurrentTermId()
-        {
-            throw new NotImplementedException();
+            var term = _termRepository.SingleOrDefault(t => today >= t.StartDate && today <= t.EndDate);
+
+            if (term == null)
+            {
+                throw new NonexistingEntityException("There is no current term.");
+            }
+
+            return term;
         }
 
         public IEnumerable<PeriodDate> GetCurrentTermPeriodDates()
         {
-            throw new NotImplementedException();
+            DateTime today = DateTime.Today;
+
+            var term = _termRepository.SingleOrDefault(t => today >= t.StartDate && today <= t.EndDate);
+
+            if (term == null)
+            {
+                throw new NonexistingEntityException("There is no current term.");
+            }
+
+            return term.PeriodDates;
         }
 
         public IEnumerable<PeriodDate> GetTermPeriodDates(int termId)
         {
-            throw new NotImplementedException();
+            var term = _termRepository.SingleOrDefault(t => t.Id == termId);
+
+            if (term == null)
+            {
+                throw new NonexistingEntityException("The term with the specific id does not exist.");
+            }
+
+            return term.PeriodDates;
         }
 
         public void Remove(Term term)
         {
-            throw new NotImplementedException();
+            if (term == null)
+            {
+                throw new ArgumentNullException("term");
+            }
+
+            if (term.Offerings.Count > 0)
+            {
+                throw new ForeignKeyEntityException("The term could not be removed. It has one or more offerins associated with it.");
+            }
+
+            _termRepository.Remove(term);
         }
 
         public void Update(Term term)
         {
-            throw new NotImplementedException();
+            if (term == null)
+            {
+                throw new ArgumentNullException("term");
+            }
+
+            _termRepository.Update(term);
         }
 
         private void ValidateTerm(Term term)

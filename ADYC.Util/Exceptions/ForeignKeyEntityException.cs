@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace ADYC.Util.Exceptions
 {
-    public class ForeignKeyException : Exception
+    public class ForeignKeyEntityException : Exception
     {
-        public ForeignKeyException(string message)
+        public ForeignKeyEntityException(string message)
             :base(message)
         {
 
         }
 
-        public ForeignKeyException(string message, Exception innerException)
+        public ForeignKeyEntityException(string message, Exception innerException)
             :base(message, innerException)
         {
 

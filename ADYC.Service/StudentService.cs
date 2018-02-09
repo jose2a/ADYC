@@ -149,7 +149,7 @@ namespace ADYC.Service
 
             if (student.Enrollments.Count > 0)
             {
-                throw new ForeignKeyException("This student could not be removed. It has one or more enrollments.");
+                throw new ForeignKeyEntityException("This student could not be removed. It has one or more enrollments.");
             }
 
             _studentRepository.Remove(student);
@@ -166,7 +166,7 @@ namespace ADYC.Service
 
             if (hasEnrollments > 0)
             {
-                throw new ForeignKeyException("A student could not be removed. It has one or more enrollments.");
+                throw new ForeignKeyEntityException("A student could not be removed. It has one or more enrollments.");
             }
 
             _studentRepository.RemoveRange(students);

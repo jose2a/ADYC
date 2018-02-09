@@ -460,7 +460,7 @@ namespace ADYC.Service.Tests
             var courseService = new CourseService(_courseRepositoryMock.Object);
 
             // act and assert
-            Assert.Throws<ForeignKeyException>(() => courseService.Remove(courseToRemove));
+            Assert.Throws<ForeignKeyEntityException>(() => courseService.Remove(courseToRemove));
         }
 
         [Test]
@@ -535,8 +535,8 @@ namespace ADYC.Service.Tests
             var courseService = new CourseService(_courseRepositoryMock.Object);
 
             // act and assert
-            Assert.Throws<ForeignKeyException>(() => courseService.RemoveRange(coursesToRemove));
-            Assert.Throws<ForeignKeyException>(() => courseService.RemoveRange(coursesToRemove));
+            Assert.Throws<ForeignKeyEntityException>(() => courseService.RemoveRange(coursesToRemove));
+            Assert.Throws<ForeignKeyEntityException>(() => courseService.RemoveRange(coursesToRemove));
         }
 
         [Test]
