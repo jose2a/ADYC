@@ -77,6 +77,9 @@
   </Choose>
   <ItemGroup>
     <Compile Include="CourseServiceTest.cs" />
+    <Compile Include="FakeRepositories\FakePeriodDateRepository.cs" />
+    <Compile Include="FakeRepositories\FakePeriodRepository.cs" />
+    <Compile Include="FakeRepositories\FakeTermRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TermServiceTest.cs" />
   </ItemGroup>
