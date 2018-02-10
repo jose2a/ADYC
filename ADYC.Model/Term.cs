@@ -16,7 +16,7 @@ namespace ADYC.Model
         public DateTime EnrollmentDeadLine { get; set; }
         public DateTime EnrollmentDropDeadLine { get; set; }
 
-        public virtual ICollection<PeriodDate> PeriodDates { get; set; }
+        public ICollection<PeriodDate> PeriodDates { get; set; }
         public virtual ICollection<Offering> Offerings { get; set; }
 
         public Term()

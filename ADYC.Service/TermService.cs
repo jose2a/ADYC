@@ -11,10 +11,12 @@ namespace ADYC.Service
     public class TermService : ITermService
     {
         private ITermRepository _termRepository;
+        private IPeriodDateRepository _periodDateRepository;
 
-        public TermService(ITermRepository termRepository)
+        public TermService(ITermRepository termRepository, IPeriodDateRepository periodDateRepository)
         {
             _termRepository = termRepository;
+            _periodDateRepository = periodDateRepository;
         }
 
         public void Add(Term term)
@@ -122,6 +124,7 @@ namespace ADYC.Service
                 throw new ForeignKeyEntityException("The term could not be removed. It has one or more offerins associated with it.");
             }
 
+            _periodDateRepository.RemoveRange(term.PeriodDates);
             _termRepository.Remove(term);
         }
 

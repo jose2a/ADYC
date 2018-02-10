@@ -15,11 +15,7 @@ namespace ADYC.Service.Tests
         [SetUp]
         public void SetUp()
         {
-            _termService = new TermService(
-                new FakeTermRepository(),
-                new FakePeriodRepository(),
-                new FakePeriodDateRepository()
-                );
+            _termService = new TermService(new FakeTermRepository(), new FakePeriodDateRepository());
         }
 
         [Test]

@@ -45,6 +45,7 @@
     <Compile Include="IGradeService.cs" />
     <Compile Include="IGroupService.cs" />
     <Compile Include="IMajorService.cs" />
+    <Compile Include="IPeriodDateService.cs" />
     <Compile Include="IPeriodService.cs" />
     <Compile Include="IProfessorService.cs" />
     <Compile Include="IStudentService.cs" />
