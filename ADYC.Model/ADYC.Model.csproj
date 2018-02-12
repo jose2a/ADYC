@@ -52,6 +52,7 @@
     <Compile Include="Offering.cs" />
     <Compile Include="Period.cs" />
     <Compile Include="PeriodDate.cs" />
+    <Compile Include="PeriodIds.cs" />
     <Compile Include="Professor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Schedule.cs" />

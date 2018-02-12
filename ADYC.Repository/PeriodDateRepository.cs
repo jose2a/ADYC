@@ -18,6 +18,7 @@ namespace ADYC.Repository
 
         public PeriodDate Get(int periodId, int termId)
         {
+            Entity.Find(new object[] { periodId, termId });
             var periodDate = Entity.SingleOrDefault(pd => pd.PeriodId == periodId && pd.TermId == termId);
 
             if (periodDate == null)

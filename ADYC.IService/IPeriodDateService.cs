@@ -13,9 +13,7 @@ namespace ADYC.IService
 
         IEnumerable<PeriodDate> GetPeriodDatesForTerm(int termId);
 
-        void Add(PeriodDate periodDate);
         void AddRange(IEnumerable<PeriodDate> periodDates);
-        void Update(PeriodDate periodDate);
         void UpdateRange(IEnumerable<PeriodDate> periodDates);        
     }
 }

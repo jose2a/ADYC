@@ -82,6 +82,7 @@
     <Compile Include="FakeRepositories\FakeTermRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TermServiceTest.cs" />
+    <Compile Include="PeriodDateServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
