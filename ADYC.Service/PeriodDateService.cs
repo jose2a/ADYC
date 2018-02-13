@@ -14,11 +14,8 @@ namespace ADYC.Service
     {
         private IPeriodDateRepository _periodDateRepository;
         private ITermRepository _termRepository;
+
         private const int totalNumberOfPeriods = 4;
-        private const int FistPeriod = 1;
-        private const int SecondPeriod = 2;
-        private const int ThirdPeriod = 3;
-        private const int FourthPeriod = 4;
 
         public PeriodDateService(IPeriodDateRepository periodDateRepository, ITermRepository termRepository)
         {
