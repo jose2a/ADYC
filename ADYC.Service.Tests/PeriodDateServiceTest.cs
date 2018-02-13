@@ -8,13 +8,15 @@ namespace ADYC.Service.Tests
     [TestFixture]
     public class PeriodDateServiceTest
     {
-        private PeriodDateService _peridDateService;
+        private PeriodDateService _periodDateService;
 
         [SetUp]
         public void SetUp()
         {
-            _peridDateService = new PeriodDateService(new FakeRepositories.FakePeriodDateRepository(),
-                new FakeRepositories.FakeTermRepository());
+            _periodDateService = new PeriodDateService(
+                new FakeRepositories.FakePeriodDateRepository(),
+                new FakeRepositories.FakeTermRepository()
+                );
         }
 
         [Test]
@@ -30,18 +32,130 @@ namespace ADYC.Service.Tests
             };
 
             // act and assert
-            var ex = Assert.Throws<ArgumentNullException>(() => _peridDateService.AddRange(periodDates));
+            var ex = Assert.Throws<ArgumentNullException>(() => _periodDateService.AddRange(periodDates));
             Assert.IsTrue(ex.Message.Contains("periodDates"));
         }
 
+        [Test]
+        public void AddRange_APeriodDateIdIsFromOtherTerm_ThrowsArgumentException()
+        {
+            // Arrange
+            // termId = 5
+            FakeRepositories.FakeTermRepository.terms.Add(FakeRepositories.FakeTermRepository.spring2018);
 
+            var periodDates = new List<PeriodDate>
+            {
+                new PeriodDate { PeriodId = 1, TermId = 5, StartDate = new DateTime(2018, 1, 9), EndDate = new DateTime(2018, 2, 9) },
+                new PeriodDate { PeriodId = 2, TermId = 4, StartDate = new DateTime(2018, 2, 10), EndDate = new DateTime(2018, 3, 11) },
+                new PeriodDate { PeriodId = 3, TermId = 5, StartDate = new DateTime(2018, 3, 12), EndDate = new DateTime(2018, 4, 12) },
+                new PeriodDate { PeriodId = 4, TermId = 5, StartDate = new DateTime(2018, 4, 13), EndDate = new DateTime(2018, 5, 28) }
+            };
 
-        //PeriodDates = new List<PeriodDate>
-        //        {
-        //            new PeriodDate { PeriodId = 1, TermId = 5, StartDate = new DateTime(2018, 1, 9), EndDate = new DateTime(2018, 2, 9) },
-        //            new PeriodDate { PeriodId = 2, TermId = 5, StartDate = new DateTime(2018, 2, 10), EndDate = new DateTime(2018, 3, 11) },
-        //            new PeriodDate { PeriodId = 3, TermId = 5, StartDate = new DateTime(2018, 3, 12), EndDate = new DateTime(2018, 4, 12) },
-        //            new PeriodDate { PeriodId = 4, TermId = 5, StartDate = new DateTime(2018, 4, 13), EndDate = new DateTime(2018, 5, 8) }
-        //        }
+            // Act and Assert
+            var ex = Assert.Throws<ArgumentException>(() => _periodDateService.AddRange(periodDates));
+            Assert.AreEqual("The period dates must be assigned to the same term.", ex.Message);
+        }
+
+        [Test]
+        public void AddRange_APeriodDateIsOutsideTermDates_ThrowsArgumentException()
+        {
+            // Arrange
+            FakeRepositories.FakeTermRepository.terms.Add(FakeRepositories.FakeTermRepository.spring2018);
+
+            var periodDates = new List<PeriodDate>
+            {
+                new PeriodDate { PeriodId = 1, TermId = 5, StartDate = new DateTime(2018, 1, 9), EndDate = new DateTime(2018, 2, 9) },
+                new PeriodDate { PeriodId = 2, TermId = 5, StartDate = new DateTime(2018, 2, 10), EndDate = new DateTime(2018, 3, 11) },
+                new PeriodDate { PeriodId = 3, TermId = 5, StartDate = new DateTime(2018, 3, 12), EndDate = new DateTime(2018, 4, 12) },
+                new PeriodDate { PeriodId = 4, TermId = 5, StartDate = new DateTime(2018, 4, 13), EndDate = new DateTime(2018, 5, 28) }
+            };
+
+            // Act and Assert
+            var ex = Assert.Throws<ArgumentException>(() => _periodDateService.AddRange(periodDates));
+            Assert.AreEqual("A period date is not between the term star and end dates.", ex.Message);
+        }
+
+        [Test]
+        public void AddRange_APeriodDateStartDateIsGreaterThanEndDate_ThrowsArgumentException()
+        {
+            // Arrange
+            FakeRepositories.FakeTermRepository.terms.Add(FakeRepositories.FakeTermRepository.spring2018);
+
+            var periodDates = new List<PeriodDate>
+            {
+                new PeriodDate { PeriodId = 1, TermId = 5, StartDate = new DateTime(2018, 1, 9), EndDate = new DateTime(2018, 2, 9) },
+                new PeriodDate { PeriodId = 2, TermId = 5, StartDate = new DateTime(2018, 2, 10), EndDate = new DateTime(2018, 3, 11) },
+                new PeriodDate { PeriodId = 3, TermId = 5, StartDate = new DateTime(2018, 3, 12), EndDate = new DateTime(2018, 4, 12) },
+                new PeriodDate { PeriodId = 4, TermId = 5, StartDate = new DateTime(2018, 5, 13), EndDate = new DateTime(2018, 4, 28) }
+            };
+
+            // Act and Assert
+            var ex = Assert.Throws<ArgumentException>(() => _periodDateService.AddRange(periodDates));
+            Assert.AreEqual("A period start date is greater its end date.", ex.Message);
+        }
+
+        [Test]
+        public void AddRange_APeriodDateStartDateIsEqualsToEndDate_ThrowsArgumentException()
+        {
+            // Arrange
+            FakeRepositories.FakeTermRepository.terms.Add(FakeRepositories.FakeTermRepository.spring2018);
+
+            var periodDates = new List<PeriodDate>
+            {
+                new PeriodDate { PeriodId = 1, TermId = 5, StartDate = new DateTime(2018, 1, 9), EndDate = new DateTime(2018, 2, 9) },
+                new PeriodDate { PeriodId = 2, TermId = 5, StartDate = new DateTime(2018, 2, 10), EndDate = new DateTime(2018, 3, 11) },
+                new PeriodDate { PeriodId = 3, TermId = 5, StartDate = new DateTime(2018, 3, 12), EndDate = new DateTime(2018, 4, 12) },
+                new PeriodDate { PeriodId = 4, TermId = 5, StartDate = new DateTime(2018, 4, 28), EndDate = new DateTime(2018, 4, 28) }
+            };
+
+            // Act and Assert
+            var ex = Assert.Throws<ArgumentException>(() => _periodDateService.AddRange(periodDates));
+            Assert.AreEqual("A period start date is equals to its end date.", ex.Message);
+        }
+
+        [Test]
+        public void AddRange_APeriodDateRangeIsBetweenAnotherPeriodDateRange_ThrowsArgumentException()
+        {
+            // Arrange
+            FakeRepositories.FakeTermRepository.terms.Add(FakeRepositories.FakeTermRepository.spring2018);
+
+            var periodDates = new List<PeriodDate>
+            {
+                new PeriodDate { PeriodId = 1, TermId = 5, StartDate = new DateTime(2018, 1, 9), EndDate = new DateTime(2018, 2, 19) },
+                new PeriodDate { PeriodId = 2, TermId = 5, StartDate = new DateTime(2018, 2, 10), EndDate = new DateTime(2018, 3, 11) },
+                new PeriodDate { PeriodId = 3, TermId = 5, StartDate = new DateTime(2018, 3, 12), EndDate = new DateTime(2018, 4, 12) },
+                new PeriodDate { PeriodId = 4, TermId = 5, StartDate = new DateTime(2018, 4, 13), EndDate = new DateTime(2018, 5, 12) }
+            };
+
+            // Act and Assert
+            var ex = Assert.Throws<ArgumentException>(() => _periodDateService.AddRange(periodDates));
+            Assert.AreEqual("A period dates' range ovelaps with another period dates' range.", ex.Message);
+        }
+
+        [Test]
+        public void AddRange_PeriodDatesAreValid_PeriodDatesAddedToReposotory()
+        {
+            // Arrange
+            FakeRepositories.FakeTermRepository.terms.Add(FakeRepositories.FakeTermRepository.spring2018);
+
+            var expected = FakeRepositories.FakePeriodDateRepository.periodDates;
+
+            var periodDates = new List<PeriodDate>
+            {
+                new PeriodDate { PeriodId = 1, TermId = 5, StartDate = new DateTime(2018, 1, 9), EndDate = new DateTime(2018, 2, 9) },
+                new PeriodDate { PeriodId = 2, TermId = 5, StartDate = new DateTime(2018, 2, 10), EndDate = new DateTime(2018, 3, 11) },
+                new PeriodDate { PeriodId = 3, TermId = 5, StartDate = new DateTime(2018, 3, 12), EndDate = new DateTime(2018, 4, 12) },
+                new PeriodDate { PeriodId = 4, TermId = 5, StartDate = new DateTime(2018, 4, 13), EndDate = new DateTime(2018, 5, 8) }
+            };
+
+            // Act
+            _periodDateService.AddRange(periodDates);
+
+            // Assert
+            foreach (var pd in periodDates)
+            {
+                Assert.IsTrue(FakeRepositories.FakePeriodDateRepository.periodDates.Contains(pd));
+            }
+        }
     }
 }

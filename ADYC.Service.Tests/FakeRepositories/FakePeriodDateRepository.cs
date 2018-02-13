@@ -11,7 +11,7 @@ namespace ADYC.Service.Tests.FakeRepositories
 {
     public class FakePeriodDateRepository : IPeriodDateRepository
     {
-        private List<PeriodDate> periodDates;
+        public static List<PeriodDate> periodDates;
 
         public FakePeriodDateRepository()
         {

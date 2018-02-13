@@ -19,14 +19,14 @@ namespace ADYC.Service.Tests.FakeRepositories
             EndDate = new DateTime(2018, 5, 12),
             EnrollmentDeadLine = new DateTime(2018, 1, 13),
             EnrollmentDropDeadLine = new DateTime(2018, 2, 10),
-            IsCurrentTerm = false,
-            PeriodDates = new List<PeriodDate>
-                {
-                    new PeriodDate { PeriodId = 1, TermId = 5, StartDate = new DateTime(2018, 1, 9), EndDate = new DateTime(2018, 2, 9) },
-                    new PeriodDate { PeriodId = 2, TermId = 5, StartDate = new DateTime(2018, 2, 10), EndDate = new DateTime(2018, 3, 11) },
-                    new PeriodDate { PeriodId = 3, TermId = 5, StartDate = new DateTime(2018, 3, 12), EndDate = new DateTime(2018, 4, 12) },
-                    new PeriodDate { PeriodId = 4, TermId = 5, StartDate = new DateTime(2018, 4, 13), EndDate = new DateTime(2018, 5, 8) }
-                }
+            IsCurrentTerm = false//,
+            //PeriodDates = new List<PeriodDate>
+            //    {
+            //        new PeriodDate { PeriodId = 1, TermId = 5, StartDate = new DateTime(2018, 1, 9), EndDate = new DateTime(2018, 2, 9) },
+            //        new PeriodDate { PeriodId = 2, TermId = 5, StartDate = new DateTime(2018, 2, 10), EndDate = new DateTime(2018, 3, 11) },
+            //        new PeriodDate { PeriodId = 3, TermId = 5, StartDate = new DateTime(2018, 3, 12), EndDate = new DateTime(2018, 4, 12) },
+            //        new PeriodDate { PeriodId = 4, TermId = 5, StartDate = new DateTime(2018, 4, 13), EndDate = new DateTime(2018, 5, 8) }
+            //    }
         };
 
         public FakeTermRepository()
