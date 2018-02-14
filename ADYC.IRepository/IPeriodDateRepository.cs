@@ -10,9 +10,5 @@ namespace ADYC.IRepository
     public interface IPeriodDateRepository : IReadOnlyRepository<PeriodDate>, IWriteOnlyRepository<PeriodDate>
     {
         PeriodDate Get(int periodId, int termId);
-        IEnumerable<PeriodDate> GetPeriodDatesForTerm(int termId);
-
-        void Remove(PeriodDate periodDate);
-        void RemoveRange(IEnumerable<PeriodDate> periodDates);
     }
 }
