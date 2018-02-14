@@ -72,10 +72,19 @@
     <Compile Include="Migrations\201801271741329_AddedWithdropFieldToEnrollmentTable.Designer.cs">
       <DependentUpon>201801271741329_AddedWithdropFieldToEnrollmentTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201802140221224_ChangeStartTimeAndEndTimeToAcceptNulls.cs" />
+    <Compile Include="Migrations\201802140221224_ChangeStartTimeAndEndTimeToAcceptNulls.Designer.cs">
+      <DependentUpon>201802140221224_ChangeStartTimeAndEndTimeToAcceptNulls.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802140225495_ChangeStartTimeAndEndTimeToTimeSpanType.cs" />
+    <Compile Include="Migrations\201802140225495_ChangeStartTimeAndEndTimeToTimeSpanType.Designer.cs">
+      <DependentUpon>201802140225495_ChangeStartTimeAndEndTimeToTimeSpanType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -90,6 +99,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201801271741329_AddedWithdropFieldToEnrollmentTable.resx">
       <DependentUpon>201801271741329_AddedWithdropFieldToEnrollmentTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802140221224_ChangeStartTimeAndEndTimeToAcceptNulls.resx">
+      <DependentUpon>201802140221224_ChangeStartTimeAndEndTimeToAcceptNulls.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802140225495_ChangeStartTimeAndEndTimeToTimeSpanType.resx">
+      <DependentUpon>201802140225495_ChangeStartTimeAndEndTimeToTimeSpanType.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

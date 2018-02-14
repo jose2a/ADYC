@@ -17,10 +17,10 @@ namespace ADYC.Data.EntityTypeConfigurations
 
             // properties
             Property(s => s.StartTime)
-                .IsRequired();
+                .IsOptional();
 
             Property(s => s.EndTime)
-                .IsRequired();
+                .IsOptional();
 
             Property(s => s.Day)
                 .IsRequired();

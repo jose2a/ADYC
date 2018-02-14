@@ -25,9 +25,9 @@ namespace ADYC.Service.Tests
             // arrange
             var periodDates = new List<PeriodDate>
             {
-                new PeriodDate { PeriodId = (int) PeriodIds.First, TermId =  1},
-                new PeriodDate { PeriodId = (int) PeriodIds.Second, TermId =  1},
-                new PeriodDate { PeriodId = (int) PeriodIds.Third, TermId =  1},
+                new PeriodDate { PeriodId = 1, TermId =  1},
+                new PeriodDate { PeriodId = 2, TermId =  1},
+                new PeriodDate { PeriodId = 3, TermId =  1},
                 null
             };
 

@@ -7,7 +7,7 @@ namespace ADYC.Data
     public class AdycDbContext : DbContext
     {
         public AdycDbContext()
-            : base("name=ADYC_DbContext")
+            : base("ADYC_DbContext")
         {
 
         }

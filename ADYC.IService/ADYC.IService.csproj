@@ -48,6 +48,7 @@
     <Compile Include="IPeriodDateService.cs" />
     <Compile Include="IPeriodService.cs" />
     <Compile Include="IProfessorService.cs" />
+    <Compile Include="IScheduleService.cs" />
     <Compile Include="IStudentService.cs" />
     <Compile Include="ITermService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
