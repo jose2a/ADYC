@@ -54,6 +54,7 @@
     <Compile Include="GradeRepository.cs" />
     <Compile Include="GroupRepository.cs" />
     <Compile Include="MajorRepository.cs" />
+    <Compile Include="OfferingRepository.cs" />
     <Compile Include="PeriodDateRepository.cs" />
     <Compile Include="PeriodRepository.cs" />
     <Compile Include="ProfessorRepository.cs" />

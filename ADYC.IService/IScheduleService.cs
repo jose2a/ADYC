@@ -9,6 +9,10 @@ namespace ADYC.IService
 {
     public interface IScheduleService
     {
-        void AddRange(IEnumerator<Schedule> schedules);
+        Schedule Get(int id);
+        IEnumerable<Schedule> FindByOfferingId(int offeringId);
+
+        void AddRange(IEnumerable<Schedule> schedules);
+        void Update(IEnumerable<Schedule> schedules);
     }
 }
