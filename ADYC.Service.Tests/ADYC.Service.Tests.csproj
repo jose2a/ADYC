@@ -77,6 +77,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="CourseServiceTest.cs" />
+    <Compile Include="FakeRepositories\FakeOfferingRepository.cs" />
     <Compile Include="FakeRepositories\FakePeriodDateRepository.cs" />
     <Compile Include="FakeRepositories\FakePeriodRepository.cs" />
     <Compile Include="FakeRepositories\FakeScheduleRepository.cs" />
@@ -85,6 +86,8 @@
     <Compile Include="TermServiceTest.cs" />
     <Compile Include="PeriodDateServiceTest.cs" />
     <Compile Include="ScheduleServiceTest.cs" />
+    <Compile Include="TestData.cs" />
+    <Compile Include="OfferingServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

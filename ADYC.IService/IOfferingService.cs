@@ -10,7 +10,8 @@ namespace ADYC.IService
     public interface IOfferingService
     {
         Offering Get(int id);
-                
+        Offering FindByProfessorIdCourseIdAndTermId(Guid professorId, int courseId, int termId);
+
         IEnumerable<Offering> FindByTermName(string termName);
         IEnumerable<Offering> FindByTermId(int termId);
         IEnumerable<Offering> FindByCurrentTerm();
@@ -20,9 +21,9 @@ namespace ADYC.IService
         IEnumerable<Offering> FindByProfessorLastName(string professorLastName);
         IEnumerable<Offering> FindByProfessorId(Guid professorId);
         IEnumerable<Offering> FindByProfessorNameAndTermName(string professorName, string termName);
-        IEnumerable<Offering> FindByProfessorIdCourseIdAndTermId(Guid professorId, int courseId, int termId);
         IEnumerable<Offering> FindByProfessorIdAndTermId(Guid professorId, int termId);
         IEnumerable<Offering> FindByLocation(string location);
+        IEnumerable<Offering> GetAll();
 
         IEnumerable<Enrollment> FindEnrollmentsByOfferingId(int offeringId);
 
