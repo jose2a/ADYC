@@ -66,6 +66,29 @@ namespace ADYC.Service
                 throw new ArgumentNullException("schedules");
             }
 
+            //var previousOffering = _offeringRepository
+            //    .SingleOrDefault(o => o.CourseId == offering.CourseId &&
+            //        o.ProfessorId == offering.ProfessorId &&
+            //        o.TermId == offering.TermId);
+
+            //List<Schedule> overlapedSchedules = null;
+
+            //foreach (var schedule in offering.Schedules)
+            //{
+            //    overlapedSchedules = previousOffering.Schedules
+            //        .Where(s => s.Day == schedule.Day &&
+            //            (
+            //            s.StartTime <= schedule.StartTime && s.EndTime >= schedule.StartTime ||
+            //            s.StartTime <= schedule.EndTime && s.EndTime >= schedule.EndTime
+            //            )
+            //        ).ToList();
+            //}
+
+            //if (previousOffering != null && overlapedSchedules.Count > 0)
+            //{
+            //    throw new PreexistingEntityException("The offering's schedules ovelaped.");
+            //}
+
             var isStartTimeNull = schedules.Count(s => s.StartTime == null);
             var isEndTimeNull = schedules.Count(s => s.EndTime == null);
 

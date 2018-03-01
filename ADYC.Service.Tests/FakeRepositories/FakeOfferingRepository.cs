@@ -57,7 +57,7 @@ namespace ADYC.Service.Tests.FakeRepositories
                 EndDate = new DateTime(2018, 5, 12),
                 EnrollmentDeadLine = new DateTime(2018, 1, 13),
                 EnrollmentDropDeadLine = new DateTime(2018, 2, 10),
-                IsCurrentTerm = false,
+                IsCurrentTerm = true,
                 PeriodDates = new List<PeriodDate>
                 {
                     new PeriodDate { PeriodId = 1, TermId = 5, StartDate = new DateTime(2018, 1, 9), EndDate = new DateTime(2018, 2, 9) },
@@ -81,20 +81,20 @@ namespace ADYC.Service.Tests.FakeRepositories
             new Course() { Id = 3, Name = "Chess", CourseTypeId = courseTypes[0].Id, CourseType = courseTypes[0], IsDeleted = false },
             new Course() { Id = 4, Name = "Computer Lab", CourseTypeId = courseTypes[0].Id, CourseType = courseTypes[0], IsDeleted = false },
             new Course() { Id = 5, Name = "Gym", CourseTypeId = courseTypes[1].Id, CourseType = courseTypes[1], IsDeleted = false },
-            new Course() { Id = 6, Name = "Design", CourseTypeId = courseTypes[0].Id, CourseType = courseTypes[0], IsDeleted = false },
+            new Course() { Id = 6, Name = "Computer Design", CourseTypeId = courseTypes[0].Id, CourseType = courseTypes[0], IsDeleted = false },
             new Course() { Id = 7, Name = "Athlete", CourseTypeId = courseTypes[1].Id, CourseType = courseTypes[1], IsDeleted = false },
             new Course() { Id = 8, Name = "Theater", CourseTypeId = courseTypes[1].Id, CourseType = courseTypes[1], IsDeleted = true },
             new Course() { Id = 9, Name = "Volleyball", CourseTypeId = courseTypes[1].Id, CourseType = courseTypes[1], IsDeleted = true }
-        };
+        };       
 
         public static string[] ProfessorGuids =
         {
             "ba659f66-95d9-4777-b2a1-5ba059859336",
-            "0048356d -b8ef-41d4-8f6c-6971024a7257",
+            "0048356d-b8ef-41d4-8f6c-6971024a7257",
             "07892efb-4009-4979-877f-0f2652b85d8e",
             "86616a3d-d8b4-42bb-a246-05fd8973eb0b",
-            "dbbfb63e -ccb2-4f41-aedf-eef8033af406",
-            "c402ef4e -861f-47c5-9a6a-74d21ac535ae"
+            "dbbfb63e-ccb2-4f41-aedf-eef8033af406",
+            "c402ef4e-861f-47c5-9a6a-74d21ac535ae"
         };
 
         public static List<Professor> professors = new List<Professor>
@@ -119,7 +119,12 @@ namespace ADYC.Service.Tests.FakeRepositories
                 Professor = professors.SingleOrDefault(p => p.FirstName == "John"),
                 ProfessorId = professors.SingleOrDefault(p => p.FirstName == "John").Id,
                 TermId = 3,
-                Term = terms.SingleOrDefault(t => t.Id == 3)
+                Term = terms.SingleOrDefault(t => t.Id == 3),
+                Enrollments = new List<Enrollment>
+                {
+                    new Enrollment { Id = 1 },
+                    new Enrollment { Id = 2 }
+                }
             },
 
             new Offering
@@ -271,6 +276,8 @@ namespace ADYC.Service.Tests.FakeRepositories
             },
         };
 
+        public static int lastOfferingId = 12;
+
         public FakeOfferingRepository()
         {
             
@@ -278,12 +285,17 @@ namespace ADYC.Service.Tests.FakeRepositories
 
         public void Add(Offering entity)
         {
-            throw new NotImplementedException();
+            entity.Id = ++lastOfferingId;
+            offerings.Add(entity);
         }
 
         public void AddRange(IEnumerable<Offering> entities)
         {
-            throw new NotImplementedException();
+            foreach (var o in entities)
+            {
+                o.Id = ++lastOfferingId;
+                offerings.Add(o);
+            }
         }
 
         public void Dispose()
@@ -293,27 +305,27 @@ namespace ADYC.Service.Tests.FakeRepositories
 
         public IEnumerable<Offering> Find(Expression<Func<Offering, bool>> filter = null, Func<IQueryable<Offering>, IOrderedQueryable<Offering>> orderBy = null, string includeProperties = "")
         {
-            throw new NotImplementedException();
+            return offerings.AsQueryable<Offering>().Where(filter);
         }
 
         public Offering Get(int id)
         {
-            throw new NotImplementedException();
+            return offerings.SingleOrDefault(o => o.Id == id);
         }
 
         public IEnumerable<Offering> GetAll(Func<IQueryable<Offering>, IOrderedQueryable<Offering>> orderBy = null, string includeProperties = "")
         {
-            throw new NotImplementedException();
+            return offerings;
         }
 
         public void Remove(Offering entity)
         {
-            throw new NotImplementedException();
+            offerings.Remove(entity);
         }
 
         public void RemoveRange(IEnumerable<Offering> entities)
         {
-            throw new NotImplementedException();
+            offerings.RemoveAll(o => entities.Contains(o));
         }
 
         public void Save()
@@ -323,12 +335,14 @@ namespace ADYC.Service.Tests.FakeRepositories
 
         public Offering SingleOrDefault(Expression<Func<Offering, bool>> filter = null)
         {
-            throw new NotImplementedException();
+            return offerings.AsQueryable<Offering>().SingleOrDefault(filter);
         }
 
         public void Update(Offering entity)
         {
-            throw new NotImplementedException();
+            var offering = this.SingleOrDefault(o => o.Id == entity.Id);
+            offerings.Remove(offering);
+            offerings.Add(offering);
         }
     }
 }
