@@ -13,33 +13,22 @@ namespace ADYC.Service.Tests
     [TestFixture]
     public class CourseServiceTest
     {
-        private Mock<ICourseRepository> _courseRepositoryMock;
+        private Mock<ICourseRepository> _courseRepository;
         private List<Course> _courses;
-        private List<CourseType> _courseTypes;
+        private CourseType _internalCT = TestData.internalCT;
+        private CourseType _externalCT = TestData.externalCT;
 
         [SetUp]
         public void SetUp()
         {
-            _courseTypes = new List<CourseType>()
-            {
-                new CourseType() { Id = 1, Name = "Internal" },
-                new CourseType() { Id = 2, Name = "External" }
-            };
+            _courses = new List<Course> (TestData.Courses);
+            _courseRepository = new Mock<ICourseRepository>();
+        }
 
-            _courses = new List<Course>()
-            {
-                new Course() { Id = 1, Name = "Baseball", CourseTypeId = _courseTypes[0].Id, CourseType = _courseTypes[0], IsDeleted = false },
-                new Course() { Id = 2, Name = "Basketball", CourseTypeId = _courseTypes[1].Id, CourseType = _courseTypes[1], IsDeleted = false },
-                new Course() { Id = 3, Name = "Chess", CourseTypeId = _courseTypes[0].Id, CourseType = _courseTypes[0], IsDeleted = false },
-                new Course() { Id = 4, Name = "Computer Lab", CourseTypeId = _courseTypes[0].Id, CourseType = _courseTypes[0], IsDeleted = false },
-                new Course() { Id = 5, Name = "Gym", CourseTypeId = _courseTypes[1].Id, CourseType = _courseTypes[1], IsDeleted = false },
-                new Course() { Id = 6, Name = "Design", CourseTypeId = _courseTypes[0].Id, CourseType = _courseTypes[0], IsDeleted = false },                
-                new Course() { Id = 7, Name = "Athlete", CourseTypeId = _courseTypes[1].Id, CourseType = _courseTypes[1], IsDeleted = false },
-                new Course() { Id = 8, Name = "Theater", CourseTypeId = _courseTypes[1].Id, CourseType = _courseTypes[1], IsDeleted = true },
-                new Course() { Id = 9, Name = "Volleyball", CourseTypeId = _courseTypes[1].Id, CourseType = _courseTypes[1], IsDeleted = true }
-            };
-
-            _courseRepositoryMock = new Mock<ICourseRepository>();
+        [TearDown]
+        public void TearDown()
+        {
+            _courses = TestData.Courses;
         }
 
         [Test]
@@ -47,33 +36,33 @@ namespace ADYC.Service.Tests
         {
             // arrange
             var expectedId = 10;
-            var expectedCourse = new Course() { Id = expectedId, Name = "Swimming", CourseType = _courseTypes[1], CourseTypeId = _courseTypes[1].Id, IsDeleted = false };
+            var courseToAdd = new Course() { Id = expectedId, Name = "Swimming", CourseType = _externalCT, CourseTypeId = _externalCT.Id, IsDeleted = false };
 
-            var courseToAdd = expectedCourse;
-            courseToAdd.Id = expectedId;
+            //var courseToAdd = expectedCourse;
 
-            _courseRepositoryMock.Setup(m => m.Add(It.IsAny<Course>()))
+            _courseRepository.Setup(m => m.Add(It.IsAny<Course>()))
                 .Callback((Course c) => {
                     c.Id = expectedId;
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act
             courseService.Add(courseToAdd);
 
             // assert
-            Assert.AreEqual(expectedId, courseToAdd.Id);
-            Assert.AreEqual(expectedCourse, courseToAdd);
+            _courseRepository.Verify(cr => cr.Add(courseToAdd));
+
+            Assert.That(courseToAdd.Id, Is.EqualTo(expectedId));
         }
 
         [Test]
         public void Add_CourseIsNull_ArgumentNullExceptionWillBeThrown()
         {
             // arrange
-            _courseRepositoryMock.Setup(m => m.Add(It.IsAny<Course>())).Callback(() => {});
+            _courseRepository.Setup(m => m.Add(It.IsAny<Course>())).Callback(() => {});
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act and assert
             Assert.Throws<ArgumentNullException>(() => courseService.Add(null));
@@ -83,9 +72,9 @@ namespace ADYC.Service.Tests
         public void Add_CourseAlreadyExist_PreexistingEntityExceptionWillBeThrown()
         {
             // arrange
-            var courseToAdd = new Course() { Id = 5, Name = "Gym", CourseTypeId = _courseTypes[1].Id, CourseType = _courseTypes[1], IsDeleted = false };
+            var courseToAdd = new Course() { Id = 5, Name = "Gym", CourseTypeId = _externalCT.Id, CourseType = _externalCT, IsDeleted = false };
 
-            _courseRepositoryMock.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
+            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
                 .Returns(() => {
                     return new List<Course>
                     {
@@ -93,10 +82,11 @@ namespace ADYC.Service.Tests
                     };
                 });            
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act and assert
             Assert.Throws<PreexistingEntityException>(() => courseService.Add(courseToAdd));
+            _courseRepository.Verify(cr => cr.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""));
         }
 
         [Test]
@@ -104,9 +94,9 @@ namespace ADYC.Service.Tests
         {
             // arrange
             var newCourses = new List<Course> {
-                new Course() { Name = "Swimming", CourseType = _courseTypes[0], CourseTypeId = _courseTypes[0].Id, IsDeleted = false },
-                new Course() { Name = "Cards", CourseType = _courseTypes[0], CourseTypeId = _courseTypes[0].Id, IsDeleted = false },
-                new Course() { Name = "Hockey", CourseType = _courseTypes[1], CourseTypeId = _courseTypes[1].Id, IsDeleted = false }
+                new Course() { Name = "Swimming", CourseType = _internalCT, CourseTypeId = _internalCT.Id, IsDeleted = false },
+                new Course() { Name = "Cards", CourseType = _internalCT, CourseTypeId = _internalCT.Id, IsDeleted = false },
+                new Course() { Name = "Hockey", CourseType = _externalCT, CourseTypeId = _externalCT.Id, IsDeleted = false }
             };
 
             var expectedIds = new int[] { 10, 11, 12 };            
@@ -122,14 +112,14 @@ namespace ADYC.Service.Tests
             expectedNewCourses[1].Id = expectedIds[1];
             expectedNewCourses[2].Id = expectedIds[2];
 
-            _courseRepositoryMock.Setup(m => m.AddRange(It.IsAny<IEnumerable<Course>>()))
+            _courseRepository.Setup(m => m.AddRange(It.IsAny<IEnumerable<Course>>()))
                 .Callback((IEnumerable<Course> courses) => {
                     ((List<Course>)courses)[0].Id = expectedIds[0];
                     ((List<Course>)courses)[1].Id = expectedIds[1];
                     ((List<Course>)courses)[2].Id = expectedIds[2];
                 });
             
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act
             courseService.AddRange(newCourses);
@@ -142,11 +132,11 @@ namespace ADYC.Service.Tests
         public void AddRange_CoursesListIsEmptyOrNull_ArgumentNullExceptionWillBeThrown()
         {
             // arrange
-            _courseRepositoryMock.Setup(m => m.AddRange(It.IsAny<IEnumerable<Course>>()))
+            _courseRepository.Setup(m => m.AddRange(It.IsAny<IEnumerable<Course>>()))
                 .Callback(() => {
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act and assert
             Assert.Throws<ArgumentNullException>(() => courseService.AddRange(null));
@@ -157,12 +147,12 @@ namespace ADYC.Service.Tests
         {
             // arrange
             var newCourses = new List<Course> {
-                new Course() { Name = "Swimming", CourseType = _courseTypes[0], CourseTypeId = _courseTypes[0].Id, IsDeleted = false },
-                new Course() { Name = "Chess", CourseType = _courseTypes[0], CourseTypeId = _courseTypes[0].Id, IsDeleted = false },
-                new Course() { Name = "Hockey", CourseType = _courseTypes[1], CourseTypeId = _courseTypes[1].Id, IsDeleted = false }
+                new Course() { Name = "Swimming", CourseType = _internalCT, CourseTypeId = _internalCT.Id, IsDeleted = false },
+                new Course() { Name = "Chess", CourseType = _internalCT, CourseTypeId = _internalCT.Id, IsDeleted = false },
+                new Course() { Name = "Hockey", CourseType = _externalCT, CourseTypeId = _externalCT.Id, IsDeleted = false }
             };
 
-            _courseRepositoryMock.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
+            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
                 .Returns(() => {
                     return new List<Course>()
                     {
@@ -170,7 +160,7 @@ namespace ADYC.Service.Tests
                     };
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act and assert
             Assert.Throws<PreexistingEntityException>(() => courseService.AddRange(newCourses));
@@ -180,7 +170,7 @@ namespace ADYC.Service.Tests
         public void FindByCourseType_InternalCourseType_ListOfCoursesInternalType()
         {
             // arrange
-            var courseType = _courseTypes[0]; // internal type
+            //var courseType = _courseTypes[0]; // internal type
 
             var expectedCourses = new List<Course>
             {
@@ -190,15 +180,15 @@ namespace ADYC.Service.Tests
                 _courses.SingleOrDefault(c => c.Id == 6)
             };
 
-            _courseRepositoryMock.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
+            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
                 .Returns(() => {
-                    return _courses.Where(c => c.CourseTypeId == courseType.Id);
+                    return _courses.Where(c => c.CourseTypeId == _internalCT.Id);
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act
-            var resultCourses = courseService.FindByCourseType(courseType);
+            var resultCourses = courseService.FindByCourseType(_internalCT);
 
             // assert
             Assert.AreEqual(expectedCourses, resultCourses);
@@ -210,12 +200,12 @@ namespace ADYC.Service.Tests
             // arrange
             var newCourseType = new CourseType() { Id = 3, Name = "New type" };
 
-            _courseRepositoryMock.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
+            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
                 .Returns(() => {
                     return new List<Course>();
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act
             var result = courseService.FindByCourseType(newCourseType);
@@ -228,12 +218,12 @@ namespace ADYC.Service.Tests
         public void FindByCourseType_CourseTypeIsNull_ArgumentNullExceptionWillBeThrown()
         {
             // arrange
-            _courseRepositoryMock.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
+            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
                 .Returns(() => {
                     return new List<Course>();
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act and assert
             Assert.Throws<ArgumentNullException>(() => courseService.FindByCourseType(null));
@@ -251,12 +241,12 @@ namespace ADYC.Service.Tests
                 _courses[1]
             };
 
-            _courseRepositoryMock.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
+            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
                 .Returns(() => {
                     return _courses.Where(c => c.Name.Contains("Bas"));
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act
             var result = courseService.FindByName(courseNameToFind);
@@ -271,12 +261,12 @@ namespace ADYC.Service.Tests
             // arrange
             var courseName = "Drawing";
 
-            _courseRepositoryMock.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
+            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
                 .Returns(() => {
                     return new List<Course>();
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act
             var result = courseService.FindByName(courseName);
@@ -289,12 +279,12 @@ namespace ADYC.Service.Tests
         public void FindByName_CourseNameIsEmpty_ThrowsArgumentNullException()
         {
             // arrange
-            _courseRepositoryMock.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
+            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
                 .Returns(() => {
                     return new List<Course>();
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act and assert
             Assert.Throws<ArgumentNullException>(() => courseService.FindByName(string.Empty));
@@ -310,12 +300,12 @@ namespace ADYC.Service.Tests
                 _courses.SingleOrDefault(c => c.Id == 9)
             };
 
-            _courseRepositoryMock.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), It.IsAny<Func<IQueryable<Course>, IOrderedQueryable<Course>>>(), ""))
+            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), It.IsAny<Func<IQueryable<Course>, IOrderedQueryable<Course>>>(), ""))
                 .Returns(() => {
                     return _courses.Where(c => c.IsDeleted == true).OrderBy(c => c.Id);
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act
             var result = courseService.FindSoftDeletedCourses();
@@ -332,12 +322,12 @@ namespace ADYC.Service.Tests
 
             var expectedCourse = _courses.SingleOrDefault(c => c.Id == 3);
 
-            _courseRepositoryMock.Setup(m => m.Get(It.IsAny<int>()))
+            _courseRepository.Setup(m => m.Get(It.IsAny<int>()))
                 .Returns(() => {
                     return _courses.SingleOrDefault(c => c.Id == id);
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act
             var result = courseService.Get(id);
@@ -352,9 +342,9 @@ namespace ADYC.Service.Tests
             // arrange
             var id = 30;
 
-            _courseRepositoryMock.Setup(m => m.Get(It.IsAny<int>())).Returns(() => { return null; });
+            _courseRepository.Setup(m => m.Get(It.IsAny<int>())).Returns(() => { return null; });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act and assert
             Assert.Throws<NonexistingEntityException>(() => courseService.Get(id));
@@ -366,12 +356,12 @@ namespace ADYC.Service.Tests
             // arrange
             var expectedCourses = _courses;
 
-            _courseRepositoryMock.Setup(m => m.GetAll(It.IsAny<Func<IQueryable<Course>, IOrderedQueryable<Course>>>(), ""))
+            _courseRepository.Setup(m => m.GetAll(It.IsAny<Func<IQueryable<Course>, IOrderedQueryable<Course>>>(), ""))
                 .Returns(() => {
                     return _courses;
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act 
             var result = courseService.GetAll();
@@ -386,12 +376,12 @@ namespace ADYC.Service.Tests
             // arrange
             var expectedCourses = new List<Course>(_courses.Where(c => c.IsDeleted == false).ToList());
 
-            _courseRepositoryMock.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), It.IsAny<Func<IQueryable<Course>, IOrderedQueryable<Course>>>(), ""))
+            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), It.IsAny<Func<IQueryable<Course>, IOrderedQueryable<Course>>>(), ""))
                 .Returns(() => {
                     return _courses.Where(c => c.IsDeleted == false);
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act 
             var result = courseService.FindNotSoftDeletedCourses();
@@ -404,13 +394,13 @@ namespace ADYC.Service.Tests
         public void Remove_WhenCalled_CourseIsRemovedFromTheList()
         {
             // arrange
-            var courseToRemove = _courses.SingleOrDefault(c => c.Id == 3);
+            var courseToRemove = _courses.SingleOrDefault(c => c.Id == 4);
 
             var expectedCourses = new List<Course>()
             {
                 _courses.SingleOrDefault(c => c.Id == 1),
                 _courses.SingleOrDefault(c => c.Id == 2),
-                _courses.SingleOrDefault(c => c.Id == 4),
+                _courses.SingleOrDefault(c => c.Id == 3),
                 _courses.SingleOrDefault(c => c.Id == 5),
                 _courses.SingleOrDefault(c => c.Id == 6),
                 _courses.SingleOrDefault(c => c.Id == 7),
@@ -418,29 +408,29 @@ namespace ADYC.Service.Tests
                 _courses.SingleOrDefault(c => c.Id == 9)
             };
 
-            _courseRepositoryMock.Setup(m => m.Remove(It.IsAny<Course>()))
+            _courseRepository.Setup(m => m.Remove(It.IsAny<Course>()))
                 .Callback((Course course) => {
                     _courses.Remove(course);
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act 
             courseService.Remove(courseToRemove);
 
             // assert
-            Assert.AreEqual(expectedCourses, _courses);
+            Assert.That(_courses, Does.Not.Contain(courseToRemove));
         }
 
         [Test]
         public void Remove_CourseIsNull_ArgumentNullExceptionWillBeThrown()
         {
             // arrange
-            _courseRepositoryMock.Setup(m => m.Remove(It.IsAny<Course>()))
+            _courseRepository.Setup(m => m.Remove(It.IsAny<Course>()))
                 .Callback(() => {
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act and assert
             Assert.Throws<ArgumentNullException>(() => courseService.Remove(null));
@@ -453,11 +443,11 @@ namespace ADYC.Service.Tests
             var courseToRemove = _courses.SingleOrDefault(c => c.Id == 3);
             courseToRemove.Offerings.Add(new Offering());
 
-            _courseRepositoryMock.Setup(m => m.Remove(It.IsAny<Course>()))
+            _courseRepository.Setup(m => m.Remove(It.IsAny<Course>()))
                 .Callback(() => {
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act and assert
             Assert.Throws<ForeignKeyEntityException>(() => courseService.Remove(courseToRemove));
@@ -471,32 +461,33 @@ namespace ADYC.Service.Tests
             {
                 _courses.SingleOrDefault(c => c.Id == 1),
                 _courses.SingleOrDefault(c => c.Id == 2),
-                _courses.SingleOrDefault(c => c.Id == 4),
+                _courses.SingleOrDefault(c => c.Id == 3),
                 _courses.SingleOrDefault(c => c.Id == 7),
                 _courses.SingleOrDefault(c => c.Id == 8),
                 _courses.SingleOrDefault(c => c.Id == 9)
             };
 
-            var IdsToRemove = new int[] { 3, 5, 6 };
+            var IdsToRemove = new int[] { 5, 6 };
 
             var coursesToRemove = new List<Course> {
-                _courses.SingleOrDefault(c => c.Id == 3),
                 _courses.SingleOrDefault(c => c.Id == 5),
                 _courses.SingleOrDefault(c => c.Id == 6)
             };
 
-            _courseRepositoryMock.Setup(m => m.RemoveRange(It.IsAny<IEnumerable<Course>>()))
+            _courseRepository.Setup(m => m.RemoveRange(It.IsAny<IEnumerable<Course>>()))
                 .Callback((IEnumerable<Course> courses) => {
                     _courses.RemoveAll(c => IdsToRemove.Contains(c.Id));
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act
             courseService.RemoveRange(coursesToRemove);
 
             // assert
-            Assert.AreEqual(expectedCourses, _courses);
+            //Assert.AreEqual(expectedCourses, _courses);
+            Assert.That(_courses, Does.Not.Contain(coursesToRemove[0]));
+            Assert.That(_courses, Does.Not.Contain(coursesToRemove[1]));
         }
 
         [Test]
@@ -505,11 +496,11 @@ namespace ADYC.Service.Tests
             // arrange
             var coursesToRemove = new List<Course>();
 
-            _courseRepositoryMock.Setup(m => m.RemoveRange(It.IsAny<IEnumerable<Course>>()))
+            _courseRepository.Setup(m => m.RemoveRange(It.IsAny<IEnumerable<Course>>()))
                 .Callback((IEnumerable<Course> courses) => {
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act and assert
             Assert.Throws<ArgumentNullException>(() => courseService.RemoveRange(coursesToRemove));
@@ -528,11 +519,11 @@ namespace ADYC.Service.Tests
 
             coursesToRemove[0].Offerings.Add(new Offering());
 
-            _courseRepositoryMock.Setup(m => m.RemoveRange(It.IsAny<IEnumerable<Course>>()))
+            _courseRepository.Setup(m => m.RemoveRange(It.IsAny<IEnumerable<Course>>()))
                 .Callback((IEnumerable<Course> courses) => {
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act and assert
             Assert.Throws<ForeignKeyEntityException>(() => courseService.RemoveRange(coursesToRemove));
@@ -548,12 +539,12 @@ namespace ADYC.Service.Tests
             var expectedCourse = courseToRemove;
             expectedCourse.IsDeleted = true;
 
-            _courseRepositoryMock.Setup(m => m.Update(It.IsAny<Course>()))
+            _courseRepository.Setup(m => m.Update(It.IsAny<Course>()))
                 .Callback((Course course) => {
                     course.IsDeleted = true;
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act 
             courseService.SoftDelete(courseToRemove);
@@ -567,11 +558,11 @@ namespace ADYC.Service.Tests
         public void SoftDelete_CourseIsNull_ArgumentNullExceptionWillBeThrown()
         {
             // arrange
-            _courseRepositoryMock.Setup(m => m.Update(It.IsAny<Course>()))
+            _courseRepository.Setup(m => m.Update(It.IsAny<Course>()))
                 .Callback(() => {
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act and assert
             Assert.Throws<ArgumentNullException>(() => courseService.SoftDelete(null));
@@ -599,12 +590,12 @@ namespace ADYC.Service.Tests
                 _courses.SingleOrDefault(c => c.Id == 6)
             };
 
-            _courseRepositoryMock.Setup(m => m.Update(It.IsAny<Course>()))
+            _courseRepository.Setup(m => m.Update(It.IsAny<Course>()))
                 .Callback((Course courseToUpdate) => {
                     courseToUpdate.IsDeleted = true;
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act
             courseService.SoftDeleteRange(coursesToRemove);
@@ -619,12 +610,12 @@ namespace ADYC.Service.Tests
             // arrange
             var coursesToRemove = new List<Course>();
 
-            _courseRepositoryMock.Setup(m => m.Update(It.IsAny<Course>()))
+            _courseRepository.Setup(m => m.Update(It.IsAny<Course>()))
                 .Callback((Course courseToUpdate) => {
                     courseToUpdate.IsDeleted = true;
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act and assert
             Assert.Throws<ArgumentNullException>(() => courseService.SoftDeleteRange(coursesToRemove));
@@ -641,17 +632,17 @@ namespace ADYC.Service.Tests
             var expectedCourse = courseToUpdate;
             expectedCourse.Name = "Gymnastic";
 
-            _courseRepositoryMock.Setup(m => m.Get(It.IsAny<int>()))
+            _courseRepository.Setup(m => m.Get(It.IsAny<int>()))
                 .Returns(() => {
                     return new Course();
                 });
 
-            _courseRepositoryMock.Setup(m => m.Update(It.IsAny<Course>()))
+            _courseRepository.Setup(m => m.Update(It.IsAny<Course>()))
                 .Callback((Course course) => {
                     course.Name = "Gymnastic";
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act
             courseService.Update(courseToUpdate);
@@ -665,14 +656,14 @@ namespace ADYC.Service.Tests
         {
             // arrange
             var courseId = 15;
-            var newCourse = new Course() { Id = courseId, Name = "Gymnastic", CourseTypeId = _courseTypes[1].Id, CourseType = _courseTypes[1], IsDeleted = true };            
+            var newCourse = new Course() { Id = courseId, Name = "Gymnastic", CourseTypeId = _externalCT.Id, CourseType = _externalCT, IsDeleted = true };            
 
-            _courseRepositoryMock.Setup(m => m.Get(It.IsAny<int>()))
+            _courseRepository.Setup(m => m.Get(It.IsAny<int>()))
                 .Returns(() => {
                     return null;
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act and assert
             Assert.Throws<NonexistingEntityException>(() => courseService.Update(newCourse));
@@ -682,17 +673,17 @@ namespace ADYC.Service.Tests
         public void Update_CourseIsNull_ArgumentNullExceptionWillBeThrown()
         {
             // arrange
-            _courseRepositoryMock.Setup(m => m.Get(It.IsAny<int>()))
+            _courseRepository.Setup(m => m.Get(It.IsAny<int>()))
                 .Returns(() => {
                     return null;
                 });
 
-            _courseRepositoryMock.Setup(m => m.Update(It.IsAny<Course>()))
+            _courseRepository.Setup(m => m.Update(It.IsAny<Course>()))
                 .Callback((Course courseToUpdate) => {
                     courseToUpdate.IsDeleted = true;
                 });
 
-            var courseService = new CourseService(_courseRepositoryMock.Object);
+            var courseService = new CourseService(_courseRepository.Object);
 
             // act and assert
             Assert.Throws<ArgumentNullException>(() => courseService.Update(null));

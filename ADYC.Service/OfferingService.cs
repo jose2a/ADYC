@@ -50,7 +50,7 @@ namespace ADYC.Service
             //}
         }
 
-        private static void ValidateOffering(Offering offering)
+        private void ValidateOffering(Offering offering)
         {
             if (offering == null)
             {

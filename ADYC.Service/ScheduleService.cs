@@ -59,38 +59,48 @@ namespace ADYC.Service
             }
         }
 
-        private static void ValidateSchedules(IEnumerable<Schedule> schedules)
+        private void ValidateSchedules(IEnumerable<Schedule> schedulesToAdd)
         {
-            if (schedules.Contains(null))
+            if (schedulesToAdd.Contains(null))
             {
                 throw new ArgumentNullException("schedules");
             }
 
-            //var previousOffering = _offeringRepository
-            //    .SingleOrDefault(o => o.CourseId == offering.CourseId &&
-            //        o.ProfessorId == offering.ProfessorId &&
-            //        o.TermId == offering.TermId);
+            var offeringForSchedules = schedulesToAdd.Select(s => s.Offering).Distinct().SingleOrDefault();
 
-            //List<Schedule> overlapedSchedules = null;
+            var schedulesByProfessorAndTerm = _scheduleRepository
+                .Find(s => s.Offering.ProfessorId == offeringForSchedules.ProfessorId &&
+                    s.Offering.TermId == offeringForSchedules.TermId);
 
-            //foreach (var schedule in offering.Schedules)
-            //{
-            //    overlapedSchedules = previousOffering.Schedules
-            //        .Where(s => s.Day == schedule.Day &&
-            //            (
-            //            s.StartTime <= schedule.StartTime && s.EndTime >= schedule.StartTime ||
-            //            s.StartTime <= schedule.EndTime && s.EndTime >= schedule.EndTime
-            //            )
-            //        ).ToList();
-            //}
+            List<Schedule> overlapedSchedules = new List<Schedule>();
 
-            //if (previousOffering != null && overlapedSchedules.Count > 0)
-            //{
-            //    throw new PreexistingEntityException("The offering's schedules ovelaped.");
-            //}
+            foreach (var schedule in schedulesToAdd)
+            {
+                var foundSchedule = schedulesByProfessorAndTerm
+                    .Where(s => s.Day == schedule.Day &&
+                        (s.StartTime <= schedule.StartTime && s.EndTime >= schedule.StartTime ||
+                        s.StartTime <= schedule.EndTime && s.EndTime >= schedule.EndTime));
 
-            var isStartTimeNull = schedules.Count(s => s.StartTime == null);
-            var isEndTimeNull = schedules.Count(s => s.EndTime == null);
+                if (foundSchedule != null)
+                {
+                    overlapedSchedules.AddRange(foundSchedule);
+                }
+            }
+
+            if (overlapedSchedules.Count > 0)
+            {
+                var message = "The following schedules overlap:\n";
+
+                foreach (var s in overlapedSchedules)
+                {
+                    message += $"{s.Day.ToString()} : {s.StartTime} - {s.EndTime} \n";
+                }
+
+                throw new PreexistingEntityException($"The offering's schedules overlaped.\n {message}");
+            }
+
+            var isStartTimeNull = schedulesToAdd.Count(s => s.StartTime == null);
+            var isEndTimeNull = schedulesToAdd.Count(s => s.EndTime == null);
 
             if (isStartTimeNull > 0 && isEndTimeNull > 0)
             {
@@ -107,14 +117,14 @@ namespace ADYC.Service
                 throw new ArgumentNullException("schedule:EndTime");
             }
 
-            var areEquals = schedules.Where(s => s.StartTime.Equals(s.EndTime));
+            var areEquals = schedulesToAdd.Where(s => s.StartTime.Equals(s.EndTime));
 
             if (areEquals.Count() > 0)
             {
                 throw new ArgumentException("Schedule for " + areEquals.FirstOrDefault().Day.ToString() + ", the start time and end time are equal.");
             }
 
-            var isEndTimeBeforeStart = schedules.Where(s => s.StartTime > s.EndTime);
+            var isEndTimeBeforeStart = schedulesToAdd.Where(s => s.StartTime > s.EndTime);
 
             if (isEndTimeBeforeStart.Count() > 0)
             {

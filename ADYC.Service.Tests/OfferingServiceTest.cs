@@ -25,7 +25,7 @@ namespace ADYC.Service.Tests
         public void FindByCourseId_WhenCalled_ReturnsAllOfferingsForGivenCourseId()
         {
             var courseId = 5;
-            var professor = FakeOfferingRepository.professors[4];
+            var professor = FakeOfferingRepository.oliverQueen;
 
             var result = _offeringServ.FindByCourseId(courseId);
 
@@ -38,7 +38,7 @@ namespace ADYC.Service.Tests
         public void FindByCourseName_WhenCalled_ReturnsOfferingsThatContainThisName()
         {
             var courseName = "Computer";
-            var expectedOffering = FakeOfferingRepository.offerings[0];
+            var expectedOffering = FakeOfferingRepository.computerLabJohnDSpring2017;
 
             var result = _offeringServ.FindByCourseName(courseName);
 
@@ -50,7 +50,7 @@ namespace ADYC.Service.Tests
         [Test]
         public void FindByCurrentTerm_WhenCalled_ReturnsOfferingsForCurrentTerm()
         {
-            var expectedOffering = FakeOfferingRepository.offerings[11];
+            var expectedOffering = FakeOfferingRepository.computerLabJaneDSpring2018;
 
             var result = _offeringServ.FindByCurrentTerm();
 
@@ -62,22 +62,23 @@ namespace ADYC.Service.Tests
         [Test]
         public void FindByProfessorId_WhenCalled_ReturnsOfferingsForThisProfessor()
         {
-            var expectedOffering = FakeOfferingRepository.offerings[10];
+            var expectedOffering = FakeOfferingRepository.gymOliverQSpring2018;
+            var professorGuid = FakeOfferingRepository.oliverQueen.Id;
 
-            var result = _offeringServ.FindByProfessorId(new System.Guid("ba659f66-95d9-4777-b2a1-5ba059859336"));
+            var result = _offeringServ.FindByProfessorId(professorGuid);
 
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Count(), Is.EqualTo(1));
+            Assert.That(result.Count(), Is.EqualTo(3));
             Assert.That(result, Does.Contain(expectedOffering));
         }
         
         [Test]
         public void FindByProfessorIdAndTermId_WhenCalled_ReturnsOfferingsForTheseProfessorAndTerm()
         {
-            var expectedOffering = FakeOfferingRepository.offerings[3];
+            var expectedOffering = FakeOfferingRepository.computerLabJohnDSpring2017;
 
-            var professorGuid = new System.Guid("0048356d-b8ef-41d4-8f6c-6971024a7257");
-            var termId = 3;
+            var professorGuid = FakeOfferingRepository.johnDoe.Id;
+            var termId = FakeOfferingRepository.spring2017.Id;
 
             var result = _offeringServ.FindByProfessorIdAndTermId(professorGuid, termId);
 
@@ -89,11 +90,11 @@ namespace ADYC.Service.Tests
         [Test]
         public void FindByProfessorIdCourseIdAndTermId_WhenCalled_ReturnsOfferingsForTheseProfessorCourseAndTerm()
         {
-            var expectedOffering = FakeOfferingRepository.offerings[4];
+            var expectedOffering = FakeOfferingRepository.computerLabJonhDFall2017;
 
-            var professorGuid = new System.Guid("0048356d-b8ef-41d4-8f6c-6971024a7257");
+            var professorGuid = FakeOfferingRepository.johnDoe.Id;
             var courseId = 4;
-            var termId = 4;
+            var termId = FakeOfferingRepository.fall2017.Id;
 
             var result = _offeringServ.FindByProfessorIdCourseIdAndTermId(professorGuid, courseId, termId);
 
@@ -124,16 +125,20 @@ namespace ADYC.Service.Tests
         [Test]
         public void Add_OfferingLocationIsEmpty_ThrowsArgumentNullException()
         {
+            var course = FakeOfferingRepository.chess;
+            var professor = FakeOfferingRepository.peterParker;
+            var term = FakeOfferingRepository.spring2018;
+
             // Id course 3
             var offering = new Offering
             {
                 OfferingDays = 2,
-                Course = FakeOfferingRepository.courses.SingleOrDefault(c => c.Id == 3),
-                CourseId = 3,
-                Professor = FakeOfferingRepository.professors.SingleOrDefault(p => p.FirstName == "Peter"),
-                ProfessorId = FakeOfferingRepository.professors.SingleOrDefault(p => p.FirstName == "Peter").Id,
-                TermId = 5,
-                Term = FakeOfferingRepository.terms.SingleOrDefault(t => t.Id == 5)
+                Course = FakeOfferingRepository.chess,
+                CourseId = course.Id,
+                Professor = professor,
+                ProfessorId = professor.Id,
+                Term = term,
+                TermId = term.Id                
             };
 
             var ex = Assert.Throws<ArgumentException>(() => _offeringServ.Add(offering));
@@ -143,15 +148,18 @@ namespace ADYC.Service.Tests
         [Test]
         public void Add_OfferingProfessorIsNull_ThrowsArgumentNullException()
         {
+            var course = FakeOfferingRepository.chess;
+            var term = FakeOfferingRepository.spring2018;
+
             // Id course 3
             var offering = new Offering
             {
                 Location = "Library",
                 OfferingDays = 2,
-                Course = FakeOfferingRepository.courses.SingleOrDefault(c => c.Id == 3),
-                CourseId = 3,
-                TermId = 5,
-                Term = FakeOfferingRepository.terms.SingleOrDefault(t => t.Id == 5)
+                Course = course,
+                CourseId = course.Id,
+                TermId = term.Id,
+                Term = term
             };
 
             var ex = Assert.Throws<ArgumentException>(() => _offeringServ.Add(offering));
@@ -161,15 +169,18 @@ namespace ADYC.Service.Tests
         [Test]
         public void Add_OfferingCourseIsNull_ThrowsArgumentNullException()
         {
+            var professor = FakeOfferingRepository.peterParker;
+            var term = FakeOfferingRepository.spring2018;
+
             // Id course 3
             var offering = new Offering
             {
                 Location = "Library",
                 OfferingDays = 2,
-                Professor = FakeOfferingRepository.professors.SingleOrDefault(p => p.FirstName == "Peter"),
-                ProfessorId = FakeOfferingRepository.professors.SingleOrDefault(p => p.FirstName == "Peter").Id,
-                TermId = 5,
-                Term = FakeOfferingRepository.terms.SingleOrDefault(t => t.Id == 5)
+                Professor = professor,
+                ProfessorId = professor.Id,
+                TermId = term.Id,
+                Term = term
             };
 
             var ex = Assert.Throws<ArgumentException>(() => _offeringServ.Add(offering));
@@ -179,15 +190,18 @@ namespace ADYC.Service.Tests
         [Test]
         public void Add_OfferingTermIsNull_ThrowsArgumentNullException()
         {
+            var course = FakeOfferingRepository.chess;
+            var professor = FakeOfferingRepository.peterParker;
+
             // Id course 3
             var offering = new Offering
             {
                 Location = "Library",
                 OfferingDays = 2,
-                Course = FakeOfferingRepository.courses.SingleOrDefault(c => c.Id == 3),
-                CourseId = 3,
-                Professor = FakeOfferingRepository.professors.SingleOrDefault(p => p.FirstName == "Peter"),
-                ProfessorId = FakeOfferingRepository.professors.SingleOrDefault(p => p.FirstName == "Peter").Id
+                Course = course,
+                CourseId = course.Id,
+                Professor = professor,
+                ProfessorId = professor.Id
             };
 
             var ex = Assert.Throws<ArgumentException>(() => _offeringServ.Add(offering));
@@ -197,20 +211,21 @@ namespace ADYC.Service.Tests
         [Test]
         public void Add_OfferingProfessorIsDeleted_ThrowsNonexistingEntityException()
         {
-            // Id course 3
-            var professor = FakeOfferingRepository.professors.SingleOrDefault(p => p.FirstName == "Peter");
+            var course = FakeOfferingRepository.chess;
+            var term = FakeOfferingRepository.spring2018;
+            var professor = FakeOfferingRepository.peterParker;
             professor.IsDeleted = true;
 
             var offering = new Offering
             {
                 OfferingDays = 2,
                 Location = "Library",
-                Course = FakeOfferingRepository.courses.SingleOrDefault(c => c.Id == 3),
-                CourseId = 3,
+                Course = course,
+                CourseId = course.Id,
                 Professor = professor,
                 ProfessorId = professor.Id,
-                TermId = 5,
-                Term = FakeOfferingRepository.terms.SingleOrDefault(t => t.Id == 5)
+                TermId = term.Id,
+                Term = term
             };
 
             var ex = Assert.Throws<ArgumentException>(() => _offeringServ.Add(offering));
@@ -222,8 +237,11 @@ namespace ADYC.Service.Tests
         public void Add_OfferingCourseIsDeleted_ThrowsNonexistingEntityException()
         {
             // Id course 3
-            var course = FakeOfferingRepository.courses.SingleOrDefault(c => c.Id == 3);
+            var course = FakeOfferingRepository.chess;
             course.IsDeleted = true;
+
+            var professor = FakeOfferingRepository.peterParker;
+            var term = FakeOfferingRepository.spring2018;
 
             var offering = new Offering
             {
@@ -231,10 +249,10 @@ namespace ADYC.Service.Tests
                 Location = "Library",
                 Course = course,
                 CourseId = course.Id,
-                Professor = FakeOfferingRepository.professors.SingleOrDefault(p => p.FirstName == "Peter"),
-                ProfessorId = FakeOfferingRepository.professors.SingleOrDefault(p => p.FirstName == "Peter").Id,
-                TermId = 5,
-                Term = FakeOfferingRepository.terms.SingleOrDefault(t => t.Id == 5)
+                Professor = professor,
+                ProfessorId = professor.Id,
+                TermId = term.Id,
+                Term = term
             };
 
             var ex = Assert.Throws<ArgumentException>(() => _offeringServ.Add(offering));
@@ -245,17 +263,21 @@ namespace ADYC.Service.Tests
         [Test]
         public void Add_OfferingTermIsNotCurrent_ThrowsArgumentException()
         {
-            var term = FakeOfferingRepository.terms.SingleOrDefault(t => t.Id == 4);
+            var term = FakeOfferingRepository.fall2017;
+            var professor = FakeOfferingRepository.peterParker;
+            professor.IsDeleted = false;
+            var course = FakeOfferingRepository.chess;
+            course.IsDeleted = false;
 
             // Id course 3
             var offering = new Offering
             {
                 OfferingDays = 2,
                 Location = "Library",
-                Course = FakeOfferingRepository.courses.SingleOrDefault(c => c.Id == 3),
-                CourseId = 3,
-                Professor = FakeOfferingRepository.professors.SingleOrDefault(p => p.FirstName == "Peter"),
-                ProfessorId = FakeOfferingRepository.professors.SingleOrDefault(p => p.FirstName == "Peter").Id,
+                Course = course,
+                CourseId = course.Id,
+                Professor = professor,
+                ProfessorId = professor.Id,
                 TermId = term.Id,
                 Term = term
             };
@@ -268,9 +290,9 @@ namespace ADYC.Service.Tests
         [Test]
         public void Add_WhenAdded_OferringWillGetNewId()
         {
-            var course = FakeOfferingRepository.courses.SingleOrDefault(c => c.Id == 4);
-            var professor = FakeOfferingRepository.professors.SingleOrDefault(p => p.FirstName == "Jane");
-            var term = FakeOfferingRepository.terms.SingleOrDefault(t => t.Id == 5);
+            var course = FakeOfferingRepository.computerlab;
+            var professor = FakeOfferingRepository.janeDoe;
+            var term = FakeOfferingRepository.spring2018;
 
             // New Id course, 13
             var offering = new Offering

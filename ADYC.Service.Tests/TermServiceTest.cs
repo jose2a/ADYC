@@ -18,6 +18,12 @@ namespace ADYC.Service.Tests
             _termService = new TermService(new FakeTermRepository(), new FakePeriodDateRepository());
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            FakeTermRepository.terms.Remove(FakeTermRepository.spring2018);
+        }
+
         [Test]
         public void Add_TermIsNull_ThrowsArgumentNullException()
         {
@@ -215,13 +221,13 @@ namespace ADYC.Service.Tests
             // arrange
             var expected = new List<Term>
             {
-                FakeTermRepository.terms[0],
-                FakeTermRepository.terms[1],
-                FakeTermRepository.terms[2]
+                FakeTermRepository.spring2016,
+                FakeTermRepository.fall2016,
+                FakeTermRepository.spring2017
             };
 
             var startDate = new DateTime(2016, 1, 1);
-            var endDate = new DateTime(2017, 5, 29);
+            var endDate = new DateTime(2017, 6, 29);
 
             // act
             var result = _termService.FindByBetweenDates(startDate, endDate);
@@ -236,8 +242,8 @@ namespace ADYC.Service.Tests
             // arrange
             var expected = new List<Term>
             {
-                FakeTermRepository.terms[0],
-                FakeTermRepository.terms[2]
+                FakeTermRepository.spring2016,
+                FakeTermRepository.spring2017
             };
 
             var termName = "Spring";
@@ -325,8 +331,8 @@ namespace ADYC.Service.Tests
         public void GetCurrentTerm_CurrentTermExist_GetCurrentTermWithNameEqualsToSpring2018()
         {
             // arrange
-            FakeTermRepository.terms.Add(FakeTermRepository.spring2018);
-            var expected = FakeTermRepository.spring2018;
+            FakeTermRepository.terms.Add(TestData.spring2018);
+            var expected = TestData.spring2018;
 
             // act
             var currentTerm = _termService.GetCurrentTerm();
@@ -362,7 +368,7 @@ namespace ADYC.Service.Tests
         public void GetTermPeriodDates_TermIdEqualsTwo_ReturnFall2017PeriodDates()
         {
             // arrange
-            var expected = FakeTermRepository.terms[1].PeriodDates;
+            var expected = FakeTermRepository.fall2016.PeriodDates;
             var termId = 2;
 
             // act
@@ -429,12 +435,12 @@ namespace ADYC.Service.Tests
             // arrange
             var expected = new List<Term>
             {
-                FakeTermRepository.terms[0],
-                FakeTermRepository.terms[1],
-                FakeTermRepository.terms[3],
+                FakeTermRepository.spring2016,
+                FakeTermRepository.spring2017,
+                FakeTermRepository.fall2017
             };
 
-            var toUpdate = FakeTermRepository.terms[2];
+            var toUpdate = FakeTermRepository.fall2016;
             toUpdate.Name = "Summer 2016";
 
             expected.Add(toUpdate);

@@ -9,6 +9,7 @@ namespace ADYC.Service.Tests
     public class PeriodDateServiceTest
     {
         private PeriodDateService _periodDateService;
+        private Term spring2018;
 
         [SetUp]
         public void SetUp()
@@ -17,6 +18,8 @@ namespace ADYC.Service.Tests
                 new FakeRepositories.FakePeriodDateRepository(),
                 new FakeRepositories.FakeTermRepository()
                 );
+
+            spring2018 = FakeRepositories.FakePeriodDateRepository.spring2018;
         }
 
         [Test]
@@ -41,7 +44,7 @@ namespace ADYC.Service.Tests
         {
             // Arrange
             // termId = 5
-            FakeRepositories.FakeTermRepository.terms.Add(FakeRepositories.FakeTermRepository.spring2018);
+            FakeRepositories.FakeTermRepository.terms.Add(spring2018);
 
             var periodDates = new List<PeriodDate>
             {
@@ -60,7 +63,7 @@ namespace ADYC.Service.Tests
         public void AddRange_APeriodDateIsOutsideTermDates_ThrowsArgumentException()
         {
             // Arrange
-            FakeRepositories.FakeTermRepository.terms.Add(FakeRepositories.FakeTermRepository.spring2018);
+            FakeRepositories.FakeTermRepository.terms.Add(spring2018);
 
             var periodDates = new List<PeriodDate>
             {
@@ -79,7 +82,7 @@ namespace ADYC.Service.Tests
         public void AddRange_APeriodDateStartDateIsGreaterThanEndDate_ThrowsArgumentException()
         {
             // Arrange
-            FakeRepositories.FakeTermRepository.terms.Add(FakeRepositories.FakeTermRepository.spring2018);
+            FakeRepositories.FakeTermRepository.terms.Add(spring2018);
 
             var periodDates = new List<PeriodDate>
             {
@@ -98,7 +101,7 @@ namespace ADYC.Service.Tests
         public void AddRange_APeriodDateStartDateIsEqualsToEndDate_ThrowsArgumentException()
         {
             // Arrange
-            FakeRepositories.FakeTermRepository.terms.Add(FakeRepositories.FakeTermRepository.spring2018);
+            FakeRepositories.FakeTermRepository.terms.Add(spring2018);
 
             var periodDates = new List<PeriodDate>
             {
@@ -117,7 +120,7 @@ namespace ADYC.Service.Tests
         public void AddRange_APeriodDateRangeIsBetweenAnotherPeriodDateRange_ThrowsArgumentException()
         {
             // Arrange
-            FakeRepositories.FakeTermRepository.terms.Add(FakeRepositories.FakeTermRepository.spring2018);
+            FakeRepositories.FakeTermRepository.terms.Add(spring2018);
 
             var periodDates = new List<PeriodDate>
             {
@@ -136,7 +139,7 @@ namespace ADYC.Service.Tests
         public void AddRange_PeriodDatesAreValid_PeriodDatesAddedToReposotory()
         {
             // Arrange
-            FakeRepositories.FakeTermRepository.terms.Add(FakeRepositories.FakeTermRepository.spring2018);
+            FakeRepositories.FakeTermRepository.terms.Add(spring2018);
 
             var expected = FakeRepositories.FakePeriodDateRepository.periodDates;
 

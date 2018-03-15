@@ -3,6 +3,8 @@ using NUnit.Framework;
 using ADYC.Service.Tests.FakeRepositories;
 using ADYC.Model;
 using System.Collections.Generic;
+using ADYC.Util.Exceptions;
+using System.Collections;
 
 namespace ADYC.Service.Tests
 {
@@ -145,5 +147,30 @@ namespace ADYC.Service.Tests
             }            
         }
 
+        private static Offering offering = FakeScheduleRepository.offering1;
+
+        private static IEnumerable<TestCaseData> AddCases()
+        {
+            yield return new TestCaseData(new List<Schedule>
+                {
+                    new Schedule { Day = Day.Monday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
+                    new Schedule { Day = Day.Wednesday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) }
+                });
+            yield return new TestCaseData(new List<Schedule>
+                {
+                    new Schedule { Day = Day.Monday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) },
+                    new Schedule { Id = 2, Day = Day.Wednesday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) }
+                });
+        }
+
+        [Test]
+        [TestCaseSource("AddCases")]
+        public void AddRange_SchedulesOverlaped_ThrowsPreexistingEntityException2(List<Schedule> schedules)
+        {
+            // Act and Assert
+            var ex = Assert.Throws<PreexistingEntityException>(() => _scheduleService.AddRange(schedules));
+            Assert.That(ex.Message, Does.Contain("schedules"));
+            Assert.That(ex.Message, Does.Contain("overlaped"));
+        }
     }
 }

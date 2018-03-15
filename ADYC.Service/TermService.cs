@@ -28,7 +28,7 @@ namespace ADYC.Service
 
         public IEnumerable<Term> FindByBetweenDates(DateTime startDate, DateTime endDate)
         {
-            var terms = _termRepository.Find(t => startDate <= t.StartDate && endDate >= t.EndDate);
+            var terms = _termRepository.Find(t => t.StartDate > startDate && t.EndDate < endDate);
 
             if (terms == null || terms.Count() == 0)
             {
