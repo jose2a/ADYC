@@ -311,14 +311,14 @@ namespace ADYC.Service
             return _offeringRepository.GetAll();
         }
 
-        public void Remove(Offering offering)
+        public void Remove(Offering offering, bool forceToRemove)
         {
-            if (offering.Enrollments.Count > 0 && !offering.Term.IsCurrentTerm)
+            if (offering.Enrollments.Count > 0 && !offering.Term.IsCurrentTerm && !forceToRemove)
             {
                 throw new ForeignKeyEntityException("The offering could not be removed because it has students enrolled in it, and it was offered in another term.");
             }
 
-            if (offering.Enrollments.Count > 0)
+            if (offering.Enrollments.Count > 0 && forceToRemove)
             {
                 // send an email to students currently enrolled in the offering that this will be removed
             }

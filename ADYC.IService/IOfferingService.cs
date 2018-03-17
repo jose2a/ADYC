@@ -30,6 +30,6 @@ namespace ADYC.IService
         void Add(Offering offering);
         void Update(Offering offering);
 
-        void Remove(Offering offering);
+        void Remove(Offering offering, bool forceToRemove);
     }
 }
