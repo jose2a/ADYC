@@ -80,6 +80,10 @@
     <Compile Include="Migrations\201802140225495_ChangeStartTimeAndEndTimeToTimeSpanType.Designer.cs">
       <DependentUpon>201802140225495_ChangeStartTimeAndEndTimeToTimeSpanType.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201803171841362_AddedTitleFieldToOfferingTable.cs" />
+    <Compile Include="Migrations\201803171841362_AddedTitleFieldToOfferingTable.Designer.cs">
+      <DependentUpon>201803171841362_AddedTitleFieldToOfferingTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -105,6 +109,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201802140225495_ChangeStartTimeAndEndTimeToTimeSpanType.resx">
       <DependentUpon>201802140225495_ChangeStartTimeAndEndTimeToTimeSpanType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803171841362_AddedTitleFieldToOfferingTable.resx">
+      <DependentUpon>201803171841362_AddedTitleFieldToOfferingTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

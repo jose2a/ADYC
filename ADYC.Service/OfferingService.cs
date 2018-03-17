@@ -25,29 +25,6 @@ namespace ADYC.Service
             ValidateOffering(offering);
 
             _offeringRepository.Add(offering);
-
-            //var previousOffering = _offeringRepository
-            //    .SingleOrDefault(o => o.CourseId == offering.CourseId &&
-            //        o.ProfessorId == offering.ProfessorId &&
-            //        o.TermId == offering.TermId);
-
-            //List<Schedule> overlapedSchedules = null;
-
-            //foreach (var schedule in offering.Schedules)
-            //{
-            //    overlapedSchedules = previousOffering.Schedules
-            //        .Where(s => s.Day == schedule.Day &&
-            //            (
-            //            s.StartTime <= schedule.StartTime && s.EndTime >= schedule.StartTime ||
-            //            s.StartTime <= schedule.EndTime && s.EndTime >= schedule.EndTime
-            //            )
-            //        ).ToList();
-            //}
-
-            //if (previousOffering != null && overlapedSchedules.Count > 0)
-            //{
-            //    throw new PreexistingEntityException("The offering's schedules ovelaped.");
-            //}
         }
 
         private void ValidateOffering(Offering offering)
@@ -55,6 +32,11 @@ namespace ADYC.Service
             if (offering == null)
             {
                 throw new ArgumentNullException("offering");
+            }
+
+            if (string.IsNullOrEmpty(offering.Title))
+            {
+                throw new ArgumentException("Title should not be empty.");
             }
 
             if (string.IsNullOrEmpty(offering.Location))
@@ -320,6 +302,15 @@ namespace ADYC.Service
 
             if (offering.Enrollments.Count > 0 && forceToRemove)
             {
+                foreach (var enrollment in offering.Enrollments)
+                {
+                    foreach (var evaluation in enrollment.Evaluations)
+                    {
+                        // Remove enrollment evaluations
+                    }
+                    // Remove enrollments
+                }
+
                 // send an email to students currently enrolled in the offering that this will be removed
             }
 
@@ -334,6 +325,42 @@ namespace ADYC.Service
             }
 
             _offeringRepository.Update(offering);
+        }
+
+        public IEnumerable<Offering> FindByProfessorIdAndCurrentTerm(Guid professorId)
+        {
+            if (professorId == null)
+            {
+                throw new ArgumentNullException("professorId");
+            }
+
+            var offerings = _offeringRepository
+                .Find(o => o.ProfessorId == professorId && o.Term.IsCurrentTerm);
+
+            if (offerings == null)
+            {
+                throw new NonexistingEntityException("Offerings for this professor and current term could not be found or do not exist.");
+            }
+
+            return offerings;
+        }
+
+        public IEnumerable<Offering> FindByTitle(string title)
+        {
+            if (string.IsNullOrEmpty(title))
+            {
+                throw new ArgumentNullException("title");
+            }
+
+            var offerings = _offeringRepository
+                .Find(o => o.Title.Contains(title));
+
+            if (offerings == null)
+            {
+                throw new NonexistingEntityException("Offerings with containing this title could not be found or do not exist.");
+            }
+
+            return offerings;
         }
     }
 }

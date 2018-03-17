@@ -16,6 +16,10 @@ namespace ADYC.Data.EntityTypeConfigurations
             HasKey(o => o.Id);
 
             // properties
+            Property(o => o.Title)
+                .HasMaxLength(300)
+                .IsRequired();
+
             Property(o => o.Location)
                 .HasMaxLength(500);
 

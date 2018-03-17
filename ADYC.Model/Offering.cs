@@ -9,6 +9,7 @@ namespace ADYC.Model
     public class Offering
     {
         public int Id { get; set; }
+        public string Title { get; set; }
         public string Location { get; set; }
         public int OfferingDays { get; set; }
         public string Notes { get; set; }
