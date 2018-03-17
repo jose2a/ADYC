@@ -25,10 +25,10 @@ namespace ADYC.Service.Tests
             // Arrange
             var schedules = new List<Schedule>
             {
-                new Schedule { Day = Day.Monday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Wednesday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Tuesday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) },
-                new Schedule { Day = Day.Thrusday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) },
+                new Schedule { Day = Day.Monday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
+                new Schedule { Day = Day.Wednesday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
+                new Schedule { Day = Day.Tuesday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) },
+                new Schedule { Day = Day.Thrusday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) },
                 null
             };
 
@@ -43,10 +43,10 @@ namespace ADYC.Service.Tests
             // Arrange
             var schedules = new List<Schedule>
             {
-                new Schedule { Day = Day.Monday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Wednesday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Tuesday, OfferingId = 3, Offering = FakeScheduleRepository.offering, EndTime = new TimeSpan(15, 0, 0) },
-                new Schedule { Day = Day.Thrusday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) }
+                new Schedule { Day = Day.Monday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
+                new Schedule { Day = Day.Wednesday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
+                new Schedule { Day = Day.Tuesday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, EndTime = new TimeSpan(15, 0, 0) },
+                new Schedule { Day = Day.Thrusday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) }
             };
 
             // Act and Assert
@@ -60,10 +60,10 @@ namespace ADYC.Service.Tests
             // Arrange
             var schedules = new List<Schedule>
             {
-                new Schedule { Day = Day.Monday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Wednesday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Tuesday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(13, 15, 0) },
-                new Schedule { Day = Day.Thrusday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) }
+                new Schedule { Day = Day.Monday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
+                new Schedule { Day = Day.Wednesday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
+                new Schedule { Day = Day.Tuesday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(13, 15, 0) },
+                new Schedule { Day = Day.Thrusday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) }
             };
 
             // Act and Assert
@@ -77,10 +77,10 @@ namespace ADYC.Service.Tests
             // Arrange
             var schedules = new List<Schedule>
             {
-                new Schedule { Day = Day.Monday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Wednesday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Tuesday, OfferingId = 3, Offering = FakeScheduleRepository.offering},
-                new Schedule { Day = Day.Thrusday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) }
+                new Schedule { Day = Day.Monday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
+                new Schedule { Day = Day.Wednesday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
+                new Schedule { Day = Day.Tuesday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017},
+                new Schedule { Day = Day.Thrusday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) }
             };
 
             // Act and Assert
@@ -94,10 +94,10 @@ namespace ADYC.Service.Tests
             // Arrange
             var schedules = new List<Schedule>
             {
-                new Schedule { Day = Day.Monday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Wednesday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Tuesday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(13, 15, 0) },
-                new Schedule { Day = Day.Thrusday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) }
+                new Schedule { Day = Day.Monday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
+                new Schedule { Day = Day.Wednesday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
+                new Schedule { Day = Day.Tuesday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(13, 15, 0) },
+                new Schedule { Day = Day.Thrusday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) }
             };
 
             // Act and Assert
@@ -111,10 +111,10 @@ namespace ADYC.Service.Tests
             // Arrange
             var schedules = new List<Schedule>
             {
-                new Schedule { Day = Day.Monday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Wednesday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Tuesday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(15, 15, 0), EndTime = new TimeSpan(13, 15, 0) },
-                new Schedule { Day = Day.Thrusday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) }
+                new Schedule { Day = Day.Monday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
+                new Schedule { Day = Day.Wednesday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
+                new Schedule { Day = Day.Tuesday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(15, 15, 0), EndTime = new TimeSpan(13, 15, 0) },
+                new Schedule { Day = Day.Thrusday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) }
             };
 
             // Act and Assert
@@ -128,10 +128,10 @@ namespace ADYC.Service.Tests
             // Arrange
             var schedules = new List<Schedule>
             {
-                new Schedule { Day = Day.Monday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Wednesday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Tuesday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) },
-                new Schedule { Day = Day.Thrusday, OfferingId = 3, Offering = FakeScheduleRepository.offering, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) }
+                new Schedule { Day = Day.Monday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
+                new Schedule { Day = Day.Wednesday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
+                new Schedule { Day = Day.Tuesday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) },
+                new Schedule { Day = Day.Thrusday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) }
             };
 
             var nextId = 5;

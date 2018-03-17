@@ -51,6 +51,8 @@
   <ItemGroup>
     <Compile Include="CourseRepository.cs" />
     <Compile Include="CourseTypeRepository.cs" />
+    <Compile Include="EnrollmentRepository.cs" />
+    <Compile Include="EvaluationRepository.cs" />
     <Compile Include="GradeRepository.cs" />
     <Compile Include="GroupRepository.cs" />
     <Compile Include="MajorRepository.cs" />

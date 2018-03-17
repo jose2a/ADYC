@@ -136,7 +136,7 @@ namespace ADYC.Service.Tests
         }
 
         [Test]
-        public void AddRange_PeriodDatesAreValid_PeriodDatesAddedToReposotory()
+        public void AddRange_PeriodDatesAreValid_PeriodDatesAddedToRepository()
         {
             // Arrange
             FakeRepositories.FakeTermRepository.terms.Add(spring2018);
@@ -159,6 +159,18 @@ namespace ADYC.Service.Tests
             {
                 Assert.IsTrue(FakeRepositories.FakePeriodDateRepository.periodDates.Contains(pd));
             }
+        }
+
+        [Test]
+        public void Get_WhenCalled_PeriodDateWillBeReturnedFromRepository()
+        {
+            var periodId = 2;
+            var termId = 1;
+
+            var result = _periodDateService.Get(periodId, termId);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.StartDate, Is.EqualTo(new DateTime(2016, 2, 5)));
         }
     }
 }

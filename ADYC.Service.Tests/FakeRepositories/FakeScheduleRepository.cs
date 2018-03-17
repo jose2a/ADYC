@@ -55,29 +55,31 @@ namespace ADYC.Service.Tests.FakeRepositories
         //        }
         //};
 
-        public static Offering offering = new Offering
-        {
-            Id = 3,
-            CourseId = 1,
-            Course = new Course
-            {
-                Id = 1,
-                Name = "Computer Science",
-                IsDeleted = false,
-                CourseTypeId = 1
-            },
-            Location = "Computer Science Lab",
-            Notes = "Bring your own computer to the lab.",
-            OfferingDays = 2,
-            Professor = new Professor
-            {
-                Id = Guid.NewGuid(),
-                FirstName = "John",
-                LastName = "Doe"
-            },
-            ProfessorId = Guid.NewGuid(),
-            TermId = 1
-        };
+        public static Offering computerLabJohnDSpring2017 = TestData.computerLabJohnDSpring2017;
+
+        //public static Offering offering = new Offering
+        //{
+        //    Id = 3,
+        //    CourseId = 1,
+        //    Course = new Course
+        //    {
+        //        Id = 1,
+        //        Name = "Computer Science",
+        //        IsDeleted = false,
+        //        CourseTypeId = 1
+        //    },
+        //    Location = "Computer Science Lab",
+        //    Notes = "Bring your own computer to the lab.",
+        //    OfferingDays = 2,
+        //    Professor = new Professor
+        //    {
+        //        Id = Guid.NewGuid(),
+        //        FirstName = "John",
+        //        LastName = "Doe"
+        //    },
+        //    ProfessorId = Guid.NewGuid(),
+        //    TermId = 1
+        //};
 
         public static Offering offering1 = new Offering
         {
@@ -104,8 +106,8 @@ namespace ADYC.Service.Tests.FakeRepositories
             {
                 new Schedule { Id = 1, Day = Day.Monday, OfferingId = 1, Offering = offering1, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
                 new Schedule { Id = 2, Day = Day.Wednesday, OfferingId = 1, Offering = offering1, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Id = 3, Day = Day.Tuesday, OfferingId = 2, Offering = offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Id = 4, Day = Day.Thrusday, OfferingId = 2, Offering = offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) }
+                new Schedule { Id = 3, Day = Day.Tuesday, OfferingId = 2, Offering = computerLabJohnDSpring2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
+                new Schedule { Id = 4, Day = Day.Thrusday, OfferingId = 2, Offering = computerLabJohnDSpring2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) }
             };
         }
 
@@ -120,7 +122,7 @@ namespace ADYC.Service.Tests.FakeRepositories
             {
                 ++lastId;
                 s.Id = lastId;
-                offering.Schedules.Add(s);
+                computerLabJohnDSpring2017.Schedules.Add(s);
             }            
         }
 

@@ -23,6 +23,15 @@ namespace ADYC.Service
         {
             ValidateTerm(term);
 
+            if (term.IsCurrentTerm)
+            {
+                foreach (var termToUpdate in _termRepository.GetAll())
+                {
+                    termToUpdate.IsCurrentTerm = false;
+                    _termRepository.Update(termToUpdate);
+                }
+            }
+
             _termRepository.Add(term);
         }        
 
