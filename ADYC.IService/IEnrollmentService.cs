@@ -16,8 +16,10 @@ namespace ADYC.IService
         IEnumerable<Enrollment> GetAllEnrollments();
         IEnumerable<Enrollment> GetCurrentTermEnrollments();
 
+        IEnumerable<Enrollment> GetStudentEnrollments(Student student);
+        IEnumerable<Enrollment> GetEnrollmentsByStudentId(Guid studentId);
         IEnumerable<Enrollment> GetOfferingEnrollments(Offering offering);
-        IEnumerable<Enrollment> GetOfferingEnrollmentsByOfferingId(int offeringId);
+        IEnumerable<Enrollment> GetEnrollmentsByOfferingId(int offeringId);
 
         void Add(Enrollment enrollment);
 

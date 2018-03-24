@@ -9,7 +9,7 @@ namespace ADYC.Service.Tests.FakeRepositories
 {
     public class FakePeriodRepository : IPeriodRepository
     {
-        public static List<Period> periods = TestData.Periods;
+        public static List<Period> periods = TestData.periods;
 
         public void Dispose()
         {

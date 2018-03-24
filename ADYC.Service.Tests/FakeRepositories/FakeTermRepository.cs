@@ -25,11 +25,9 @@ namespace ADYC.Service.Tests.FakeRepositories
 
         public FakeTermRepository()
         {
-            spring2016.PeriodDates = TestData.periodDates.Where(pd => pd.TermId == spring2016.Id).ToList();
-            fall2016.PeriodDates = TestData.periodDates.Where(pd => pd.TermId == fall2016.Id).ToList();
-            spring2017.PeriodDates = TestData.periodDates.Where(pd => pd.TermId == spring2017.Id).ToList();
-            fall2017.PeriodDates = TestData.periodDates.Where(pd => pd.TermId == fall2017.Id).ToList();
-            spring2018.PeriodDates = TestData.periodDates.Where(pd => pd.TermId == spring2018.Id).ToList();            
+            terms.ForEach(t => {
+                t.PeriodDates = TestData.periodDates.Where(pd => pd.TermId == t.Id).ToList();
+            });
         }
         public void Add(Term entity)
         {

@@ -132,6 +132,7 @@ namespace ADYC.Service.Tests
             // Id course 3
             var offering = new Offering
             {
+                Title = "Chess 2018",
                 OfferingDays = 2,
                 Course = FakeOfferingRepository.chess,
                 CourseId = course.Id,
@@ -154,6 +155,7 @@ namespace ADYC.Service.Tests
             // Id course 3
             var offering = new Offering
             {
+                Title = "Chess 2018",
                 Location = "Library",
                 OfferingDays = 2,
                 Course = course,
@@ -175,6 +177,7 @@ namespace ADYC.Service.Tests
             // Id course 3
             var offering = new Offering
             {
+                Title = "Chess 2018",
                 Location = "Library",
                 OfferingDays = 2,
                 Professor = professor,
@@ -196,6 +199,7 @@ namespace ADYC.Service.Tests
             // Id course 3
             var offering = new Offering
             {
+                Title = "Chess 2018",
                 Location = "Library",
                 OfferingDays = 2,
                 Course = course,
@@ -218,6 +222,7 @@ namespace ADYC.Service.Tests
 
             var offering = new Offering
             {
+                Title = "Chess 2018",
                 OfferingDays = 2,
                 Location = "Library",
                 Course = course,
@@ -245,6 +250,7 @@ namespace ADYC.Service.Tests
 
             var offering = new Offering
             {
+                Title = "Chess 2018",
                 OfferingDays = 2,
                 Location = "Library",
                 Course = course,
@@ -272,6 +278,7 @@ namespace ADYC.Service.Tests
             // Id course 3
             var offering = new Offering
             {
+                Title = "Chess 2018",
                 OfferingDays = 2,
                 Location = "Library",
                 Course = course,
@@ -297,6 +304,7 @@ namespace ADYC.Service.Tests
             // New Id course, 13
             var offering = new Offering
             {
+                Title = "Chess 2018",
                 Location = "Computer Lab",
                 OfferingDays = 2,
                 Course = course,
