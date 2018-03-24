@@ -1342,5 +1342,106 @@ namespace ADYC.Service.Tests
         };
 
         #endregion
+
+        #region Evaluation
+        public static List<Evaluation> evaluations = new List<Evaluation>
+        {
+            raquelWSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            raquelWSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            raquelWSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            raquelWSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+
+            raquelWFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            raquelWFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            raquelWFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            raquelWFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+
+            raquelWSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            raquelWSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            raquelWSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            raquelWSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+
+            landonZFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            landonZFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            landonZFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            landonZFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+
+            landonZSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            landonZSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            landonZSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            landonZSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+
+            candyceDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            candyceDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            candyceDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            candyceDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+
+            reganMFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            reganMFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            reganMFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            reganMFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+
+            ethanSFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            ethanSFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            ethanSFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            ethanSFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+
+            ethanSSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            ethanSSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            ethanSSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            ethanSSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+
+            lucyCFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            lucyCFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            lucyCFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            lucyCFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+
+            madonnaBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            madonnaBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            madonnaBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            madonnaBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+
+            yorkASpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            yorkASpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            yorkASpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            yorkASpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+
+            serenaTFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            serenaTFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            serenaTFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            serenaTFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+
+            serenaTSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            serenaTSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            serenaTSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            serenaTSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+
+            serenaTSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            serenaTSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            serenaTSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            serenaTSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+
+            phillisBSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            phillisBSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            phillisBSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            phillisBSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+
+            phillisBFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            phillisBFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            phillisBFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            phillisBFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+
+            phillisBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            phillisBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            phillisBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            phillisBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+
+            SydneyDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            SydneyDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            SydneyDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            SydneyDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4)
+        };
+
+        #endregion
     }
 }
