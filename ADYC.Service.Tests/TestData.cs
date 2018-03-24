@@ -72,6 +72,7 @@ namespace ADYC.Service.Tests
 
         #region Terms
 
+        #region spring 2016 - 1
         public static Term spring2016 = new Term
         {
             Id = 1,
@@ -89,7 +90,9 @@ namespace ADYC.Service.Tests
                 new PeriodDate { PeriodId = 4, TermId = 1, StartDate = new DateTime(2016, 4, 7), EndDate = new DateTime(2016, 5, 7) }
             }
         };
+        #endregion
 
+        #region fall 2016 - 2
         public static Term fall2016 = new Term
         {
             Id = 2,
@@ -107,7 +110,9 @@ namespace ADYC.Service.Tests
                 new PeriodDate { PeriodId = 4, TermId = 2, StartDate = new DateTime(2016, 11, 25), EndDate = new DateTime(2016, 12, 20) }
             }
         };
+        #endregion
 
+        #region spring 2017 - 3
         public static Term spring2017 = new Term
         {
             Id = 3,
@@ -125,7 +130,9 @@ namespace ADYC.Service.Tests
                 new PeriodDate { PeriodId = 4, TermId = 3, StartDate = new DateTime(2017, 4, 13), EndDate = new DateTime(2017, 5, 8) }
             }
         };
+        #endregion
 
+        #region fall 2017 - 4
         public static Term fall2017 = new Term
         {
             Id = 4,
@@ -144,6 +151,9 @@ namespace ADYC.Service.Tests
             }
         };
 
+        #endregion
+
+        #region spring 2018 - 5
         public static Term spring2018 = new Term
         {
             Id = 5,
@@ -152,19 +162,41 @@ namespace ADYC.Service.Tests
             EndDate = new DateTime(2018, 5, 12),
             EnrollmentDeadLine = new DateTime(2018, 1, 13),
             EnrollmentDropDeadLine = new DateTime(2018, 2, 10),
-            IsCurrentTerm = true//,
-            //PeriodDates = new List<PeriodDate>
-            //    {
-            //        new PeriodDate { PeriodId = 1, TermId = 5, StartDate = new DateTime(2018, 1, 9), EndDate = new DateTime(2018, 2, 9) },
-            //        new PeriodDate { PeriodId = 2, TermId = 5, StartDate = new DateTime(2018, 2, 10), EndDate = new DateTime(2018, 3, 11) },
-            //        new PeriodDate { PeriodId = 3, TermId = 5, StartDate = new DateTime(2018, 3, 12), EndDate = new DateTime(2018, 4, 12) },
-            //        new PeriodDate { PeriodId = 4, TermId = 5, StartDate = new DateTime(2018, 4, 13), EndDate = new DateTime(2018, 5, 8) }
-            //    }
+            IsCurrentTerm = true,
+            PeriodDates = new List<PeriodDate>
+                {
+                    new PeriodDate { PeriodId = 1, TermId = 5, StartDate = new DateTime(2018, 1, 9), EndDate = new DateTime(2018, 2, 9) },
+                    new PeriodDate { PeriodId = 2, TermId = 5, StartDate = new DateTime(2018, 2, 10), EndDate = new DateTime(2018, 3, 11) },
+                    new PeriodDate { PeriodId = 3, TermId = 5, StartDate = new DateTime(2018, 3, 12), EndDate = new DateTime(2018, 4, 12) },
+                    new PeriodDate { PeriodId = 4, TermId = 5, StartDate = new DateTime(2018, 4, 13), EndDate = new DateTime(2018, 5, 8) }
+                }
         };
+
+        #endregion
+
+        #region fall 2018 - 6
+        public static Term fall2018 = new Term
+        {
+            Id = 6,
+            Name = "Fall 2018",
+            StartDate = new DateTime(2018, 8, 21),
+            EndDate = new DateTime(2018, 12, 22),
+            EnrollmentDeadLine = new DateTime(2018, 9, 8),
+            EnrollmentDropDeadLine = new DateTime(2018, 9, 22),
+            IsCurrentTerm = false,
+            PeriodDates = new List<PeriodDate>
+            {
+                new PeriodDate { PeriodId = 1, TermId = 6, StartDate = new DateTime(2018, 8, 21), EndDate = new DateTime(2018, 9, 22) },
+                new PeriodDate { PeriodId = 2, TermId = 6, StartDate = new DateTime(2018, 9, 23), EndDate = new DateTime(2018, 10, 24) },
+                new PeriodDate { PeriodId = 3, TermId = 6, StartDate = new DateTime(2018, 10, 25), EndDate = new DateTime(2018, 11, 26) },
+                new PeriodDate { PeriodId = 4, TermId = 6, StartDate = new DateTime(2018, 11, 27), EndDate = new DateTime(2018, 12, 18) }
+            }
+        };
+        #endregion
 
         public static List<Term> Terms = new List<Term>
         {
-            spring2016, fall2016, spring2017, fall2017, spring2018
+            spring2016, fall2016, spring2017, fall2017, spring2018, fall2018
         };
 
         #endregion
@@ -789,8 +821,6 @@ namespace ADYC.Service.Tests
         public static Enrollment raquelWSpring2018 = new Enrollment
         {
             Id = 3,
-            FinalGrade = 80,
-            FinalGradeLetter = GradeLetter.B,
             Notes = "Great student",
             IsCurrentEnrollment = false,
             EnrollmentDate = new DateTime(2018, 01, 10),
@@ -807,10 +837,10 @@ namespace ADYC.Service.Tests
                     EnrollmentId = 3, PeriodId = 2, Period = secondPeriod, PeriodGrade = 80, PeriodGradeLetter = GradeLetter.B
                 },
                 new Evaluation {
-                    EnrollmentId = 3, PeriodId = 3, Period = thirdPeriod, PeriodGrade = 80, PeriodGradeLetter = GradeLetter.B
+                    EnrollmentId = 3, PeriodId = 3, Period = thirdPeriod
                 },
                 new Evaluation {
-                    EnrollmentId = 3, PeriodId = 4, Period = fourthPeriod, PeriodGrade = 80, PeriodGradeLetter = GradeLetter.B
+                    EnrollmentId = 3, PeriodId = 4, Period = fourthPeriod
                 }
             }
         };
@@ -851,8 +881,6 @@ namespace ADYC.Service.Tests
         public static Enrollment landonZSpring2018 = new Enrollment
         {
             Id = 5,
-            FinalGrade = 92,
-            FinalGradeLetter = GradeLetter.A,
             Notes = "Great student",
             IsCurrentEnrollment = false,
             EnrollmentDate = new DateTime(2018, 01, 10),
@@ -869,10 +897,10 @@ namespace ADYC.Service.Tests
                     EnrollmentId = 5, PeriodId = 2, Period = secondPeriod, PeriodGrade = 92, PeriodGradeLetter = GradeLetter.A
                 },
                 new Evaluation {
-                    EnrollmentId = 5, PeriodId = 3, Period = thirdPeriod, PeriodGrade = 92, PeriodGradeLetter = GradeLetter.A
+                    EnrollmentId = 5, PeriodId = 3, Period = thirdPeriod
                 },
                 new Evaluation {
-                    EnrollmentId = 5, PeriodId = 4, Period = fourthPeriod, PeriodGrade = 92, PeriodGradeLetter = GradeLetter.A
+                    EnrollmentId = 5, PeriodId = 4, Period = fourthPeriod
                 }
             }
         };
@@ -882,8 +910,6 @@ namespace ADYC.Service.Tests
         public static Enrollment candyceDSpring2018 = new Enrollment
         {
             Id = 6,
-            FinalGrade = 92,
-            FinalGradeLetter = GradeLetter.A,
             Notes = "Great student",
             IsCurrentEnrollment = false,
             EnrollmentDate = new DateTime(2018, 01, 10),
@@ -900,10 +926,10 @@ namespace ADYC.Service.Tests
                     EnrollmentId = 6, PeriodId = 2, Period = secondPeriod, PeriodGrade = 92, PeriodGradeLetter = GradeLetter.A
                 },
                 new Evaluation {
-                    EnrollmentId = 6, PeriodId = 3, Period = thirdPeriod, PeriodGrade = 92, PeriodGradeLetter = GradeLetter.A
+                    EnrollmentId = 6, PeriodId = 3, Period = thirdPeriod
                 },
                 new Evaluation {
-                    EnrollmentId = 6, PeriodId = 4, Period = fourthPeriod, PeriodGrade = 92, PeriodGradeLetter = GradeLetter.A
+                    EnrollmentId = 6, PeriodId = 4, Period = fourthPeriod
                 }
             }
         };
@@ -975,8 +1001,6 @@ namespace ADYC.Service.Tests
         public static Enrollment ethanSSpring2018 = new Enrollment
         {
             Id = 9,
-            FinalGrade = 80,
-            FinalGradeLetter = GradeLetter.B,
             Notes = "Great student",
             IsCurrentEnrollment = false,
             EnrollmentDate = new DateTime(2018, 01, 10),
@@ -993,10 +1017,10 @@ namespace ADYC.Service.Tests
                     EnrollmentId = 9, PeriodId = 2, Period = secondPeriod, PeriodGrade = 80, PeriodGradeLetter = GradeLetter.B
                 },
                 new Evaluation {
-                    EnrollmentId = 9, PeriodId = 3, Period = thirdPeriod, PeriodGrade = 80, PeriodGradeLetter = GradeLetter.B
+                    EnrollmentId = 9, PeriodId = 3, Period = thirdPeriod
                 },
                 new Evaluation {
-                    EnrollmentId = 9, PeriodId = 4, Period = fourthPeriod, PeriodGrade = 80, PeriodGradeLetter = GradeLetter.B
+                    EnrollmentId = 9, PeriodId = 4, Period = fourthPeriod
                 }
             }
         };
@@ -1037,8 +1061,6 @@ namespace ADYC.Service.Tests
         public static Enrollment madonnaBSpring2018 = new Enrollment
         {
             Id = 11,
-            FinalGrade = 92,
-            FinalGradeLetter = GradeLetter.A,
             Notes = "Great student",
             IsCurrentEnrollment = false,
             EnrollmentDate = new DateTime(2018, 01, 10),
@@ -1055,10 +1077,10 @@ namespace ADYC.Service.Tests
                     EnrollmentId = 11, PeriodId = 2, Period = secondPeriod, PeriodGrade = 92, PeriodGradeLetter = GradeLetter.A
                 },
                 new Evaluation {
-                    EnrollmentId = 11, PeriodId = 3, Period = thirdPeriod, PeriodGrade = 92, PeriodGradeLetter = GradeLetter.A
+                    EnrollmentId = 11, PeriodId = 3, Period = thirdPeriod
                 },
                 new Evaluation {
-                    EnrollmentId = 11, PeriodId = 4, Period = fourthPeriod, PeriodGrade = 92, PeriodGradeLetter = GradeLetter.A
+                    EnrollmentId = 11, PeriodId = 4, Period = fourthPeriod
                 }
             }
         };
@@ -1068,8 +1090,6 @@ namespace ADYC.Service.Tests
         public static Enrollment yorkASpring2018 = new Enrollment
         {
             Id = 12,
-            FinalGrade = 75,
-            FinalGradeLetter = GradeLetter.C,
             Notes = "Great student",
             IsCurrentEnrollment = false,
             EnrollmentDate = new DateTime(2018, 01, 10),
@@ -1086,10 +1106,10 @@ namespace ADYC.Service.Tests
                     EnrollmentId = 12, PeriodId = 2, Period = secondPeriod, PeriodGrade = 75, PeriodGradeLetter = GradeLetter.C
                 },
                 new Evaluation {
-                    EnrollmentId = 12, PeriodId = 3, Period = thirdPeriod, PeriodGrade = 75, PeriodGradeLetter = GradeLetter.C
+                    EnrollmentId = 12, PeriodId = 3, Period = thirdPeriod
                 },
                 new Evaluation {
-                    EnrollmentId = 12, PeriodId = 4, Period = fourthPeriod, PeriodGrade = 75, PeriodGradeLetter = GradeLetter.C
+                    EnrollmentId = 12, PeriodId = 4, Period = fourthPeriod
                 }
             }
         };
@@ -1161,8 +1181,6 @@ namespace ADYC.Service.Tests
         public static Enrollment serenaTSpring2018 = new Enrollment
         {
             Id = 15,
-            FinalGrade = 92,
-            FinalGradeLetter = GradeLetter.A,
             Notes = "Great student",
             IsCurrentEnrollment = false,
             EnrollmentDate = new DateTime(2018, 01, 10),
@@ -1179,10 +1197,10 @@ namespace ADYC.Service.Tests
                     EnrollmentId = 15, PeriodId = 2, Period = secondPeriod, PeriodGrade = 92, PeriodGradeLetter = GradeLetter.A
                 },
                 new Evaluation {
-                    EnrollmentId = 15, PeriodId = 3, Period = thirdPeriod, PeriodGrade = 92, PeriodGradeLetter = GradeLetter.A
+                    EnrollmentId = 15, PeriodId = 3, Period = thirdPeriod
                 },
                 new Evaluation {
-                    EnrollmentId = 15, PeriodId = 4, Period = fourthPeriod, PeriodGrade = 92, PeriodGradeLetter = GradeLetter.A
+                    EnrollmentId = 15, PeriodId = 4, Period = fourthPeriod
                 }
             }
         };
@@ -1254,8 +1272,6 @@ namespace ADYC.Service.Tests
         public static Enrollment phillisBSpring2018 = new Enrollment
         {
             Id = 18,
-            FinalGrade = 82,
-            FinalGradeLetter = GradeLetter.B,
             Notes = "Great student",
             IsCurrentEnrollment = false,
             EnrollmentDate = new DateTime(2018, 01, 06),
@@ -1272,10 +1288,10 @@ namespace ADYC.Service.Tests
                     EnrollmentId = 18, PeriodId = 2, Period = secondPeriod, PeriodGrade = 82, PeriodGradeLetter = GradeLetter.B
                 },
                 new Evaluation {
-                    EnrollmentId = 18, PeriodId = 3, Period = thirdPeriod, PeriodGrade = 82, PeriodGradeLetter = GradeLetter.B
+                    EnrollmentId = 18, PeriodId = 3, Period = thirdPeriod
                 },
                 new Evaluation {
-                    EnrollmentId = 18, PeriodId = 4, Period = fourthPeriod, PeriodGrade = 82, PeriodGradeLetter = GradeLetter.B
+                    EnrollmentId = 18, PeriodId = 4, Period = fourthPeriod
                 }
             }
         };
@@ -1285,8 +1301,6 @@ namespace ADYC.Service.Tests
         public static Enrollment SydneyDSpring2018 = new Enrollment
         {
             Id = 19,
-            FinalGrade = 88,
-            FinalGradeLetter = GradeLetter.B,
             Notes = "Great student",
             IsCurrentEnrollment = false,
             EnrollmentDate = new DateTime(2018, 01, 10),
@@ -1303,14 +1317,29 @@ namespace ADYC.Service.Tests
                     EnrollmentId = 19, PeriodId = 2, Period = secondPeriod, PeriodGrade = 95, PeriodGradeLetter = GradeLetter.A
                 },
                 new Evaluation {
-                    EnrollmentId = 19, PeriodId = 3, Period = thirdPeriod, PeriodGrade = 90, PeriodGradeLetter = GradeLetter.A
+                    EnrollmentId = 19, PeriodId = 3, Period = thirdPeriod
                 },
                 new Evaluation {
-                    EnrollmentId = 19, PeriodId = 4, Period = fourthPeriod, PeriodGrade = 85, PeriodGradeLetter = GradeLetter.B
+                    EnrollmentId = 19, PeriodId = 4, Period = fourthPeriod
                 }
             }
         };
         #endregion
+
+        public static List<Enrollment> enrollments = new List<Enrollment>
+        {
+            raquelWSpring2017, raquelWFall2017, raquelWSpring2018,
+            landonZFall2017, landonZSpring2018,
+            candyceDSpring2018,
+            reganMFall2017,
+            ethanSFall2017, ethanSSpring2018,
+            lucyCFall2017,
+            madonnaBSpring2018,
+            yorkASpring2018,
+            serenaTSpring2017, serenaTFall2017, serenaTSpring2018,
+            phillisBSpring2017, phillisBFall2017, phillisBSpring2018,
+            SydneyDSpring2018
+        };
 
         #endregion
     }

@@ -11,7 +11,7 @@ namespace ADYC.Model
         public int PeriodId { get; set; }
         public int EnrollmentId { get; set; }
 
-        public decimal? PeriodGrade { get; set; }
+        public Double? PeriodGrade { get; set; }
         public GradeLetter? PeriodGradeLetter { get; set; }
         public string Notes { get; set; }
 

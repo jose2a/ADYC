@@ -84,6 +84,10 @@
     <Compile Include="Migrations\201803171841362_AddedTitleFieldToOfferingTable.Designer.cs">
       <DependentUpon>201803171841362_AddedTitleFieldToOfferingTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201803241543409_ChangeFinalGradeFieldFromEnrollmentAndEvaluationTablesToDouble.cs" />
+    <Compile Include="Migrations\201803241543409_ChangeFinalGradeFieldFromEnrollmentAndEvaluationTablesToDouble.Designer.cs">
+      <DependentUpon>201803241543409_ChangeFinalGradeFieldFromEnrollmentAndEvaluationTablesToDouble.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -112,6 +116,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201803171841362_AddedTitleFieldToOfferingTable.resx">
       <DependentUpon>201803171841362_AddedTitleFieldToOfferingTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803241543409_ChangeFinalGradeFieldFromEnrollmentAndEvaluationTablesToDouble.resx">
+      <DependentUpon>201803241543409_ChangeFinalGradeFieldFromEnrollmentAndEvaluationTablesToDouble.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

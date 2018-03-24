@@ -76,6 +76,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="EnrollmentServiceTest.cs" />
     <Compile Include="CourseServiceTest.cs" />
     <Compile Include="FakeRepositories\FakeOfferingRepository.cs" />
     <Compile Include="FakeRepositories\FakePeriodDateRepository.cs" />

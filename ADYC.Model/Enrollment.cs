@@ -9,7 +9,7 @@ namespace ADYC.Model
     public class Enrollment
     {
         public int Id { get; set; }
-        public Decimal? FinalGrade { get; set; }
+        public Double? FinalGrade { get; set; }
         public GradeLetter? FinalGradeLetter { get; set; }
         public string Notes { get; set; }
         public bool IsCurrentEnrollment { get; set; }
