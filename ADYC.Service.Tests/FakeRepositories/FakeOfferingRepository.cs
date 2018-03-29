@@ -56,6 +56,12 @@ namespace ADYC.Service.Tests.FakeRepositories
 
         public FakeOfferingRepository()
         {
+            computerLabJohnDSpring2017.Enrollments = new List<Enrollment>
+            {
+                new Enrollment { Id = 1 },
+                new Enrollment { Id = 2 }
+            };
+
             baseballBruceWSpring2017.Enrollments = new List<Enrollment>
             {
                 new Enrollment { Id = 1 },

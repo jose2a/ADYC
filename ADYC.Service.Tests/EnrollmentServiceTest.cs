@@ -15,67 +15,209 @@ namespace ADYC.Service.Tests
     {
         private Mock<IEnrollmentRepository> _enrollmentRepository;
         private Mock<IEvaluationRepository> _evaluationRepository;
+        private Mock<IPeriodRepository> _periodRepository;
+
         private List<Enrollment> _enrollments;
         private List<Evaluation> _evaluations;
-        //private List<Course> _courses;
-        //private CourseType _internalCT = TestData.internalCT;
-        //private CourseType _externalCT = TestData.externalCT;
+        private List<Period> _periods;
 
         [SetUp]
         public void SetUp()
         {
             _enrollmentRepository = new Mock<IEnrollmentRepository>();
             _evaluationRepository = new Mock<IEvaluationRepository>();
+            _periodRepository = new Mock<IPeriodRepository>();
 
             _enrollments = new List<Enrollment>(TestData.enrollments);
             _evaluations = new List<Evaluation>(TestData.evaluations);
+            _periods = new List<Period>(TestData.periods);
+        }
+
+        public Offering DuplicateOffering(Offering offering)
+        {
+            return new Offering
+            {
+                Id = offering.Id,
+                Title = offering.Title,
+                Location = offering.Location,
+                OfferingDays = offering.OfferingDays,
+                Notes = offering.Notes,
+                ProfessorId = offering.ProfessorId,
+                Professor = offering.Professor,
+                CourseId = offering.CourseId,
+                Course = offering.Course,
+                TermId = offering.TermId,
+                Term = new Term
+                {
+                    Id = offering.Term.Id,
+                    EndDate = offering.Term.EndDate,
+                    EnrollmentDeadLine = offering.Term.EnrollmentDeadLine,
+                    EnrollmentDropDeadLine = offering.Term.EnrollmentDropDeadLine,
+                    IsCurrentTerm = offering.Term.IsCurrentTerm,
+                    Name = offering.Term.Name,
+                    Offerings = offering.Term.Offerings,
+                    PeriodDates = offering.Term.PeriodDates,
+                    StartDate = offering.Term.StartDate
+                },
+                Enrollments = offering.Enrollments,
+                Schedules = offering.Schedules
+            };
+        }
+
+        private EnrollmentService GetEnrollmentService()
+        {
+            return new EnrollmentService(
+                _enrollmentRepository.Object,
+                _evaluationRepository.Object,
+                _periodRepository.Object);
         }
 
         [TearDown]
         public void TearDown()
         {
-            _enrollments = new List<Enrollment>(TestData.enrollments);
-            _evaluations = new List<Evaluation>(TestData.evaluations);
+            _enrollments = null;
+            _evaluations = null;
+            _periods = null;
         }
 
         [Test]
-        public void Add_WhenAdded_CourseWillGetNewId()
+        public void Add_EnrollmentDeadLinePassed_ThrowsArgumentException()
         {
-            // arrange
-            //var expectedId = 10;
-            //var courseToAdd = new Course() { Id = expectedId, Name = "Swimming", CourseType = _externalCT, CourseTypeId = _externalCT.Id, IsDeleted = false };
+            var student = TestData.marionDavis;            
+            var offering = DuplicateOffering(TestData.compDesignDspring2018);
 
-            //var courseToAdd = expectedCourse;
+            var enrollment = new Enrollment
+            {
+                OfferingId = offering.Id,
+                Offering = offering,
+                StudentId = student.Id,
+                Student = student
+            };
 
-            //_courseRepository.Setup(m => m.Add(It.IsAny<Course>()))
-            //    .Callback((Course c) => {
-            //        c.Id = expectedId;
-            //    });
+            var enrollmentService = GetEnrollmentService();
 
-            //var courseService = new CourseService(_courseRepository.Object);
-
-            //// act
-            //courseService.Add(courseToAdd);
-
-            //// assert
-            //_courseRepository.Verify(cr => cr.Add(courseToAdd));
-
-            //Assert.That(courseToAdd.Id, Is.EqualTo(expectedId));
+            var ex = Assert.Throws<ArgumentException>(() => enrollmentService.Add(enrollment));
+            Assert.That(ex.Message, Does.Contain("not allow"));
         }
 
         [Test]
-        public void Get_CourseDoesNotExist_NonexistingExceptionWillBeThrown()
+        public void Add_EnrollmentIsAttemptedBeforeTermStartDate_ThrowsArgumentException()
         {
-            // arrange
-            var id = 30;
+            var student = TestData.marionDavis;
 
-            //_courseRepository.Setup(m => m.Get(It.IsAny<int>())).Returns(() => { return null; });
+            var offering = DuplicateOffering(TestData.compDesignDspring2018);
+            offering.Term.StartDate = new DateTime(2018, 3, 28);
+            offering.Term.EnrollmentDeadLine = new DateTime(2018, 3, 30);
 
-            //var courseService = new CourseService(_courseRepository.Object);
+            var enrollment = new Enrollment
+            {
+                OfferingId = offering.Id,
+                Offering = offering,
+                StudentId = student.Id,
+                Student = student
+            };
 
-            //// act and assert
-            //Assert.Throws<NonexistingEntityException>(() => courseService.Get(id));
+            var enrollmentService = GetEnrollmentService();
+
+            var ex = Assert.Throws<ArgumentException>(() => enrollmentService.Add(enrollment));
+            Assert.That(ex.Message, Does.Contain("not allowed"));
+            Assert.That(ex.Message, Does.Contain("start date"));
         }
+
+        [Test]
+        public void Add_StudentIsCurrentlyEnrolled_ThrowsPreArgumentException()
+        {
+            var student = TestData.yorkAnnmarie;
+
+            var offering = DuplicateOffering(TestData.compDesignDspring2018);
+            offering.Term.EnrollmentDeadLine = new DateTime(2018, 3, 28);
+
+            _enrollmentRepository
+                .Setup(m => m.Find(It.IsAny<Expression<Func<Enrollment, bool>>>(), null, ""))
+                .Returns(() =>
+                {
+                    return new List<Enrollment> { new Enrollment() };
+                });
+
+            var enrollment = new Enrollment
+            {
+                OfferingId = offering.Id,
+                Offering = offering,
+                StudentId = student.Id,
+                Student = student
+            };
+
+            var enrollmentService = GetEnrollmentService();
+
+            var ex = Assert.Throws<PreexistingEntityException>(() => enrollmentService.Add(enrollment));
+            Assert.That(ex.Message, Does.Contain("student").IgnoreCase);
+            Assert.That(ex.Message, Does.Contain("enrolled"));
+        }
+
+        [Test]
+        public void Add_WhenCalled_EnrollmentIsAddedToTheRepositoryAndGetANewId()
+        {
+            var student = TestData.yorkAnnmarie;
+
+            var offering = DuplicateOffering(TestData.compDesignDspring2018);
+            offering.Term.EnrollmentDeadLine = new DateTime(2018, 3, 30);
+
+            var enrollmentId = 20;
+
+            var enrollment = new Enrollment
+            {
+                OfferingId = offering.Id,
+                Offering = offering,
+                StudentId = student.Id,
+                Student = student
+            };
+
+            _enrollmentRepository
+                .SetupSequence(m => m.Find(It.IsAny<Expression<Func<Enrollment, bool>>>(), null, It.IsAny<string>()))
+                .Returns(new List<Enrollment>())
+                .Returns(new List<Enrollment>
+                    {
+                        new Enrollment(),
+                        new Enrollment()
+                    }
+                );
+
+            _enrollmentRepository
+                .Setup(m => m.Add(It.IsAny<Enrollment>()))
+                .Callback((Enrollment e) =>
+                {
+                    e.Id = enrollmentId;                    
+                });
+
+            _enrollmentRepository
+                .Setup(m => m.Update(It.IsAny<Enrollment>()))
+                .Callback((Enrollment e) =>
+                {
+                });
+
+            _periodRepository
+                .Setup(m => m.GetAll(null, ""))
+                .Returns(_periods);
+
+            _evaluationRepository
+                .Setup(m => m.Add(It.IsAny<Evaluation>()))
+                .Callback((Evaluation e) =>
+                {
+                    enrollment.Evaluations.Add(e);
+                });
+
+            var enrollmentService = GetEnrollmentService();
+
+            enrollmentService.Add(enrollment);
+
+            Assert.That(enrollment.Id, Is.EqualTo(enrollmentId));
+            _enrollmentRepository.Verify(m => m.Find(It.IsAny<Expression<Func<Enrollment, bool>>>(), null, ""));
+            _enrollmentRepository.Verify(m => m.Add(It.IsAny<Enrollment>()));
+            _enrollmentRepository.Verify(m => m.Update(It.IsAny<Enrollment>()), Times.Exactly(2));
+            _periodRepository.Verify(m => m.GetAll(null, ""));
+            _evaluationRepository.Verify(m => m.Add(It.IsAny<Evaluation>()));
+        }
+
 
     }
 }
