@@ -10,5 +10,7 @@ namespace ADYC.IRepository
     public interface IEvaluationRepository : IReadOnlyRepository<Evaluation>, IWriteOnlyRepository<Evaluation>
     {
         Evaluation Get(int enrollmentId, int periodId);
+
+        void UpdateRange(IEnumerable<Evaluation> evaluations);
     }
 }

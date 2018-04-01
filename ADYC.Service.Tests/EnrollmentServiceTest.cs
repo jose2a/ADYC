@@ -106,8 +106,8 @@ namespace ADYC.Service.Tests
             var student = TestData.marionDavis;
 
             var offering = DuplicateOffering(TestData.compDesignDspring2018);
-            offering.Term.StartDate = new DateTime(2018, 3, 28);
-            offering.Term.EnrollmentDeadLine = new DateTime(2018, 3, 30);
+            offering.Term.StartDate = new DateTime(2018, 4, 2);
+            offering.Term.EnrollmentDeadLine = new DateTime(2018, 4, 6);
 
             var enrollment = new Enrollment
             {
@@ -125,12 +125,12 @@ namespace ADYC.Service.Tests
         }
 
         [Test]
-        public void Add_StudentIsCurrentlyEnrolled_ThrowsPreArgumentException()
+        public void Add_StudentIsCurrentlyEnrolled_ThrowsPreexistingEntityException()
         {
             var student = TestData.yorkAnnmarie;
 
             var offering = DuplicateOffering(TestData.compDesignDspring2018);
-            offering.Term.EnrollmentDeadLine = new DateTime(2018, 3, 28);
+            offering.Term.EnrollmentDeadLine = new DateTime(2018, 4, 2);
 
             _enrollmentRepository
                 .Setup(m => m.Find(It.IsAny<Expression<Func<Enrollment, bool>>>(), null, ""))
@@ -150,6 +150,7 @@ namespace ADYC.Service.Tests
             var enrollmentService = GetEnrollmentService();
 
             var ex = Assert.Throws<PreexistingEntityException>(() => enrollmentService.Add(enrollment));
+            _enrollmentRepository.Verify(m => m.Find(It.IsAny<Expression<Func<Enrollment, bool>>>(), null, ""));
             Assert.That(ex.Message, Does.Contain("student").IgnoreCase);
             Assert.That(ex.Message, Does.Contain("enrolled"));
         }
@@ -160,7 +161,7 @@ namespace ADYC.Service.Tests
             var student = TestData.yorkAnnmarie;
 
             var offering = DuplicateOffering(TestData.compDesignDspring2018);
-            offering.Term.EnrollmentDeadLine = new DateTime(2018, 3, 30);
+            offering.Term.EnrollmentDeadLine = new DateTime(2018, 4, 7);
 
             var enrollmentId = 20;
 
@@ -218,6 +219,92 @@ namespace ADYC.Service.Tests
             _evaluationRepository.Verify(m => m.Add(It.IsAny<Evaluation>()));
         }
 
+        [Test]
+        public void Remove_EnrollmentIsNull_ThrowsArgumentNullException()
+        {
+            var enrollmentService = GetEnrollmentService();
+
+            var ex = Assert.Throws<ArgumentNullException>(() => enrollmentService.Remove(null));
+            Assert.That(ex.Message, Does.Contain("enrollment"));
+        }
+
+        [Test]
+        public void Remove_WhenCalled_EnrollmentAndEvaluationsWillBeRemoved()
+        {
+            var enrollment = TestData.yorkASpring2018;
+
+            _evaluationRepository
+                .Setup(m => m.RemoveRange(It.IsAny<List<Evaluation>>()))
+                .Callback(() => { });
+
+            _enrollmentRepository
+                .Setup(m => m.Remove(It.IsAny<Enrollment>()))
+                .Callback(() => { });
+
+            var enrollmentService = GetEnrollmentService();
+
+            enrollmentService.Remove(enrollment);
+
+            _evaluationRepository.Verify(m => m.RemoveRange(It.IsAny<List<Evaluation>>()));
+            _enrollmentRepository.Verify(m => m.Remove(It.IsAny<Enrollment>()));
+        }
+
+        // sydneyDSpring2018 -> 65.5
+        [Test]
+        public void Update_WhenCalled_EnrollmentFinalGradeAndEvaluationsWillBeCalculatedAndFinalGradeLetterWillBeSet()
+        {
+            var enrollment = TestData.sydneyDSpring2018;
+            var evaluation = TestData.evaluations.SingleOrDefault(e => e.PeriodId == 3 && e.EnrollmentId == enrollment.Id);
+            evaluation.PeriodGrade = 85;
+
+            _evaluationRepository
+                .Setup(m => m.UpdateRange(It.IsAny<List<Evaluation>>()))
+                .Callback(() => { });
+
+            _enrollmentRepository
+                .Setup(m => m.Update(It.IsAny<Enrollment>()))
+                .Callback((Enrollment e) => { enrollment = e; });
+
+            var enrollmentService = GetEnrollmentService();
+
+            enrollmentService.Update(enrollment);
+
+            Assert.That(enrollment.FinalGrade, Is.EqualTo(65.5));
+            Assert.That(enrollment.FinalGradeLetter, Is.EqualTo(GradeLetter.F));
+
+            _evaluationRepository.Verify(m => m.UpdateRange(It.IsAny<List<Evaluation>>()));
+            _enrollmentRepository.Verify(m => m.Update(It.IsAny<Enrollment>()));
+        }
+
+        [Test]
+        public void Withdrop_WhenCalled_EnrollmentAndEvaluationsFinalGradeLetterWillBeSetToW()
+        {
+            var enrollment = TestData.phillisBSpring2018;
+
+            var offering = DuplicateOffering(TestData.compDesignDspring2018);
+            offering.Term.EnrollmentDropDeadLine = new DateTime(2018, 4, 7);
+
+            enrollment.Offering = offering;
+
+            _evaluationRepository
+                .Setup(m => m.UpdateRange(It.IsAny<List<Evaluation>>()))
+                .Callback(() => { });
+
+            _enrollmentRepository
+                .Setup(m => m.Update(It.IsAny<Enrollment>()))
+                .Callback((Enrollment e) => { enrollment = e; });
+
+            var enrollmentService = GetEnrollmentService();
+
+            enrollmentService.Withdrop(enrollment);
+
+            Assert.That(enrollment.FinalGrade, Is.Null);
+            Assert.That(enrollment.FinalGradeLetter, Is.EqualTo(GradeLetter.W));
+            Assert.That(enrollment.Evaluations.First().PeriodGradeLetter, Is.EqualTo(GradeLetter.W));
+
+            _evaluationRepository.Verify(m => m.UpdateRange(It.IsAny<List<Evaluation>>()));
+            _enrollmentRepository.Verify(m => m.Update(It.IsAny<Enrollment>()));
+        }
 
     }
 }

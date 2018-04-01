@@ -1273,7 +1273,7 @@ namespace ADYC.Service.Tests
         {
             Id = 18,
             Notes = "Great student",
-            IsCurrentEnrollment = false,
+            IsCurrentEnrollment = true,
             EnrollmentDate = new DateTime(2018, 01, 06),
             Student = phillisBryon,
             StudentId = phillisBryon.Id,
@@ -1298,11 +1298,11 @@ namespace ADYC.Service.Tests
         #endregion
 
         #region enrollment 19
-        public static Enrollment SydneyDSpring2018 = new Enrollment
+        public static Enrollment sydneyDSpring2018 = new Enrollment
         {
             Id = 19,
             Notes = "Great student",
-            IsCurrentEnrollment = false,
+            IsCurrentEnrollment = true,
             EnrollmentDate = new DateTime(2018, 01, 10),
             Student = sydneyDuke,
             StudentId = sydneyDuke.Id,
@@ -1311,10 +1311,10 @@ namespace ADYC.Service.Tests
             Evaluations = new List<Evaluation>
             {
                 new Evaluation {
-                    EnrollmentId = 19, PeriodId = 1, Period = firstPeriod, PeriodGrade = 82, PeriodGradeLetter = GradeLetter.B
+                    EnrollmentId = 19, PeriodId = 1, Period = firstPeriod, PeriodGrade = 82
                 },
                 new Evaluation {
-                    EnrollmentId = 19, PeriodId = 2, Period = secondPeriod, PeriodGrade = 95, PeriodGradeLetter = GradeLetter.A
+                    EnrollmentId = 19, PeriodId = 2, Period = secondPeriod, PeriodGrade = 95
                 },
                 new Evaluation {
                     EnrollmentId = 19, PeriodId = 3, Period = thirdPeriod
@@ -1338,7 +1338,7 @@ namespace ADYC.Service.Tests
             yorkASpring2018,
             serenaTSpring2017, serenaTFall2017, serenaTSpring2018,
             phillisBSpring2017, phillisBFall2017, phillisBSpring2018,
-            SydneyDSpring2018
+            sydneyDSpring2018
         };
 
         #endregion
@@ -1436,10 +1436,10 @@ namespace ADYC.Service.Tests
             phillisBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
             phillisBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
 
-            SydneyDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
-            SydneyDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
-            SydneyDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
-            SydneyDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4)
+            sydneyDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            sydneyDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            sydneyDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            sydneyDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4)
         };
 
         #endregion

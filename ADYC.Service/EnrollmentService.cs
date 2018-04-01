@@ -41,66 +41,109 @@ namespace ADYC.Service
 
         public Enrollment Get(int id)
         {
-            throw new NotImplementedException();
+            var enrollment = _enrollmentRepository.Get(id);
+
+            if (enrollment == null)
+            {
+                throw new NonexistingEntityException("An enrollment with the given id does not exist.");
+            }
+
+            return enrollment;
         }
 
         public IEnumerable<Enrollment> GetAllEnrollments()
         {
-            throw new NotImplementedException();
+            return _enrollmentRepository.GetAll();
         }
 
         public IEnumerable<Enrollment> GetCurrentTermEnrollments()
         {
-            throw new NotImplementedException();
+            return _enrollmentRepository.Find(e => e.Offering.Term.IsCurrentTerm);
         }
 
         public IEnumerable<Enrollment> GetEnrollmentsByOfferingId(int offeringId)
         {
-            throw new NotImplementedException();
+            return _enrollmentRepository.Find(e => e.OfferingId == offeringId);
         }
 
         public IEnumerable<Enrollment> GetEnrollmentsByStudentId(Guid studentId)
         {
-            throw new NotImplementedException();
+            if (studentId == null)
+            {
+                throw new ArgumentNullException("studentId");
+            }
+
+            return _enrollmentRepository.Find(e => e.StudentId == studentId);
         }
 
         public IEnumerable<Enrollment> GetOfferingEnrollments(Offering offering)
         {
-            throw new NotImplementedException();
+            return offering.Enrollments;
         }
 
         public Enrollment GetStudentCurrentTermEnrollment(Student student)
         {
-            throw new NotImplementedException();
+            //_enrollmentRepository.SingleOrDefault(e => e.StudentId == student.Id && e.Offering.Term.IsCurrentTerm);
+            return student.Enrollments.SingleOrDefault(e => e.Offering.Term.IsCurrentTerm);
         }
 
         public Enrollment GetStudentCurrentTermEnrollmentByStudentId(Guid studentId)
         {
-            throw new NotImplementedException();
+            return _enrollmentRepository.SingleOrDefault(e => e.StudentId == studentId && e.Offering.Term.IsCurrentTerm);
         }
 
         public IEnumerable<Enrollment> GetStudentEnrollments(Student student)
         {
-            throw new NotImplementedException();
+            return _enrollmentRepository.Find(e => e.StudentId == student.Id);
         }
 
         public void Remove(Enrollment enrollment)
         {
-            throw new NotImplementedException();
+            if (enrollment == null)
+            {
+                throw new ArgumentNullException("enrollment");
+            }
+
+            _evaluationRepository.RemoveRange(enrollment.Evaluations);
+
+            _enrollmentRepository.Remove(enrollment);
         }
 
         public void Update(Enrollment enrollment)
         {
-            throw new NotImplementedException();
-        }
+            if (enrollment == null)
+            {
+                throw new ArgumentNullException("enrollment");
+            }
+
+            if (!enrollment.IsCurrentEnrollment)
+            {
+                throw new ArgumentException("This enrollment is not for the current term.");
+            }
+
+            SetEnrollmentGrades(enrollment);
+
+            _evaluationRepository.UpdateRange(enrollment.Evaluations);
+            _enrollmentRepository.Update(enrollment);
+        }        
 
         public void Withdrop(Enrollment enrollment)
         {
-            throw new NotImplementedException();
+            ValidateEnrollmentWithdrop(enrollment);
+
+            SetEnrollmentToWithdrop(enrollment);
+
+            _evaluationRepository.UpdateRange(enrollment.Evaluations);
+            _enrollmentRepository.Update(enrollment);
         }
 
         private void ValidateEnrollment(Enrollment enrollment)
         {
+            if (enrollment == null)
+            {
+                throw new ArgumentNullException("enrollment");
+            }
+
             if (enrollment.StudentId == null || enrollment.Student == null)
             {
                 throw new ArgumentNullException("Student");
@@ -156,6 +199,75 @@ namespace ADYC.Service
             {
                 var evaluation = new Evaluation { EnrollmentId = enrollment.Id, PeriodId = period.Id };
                 _evaluationRepository.Add(evaluation);
+            }
+        }
+
+        private void SetEnrollmentGrades(Enrollment enrollment)
+        {
+            var finalGrade = 0.0;
+
+            foreach (var evaluation in enrollment.Evaluations)
+            {
+                if (evaluation.PeriodGrade.HasValue)
+                {
+                    finalGrade += evaluation.PeriodGrade.Value;
+                    evaluation.PeriodGradeLetter = GetGradeLetter(evaluation.PeriodGrade.Value);
+                }
+            }
+
+            finalGrade = finalGrade / enrollment.Evaluations.Count;
+            enrollment.FinalGrade = finalGrade;
+            enrollment.FinalGradeLetter = GetGradeLetter(enrollment.FinalGrade.Value);
+        }
+
+        private GradeLetter GetGradeLetter(double grade)
+        {
+            if (grade >= 90 && grade <= 100)
+            {
+                return GradeLetter.A;
+            }
+
+            if (grade >= 80 && grade < 90)
+            {
+                return GradeLetter.B;
+            }
+
+            if (grade >= 70 && grade < 80)
+            {
+                return GradeLetter.C;
+            }
+
+            return GradeLetter.F;
+        }
+
+        private static void ValidateEnrollmentWithdrop(Enrollment enrollment)
+        {
+            if (enrollment == null)
+            {
+                throw new ArgumentNullException("enrollment");
+            }
+
+            if (!enrollment.IsCurrentEnrollment)
+            {
+                throw new ArgumentException("This enrollment is not for the current term.");
+            }
+
+            if (DateTime.Today > enrollment.Offering.Term.EnrollmentDropDeadLine.AddDays(1))
+            {
+                throw new ArgumentException("The dead line to withdrop from the offering was: " + enrollment.Offering.Term.EnrollmentDropDeadLine);
+            }
+        }
+
+        private static void SetEnrollmentToWithdrop(Enrollment enrollment)
+        {
+            enrollment.WithdropDate = DateTime.Today;
+            enrollment.FinalGrade = null;
+            enrollment.FinalGradeLetter = GradeLetter.W;
+
+            foreach (var evaluation in enrollment.Evaluations)
+            {
+                evaluation.PeriodGrade = null;
+                evaluation.PeriodGradeLetter = GradeLetter.W;
             }
         }
     }
