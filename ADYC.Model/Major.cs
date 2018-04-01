@@ -18,5 +18,11 @@ namespace ADYC.Model
         {
             Students = new List<Student>();
         }
+
+        public Major(string name)
+            : this()
+        {
+            Name = name;
+        }
     }
 }

@@ -17,5 +17,10 @@ namespace ADYC.Model
         {
             Students = new List<Student>();
         }
+
+        public Group(string name)
+        {
+            Name = name;
+        }
     }
 }

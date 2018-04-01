@@ -27,5 +27,11 @@ namespace ADYC.Model
         {
             Evaluations = new List<Evaluation>();
         }
+
+        public Enrollment(Guid studentId, int offeringId) : this()
+        {
+            StudentId = studentId;
+            OfferingId = offeringId;
+        }
     }
 }

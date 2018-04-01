@@ -14,6 +14,9 @@ namespace ADYC.Model
         public string Email { get; set; }
         public string CellphoneNumber { get; set; }
         public bool IsDeleted { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public DateTime? DeletedAt { get; set; }
 
         public int GradeId { get; set; }
         public Grade Grade { get; set; }
@@ -30,6 +33,16 @@ namespace ADYC.Model
         public Student()
         {
             Enrollments = new List<Enrollment>();
+        }
+
+        public Student(Guid id, string firstName, string lastName, string email, string cellphoneNumber)
+            : this()
+        {
+            Id = id;
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            CellphoneNumber = cellphoneNumber;
         }
     }
 }

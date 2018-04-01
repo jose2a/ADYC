@@ -19,6 +19,14 @@ namespace ADYC.Model
 
         public Course()
         {
+            IsDeleted = false;
+            Offerings = new List<Offering>();
+        }
+
+        public Course(string name, int courseTypeId) : this()
+        {
+            Name = name;
+            CourseTypeId = courseTypeId;
             Offerings = new List<Offering>();
         }
     }

@@ -192,6 +192,7 @@ namespace ADYC.Service.Tests
 
             // assert
             Assert.AreEqual(expectedCourses, resultCourses);
+            Assert.That(resultCourses, Has.One.EqualTo(_courses.SingleOrDefault(c => c.Id == 3)));
         }
 
         [Test]

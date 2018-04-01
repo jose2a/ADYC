@@ -16,5 +16,11 @@ namespace ADYC.Model
         public virtual Offering Offering { get; set; }
 
         public Day Day { get; set; }
+
+        public Schedule(int offeringId, Day day)
+        {
+            OfferingId = offeringId;
+            Day = day;
+        }
     }
 }

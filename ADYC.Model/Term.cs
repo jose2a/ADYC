@@ -24,5 +24,17 @@ namespace ADYC.Model
             PeriodDates = new List<PeriodDate>();
             Offerings = new List<Offering>();
         }
+
+        public Term(string name, DateTime startDate, DateTime endDate, bool isCurrentTerm,
+            DateTime enrollmentDeadLine, DateTime enrollmentDropDeadLine)
+            : this()
+        {
+            Name = name;
+            StartDate = startDate;
+            EndDate = endDate;
+            IsCurrentTerm = isCurrentTerm;
+            EnrollmentDeadLine = enrollmentDeadLine;
+            EnrollmentDropDeadLine = enrollmentDropDeadLine;
+        }
     }
 }

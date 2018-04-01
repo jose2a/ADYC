@@ -14,12 +14,25 @@ namespace ADYC.Model
         public string Email { get; set; }
         public string CellphoneNumber { get; set; }
         public bool IsDeleted { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public DateTime? DeletedAt { get; set; }
 
         public virtual ICollection<Offering> Offerings { get; set; }
 
         public Professor()
         {
             Offerings = new List<Offering>();
+        }
+
+        public Professor(Guid id, string firstName, string lastName, string email, string cellphoneNumber)
+            : this()
+        {
+            Id = id;
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            CellphoneNumber = cellphoneNumber;
         }
 
     }

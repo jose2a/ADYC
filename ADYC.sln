@@ -11,13 +11,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADYC.Repository", "ADYC.Rep
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADYC.IRepository", "ADYC.IRepository\ADYC.IRepository.csproj", "{B1F58032-6592-4FC5-853B-B426DB2DE120}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADYC.Repository.Tests", "ADYC.Repository.Tests\ADYC.Repository.Tests.csproj", "{F2D485CE-903E-467F-9E7E-771B4B556989}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADYC.Repository.UnitTests", "ADYC.Repository.Tests\ADYC.Repository.UnitTests.csproj", "{F2D485CE-903E-467F-9E7E-771B4B556989}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADYC.IService", "ADYC.IService\ADYC.IService.csproj", "{B8EF1BF2-BABF-4EA2-8F98-FF17F50E4569}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADYC.Service", "ADYC.Service\ADYC.Service.csproj", "{7D90ED45-D38E-40EC-8A6B-20C211318C98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADYC.Service.Tests", "ADYC.Service.Tests\ADYC.Service.Tests.csproj", "{693F0089-502C-407C-B2E6-CA68A7E4A13E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADYC.Service.UnitTests", "ADYC.Service.Tests\ADYC.Service.UnitTests.csproj", "{693F0089-502C-407C-B2E6-CA68A7E4A13E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADYC.Util", "ADYC.Util\ADYC.Util.csproj", "{8BB0EC84-5C07-408D-BF7C-FC7ECF3429B0}"
 EndProject

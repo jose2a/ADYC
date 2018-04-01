@@ -19,5 +19,11 @@ namespace ADYC.Model
             PeriodDates = new List<PeriodDate>();
             Evaluations = new List<Evaluation>();
         }
+
+        public Period(string name)
+            : this()
+        {
+            Name = name;
+        }
     }
 }

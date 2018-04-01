@@ -17,5 +17,10 @@ namespace ADYC.Model
         {
             Students = new List<Student>();
         }
+
+        public Grade(string name) : this()
+        {
+            Name = name;
+        }
     }
 }

@@ -32,5 +32,17 @@ namespace ADYC.Model
             Enrollments = new List<Enrollment>();
             Schedules = new List<Schedule>();
         }
+
+        public Offering(string title, string location, int offeringDays, string notes, Guid professorId, int courseId, int termId)
+            : this()
+        {
+            Title = title;
+            Location = location;
+            OfferingDays = offeringDays;
+            Notes = notes;
+            ProfessorId = professorId;
+            CourseId = courseId;
+            TermId = termId;
+        }
     }
 }

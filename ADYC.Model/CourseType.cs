@@ -17,5 +17,10 @@ namespace ADYC.Model
         {
             Courses = new List<Course>();
         }
+
+        public CourseType(string name) : this()
+        {
+            Name = name;
+        }
     }
 }
