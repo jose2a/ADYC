@@ -37,6 +37,15 @@ namespace ADYC.Data.EntityTypeConfigurations
 
             Property(p => p.IsDeleted)
                 .IsRequired();
+
+            Property(p => p.CreatedAt)
+                .IsRequired();
+
+            Property(p => p.UpdatedAt)
+                .IsOptional();
+
+            Property(p => p.DeletedAt)
+                .IsOptional();
         }
     }
 }

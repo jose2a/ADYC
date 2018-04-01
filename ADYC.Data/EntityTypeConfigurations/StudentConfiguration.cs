@@ -37,6 +37,15 @@ namespace ADYC.Data.EntityTypeConfigurations
             Property(s => s.IsDeleted)
                 .IsRequired();
 
+            Property(s => s.CreatedAt)
+                .IsRequired();
+
+            Property(s => s.UpdatedAt)
+                .IsOptional();
+
+            Property(s => s.DeletedAt)
+                .IsOptional();
+
             // Relationships
             HasRequired(s => s.Grade)
                 .WithMany(g => g.Students)

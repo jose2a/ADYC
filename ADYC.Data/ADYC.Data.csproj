@@ -88,6 +88,10 @@
     <Compile Include="Migrations\201803241543409_ChangeFinalGradeFieldFromEnrollmentAndEvaluationTablesToDouble.Designer.cs">
       <DependentUpon>201803241543409_ChangeFinalGradeFieldFromEnrollmentAndEvaluationTablesToDouble.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201804012339109_AddedFieldCreatedAtUpdateAtAndDeleteAtToProfessorAndStudentTables.cs" />
+    <Compile Include="Migrations\201804012339109_AddedFieldCreatedAtUpdateAtAndDeleteAtToProfessorAndStudentTables.Designer.cs">
+      <DependentUpon>201804012339109_AddedFieldCreatedAtUpdateAtAndDeleteAtToProfessorAndStudentTables.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -119,6 +123,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201803241543409_ChangeFinalGradeFieldFromEnrollmentAndEvaluationTablesToDouble.resx">
       <DependentUpon>201803241543409_ChangeFinalGradeFieldFromEnrollmentAndEvaluationTablesToDouble.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804012339109_AddedFieldCreatedAtUpdateAtAndDeleteAtToProfessorAndStudentTables.resx">
+      <DependentUpon>201804012339109_AddedFieldCreatedAtUpdateAtAndDeleteAtToProfessorAndStudentTables.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
