@@ -19,42 +19,24 @@ namespace ADYC.Service
 
         public void Add(Professor professor)
         {
-            if (professor == null)
-            {
-                throw new ArgumentNullException("professor");
-            }
+            ValidateProfessor(professor);
 
-            var professorExist = (_professorRepository.Find(p => p.FirstName.Equals(professor.FirstName)).Count() > 0)
-                || (_professorRepository.Find(p => p.LastName.Equals(professor.LastName)).Count() > 0);
-
-            if (professorExist)
-            {
-                throw new PreexistingEntityException("A professor with the same first name and last name already exists.");
-            }
+            professor.CreatedAt = DateTime.Today;
 
             _professorRepository.Add(professor);
         }
 
         public void AddRange(IEnumerable<Professor> professors)
         {
-            if (professors == null)
+            ValidateProfessorRange(professors);
+
+            foreach (var professor in professors)
             {
-                throw new ArgumentNullException("professors");
-            }
-
-            var professorFirstNames = professors.Select(p => p.FirstName);
-            var professorLastNames = professors.Select(p => p.LastName);
-
-            var professorExist = (_professorRepository.Find(p => professorFirstNames.Contains(p.FirstName)).Count() > 0)
-                || (_professorRepository.Find(p => professorLastNames.Contains(p.LastName)).Count() > 0);
-
-            if (professorExist)
-            {
-                throw new PreexistingEntityException("A professor with the first name and last name already exists.");
+                professor.CreatedAt = DateTime.Today;
             }
 
             _professorRepository.AddRange(professors);
-        }
+        }       
 
         public IEnumerable<Professor> FindByCellphoneNumber(string cellphoneNumber)
         {
@@ -180,6 +162,7 @@ namespace ADYC.Service
             }
 
             professor.IsDeleted = true;
+            professor.DeletedAt = DateTime.Today;
 
             _professorRepository.Update(professor);
         }
@@ -194,6 +177,7 @@ namespace ADYC.Service
             foreach (var professor in professors)
             {
                 professor.IsDeleted = true;
+                professor.DeletedAt = DateTime.Today;
 
                 _professorRepository.Update(professor);
             }
@@ -211,7 +195,44 @@ namespace ADYC.Service
                 throw new NonexistingEntityException("The professor does not currently exist.");
             }
 
+            professor.UpdatedAt = DateTime.Today;
+
             _professorRepository.Update(professor);
+        }
+
+        private void ValidateProfessor(Professor professor)
+        {
+            if (professor == null)
+            {
+                throw new ArgumentNullException("professor");
+            }
+
+            var professorExist = (_professorRepository.Find(p => p.FirstName.Equals(professor.FirstName)).Count() > 0)
+                || (_professorRepository.Find(p => p.LastName.Equals(professor.LastName)).Count() > 0);
+
+            if (professorExist)
+            {
+                throw new PreexistingEntityException("A professor with the same first name and last name already exists.");
+            }
+        }
+
+        private void ValidateProfessorRange(IEnumerable<Professor> professors)
+        {
+            if (professors == null)
+            {
+                throw new ArgumentNullException("professors");
+            }
+
+            var professorFirstNames = professors.Select(p => p.FirstName);
+            var professorLastNames = professors.Select(p => p.LastName);
+
+            var professorExist = (_professorRepository.Find(p => professorFirstNames.Contains(p.FirstName)).Count() > 0)
+                || (_professorRepository.Find(p => professorLastNames.Contains(p.LastName)).Count() > 0);
+
+            if (professorExist)
+            {
+                throw new PreexistingEntityException("A professor with the first name and last name already exists.");
+            }
         }
     }
 }

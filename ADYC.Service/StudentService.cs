@@ -19,6 +19,15 @@ namespace ADYC.Service
 
         public void Add(Student student)
         {
+            ValidateStudent(student);
+
+            student.CreatedAt = DateTime.Today;
+
+            _studentRepository.Add(student);
+        }
+
+        private void ValidateStudent(Student student)
+        {
             if (student == null)
             {
                 throw new ArgumentNullException("student");
@@ -31,11 +40,21 @@ namespace ADYC.Service
             {
                 throw new PreexistingEntityException("A student with the same first name and last name already exists.");
             }
-
-            _studentRepository.Add(student);
         }
 
         public void AddRange(IEnumerable<Student> students)
+        {
+            ValidateStudentRange(students);
+
+            foreach (var student in students)
+            {
+                student.CreatedAt = DateTime.Today;
+            }
+
+            _studentRepository.AddRange(students);
+        }
+
+        private void ValidateStudentRange(IEnumerable<Student> students)
         {
             if (students == null)
             {
@@ -52,8 +71,6 @@ namespace ADYC.Service
             {
                 throw new PreexistingEntityException("A student with the first name and last name already exists.");
             }
-
-            _studentRepository.AddRange(students);
         }
 
         public IEnumerable<Student> FindByCellphoneNumber(string cellphoneNumber)
@@ -180,6 +197,7 @@ namespace ADYC.Service
             }
 
             student.IsDeleted = true;
+            student.DeletedAt = DateTime.Today;
 
             _studentRepository.Update(student);
         }
@@ -194,6 +212,7 @@ namespace ADYC.Service
             foreach (var student in students)
             {
                 student.IsDeleted = true;
+                student.DeletedAt = DateTime.Today;
 
                 _studentRepository.Update(student);
             }
@@ -210,6 +229,8 @@ namespace ADYC.Service
             {
                 throw new NonexistingEntityException("The student does not currently exist.");
             }
+
+            student.UpdatedAt = DateTime.Today;
 
             _studentRepository.Update(student);
         }
