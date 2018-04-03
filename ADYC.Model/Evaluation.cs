@@ -18,6 +18,11 @@ namespace ADYC.Model
         public Period Period { get; set; }
         public Enrollment Enrollment { get; set; }
 
+        public Evaluation()
+        {
+
+        }
+
         public Evaluation(int periodId, int enrollmentId)
         {
             PeriodId = periodId;

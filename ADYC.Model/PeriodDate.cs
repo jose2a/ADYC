@@ -18,6 +18,11 @@ namespace ADYC.Model
         public virtual Period Period { get; set; }
         public virtual Term Term { get; set; }
 
+        public PeriodDate()
+        {
+
+        }
+
         public PeriodDate(int periodId, int termId)
         {
             PeriodId = periodId;

@@ -17,6 +17,11 @@ namespace ADYC.Model
 
         public Day Day { get; set; }
 
+        public Schedule()
+        {
+
+        }
+
         public Schedule(int offeringId, Day day)
         {
             OfferingId = offeringId;
