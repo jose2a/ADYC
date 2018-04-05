@@ -8,6 +8,11 @@ namespace ADYC.Util.Exceptions
 {
     public class NonexistingEntityException : Exception
     {
+        public NonexistingEntityException()
+        {
+
+        }
+
         public NonexistingEntityException(string message)
             : base(message)
         {

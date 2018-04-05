@@ -66,7 +66,7 @@ namespace ADYC.Service
                 throw new ArgumentNullException("name");
             }
 
-            return _courseRepository.Find(c => c.Name.Contains(name));
+            return _courseRepository.Find(c => c.Name.Contains(name), includeProperties : "CourseType");
         }
 
         public IEnumerable<Course> FindSoftDeletedCourses()
@@ -81,19 +81,12 @@ namespace ADYC.Service
 
         public Course Get(int id)
         {
-            var course = _courseRepository.Get(id);
-
-            if (course == null)
-            {
-                throw new NonexistingEntityException("A course with the given id does not exist.");
-            }
-
-            return course;
+            return _courseRepository.Get(id);
         }
 
         public IEnumerable<Course> GetAll()
         {
-            return _courseRepository.GetAll();
+            return _courseRepository.GetAll(includeProperties: "CourseType");
         }
 
         public void Remove(Course course)
