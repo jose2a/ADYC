@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Web.Http;
-using ADYC.API;
+﻿using System.Collections.Generic;
 using ADYC.API.Controllers;
 using NUnit.Framework;
 using ADYC.IService;
 using Moq;
 using ADYC.Model;
 using System.Web.Http.Results;
-using ADYC.Util.Exceptions;
 using ADYC.API.ViewModels;
 
 namespace ADYC.API.UnitTests.Controllers
@@ -20,11 +13,13 @@ namespace ADYC.API.UnitTests.Controllers
     public class CourseControllerTest
     {
         private Mock<ICourseService> courseService;
+        private Mock<ICourseTypeService> courseTypeService;
 
         [SetUp]
         public void SetUp()
         {
             courseService = new Mock<ICourseService>();
+            courseTypeService = new Mock<ICourseTypeService>();
         }
 
         [Test]
@@ -34,7 +29,7 @@ namespace ADYC.API.UnitTests.Controllers
             courseService.Setup(m => m.GetAll())
                 .Returns(TestDataApi.Courses);
 
-            var controller = new CoursesController(courseService.Object);
+            var controller = new CoursesController(courseService.Object, courseTypeService.Object);
 
             // Act
             var actionResult = controller.Get();
@@ -47,19 +42,46 @@ namespace ADYC.API.UnitTests.Controllers
         }
 
         [Test]
-        public void GetById_CourseWithThatIdDoesNotExist_ReturnsNotFound()
+        public void GetById_CourseWithIdDoesNotExist_ReturnsNotFound()
         {
             // Arrange
             courseService.Setup(m => m.Get(It.IsAny<int>()))
                 .Returns(() => null);
 
-            var controller = new CoursesController(courseService.Object);
+            courseTypeService.Setup(m => m.Get(It.IsAny<int>()))
+                .Returns(new CourseType { Id = 1, Name = "Internal" });
+
+            var controller = new CoursesController(courseService.Object, courseTypeService.Object);
 
             // Act
             var actionResult = controller.Get(25);
 
             // Assert
             Assert.That(actionResult, Is.InstanceOf(typeof(NotFoundResult)));
+        }
+
+        [Test]
+        public void GetById_WhenCalled_ReturnsCourse()
+        {
+            // Arrange
+            courseService.Setup(m => m.Get(It.IsAny<int>()))
+                .Returns(TestDataApi.computerDesign);
+
+            courseTypeService.Setup(m => m.Get(It.IsAny<int>()))
+                .Returns(new CourseType { Id = 1, Name = "Internal" });
+
+            var controller = new CoursesController(courseService.Object, courseTypeService.Object);
+
+            TestHelper.SetUpControllerRequest(controller, "courses");
+
+            // Act
+            var actionResult = controller.Get(2);
+            var contentResult = actionResult as OkNegotiatedContentResult<CourseDto>;
+
+            // Assert
+            Assert.That(contentResult, Is.Not.Null);
+            Assert.That(contentResult.Content, Is.Not.Null);
+            Assert.That(contentResult.Content.Name, Is.EqualTo("Computer Design"));
         }
 
         [Test]
@@ -76,7 +98,7 @@ namespace ADYC.API.UnitTests.Controllers
 
             var courseForm = new CourseForm { Name = "Swimming", CourseTypeId = 1 };
 
-            var controller = new CoursesController(courseService.Object);
+            var controller = new CoursesController(courseService.Object, courseTypeService.Object);
 
             // Act
             var actionResult = controller.Post(courseForm);
@@ -86,7 +108,7 @@ namespace ADYC.API.UnitTests.Controllers
             Assert.IsNotNull(createdResult);
             Assert.AreEqual("DefaultApi", createdResult.RouteName);
             Assert.AreEqual(23, createdResult.RouteValues["id"]);
-        }
+        }        
 
         [Test]
         public void Post_InvalidModel_ReturnsBadRequest()
@@ -94,7 +116,7 @@ namespace ADYC.API.UnitTests.Controllers
             // Arrange
             var courseForm = new CourseForm { Name = "Swimming" };//, CourseTypeId = 1 };
 
-            var controller = new CoursesController(courseService.Object);
+            var controller = new CoursesController(courseService.Object, courseTypeService.Object);
             controller.ModelState.AddModelError("fakeError", "Error");
 
             // Act
