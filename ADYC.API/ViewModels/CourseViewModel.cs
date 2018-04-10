@@ -24,6 +24,9 @@ namespace ADYC.API.ViewModels
         public string Name { get; set; }
 
         [Required]
+        public bool IsDeleted { get; set; }
+
+        [Required]
         public int CourseTypeId { get; set; }
     }
 }

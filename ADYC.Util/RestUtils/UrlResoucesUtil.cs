@@ -13,7 +13,7 @@ namespace ADYC.Util.RestUtils
         {
             var reqUri = request.RequestUri;
 
-            return reqUri.Scheme + "://" + reqUri.Authority + ":" + reqUri.Port + "/api/" + controllerName + "/";
+            return reqUri.Scheme + "://" + reqUri.Authority + "/api/" + controllerName + "/";
         }
     }
 }

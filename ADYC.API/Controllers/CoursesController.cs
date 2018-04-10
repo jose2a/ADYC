@@ -4,11 +4,8 @@ using ADYC.Model;
 using ADYC.Util.Exceptions;
 using ADYC.Util.RestUtils;
 using AutoMapper;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 
@@ -86,6 +83,7 @@ namespace ADYC.API.Controllers
         }
 
         [Route("")]
+        [HttpPost]
         [ResponseType(typeof(Course))]
         // POST api/<controller>
         public IHttpActionResult Post([FromBody] CourseForm form)
@@ -116,18 +114,79 @@ namespace ADYC.API.Controllers
         }
 
         [Route("{id}")]
+        [HttpPut]
+        [ResponseType(typeof(void))]
         // PUT api/<controller>/5
         public IHttpActionResult Put(int id, [FromBody] CourseForm form)
         {
+            if (ModelState.IsValid)
+            {
+                var courseInDb = _courseService.Get(id);
 
+                if (courseInDb == null)
+                {
+                    return BadRequest();
+                }
+
+                try
+                {
+                    Mapper.Map(form, courseInDb);
+
+                    _courseService.Update(courseInDb);
+
+                    return Ok();
+                }
+                catch (NonexistingEntityException ne)
+                {
+                    ModelState.AddModelError("", ne.Message);
+                }
+            }
+
+            return BadRequest(ModelState);
+        }
+
+        [Route("{id}")]
+        [HttpDelete]
+        [ResponseType(typeof(void))]
+        // DELETE api/<controller>/5
+        public IHttpActionResult Delete(int id)
+        {
+            var courseInDb = _courseService.Get(id);
+
+            if (courseInDb == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                _courseService.Remove(courseInDb);
+            }
+            catch (ForeignKeyEntityException fke)
+            {
+                ModelState.AddModelError("", fke.Message);
+                return BadRequest(ModelState);
+            }
 
             return Ok();
         }
 
-        [Route("{id}")]
+        [Route("SoftDelete/{id}")]
+        [HttpDelete]
+        [ResponseType(typeof(void))]
         // DELETE api/<controller>/5
-        public void Delete(int id)
+        public IHttpActionResult SoftDelete(int id)
         {
+            var courseInDb = _courseService.Get(id);
+
+            if (courseInDb == null)
+            {
+                return NotFound();
+            }
+
+            _courseService.SoftDelete(courseInDb);
+
+            return Ok();
         }
     }
 }

@@ -43,6 +43,7 @@ namespace ADYC.API.UnitTests.Controllers
             var courseNames = contentResult.Content.Select(c => c.Name);
 
             // Assert
+            courseService.Verify(m => m.GetAll());
             Assert.That(contentResult, Is.Not.Null);
             Assert.That(contentResult.Content, Is.Not.Null);
             Assert.That(courseNames, Has.Exactly(1).EqualTo(TestDataApi.computerlab.Name));
@@ -61,6 +62,7 @@ namespace ADYC.API.UnitTests.Controllers
             var actionResult = controller.Get(25);
 
             // Assert
+            courseService.Verify(m => m.Get(It.IsAny<int>()));
             Assert.That(actionResult, Is.InstanceOf(typeof(NotFoundResult)));
         }
 
@@ -83,6 +85,8 @@ namespace ADYC.API.UnitTests.Controllers
             var contentResult = actionResult as OkNegotiatedContentResult<CourseDto>;
 
             // Assert
+            courseService.Verify(m => m.Get(It.IsAny<int>()));
+            courseTypeService.Verify(m => m.Get(It.IsAny<int>()));
             Assert.That(contentResult, Is.Not.Null);
             Assert.That(contentResult.Content, Is.Not.Null);
             Assert.That(contentResult.Content.Name, Is.EqualTo("Computer Design"));
@@ -113,6 +117,8 @@ namespace ADYC.API.UnitTests.Controllers
             var createdResult = actionResult as CreatedAtRouteNegotiatedContentResult<CourseDto>;
 
             // Assert
+            courseService.Verify(m => m.Add(It.IsAny<Course>()));
+            courseTypeService.Verify(m => m.Get(It.IsAny<int>()));
             Assert.IsNotNull(createdResult);
             Assert.AreEqual("DefaultApi", createdResult.RouteName);
             Assert.AreEqual(23, createdResult.RouteValues["id"]);
@@ -134,28 +140,115 @@ namespace ADYC.API.UnitTests.Controllers
             Assert.That(actionResult, Is.TypeOf(typeof(InvalidModelStateResult)));
         }
 
-        //[TestMethod]
-        //public void Put()
-        //{
-        //    // Arrange
-        //    ValuesController controller = new ValuesController();
+        [Test]
+        public void Put_WhenCalled_CourseWillBeUpdated()
+        {
+            // Arrange
+            var computerLab = new Course
+            {
+                Id = TestDataApi.computerlab.Id,
+                Name = TestDataApi.computerlab.Name,
+                IsDeleted = TestDataApi.computerlab.IsDeleted,
+                CourseTypeId = TestDataApi.computerlab.CourseTypeId,
+                CourseType = TestDataApi.computerlab.CourseType
+            };
 
-        //    // Act
-        //    controller.Put(5, "value");
+            var courseForm = new CourseForm {
+                Id = computerLab.Id,
+                Name = "Cyber Security Workshop",
+                IsDeleted = true,
+                CourseTypeId = 2
+            };
 
-        //    // Assert
-        //}
+            courseService.Setup(m => m.Get(It.IsAny<int>()))
+                .Returns(computerLab);
 
-        //[TestMethod]
-        //public void Delete()
-        //{
-        //    // Arrange
-        //    ValuesController controller = new ValuesController();
+            courseService.Setup(m => m.Update(It.IsAny<Course>()))
+                .Callback((Course c) => computerLab = c);
 
-        //    // Act
-        //    controller.Delete(5);
+            var id = 4;
 
-        //    // Assert
-        //}
+            var controller = new CoursesController(courseService.Object, courseTypeService.Object);
+            TestHelper.SetUpControllerRequest(controller, "courses");
+
+            // Act
+            var actionResult = controller.Put(id, courseForm);
+            var okResult = actionResult as OkResult;
+
+            // Assert
+            courseService.Verify(m => m.Get(It.IsAny<int>()));
+            courseService.Verify(m => m.Update(It.IsAny<Course>()));
+            Assert.That(okResult, Is.Not.Null);
+            Assert.That(computerLab.Name, Is.EqualTo("Cyber Security Workshop"));
+        }
+
+        [Test]
+        public void Delete_WhenCalled_CourseWillBeRemoved()
+        {
+            // Arrange
+            var computerLab = new Course
+            {
+                Id = TestDataApi.computerlab.Id,
+                Name = TestDataApi.computerlab.Name,
+                IsDeleted = TestDataApi.computerlab.IsDeleted,
+                CourseTypeId = TestDataApi.computerlab.CourseTypeId,
+                CourseType = TestDataApi.computerlab.CourseType
+            };
+
+            courseService.Setup(m => m.Get(It.IsAny<int>()))
+                .Returns(computerLab);
+
+            courseService.Setup(m => m.Remove(It.IsAny<Course>()))
+                .Callback((Course c) => { c = null; });
+
+            var id = 4;
+
+            var controller = new CoursesController(courseService.Object, courseTypeService.Object);
+            TestHelper.SetUpControllerRequest(controller, "courses");
+
+            // Act
+            var actionResult = controller.Delete(id);
+            var okResult = actionResult as OkResult;
+
+            // Assert
+            courseService.Verify(m => m.Get(It.IsAny<int>()));
+            courseService.Verify(m => m.Remove(It.IsAny<Course>()));
+            Assert.That(okResult, Is.Not.Null);
+        }
+
+        [Test]
+        public void SoftDelete_WhenCalled_CourseWillBeRemoved()
+        {
+            // Arrange
+            var computerLab = new Course
+            {
+                Id = TestDataApi.computerlab.Id,
+                Name = TestDataApi.computerlab.Name,
+                IsDeleted = false,
+                CourseTypeId = TestDataApi.computerlab.CourseTypeId,
+                CourseType = TestDataApi.computerlab.CourseType
+            };
+
+            courseService.Setup(m => m.Get(It.IsAny<int>()))
+                .Returns(computerLab);
+
+            courseService.Setup(m => m.SoftDelete(It.IsAny<Course>()))
+                .Callback((Course c) => { c.IsDeleted = true; });
+
+            var id = 4;
+
+            var controller = new CoursesController(courseService.Object, courseTypeService.Object);
+            TestHelper.SetUpControllerRequest(controller, "courses");
+
+            // Act
+            var actionResult = controller.SoftDelete(id);
+            var okResult = actionResult as OkResult;
+
+            // Assert
+            courseService.Verify(m => m.Get(It.IsAny<int>()));
+            courseService.Verify(m => m.SoftDelete(It.IsAny<Course>()));
+            Assert.That(okResult, Is.Not.Null);
+            Assert.That(computerLab.IsDeleted, Is.True);
+        }
     }
 }
