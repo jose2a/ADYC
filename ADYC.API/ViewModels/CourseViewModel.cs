@@ -13,8 +13,7 @@ namespace ADYC.API.ViewModels
         public int Id { get; set; }
         public string Name { get; set; }
         public int CourseTypeId { get; set; }
-        public string CourseType { get; set; }
-        public string CourseTypeUrl { get; set; }
+        public CourseTypeDto CourseType { get; set; }
     }
 
     public class CourseForm

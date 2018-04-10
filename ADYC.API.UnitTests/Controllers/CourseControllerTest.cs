@@ -6,6 +6,9 @@ using Moq;
 using ADYC.Model;
 using System.Web.Http.Results;
 using ADYC.API.ViewModels;
+using AutoMapper;
+using System.Linq;
+using ADYC.API.App_Start;
 
 namespace ADYC.API.UnitTests.Controllers
 {
@@ -20,6 +23,8 @@ namespace ADYC.API.UnitTests.Controllers
         {
             courseService = new Mock<ICourseService>();
             courseTypeService = new Mock<ICourseTypeService>();
+
+            Mapper.Initialize(c => c.AddProfile<MappingProfile>());
         }
 
         [Test]
@@ -30,15 +35,17 @@ namespace ADYC.API.UnitTests.Controllers
                 .Returns(TestDataApi.Courses);
 
             var controller = new CoursesController(courseService.Object, courseTypeService.Object);
+            TestHelper.SetUpControllerRequest(controller, "Course");
 
             // Act
             var actionResult = controller.Get();
-            var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<Course>>;
+            var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<CourseDto>>;
+            var courseNames = contentResult.Content.Select(c => c.Name);
 
             // Assert
             Assert.That(contentResult, Is.Not.Null);
             Assert.That(contentResult.Content, Is.Not.Null);
-            Assert.That(contentResult.Content, Has.Exactly(1).EqualTo(TestDataApi.computerlab));
+            Assert.That(courseNames, Has.Exactly(1).EqualTo(TestDataApi.computerlab.Name));
         }
 
         [Test]
@@ -47,9 +54,6 @@ namespace ADYC.API.UnitTests.Controllers
             // Arrange
             courseService.Setup(m => m.Get(It.IsAny<int>()))
                 .Returns(() => null);
-
-            courseTypeService.Setup(m => m.Get(It.IsAny<int>()))
-                .Returns(new CourseType { Id = 1, Name = "Internal" });
 
             var controller = new CoursesController(courseService.Object, courseTypeService.Object);
 
@@ -96,13 +100,17 @@ namespace ADYC.API.UnitTests.Controllers
                     c.Id = newId;
                 });
 
-            var courseForm = new CourseForm { Name = "Swimming", CourseTypeId = 1 };
+            courseTypeService.Setup(m => m.Get(It.IsAny<int>()))
+                .Returns(TestDataApi.externalCT);
+
+            var courseForm = new CourseForm { Name = "Swimming", CourseTypeId = 2 };
 
             var controller = new CoursesController(courseService.Object, courseTypeService.Object);
+            TestHelper.SetUpControllerRequest(controller, "courses");
 
             // Act
             var actionResult = controller.Post(courseForm);
-            var createdResult = actionResult as CreatedAtRouteNegotiatedContentResult<CourseForm>;
+            var createdResult = actionResult as CreatedAtRouteNegotiatedContentResult<CourseDto>;
 
             // Assert
             Assert.IsNotNull(createdResult);
