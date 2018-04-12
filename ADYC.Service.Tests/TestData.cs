@@ -14,7 +14,23 @@ namespace ADYC.Service.Tests
         public static CourseType internalCT = new CourseType() { Id = 1, Name = "Internal" };
         public static CourseType externalCT = new CourseType() { Id = 2, Name = "External" };
 
-        public static List<CourseType> CourseTypes = new List<CourseType> { internalCT, externalCT };
+        public static CourseType CloneCourseType(CourseType oldCType)
+        {
+            return new CourseType
+            {
+                Id = oldCType.Id,
+                Name = oldCType.Name,
+                Courses = oldCType.Courses
+            };
+        }
+
+        public static List<CourseType> GetCourseTypes()
+        {
+            return new List<CourseType> {
+                CloneCourseType(internalCT),
+                CloneCourseType(externalCT)
+            };
+        }
         
         #endregion
 
@@ -23,17 +39,40 @@ namespace ADYC.Service.Tests
         public static Course baseball = new Course() { Id = 1, Name = "Baseball", CourseTypeId = internalCT.Id, CourseType = internalCT, IsDeleted = false };
         public static Course basketball = new Course() { Id = 2, Name = "Basketball", CourseTypeId = externalCT.Id, CourseType = externalCT, IsDeleted = false };
         public static Course chess = new Course() { Id = 3, Name = "Chess", CourseTypeId = internalCT.Id, CourseType = internalCT, IsDeleted = false };
-        public static Course computerlab = new Course() { Id = 4, Name = "Computer Lab", CourseTypeId = internalCT.Id, CourseType = internalCT, IsDeleted = false };
+        public static Course computerLab = new Course() { Id = 4, Name = "Computer Lab", CourseTypeId = internalCT.Id, CourseType = internalCT, IsDeleted = false };
         public static Course gym = new Course() { Id = 5, Name = "Gym", CourseTypeId = externalCT.Id, CourseType = externalCT, IsDeleted = false };
         public static Course computerDesign = new Course() { Id = 6, Name = "Computer Design", CourseTypeId = internalCT.Id, CourseType = internalCT, IsDeleted = false };
         public static Course athletism = new Course() { Id = 7, Name = "Athlete", CourseTypeId = externalCT.Id, CourseType = externalCT, IsDeleted = false };
         public static Course theater = new Course() { Id = 8, Name = "Theater", CourseTypeId = externalCT.Id, CourseType = externalCT, IsDeleted = true };
         public static Course vollebay = new Course() { Id = 9, Name = "Volleyball", CourseTypeId = externalCT.Id, CourseType = externalCT, IsDeleted = true };
 
-        public static List<Course> Courses = new List<Course>
+        public static Course CloneCourse(Course oldCourse)
         {
-            baseball, basketball, chess, computerlab, gym, computerDesign, athletism, theater, vollebay
-        };
+            return new Course
+            {
+                Id = oldCourse.Id,
+                Name = oldCourse.Name,
+                IsDeleted = oldCourse.IsDeleted,
+                CourseTypeId = oldCourse.CourseTypeId,
+                CourseType = oldCourse.CourseType
+            };
+        }
+
+        public static List<Course> GetCourses()
+        {
+            return new List<Course>
+            {
+                CloneCourse(baseball),
+                CloneCourse(basketball),
+                CloneCourse(chess),
+                CloneCourse(computerLab),
+                CloneCourse(gym),
+                CloneCourse(computerDesign),
+                CloneCourse(athletism),
+                CloneCourse(theater),
+                CloneCourse(vollebay)
+            };
+        }
 
         #endregion
 
@@ -45,6 +84,23 @@ namespace ADYC.Service.Tests
         public static Professor perterParker = new Professor { Id = new Guid("86616a3d-d8b4-42bb-a246-05fd8973eb0b"), FirstName = "Peter", LastName = "Parker" };
         public static Professor oliverQueen = new Professor { Id = new Guid("dbbfb63e-ccb2-4f41-aedf-eef8033af406"), FirstName = "Oliver", LastName = "Queen" };
         public static Professor jackDaniels = new Professor { Id = new Guid("c402ef4e-861f-47c5-9a6a-74d21ac535ae"), FirstName = "Jack", LastName = "Daniels" };
+
+        public static Professor CloneProfessor(Professor p)
+        {
+            return new Professor
+            {
+                 Id = p.Id,
+                 FirstName = p.FirstName,
+                 LastName = p.LastName,
+                 CellphoneNumber = p.CellphoneNumber,
+                 Email = p.Email,
+                 IsDeleted = p.IsDeleted,
+                 CreatedAt = p.CreatedAt,
+                 UpdatedAt = p.UpdatedAt,
+                 DeletedAt = p.DeletedAt,
+                 Offerings = p.Offerings
+            };
+        }
 
         public static List<Professor> professors = new List<Professor>
         {
@@ -59,6 +115,15 @@ namespace ADYC.Service.Tests
         public static Period secondPeriod = new Period { Id = 2, Name = "Second" };
         public static Period thirdPeriod = new Period { Id = 3, Name = "Third" };
         public static Period fourthPeriod = new Period { Id = 4, Name = "Fourth" };
+
+        public static Period ClonePeriod(Period p)
+        {
+            return new Period
+            {
+                Id = p.Id,
+                Name = p.Name
+            };
+        }
 
         public static List<Period> periods = new List<Period>
         {
@@ -194,6 +259,21 @@ namespace ADYC.Service.Tests
         };
         #endregion
 
+        public static Term CloneTerm(Term t)
+        {
+            return new Term
+            {
+                Id = t.Id,
+                Name = t.Name,
+                StartDate = t.StartDate,
+                EndDate = t.EndDate,
+                EnrollmentDeadLine = t.EnrollmentDeadLine,
+                EnrollmentDropDeadLine = t.EnrollmentDropDeadLine,
+                IsCurrentTerm = t.IsCurrentTerm,
+                PeriodDates = new List<PeriodDate> (t.PeriodDates)
+            };
+        }
+
         public static List<Term> Terms = new List<Term>
         {
             spring2016, fall2016, spring2017, fall2017, spring2018, fall2018
@@ -232,8 +312,8 @@ namespace ADYC.Service.Tests
             Id = 1,
             Location = "Computer Lab",
             OfferingDays = 2,
-            Course = computerlab,
-            CourseId = computerlab.Id,
+            Course = computerLab,
+            CourseId = computerLab.Id,
             Professor = johnDoe,
             ProfessorId = johnDoe.Id,            
             Term = spring2017,
@@ -309,8 +389,8 @@ namespace ADYC.Service.Tests
             Id = 5,
             Location = "Computer Lab",
             OfferingDays = 2,
-            Course = computerlab,
-            CourseId = computerlab.Id,
+            Course = computerLab,
+            CourseId = computerLab.Id,
             Professor = johnDoe,
             ProfessorId = johnDoe.Id,            
             Term = fall2017,
@@ -363,8 +443,8 @@ namespace ADYC.Service.Tests
             Id = 8,
             Location = "Computer Lab",
             OfferingDays = 2,
-            Course = computerlab,
-            CourseId = computerlab.Id,
+            Course = computerLab,
+            CourseId = computerLab.Id,
             Professor = johnDoe,
             ProfessorId = johnDoe.Id,            
             Term = spring2018,
@@ -417,8 +497,8 @@ namespace ADYC.Service.Tests
             Id = 11,
             Location = "Computer Lab",
             OfferingDays = 2,
-            Course = computerlab,
-            CourseId = computerlab.Id,
+            Course = computerLab,
+            CourseId = computerLab.Id,
             Professor = janeDoe,
             ProfessorId = janeDoe.Id,
             Term = spring2018,

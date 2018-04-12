@@ -11,10 +11,12 @@ namespace ADYC.Service
     public class CourseService : ICourseService
     {
         private ICourseRepository _courseRepository;
+        private ICourseTypeRepository _courseTypeRepository;
 
-        public CourseService(ICourseRepository courseRepository)
+        public CourseService(ICourseRepository courseRepository, ICourseTypeRepository courseTypeRepository)
         {
             _courseRepository = courseRepository;
+            _courseTypeRepository = courseTypeRepository;
         }
 
         public void Add(Course course)
@@ -56,7 +58,8 @@ namespace ADYC.Service
                 throw new ArgumentNullException("courseType");
             }
 
-            return _courseRepository.Find(c => c.CourseTypeId == courseType.Id);
+            return _courseRepository.Find(filter: c => c.CourseTypeId == courseType.Id,
+                includeProperties: "CourseType");
         }
 
         public IEnumerable<Course> FindByName(string name)
@@ -66,22 +69,33 @@ namespace ADYC.Service
                 throw new ArgumentNullException("name");
             }
 
-            return _courseRepository.Find(c => c.Name.Contains(name), includeProperties : "CourseType");
+            return _courseRepository.Find(c => c.Name.Contains(name),
+                includeProperties : "CourseType");
         }
 
-        public IEnumerable<Course> FindSoftDeletedCourses()
+        public IEnumerable<Course> FindTrashedCourses()
         {
-            return _courseRepository.Find(c => c.IsDeleted == true, o => o.OrderBy(c => c.Id));
+            return _courseRepository.Find(c => c.IsDeleted == true, o => o.OrderBy(c => c.Id),
+                "CourseType");
         }
 
-        public IEnumerable<Course> FindNotSoftDeletedCourses()
+        public IEnumerable<Course> FindNotTrashedCourses()
         {
-            return _courseRepository.Find(c => c.IsDeleted == false, o => o.OrderBy(c => c.Id));
+            return _courseRepository.Find(c => c.IsDeleted == false,
+                o => o.OrderBy(c => c.Id),
+                "CourseType");
         }
 
         public Course Get(int id)
         {
-            return _courseRepository.Get(id);
+            var course = _courseRepository.Get(id);
+
+            if (course != null)
+            {
+                course.CourseType = _courseTypeRepository.Get(course.CourseTypeId);
+            }
+
+            return course;
         }
 
         public IEnumerable<Course> GetAll()
@@ -121,7 +135,7 @@ namespace ADYC.Service
             _courseRepository.RemoveRange(courses);
         }
 
-        public void SoftDelete(Course course)
+        public void Trash(Course course)
         {
             if (course == null)
             {
@@ -133,7 +147,7 @@ namespace ADYC.Service
             _courseRepository.Update(course);
         }
 
-        public void SoftDeleteRange(IEnumerable<Course> courses)
+        public void TrashRange(IEnumerable<Course> courses)
         {
             if (courses.Count() == 0 || courses == null)
             {
@@ -161,6 +175,38 @@ namespace ADYC.Service
             }
 
             _courseRepository.Update(course);
+        }
+
+        public void Restore(Course course)
+        {
+            if (course == null)
+            {
+                throw new ArgumentNullException("course");
+            }
+
+            if (_courseRepository.Get(course.Id) == null)
+            {
+                throw new NonexistingEntityException("Course does not currently exist.");
+            }
+
+            course.IsDeleted = false;
+
+            _courseRepository.Update(course);
+        }
+
+        public void RestoreRange(IEnumerable<Course> courses)
+        {
+            if (courses == null)
+            {
+                throw new ArgumentNullException("courses");
+            }
+
+            foreach (var course in courses)
+            {
+                course.IsDeleted = false;
+
+                _courseRepository.Update(course);
+            }
         }
     }
 }

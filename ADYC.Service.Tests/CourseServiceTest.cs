@@ -14,21 +14,21 @@ namespace ADYC.Service.Tests
     public class CourseServiceTest
     {
         private Mock<ICourseRepository> _courseRepository;
+        private Mock<ICourseTypeRepository> _courseTypeRepository;
+
         private List<Course> _courses;
-        private CourseType _internalCT = TestData.internalCT;
-        private CourseType _externalCT = TestData.externalCT;
+        private List<CourseType> _courseTypes;
+        private CourseType _internalCT = TestData.CloneCourseType(TestData.internalCT);
+        private CourseType _externalCT = TestData.CloneCourseType(TestData.externalCT);
 
         [SetUp]
         public void SetUp()
         {
-            _courses = new List<Course> (TestData.Courses);
-            _courseRepository = new Mock<ICourseRepository>();
-        }
+            _courses = TestData.GetCourses();
+            _courseTypes = TestData.GetCourseTypes();
 
-        [TearDown]
-        public void TearDown()
-        {
-            _courses = TestData.Courses;
+            _courseRepository = new Mock<ICourseRepository>();
+            _courseTypeRepository = new Mock<ICourseTypeRepository>();
         }
 
         [Test]
@@ -38,21 +38,18 @@ namespace ADYC.Service.Tests
             var expectedId = 10;
             var courseToAdd = new Course() { Id = expectedId, Name = "Swimming", CourseType = _externalCT, CourseTypeId = _externalCT.Id, IsDeleted = false };
 
-            //var courseToAdd = expectedCourse;
-
             _courseRepository.Setup(m => m.Add(It.IsAny<Course>()))
                 .Callback((Course c) => {
                     c.Id = expectedId;
                 });
 
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object, _courseTypeRepository.Object);
 
             // act
             courseService.Add(courseToAdd);
 
             // assert
             _courseRepository.Verify(cr => cr.Add(courseToAdd));
-
             Assert.That(courseToAdd.Id, Is.EqualTo(expectedId));
         }
 
@@ -62,9 +59,10 @@ namespace ADYC.Service.Tests
             // arrange
             _courseRepository.Setup(m => m.Add(It.IsAny<Course>())).Callback(() => {});
 
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object, _courseTypeRepository.Object);
 
             // act and assert
+            _courseRepository.Verify(cr => cr.Add(It.IsAny<Course>()));
             Assert.Throws<ArgumentNullException>(() => courseService.Add(null));
         }
 
@@ -82,11 +80,11 @@ namespace ADYC.Service.Tests
                     };
                 });            
 
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object, _courseTypeRepository.Object);
 
             // act and assert
-            Assert.Throws<PreexistingEntityException>(() => courseService.Add(courseToAdd));
             _courseRepository.Verify(cr => cr.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""));
+            Assert.Throws<PreexistingEntityException>(() => courseService.Add(courseToAdd));
         }
 
         [Test]
@@ -99,33 +97,18 @@ namespace ADYC.Service.Tests
                 new Course() { Name = "Hockey", CourseType = _externalCT, CourseTypeId = _externalCT.Id, IsDeleted = false }
             };
 
-            var expectedIds = new int[] { 10, 11, 12 };            
-
-            var expectedNewCourses = new List<Course>
-            {
-                newCourses[0],
-                newCourses[1],
-                newCourses[2]
-            };
-
-            expectedNewCourses[0].Id = expectedIds[0];
-            expectedNewCourses[1].Id = expectedIds[1];
-            expectedNewCourses[2].Id = expectedIds[2];
+            var expectedIds = new int[] { 10, 11, 12 };
 
             _courseRepository.Setup(m => m.AddRange(It.IsAny<IEnumerable<Course>>()))
-                .Callback((IEnumerable<Course> courses) => {
-                    ((List<Course>)courses)[0].Id = expectedIds[0];
-                    ((List<Course>)courses)[1].Id = expectedIds[1];
-                    ((List<Course>)courses)[2].Id = expectedIds[2];
-                });
+                .Callback((IEnumerable<Course> courses) => {});
             
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object, _courseTypeRepository.Object);
 
             // act
             courseService.AddRange(newCourses);
 
             // assert
-            Assert.AreEqual(expectedNewCourses, newCourses);
+            _courseRepository.Verify(cr => cr.AddRange(It.IsAny<IEnumerable<Course>>()));
         }
 
         [Test]
@@ -136,9 +119,10 @@ namespace ADYC.Service.Tests
                 .Callback(() => {
                 });
 
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object, _courseTypeRepository.Object);
 
             // act and assert
+            _courseRepository.Verify(cr => cr.AddRange(It.IsAny<IEnumerable<Course>>()));
             Assert.Throws<ArgumentNullException>(() => courseService.AddRange(null));
         }
 
@@ -160,9 +144,10 @@ namespace ADYC.Service.Tests
                     };
                 });
 
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object, _courseTypeRepository.Object);
 
             // act and assert
+            _courseRepository.Verify(cr => cr.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""));
             Assert.Throws<PreexistingEntityException>(() => courseService.AddRange(newCourses));
         }
 
@@ -170,28 +155,19 @@ namespace ADYC.Service.Tests
         public void FindByCourseType_InternalCourseType_ListOfCoursesInternalType()
         {
             // arrange
-            //var courseType = _courseTypes[0]; // internal type
-
-            var expectedCourses = new List<Course>
-            {
-                _courses.SingleOrDefault(c => c.Id == 1),
-                _courses.SingleOrDefault(c => c.Id == 3),
-                _courses.SingleOrDefault(c => c.Id == 4),
-                _courses.SingleOrDefault(c => c.Id == 6)
-            };
-
             _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
                 .Returns(() => {
                     return _courses.Where(c => c.CourseTypeId == _internalCT.Id);
                 });
 
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object,
+                _courseTypeRepository.Object);
 
             // act
             var resultCourses = courseService.FindByCourseType(_internalCT);
 
             // assert
-            Assert.AreEqual(expectedCourses, resultCourses);
+            _courseRepository.Verify(cr => cr.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""));
             Assert.That(resultCourses, Has.One.EqualTo(_courses.SingleOrDefault(c => c.Id == 3)));
         }
 
@@ -206,13 +182,15 @@ namespace ADYC.Service.Tests
                     return new List<Course>();
                 });
 
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object,
+                _courseTypeRepository.Object);
 
             // act
             var result = courseService.FindByCourseType(newCourseType);
 
             // assert
-            Assert.IsEmpty(result);
+            _courseRepository.Verify(cr => cr.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""));
+            Assert.That(result, Is.Empty);
         }
 
         [Test]
@@ -224,9 +202,11 @@ namespace ADYC.Service.Tests
                     return new List<Course>();
                 });
 
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object,
+                _courseTypeRepository.Object);
 
             // act and assert
+            _courseRepository.Verify(cr => cr.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""));
             Assert.Throws<ArgumentNullException>(() => courseService.FindByCourseType(null));
         }
 
@@ -236,24 +216,20 @@ namespace ADYC.Service.Tests
             // arrange
             var courseNameToFind = "Bas";
 
-            var expectedCourses = new List<Course>()
-            {
-                _courses[0],
-                _courses[1]
-            };
-
             _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
                 .Returns(() => {
                     return _courses.Where(c => c.Name.Contains("Bas"));
                 });
 
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object,
+                _courseTypeRepository.Object);
 
             // act
             var result = courseService.FindByName(courseNameToFind);
 
             // assert
-            Assert.AreEqual(expectedCourses, result);
+            _courseRepository.Verify(cr => cr.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""));
+            Assert.That(result.Count, Is.GreaterThan(0));
         }
 
         [Test]
@@ -309,7 +285,7 @@ namespace ADYC.Service.Tests
             var courseService = new CourseService(_courseRepository.Object);
 
             // act
-            var result = courseService.FindSoftDeletedCourses();
+            var result = courseService.FindTrashedCourses();
 
             // assert
             Assert.AreEqual(expectedCourses, result);
@@ -368,7 +344,7 @@ namespace ADYC.Service.Tests
             var result = courseService.GetAll();
 
             // assert
-            Assert.AreEqual(expectedCourses, result);
+            Assert.That(result, Does.Contain(TestData.computerLab));
         }
 
         [Test]
@@ -385,7 +361,7 @@ namespace ADYC.Service.Tests
             var courseService = new CourseService(_courseRepository.Object);
 
             // act 
-            var result = courseService.FindNotSoftDeletedCourses();
+            var result = courseService.FindNotTrashedCourses();
 
             // assert
             Assert.AreEqual(expectedCourses, result);
@@ -548,7 +524,7 @@ namespace ADYC.Service.Tests
             var courseService = new CourseService(_courseRepository.Object);
 
             // act 
-            courseService.SoftDelete(courseToRemove);
+            courseService.Trash(courseToRemove);
 
             // assert
             Assert.AreEqual(expectedCourse, courseToRemove);
@@ -566,7 +542,7 @@ namespace ADYC.Service.Tests
             var courseService = new CourseService(_courseRepository.Object);
 
             // act and assert
-            Assert.Throws<ArgumentNullException>(() => courseService.SoftDelete(null));
+            Assert.Throws<ArgumentNullException>(() => courseService.Trash(null));
         }
 
         [Test]
@@ -599,7 +575,7 @@ namespace ADYC.Service.Tests
             var courseService = new CourseService(_courseRepository.Object);
 
             // act
-            courseService.SoftDeleteRange(coursesToRemove);
+            courseService.TrashRange(coursesToRemove);
 
             // assert
             Assert.AreEqual(expectedCourses, coursesToRemove);
@@ -619,8 +595,8 @@ namespace ADYC.Service.Tests
             var courseService = new CourseService(_courseRepository.Object);
 
             // act and assert
-            Assert.Throws<ArgumentNullException>(() => courseService.SoftDeleteRange(coursesToRemove));
-            Assert.Throws<ArgumentNullException>(() => courseService.SoftDeleteRange(null));
+            Assert.Throws<ArgumentNullException>(() => courseService.TrashRange(coursesToRemove));
+            Assert.Throws<ArgumentNullException>(() => courseService.TrashRange(null));
         }
 
         [Test]

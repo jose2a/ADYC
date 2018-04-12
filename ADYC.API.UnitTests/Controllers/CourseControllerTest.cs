@@ -232,7 +232,7 @@ namespace ADYC.API.UnitTests.Controllers
             courseService.Setup(m => m.Get(It.IsAny<int>()))
                 .Returns(computerLab);
 
-            courseService.Setup(m => m.SoftDelete(It.IsAny<Course>()))
+            courseService.Setup(m => m.Trash(It.IsAny<Course>()))
                 .Callback((Course c) => { c.IsDeleted = true; });
 
             var id = 4;
@@ -241,12 +241,12 @@ namespace ADYC.API.UnitTests.Controllers
             TestHelper.SetUpControllerRequest(controller, "courses");
 
             // Act
-            var actionResult = controller.SoftDelete(id);
+            var actionResult = controller.Trash(id);
             var okResult = actionResult as OkResult;
 
             // Assert
             courseService.Verify(m => m.Get(It.IsAny<int>()));
-            courseService.Verify(m => m.SoftDelete(It.IsAny<Course>()));
+            courseService.Verify(m => m.Trash(It.IsAny<Course>()));
             Assert.That(okResult, Is.Not.Null);
             Assert.That(computerLab.IsDeleted, Is.True);
         }

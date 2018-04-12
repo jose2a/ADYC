@@ -51,11 +51,9 @@ namespace ADYC.API.Controllers
 
             if (course != null)
             {
-                var courseType = _courseTypeService.Get(course.CourseTypeId);
-
                 var courseDto = Mapper.Map<Course, CourseDto>(course);
                 courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + course.Id;
-                courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(courseType);
+                courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(course.CourseType);
                 courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + course.CourseTypeId;
 
                 return Ok(courseDto);
@@ -69,6 +67,67 @@ namespace ADYC.API.Controllers
         public IHttpActionResult GetByName(string name)
         {
             var courses = _courseService.FindByName(name);
+
+            return Ok(courses
+                .Select(c => {
+                    var courseDto = Mapper.Map<Course, CourseDto>(c);
+
+                    courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + c.Id;
+                    courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(c.CourseType);
+                    courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + c.CourseTypeId;
+
+                    return courseDto;
+                }));
+        }
+
+        [Route("GetByCourseType/{courseTypeName}")]
+        [ResponseType(typeof(IEnumerable<Course>))]
+        public IHttpActionResult GetByCourseType(string courseTypeName)
+        {
+            var courseTypes = _courseTypeService.FindByName(courseTypeName);
+
+            var courses = new List<Course>();
+
+            foreach (var ct in courseTypes)
+            {
+                courses.AddRange(_courseService.FindByCourseType(ct));
+            }              
+
+            return Ok(courses
+                .Select(c => {
+                    var courseDto = Mapper.Map<Course, CourseDto>(c);
+
+                    courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + c.Id;
+                    courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(c.CourseType);
+                    courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + c.CourseTypeId;
+
+                    return courseDto;
+                }));
+        }
+
+        [Route("GetNotTrashed")]
+        [ResponseType(typeof(IEnumerable<Course>))]
+        public IHttpActionResult GetNotTrashed()
+        {
+            var courses = _courseService.FindNotTrashedCourses();
+
+            return Ok(courses
+                .Select(c => {
+                    var courseDto = Mapper.Map<Course, CourseDto>(c);
+
+                    courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + c.Id;
+                    courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(c.CourseType);
+                    courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + c.CourseTypeId;
+
+                    return courseDto;
+                }));
+        }
+
+        [Route("GetTrashed")]
+        [ResponseType(typeof(IEnumerable<Course>))]
+        public IHttpActionResult GetTrashed()
+        {
+            var courses = _courseService.FindTrashedCourses();
 
             return Ok(courses
                 .Select(c => {
@@ -110,6 +169,7 @@ namespace ADYC.API.Controllers
                     ModelState.AddModelError("", pe.Message);
                 }
             }
+
             return BadRequest(ModelState);
         }
 
@@ -165,17 +225,17 @@ namespace ADYC.API.Controllers
             catch (ForeignKeyEntityException fke)
             {
                 ModelState.AddModelError("", fke.Message);
+
                 return BadRequest(ModelState);
             }
 
             return Ok();
         }
 
-        [Route("SoftDelete/{id}")]
-        [HttpDelete]
+        [Route("Trash/{id}")]
         [ResponseType(typeof(void))]
-        // DELETE api/<controller>/5
-        public IHttpActionResult SoftDelete(int id)
+        // GET api/<controller>/5
+        public IHttpActionResult Trash(int id)
         {
             var courseInDb = _courseService.Get(id);
 
@@ -184,7 +244,24 @@ namespace ADYC.API.Controllers
                 return NotFound();
             }
 
-            _courseService.SoftDelete(courseInDb);
+            _courseService.Trash(courseInDb);
+
+            return Ok();
+        }
+
+        [Route("Restore/{id}")]
+        [ResponseType(typeof(void))]
+        // GET api/<controller>/5
+        public IHttpActionResult Restore(int id)
+        {
+            var courseInDb = _courseService.Get(id);
+
+            if (courseInDb == null)
+            {
+                return NotFound();
+            }
+
+            _courseService.Restore(courseInDb);
 
             return Ok();
         }

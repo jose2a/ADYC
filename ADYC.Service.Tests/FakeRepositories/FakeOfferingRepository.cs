@@ -21,7 +21,7 @@ namespace ADYC.Service.Tests.FakeRepositories
         public static Professor oliverQueen = TestData.oliverQueen;
 
         public static Course chess = TestData.chess;
-        public static Course computerlab = TestData.computerlab;
+        public static Course computerlab = TestData.computerLab;
 
         public static Offering computerLabJohnDSpring2017 = TestData.computerLabJohnDSpring2017;
         public static Offering baseballBruceWSpring2017 = TestData.baseballBruceWSpring2017;
