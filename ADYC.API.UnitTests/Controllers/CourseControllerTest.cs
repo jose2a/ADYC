@@ -22,8 +22,12 @@ namespace ADYC.API.UnitTests.Controllers
         public void SetUp()
         {
             courseService = new Mock<ICourseService>();
-            courseTypeService = new Mock<ICourseTypeService>();
+            courseTypeService = new Mock<ICourseTypeService>();            
+        }
 
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
             Mapper.Initialize(c => c.AddProfile<MappingProfile>());
         }
 
@@ -86,7 +90,7 @@ namespace ADYC.API.UnitTests.Controllers
 
             // Assert
             courseService.Verify(m => m.Get(It.IsAny<int>()));
-            courseTypeService.Verify(m => m.Get(It.IsAny<int>()));
+            //courseTypeService.Verify(m => m.Get(It.IsAny<int>()));
             Assert.That(contentResult, Is.Not.Null);
             Assert.That(contentResult.Content, Is.Not.Null);
             Assert.That(contentResult.Content.Name, Is.EqualTo("Computer Design"));

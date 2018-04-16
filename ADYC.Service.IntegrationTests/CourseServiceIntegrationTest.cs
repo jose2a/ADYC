@@ -27,7 +27,7 @@ namespace ADYC.Service.IntegrationTests
         {
             var context = new AdycDbContext();
 
-            courseService = new CourseService(new CourseRepository(context));
+            courseService = new CourseService(new CourseRepository(context), new CourseTypeRepository(context));
             courseTypeService = new CourseTypeService(new CourseTypeRepository(context));
 
             internalCT = courseTypeService.Get(internalCTId);
@@ -90,7 +90,7 @@ namespace ADYC.Service.IntegrationTests
             var id = 30;
 
             // act and assert
-            Assert.Throws<NonexistingEntityException>(() => courseService.Get(id));
+            Assert.That(courseService.Get(id), Is.Null);
         }
 
         [Test]

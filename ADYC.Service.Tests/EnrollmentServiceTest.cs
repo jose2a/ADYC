@@ -28,9 +28,9 @@ namespace ADYC.Service.Tests
             _evaluationRepository = new Mock<IEvaluationRepository>();
             _periodRepository = new Mock<IPeriodRepository>();
 
-            _enrollments = new List<Enrollment>(TestData.enrollments);
-            _evaluations = new List<Evaluation>(TestData.evaluations);
-            _periods = new List<Period>(TestData.periods);
+            _enrollments = TestData.GetEnrollments();
+            _evaluations = TestData.GetEvaluations();
+            _periods = TestData.GetPeriods();
         }
 
         public Offering DuplicateOffering(Offering offering)
@@ -254,7 +254,7 @@ namespace ADYC.Service.Tests
         public void Update_WhenCalled_EnrollmentFinalGradeAndEvaluationsWillBeCalculatedAndFinalGradeLetterWillBeSet()
         {
             var enrollment = TestData.sydneyDSpring2018;
-            var evaluation = TestData.evaluations.SingleOrDefault(e => e.PeriodId == 3 && e.EnrollmentId == enrollment.Id);
+            var evaluation = TestData.GetEvaluations().SingleOrDefault(e => e.PeriodId == 3 && e.EnrollmentId == enrollment.Id);
             evaluation.PeriodGrade = 85;
 
             _evaluationRepository

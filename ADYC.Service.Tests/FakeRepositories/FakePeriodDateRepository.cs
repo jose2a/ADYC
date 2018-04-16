@@ -11,7 +11,7 @@ namespace ADYC.Service.Tests.FakeRepositories
 {
     public class FakePeriodDateRepository : IPeriodDateRepository
     {
-        public static List<PeriodDate> periodDates = TestData.periodDates;
+        public static List<PeriodDate> periodDates = TestData.GetPeriodDates();
         public static Term spring2018 = TestData.spring2018;
 
         public void Add(PeriodDate entity)

@@ -24,13 +24,13 @@ namespace ADYC.Service.Tests.FakeRepositories
 
         public static Offering compDesignDspring2018 = TestData.compDesignDspring2018;
 
-        public static List<Schedule> schedules = TestData.schedules;
+        public static List<Schedule> schedules = TestData.GetSchedules();
 
         public FakeScheduleRepository()
         {
             foreach (var s in schedules)
             {
-                s.Offering = TestData.Offerings.SingleOrDefault(o => o.Id == s.OfferingId);
+                s.Offering = TestData.GetOfferings().SingleOrDefault(o => o.Id == s.OfferingId);
             }
         }
 

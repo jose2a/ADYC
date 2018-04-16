@@ -57,12 +57,9 @@ namespace ADYC.Service.Tests
         public void Add_CourseIsNull_ArgumentNullExceptionWillBeThrown()
         {
             // arrange
-            _courseRepository.Setup(m => m.Add(It.IsAny<Course>())).Callback(() => {});
-
             var courseService = new CourseService(_courseRepository.Object, _courseTypeRepository.Object);
 
             // act and assert
-            _courseRepository.Verify(cr => cr.Add(It.IsAny<Course>()));
             Assert.Throws<ArgumentNullException>(() => courseService.Add(null));
         }
 
@@ -83,8 +80,9 @@ namespace ADYC.Service.Tests
             var courseService = new CourseService(_courseRepository.Object, _courseTypeRepository.Object);
 
             // act and assert
-            _courseRepository.Verify(cr => cr.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""));
             Assert.Throws<PreexistingEntityException>(() => courseService.Add(courseToAdd));
+            _courseRepository.Verify(cr => cr.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""));
+            
         }
 
         [Test]
@@ -115,14 +113,9 @@ namespace ADYC.Service.Tests
         public void AddRange_CoursesListIsEmptyOrNull_ArgumentNullExceptionWillBeThrown()
         {
             // arrange
-            _courseRepository.Setup(m => m.AddRange(It.IsAny<IEnumerable<Course>>()))
-                .Callback(() => {
-                });
-
             var courseService = new CourseService(_courseRepository.Object, _courseTypeRepository.Object);
 
             // act and assert
-            _courseRepository.Verify(cr => cr.AddRange(It.IsAny<IEnumerable<Course>>()));
             Assert.Throws<ArgumentNullException>(() => courseService.AddRange(null));
         }
 
@@ -147,15 +140,15 @@ namespace ADYC.Service.Tests
             var courseService = new CourseService(_courseRepository.Object, _courseTypeRepository.Object);
 
             // act and assert
-            _courseRepository.Verify(cr => cr.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""));
             Assert.Throws<PreexistingEntityException>(() => courseService.AddRange(newCourses));
+            _courseRepository.Verify(cr => cr.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""));
         }
 
         [Test]
         public void FindByCourseType_InternalCourseType_ListOfCoursesInternalType()
         {
             // arrange
-            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
+            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, It.IsAny<string>()))
                 .Returns(() => {
                     return _courses.Where(c => c.CourseTypeId == _internalCT.Id);
                 });
@@ -167,7 +160,7 @@ namespace ADYC.Service.Tests
             var resultCourses = courseService.FindByCourseType(_internalCT);
 
             // assert
-            _courseRepository.Verify(cr => cr.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""));
+            _courseRepository.Verify(cr => cr.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, It.IsAny<string>()));
             Assert.That(resultCourses, Has.One.EqualTo(_courses.SingleOrDefault(c => c.Id == 3)));
         }
 
@@ -177,7 +170,7 @@ namespace ADYC.Service.Tests
             // arrange
             var newCourseType = new CourseType() { Id = 3, Name = "New type" };
 
-            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
+            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, It.IsAny<string>()))
                 .Returns(() => {
                     return new List<Course>();
                 });
@@ -189,7 +182,7 @@ namespace ADYC.Service.Tests
             var result = courseService.FindByCourseType(newCourseType);
 
             // assert
-            _courseRepository.Verify(cr => cr.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""));
+            _courseRepository.Verify(cr => cr.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, It.IsAny<string>()));
             Assert.That(result, Is.Empty);
         }
 
@@ -197,16 +190,10 @@ namespace ADYC.Service.Tests
         public void FindByCourseType_CourseTypeIsNull_ArgumentNullExceptionWillBeThrown()
         {
             // arrange
-            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
-                .Returns(() => {
-                    return new List<Course>();
-                });
-
             var courseService = new CourseService(_courseRepository.Object,
                 _courseTypeRepository.Object);
 
             // act and assert
-            _courseRepository.Verify(cr => cr.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""));
             Assert.Throws<ArgumentNullException>(() => courseService.FindByCourseType(null));
         }
 
@@ -216,7 +203,7 @@ namespace ADYC.Service.Tests
             // arrange
             var courseNameToFind = "Bas";
 
-            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
+            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, It.IsAny<string>()))
                 .Returns(() => {
                     return _courses.Where(c => c.Name.Contains("Bas"));
                 });
@@ -228,7 +215,7 @@ namespace ADYC.Service.Tests
             var result = courseService.FindByName(courseNameToFind);
 
             // assert
-            _courseRepository.Verify(cr => cr.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""));
+            _courseRepository.Verify(cr => cr.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, It.IsAny<string>()));
             Assert.That(result.Count, Is.GreaterThan(0));
         }
 
@@ -238,57 +225,51 @@ namespace ADYC.Service.Tests
             // arrange
             var courseName = "Drawing";
 
-            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
+            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, It.IsAny<string>()))
                 .Returns(() => {
                     return new List<Course>();
                 });
 
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object, _courseTypeRepository.Object);
 
             // act
             var result = courseService.FindByName(courseName);
 
             // assert
-            Assert.AreEqual(0, result.Count());
+            _courseRepository.Verify(cr => cr.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, It.IsAny<string>()));
+            Assert.That(result.Count, Is.EqualTo(0));
         }
 
         [Test]
         public void FindByName_CourseNameIsEmpty_ThrowsArgumentNullException()
         {
             // arrange
-            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, ""))
-                .Returns(() => {
-                    return new List<Course>();
-                });
-
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object, _courseTypeRepository.Object);
 
             // act and assert
             Assert.Throws<ArgumentNullException>(() => courseService.FindByName(string.Empty));
         }
 
         [Test]
-        public void FindSoftDeletedCourses_WhenCalled_ListOfCoursesWithIsDeletedEqualsTrue()
+        public void FindTrashedCourses_WhenCalled_ListOfCoursesWithIsDeletedEqualsTrue()
         {
             // arrange
-            var expectedCourses = new List<Course>
-            {
-                _courses.SingleOrDefault(c => c.Id == 8),
-                _courses.SingleOrDefault(c => c.Id == 9)
-            };
+            var theater = _courses.SingleOrDefault(c => c.Id == 8);
 
-            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), It.IsAny<Func<IQueryable<Course>, IOrderedQueryable<Course>>>(), ""))
+            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), It.IsAny<Func<IQueryable<Course>, IOrderedQueryable<Course>>>(), It.IsAny<string>()))
                 .Returns(() => {
                     return _courses.Where(c => c.IsDeleted == true).OrderBy(c => c.Id);
                 });
 
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object,
+                _courseTypeRepository.Object);
 
             // act
             var result = courseService.FindTrashedCourses();
 
             // assert
-            Assert.AreEqual(expectedCourses, result);
+            _courseRepository.Verify(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), It.IsAny<Func<IQueryable<Course>, IOrderedQueryable<Course>>>(), It.IsAny<string>()));
+            Assert.That(result, Has.Member(theater));
         }
 
         [Test]
@@ -297,74 +278,62 @@ namespace ADYC.Service.Tests
             // arrange
             var id = 3;
 
-            var expectedCourse = _courses.SingleOrDefault(c => c.Id == 3);
-
             _courseRepository.Setup(m => m.Get(It.IsAny<int>()))
                 .Returns(() => {
                     return _courses.SingleOrDefault(c => c.Id == id);
                 });
 
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object,
+                _courseTypeRepository.Object);
 
             // act
             var result = courseService.Get(id);
 
             // assert
-            Assert.AreEqual(expectedCourse, result);
+            _courseRepository.Verify(m => m.Get(It.IsAny<int>()));
+            Assert.That(result.Id, Is.EqualTo(3));
         }
-
-        [Test]
-        public void Get_CourseDoesNotExist_NonexistingExceptionWillBeThrown()
-        {
-            // arrange
-            var id = 30;
-
-            _courseRepository.Setup(m => m.Get(It.IsAny<int>())).Returns(() => { return null; });
-
-            var courseService = new CourseService(_courseRepository.Object);
-
-            // act and assert
-            Assert.Throws<NonexistingEntityException>(() => courseService.Get(id));
-        }
-
+        
         [Test]
         public void GetAll_WhenCalled_ReturnsListOfAllCourses()
         {
             // arrange
-            var expectedCourses = _courses;
-
-            _courseRepository.Setup(m => m.GetAll(It.IsAny<Func<IQueryable<Course>, IOrderedQueryable<Course>>>(), ""))
+            _courseRepository.Setup(m => m.GetAll(It.IsAny<Func<IQueryable<Course>, IOrderedQueryable<Course>>>(), It.IsAny<string>()))
                 .Returns(() => {
                     return _courses;
                 });
 
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object,
+                _courseTypeRepository.Object);
 
             // act 
             var result = courseService.GetAll();
 
             // assert
-            Assert.That(result, Does.Contain(TestData.computerLab));
+            _courseRepository.Verify(m => m.GetAll(It.IsAny<Func<IQueryable<Course>, IOrderedQueryable<Course>>>(), It.IsAny<string>()));
+            Assert.That(result, Does.Contain(_courses.SingleOrDefault(c => c.Id == 4)));
         }
 
         [Test]
-        public void FindNotSoftDeletedCourses_WhenCalled_ReturnsListOfCoursesWithIsDeletedEqualsFalse()
+        public void FindNotTrashedCourses_WhenCalled_ReturnsListOfCoursesWithIsDeletedEqualsFalse()
         {
             // arrange
-            var expectedCourses = new List<Course>(_courses.Where(c => c.IsDeleted == false).ToList());
+            var chess = _courses.SingleOrDefault(c => c.Id == 3);
 
-            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), It.IsAny<Func<IQueryable<Course>, IOrderedQueryable<Course>>>(), ""))
+            _courseRepository.Setup(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), It.IsAny<Func<IQueryable<Course>, IOrderedQueryable<Course>>>(), It.IsAny<string>()))
                 .Returns(() => {
                     return _courses.Where(c => c.IsDeleted == false);
                 });
 
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object,
+                _courseTypeRepository.Object);
 
             // act 
             var result = courseService.FindNotTrashedCourses();
 
             // assert
-            Assert.AreEqual(expectedCourses, result);
+            _courseRepository.Verify(m => m.Find(It.IsAny<Expression<Func<Course, bool>>>(), It.IsAny<Func<IQueryable<Course>, IOrderedQueryable<Course>>>(), It.IsAny<string>()));
+            Assert.That(result, Has.One.EqualTo(chess));
         }
 
         [Test]
@@ -373,41 +342,26 @@ namespace ADYC.Service.Tests
             // arrange
             var courseToRemove = _courses.SingleOrDefault(c => c.Id == 4);
 
-            var expectedCourses = new List<Course>()
-            {
-                _courses.SingleOrDefault(c => c.Id == 1),
-                _courses.SingleOrDefault(c => c.Id == 2),
-                _courses.SingleOrDefault(c => c.Id == 3),
-                _courses.SingleOrDefault(c => c.Id == 5),
-                _courses.SingleOrDefault(c => c.Id == 6),
-                _courses.SingleOrDefault(c => c.Id == 7),
-                _courses.SingleOrDefault(c => c.Id == 8),
-                _courses.SingleOrDefault(c => c.Id == 9)
-            };
-
             _courseRepository.Setup(m => m.Remove(It.IsAny<Course>()))
                 .Callback((Course course) => {
-                    _courses.Remove(course);
                 });
 
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object,
+                _courseTypeRepository.Object);
 
             // act 
             courseService.Remove(courseToRemove);
 
             // assert
-            Assert.That(_courses, Does.Not.Contain(courseToRemove));
+            _courseRepository.Verify(m => m.Remove(It.IsAny<Course>()));
         }
 
         [Test]
         public void Remove_CourseIsNull_ArgumentNullExceptionWillBeThrown()
         {
             // arrange
-            _courseRepository.Setup(m => m.Remove(It.IsAny<Course>()))
-                .Callback(() => {
-                });
-
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object,
+                _courseTypeRepository.Object);
 
             // act and assert
             Assert.Throws<ArgumentNullException>(() => courseService.Remove(null));
@@ -420,11 +374,8 @@ namespace ADYC.Service.Tests
             var courseToRemove = _courses.SingleOrDefault(c => c.Id == 3);
             courseToRemove.Offerings.Add(new Offering());
 
-            _courseRepository.Setup(m => m.Remove(It.IsAny<Course>()))
-                .Callback(() => {
-                });
-
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object,
+                _courseTypeRepository.Object);
 
             // act and assert
             Assert.Throws<ForeignKeyEntityException>(() => courseService.Remove(courseToRemove));
@@ -434,18 +385,6 @@ namespace ADYC.Service.Tests
         public void RemoveRange_WhenCalled_ListOfCoursesWillBeRemovedFromList()
         {
             // arrange
-            var expectedCourses = new List<Course>()
-            {
-                _courses.SingleOrDefault(c => c.Id == 1),
-                _courses.SingleOrDefault(c => c.Id == 2),
-                _courses.SingleOrDefault(c => c.Id == 3),
-                _courses.SingleOrDefault(c => c.Id == 7),
-                _courses.SingleOrDefault(c => c.Id == 8),
-                _courses.SingleOrDefault(c => c.Id == 9)
-            };
-
-            var IdsToRemove = new int[] { 5, 6 };
-
             var coursesToRemove = new List<Course> {
                 _courses.SingleOrDefault(c => c.Id == 5),
                 _courses.SingleOrDefault(c => c.Id == 6)
@@ -453,18 +392,16 @@ namespace ADYC.Service.Tests
 
             _courseRepository.Setup(m => m.RemoveRange(It.IsAny<IEnumerable<Course>>()))
                 .Callback((IEnumerable<Course> courses) => {
-                    _courses.RemoveAll(c => IdsToRemove.Contains(c.Id));
                 });
 
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object,
+                _courseTypeRepository.Object);
 
             // act
             courseService.RemoveRange(coursesToRemove);
 
             // assert
-            //Assert.AreEqual(expectedCourses, _courses);
-            Assert.That(_courses, Does.Not.Contain(coursesToRemove[0]));
-            Assert.That(_courses, Does.Not.Contain(coursesToRemove[1]));
+            _courseRepository.Verify(m => m.RemoveRange(It.IsAny<IEnumerable<Course>>()));
         }
 
         [Test]
@@ -473,11 +410,8 @@ namespace ADYC.Service.Tests
             // arrange
             var coursesToRemove = new List<Course>();
 
-            _courseRepository.Setup(m => m.RemoveRange(It.IsAny<IEnumerable<Course>>()))
-                .Callback((IEnumerable<Course> courses) => {
-                });
-
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object,
+                _courseTypeRepository.Object);
 
             // act and assert
             Assert.Throws<ArgumentNullException>(() => courseService.RemoveRange(coursesToRemove));
@@ -496,103 +430,77 @@ namespace ADYC.Service.Tests
 
             coursesToRemove[0].Offerings.Add(new Offering());
 
-            _courseRepository.Setup(m => m.RemoveRange(It.IsAny<IEnumerable<Course>>()))
-                .Callback((IEnumerable<Course> courses) => {
-                });
-
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object,
+                _courseTypeRepository.Object);
 
             // act and assert
-            Assert.Throws<ForeignKeyEntityException>(() => courseService.RemoveRange(coursesToRemove));
             Assert.Throws<ForeignKeyEntityException>(() => courseService.RemoveRange(coursesToRemove));
         }
 
         [Test]
-        public void SoftDelete_WhenCalled_CourseIsDeletedPropertyWillBeSetToTrue()
+        public void Trash_WhenCalled_CourseIsDeletedPropertyWillBeSetToTrue()
         {
             // arrange
             var courseToRemove = _courses.SingleOrDefault(c => c.Id == 3);
-
-            var expectedCourse = courseToRemove;
-            expectedCourse.IsDeleted = true;
 
             _courseRepository.Setup(m => m.Update(It.IsAny<Course>()))
                 .Callback((Course course) => {
                     course.IsDeleted = true;
                 });
 
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object,
+                _courseTypeRepository.Object);
 
             // act 
             courseService.Trash(courseToRemove);
 
             // assert
-            Assert.AreEqual(expectedCourse, courseToRemove);
-            Assert.IsTrue(courseToRemove.IsDeleted);
+            _courseRepository.Verify(m => m.Update(It.IsAny<Course>()));
+            Assert.That(courseToRemove.IsDeleted, Is.True);
         }
 
         [Test]
-        public void SoftDelete_CourseIsNull_ArgumentNullExceptionWillBeThrown()
+        public void Trash_CourseIsNull_ArgumentNullExceptionWillBeThrown()
         {
             // arrange
-            _courseRepository.Setup(m => m.Update(It.IsAny<Course>()))
-                .Callback(() => {
-                });
-
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object,
+                _courseTypeRepository.Object);
 
             // act and assert
             Assert.Throws<ArgumentNullException>(() => courseService.Trash(null));
         }
 
         [Test]
-        public void SoftDeleteRange_WhenCalled_ListOfCoursesWillBeSetToTrue()
+        public void TrashRange_WhenCalled_ListOfCoursesWillBeSetToTrue()
         {
             // arrange
-            var expectedCourses = new List<Course> {
-                _courses.SingleOrDefault(c => c.Id == 3),
-                _courses.SingleOrDefault(c => c.Id == 5),
-                _courses.SingleOrDefault(c => c.Id == 6)
-            };
-
-            expectedCourses[0].IsDeleted = true;
-            expectedCourses[1].IsDeleted = true;
-            expectedCourses[2].IsDeleted = true;
-
             var coursesIdsToRemove = new List<int> { 3, 5, 6 };
 
-            var coursesToRemove = new List<Course> {
-                _courses.SingleOrDefault(c => c.Id == 3),
-                _courses.SingleOrDefault(c => c.Id == 5),
-                _courses.SingleOrDefault(c => c.Id == 6)
-            };
+            var coursesToRemove = _courses.Where(c => coursesIdsToRemove.Contains(c.Id));
 
             _courseRepository.Setup(m => m.Update(It.IsAny<Course>()))
                 .Callback((Course courseToUpdate) => {
                     courseToUpdate.IsDeleted = true;
                 });
 
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object,
+                _courseTypeRepository.Object);
 
             // act
             courseService.TrashRange(coursesToRemove);
 
             // assert
-            Assert.AreEqual(expectedCourses, coursesToRemove);
+            _courseRepository.Verify(m => m.Update(It.IsAny<Course>()));
         }
 
         [Test]
-        public void SoftDeleteRange_ListIsNullOrEmpty_ArgumentNullExceptionWillBeThrown()
+        public void TrashRange_ListIsNullOrEmpty_ArgumentNullExceptionWillBeThrown()
         {
             // arrange
             var coursesToRemove = new List<Course>();
 
-            _courseRepository.Setup(m => m.Update(It.IsAny<Course>()))
-                .Callback((Course courseToUpdate) => {
-                    courseToUpdate.IsDeleted = true;
-                });
-
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object,
+                _courseTypeRepository.Object);
 
             // act and assert
             Assert.Throws<ArgumentNullException>(() => courseService.TrashRange(coursesToRemove));
@@ -605,9 +513,7 @@ namespace ADYC.Service.Tests
             // arrange            
             var courseId = 5;
             var courseToUpdate = _courses.SingleOrDefault(c => c.Id == courseId);
-
-            var expectedCourse = courseToUpdate;
-            expectedCourse.Name = "Gymnastic";
+            courseToUpdate.Name = "Gymnastic";
 
             _courseRepository.Setup(m => m.Get(It.IsAny<int>()))
                 .Returns(() => {
@@ -616,16 +522,17 @@ namespace ADYC.Service.Tests
 
             _courseRepository.Setup(m => m.Update(It.IsAny<Course>()))
                 .Callback((Course course) => {
-                    course.Name = "Gymnastic";
                 });
 
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object,
+                _courseTypeRepository.Object);
 
             // act
             courseService.Update(courseToUpdate);
 
             // assert
-            Assert.AreEqual(expectedCourse, courseToUpdate);
+            _courseRepository.Verify(m => m.Get(It.IsAny<int>()));
+            _courseRepository.Verify(m => m.Update(It.IsAny<Course>()));
         }
 
         [Test]
@@ -640,10 +547,12 @@ namespace ADYC.Service.Tests
                     return null;
                 });
 
-            var courseService = new CourseService(_courseRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object,
+                _courseTypeRepository.Object);
 
-            // act and assert
+            // act and assert            
             Assert.Throws<NonexistingEntityException>(() => courseService.Update(newCourse));
+            _courseRepository.Verify(m => m.Get(It.IsAny<int>()));
         }
 
         [Test]
@@ -655,15 +564,12 @@ namespace ADYC.Service.Tests
                     return null;
                 });
 
-            _courseRepository.Setup(m => m.Update(It.IsAny<Course>()))
-                .Callback((Course courseToUpdate) => {
-                    courseToUpdate.IsDeleted = true;
-                });
+            var courseService = new CourseService(_courseRepository.Object,
+                _courseTypeRepository.Object);
 
-            var courseService = new CourseService(_courseRepository.Object);
-
-            // act and assert
+            // act and assert            
             Assert.Throws<ArgumentNullException>(() => courseService.Update(null));
+            _courseRepository.Verify(m => m.Get(It.IsAny<int>()));
         }
     }
 }

@@ -19,8 +19,7 @@ namespace ADYC.Service.Tests
             return new CourseType
             {
                 Id = oldCType.Id,
-                Name = oldCType.Name,
-                Courses = oldCType.Courses
+                Name = oldCType.Name
             };
         }
 
@@ -48,13 +47,15 @@ namespace ADYC.Service.Tests
 
         public static Course CloneCourse(Course oldCourse)
         {
+            var enrollmens = GetOfferings().Where(o => o.CourseId == oldCourse.Id);
+
             return new Course
             {
                 Id = oldCourse.Id,
                 Name = oldCourse.Name,
                 IsDeleted = oldCourse.IsDeleted,
                 CourseTypeId = oldCourse.CourseTypeId,
-                CourseType = oldCourse.CourseType
+                CourseType = CloneCourseType(oldCourse.CourseType)
             };
         }
 
@@ -97,15 +98,21 @@ namespace ADYC.Service.Tests
                  IsDeleted = p.IsDeleted,
                  CreatedAt = p.CreatedAt,
                  UpdatedAt = p.UpdatedAt,
-                 DeletedAt = p.DeletedAt,
-                 Offerings = p.Offerings
+                 DeletedAt = p.DeletedAt
             };
         }
 
-        public static List<Professor> professors = new List<Professor>
+        public static List<Professor> GetProfessors()
         {
-            janeDoe, johnDoe, bruceWayne, perterParker, oliverQueen, jackDaniels
-        };
+            return new List<Professor> {
+                CloneProfessor(janeDoe),
+                CloneProfessor(johnDoe),
+                CloneProfessor(bruceWayne),
+                CloneProfessor(perterParker),
+                CloneProfessor(oliverQueen),
+                CloneProfessor(jackDaniels)
+            };
+        }
 
         #endregion
 
@@ -125,13 +132,16 @@ namespace ADYC.Service.Tests
             };
         }
 
-        public static List<Period> periods = new List<Period>
+        public static List<Period> GetPeriods()
         {
-            firstPeriod,
-            secondPeriod,
-            thirdPeriod,
-            fourthPeriod
-        };
+            return new List<Period>
+            {
+                ClonePeriod(firstPeriod),
+                ClonePeriod(secondPeriod),
+                ClonePeriod(thirdPeriod),
+                ClonePeriod(fourthPeriod)
+            };
+        }
 
         #endregion
 
@@ -270,38 +280,68 @@ namespace ADYC.Service.Tests
                 EnrollmentDeadLine = t.EnrollmentDeadLine,
                 EnrollmentDropDeadLine = t.EnrollmentDropDeadLine,
                 IsCurrentTerm = t.IsCurrentTerm,
-                PeriodDates = new List<PeriodDate> (t.PeriodDates)
+                PeriodDates = ClonePeriodDatesList(t.PeriodDates).ToList()
             };
         }
 
-        public static List<Term> Terms = new List<Term>
+        public static List<Term> GetTerms()
         {
-            spring2016, fall2016, spring2017, fall2017, spring2018, fall2018
-        };
+            return new List<Term>
+            {
+                CloneTerm(spring2016),
+                CloneTerm(fall2016),
+                CloneTerm(spring2017),
+                CloneTerm(fall2017),
+                CloneTerm(spring2018),
+                CloneTerm(fall2018)
+            };
+        }
 
         #endregion
 
         #region Period Dates
 
-        public static List<PeriodDate> periodDates = new List<PeriodDate>
+        public static List<PeriodDate> GetPeriodDates()
         {
-            spring2016.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 1),
-            spring2016.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 2),
-            spring2016.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 3),
-            spring2016.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 4),
-            fall2016.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 1),
-            fall2016.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 2),
-            fall2016.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 3),
-            fall2016.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 4),
-            spring2017.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 1),
-            spring2017.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 2),
-            spring2017.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 3),
-            spring2017.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 4),
-            fall2017.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 1),
-            fall2017.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 2),
-            fall2017.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 3),
-            fall2017.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 4)
-        };
+            return new List<PeriodDate>
+            {
+                ClonePeriodDate(spring2016.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 1)),
+                ClonePeriodDate(spring2016.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 2)),
+                ClonePeriodDate(spring2016.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 3)),
+                ClonePeriodDate(spring2016.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 4)),
+                ClonePeriodDate(fall2016.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 1)),
+                ClonePeriodDate(fall2016.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 2)),
+                ClonePeriodDate(fall2016.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 3)),
+                ClonePeriodDate(fall2016.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 4)),
+                ClonePeriodDate(spring2017.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 1)),
+                ClonePeriodDate(spring2017.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 2)),
+                ClonePeriodDate(spring2017.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 3)),
+                ClonePeriodDate(spring2017.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 4)),
+                ClonePeriodDate(fall2017.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 1)),
+                ClonePeriodDate(fall2017.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 2)),
+                ClonePeriodDate(fall2017.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 3)),
+                ClonePeriodDate(fall2017.PeriodDates.SingleOrDefault(pd => pd.PeriodId == 4))
+            };
+        }
+
+        public static PeriodDate ClonePeriodDate(PeriodDate pd)
+        {
+            return new PeriodDate
+            {
+                PeriodId = pd.PeriodId,
+                TermId = pd.TermId,
+                StartDate = pd.StartDate,
+                EndDate = pd.EndDate
+            };
+        }
+
+        public static IEnumerable<PeriodDate> ClonePeriodDatesList(ICollection<PeriodDate> pds)
+        {
+            foreach (var pd in pds)
+            {
+                yield return ClonePeriodDate(pd);
+            }
+        }
 
         #endregion
 
@@ -528,52 +568,80 @@ namespace ADYC.Service.Tests
             //}
         };
 
-        public static List<Offering> Offerings = new List<Offering>
+        public static List<Offering> GetOfferings()
         {
-            computerLabJohnDSpring2017,
-            baseballBruceWSpring2017,
-            gymOliverQSpring2017,
-            compDesignJohnDFall2017,
-            computerLabJohnDFall2017,
-            baseballBruceWFall2017,
-            gymOliverQFall2017,
-            computerLabJohnDSpring2018,
-            baseballBruceWSpring2018,
-            gymOliverQSpring2018,
-            computerLabJaneDSpring2018,
-            compDesignDspring2018
-        };
+            return new List<Offering>
+            {
+                CloneOffering(computerLabJohnDSpring2017),
+                CloneOffering(baseballBruceWSpring2017),
+                CloneOffering(gymOliverQSpring2017),
+                CloneOffering(compDesignJohnDFall2017),
+                CloneOffering(computerLabJohnDFall2017),
+                CloneOffering(baseballBruceWFall2017),
+                CloneOffering(gymOliverQFall2017),
+                CloneOffering(computerLabJohnDSpring2018),
+                CloneOffering(baseballBruceWSpring2018),
+                CloneOffering(gymOliverQSpring2018),
+                CloneOffering(computerLabJaneDSpring2018),
+                CloneOffering(compDesignDspring2018)
+            };
+        }
+
+        public static Offering CloneOffering(Offering o)
+        {
+            return new Offering
+            {
+                Id = o.Id,
+                Location = o.Location,
+                OfferingDays = o.OfferingDays,
+                CourseId = o.CourseId,
+                Course = CloneCourse(o.Course),
+                ProfessorId = o.ProfessorId,
+                Professor = CloneProfessor(o.Professor),
+                TermId = o.TermId,
+                Term = CloneTerm(o.Term),
+                Title = o.Title,
+                Notes = o.Notes,
+                Schedules = CloneScheduleList(o.Schedules).ToList()
+            };
+        }
 
         #endregion
 
         #region Schedules
 
-        public static List<Schedule> schedules = new List<Schedule> {
-            computerLabJohnDSpring2017.Schedules.ElementAt(0),
-            computerLabJohnDSpring2017.Schedules.ElementAt(1),
-            baseballBruceWSpring2017.Schedules.ElementAt(0),
-            baseballBruceWSpring2017.Schedules.ElementAt(1),
-            gymOliverQSpring2017.Schedules.ElementAt(0),
-            gymOliverQSpring2017.Schedules.ElementAt(1),
-            compDesignJohnDFall2017.Schedules.ElementAt(0),
-            compDesignJohnDFall2017.Schedules.ElementAt(1),
-            computerLabJohnDFall2017.Schedules.ElementAt(0),
-            computerLabJohnDFall2017.Schedules.ElementAt(1),
-            baseballBruceWFall2017.Schedules.ElementAt(0),
-            baseballBruceWFall2017.Schedules.ElementAt(1),
-            gymOliverQFall2017.Schedules.ElementAt(0),
-            gymOliverQFall2017.Schedules.ElementAt(1),
-            computerLabJohnDSpring2018.Schedules.ElementAt(0),
-            computerLabJohnDSpring2018.Schedules.ElementAt(1),
-            baseballBruceWSpring2018.Schedules.ElementAt(0),
-            baseballBruceWSpring2018.Schedules.ElementAt(1),
-            gymOliverQSpring2018.Schedules.ElementAt(0),
-            gymOliverQSpring2018.Schedules.ElementAt(1),
-            computerLabJaneDSpring2018.Schedules.ElementAt(0),
-            computerLabJaneDSpring2018.Schedules.ElementAt(1)//,
-            //compDesignDspring2018.Schedules.ElementAt(0),
-            //compDesignDspring2018.Schedules.ElementAt(1)
-        };
+        public static List<Schedule> GetSchedules()
+        {
+            var schedules = new List<Schedule>();
+
+            foreach (var offering in GetOfferings())
+            {
+                schedules.AddRange(CloneScheduleList(offering.Schedules).ToList());
+            }
+
+            return schedules;
+        }
+
+        public static Schedule CloneSchedule(Schedule s)
+        {
+            return new Schedule
+            {
+                Id = s.Id,
+                Day = s.Day,
+                OfferingId = s.OfferingId,
+                Offering = CloneOffering(s.Offering),
+                StartTime = s.StartTime,
+                EndTime = s.EndTime
+            };
+        }
+
+        public static IEnumerable<Schedule> CloneScheduleList(ICollection<Schedule> schedules)
+        {
+            foreach (var s in schedules)
+            {
+                yield return CloneSchedule(s);
+            }
+        }
 
         #endregion
 
@@ -584,7 +652,25 @@ namespace ADYC.Service.Tests
         public static Grade thirdSemester = new Grade { Id = 3, Name = "Third Semester" };
         public static Grade fourthSemester = new Grade { Id = 4, Name = "Fourth Semester" };
 
-        public static List<Grade> grades = new List<Grade> { firstSemester, secondSemester, thirdSemester, fourthSemester };
+        public static List<Grade> GetGrades()
+        {
+            return new List<Grade>
+            {
+                CloneGrade(firstSemester),
+                CloneGrade(secondSemester),
+                CloneGrade(thirdSemester),
+                CloneGrade(fourthSemester)
+            };
+        }
+
+        public static Grade CloneGrade(Grade g)
+        {
+            return new Grade
+            {
+                Id = g.Id,
+                Name = g.Name
+            };
+        }
 
         #endregion
 
@@ -597,7 +683,27 @@ namespace ADYC.Service.Tests
         public static Group groupE = new Group { Id = 5, Name = "E" };
         public static Group groupF = new Group { Id = 6, Name = "F" };
 
-        public static List<Group> groups = new List<Group> { groupA, groupB, groupC, groupD, groupE, groupF };
+        public static List<Group> GetGroups()
+        {
+            return new List<Group>
+            {
+                CloneGroup(groupA),
+                CloneGroup(groupB),
+                CloneGroup(groupC),
+                CloneGroup(groupD),
+                CloneGroup(groupE),
+                CloneGroup(groupF)
+            };
+        }
+
+        public static Group CloneGroup(Group g)
+        {
+            return new Group
+            {
+                Id = g.Id,
+                Name = g.Name
+            };
+        }
 
         #endregion
 
@@ -614,11 +720,32 @@ namespace ADYC.Service.Tests
         public static Major compDesign = new Major { Id = 9, Name = "Computer Design", IsDeleted = true };
         public static Major math = new Major { Id = 10, Name = "Math", IsDeleted = true };
 
-        public static List<Major> majors = new List<Major>
+        public static List<Major> GetMajors()
         {
-            computerScience, foodScience, electronics, robotics, civilEngineering, mechanic, bigData, businessAdmin, compDesign, math
-        };
+            return new List<Major>
+            {
+                CloneMajor(computerScience),
+                CloneMajor(foodScience),
+                CloneMajor(electronics),
+                CloneMajor(robotics),
+                CloneMajor(civilEngineering),
+                CloneMajor(mechanic),
+                CloneMajor(bigData),
+                CloneMajor(businessAdmin),
+                CloneMajor(compDesign),
+                CloneMajor(math)
+            };
+        }
 
+        public static Major CloneMajor(Major m)
+        {
+            return new Major
+            {
+                Id = m.Id,
+                Name = m.Name,
+                IsDeleted = m.IsDeleted
+            };
+        }
         #endregion
 
         #region Students
@@ -815,21 +942,43 @@ namespace ADYC.Service.Tests
             IsDeleted = false
         };
 
-        public static List<Student> students = new List<Student>
+        public static List<Student> GetStudents()
         {
-            raquelWilson,
-            landonZoe,
-            candyceDenzil,
-            reganMerton,
-            ethanSunshine,
-            marionDavis,
-            lucyCorinne,
-            madonnaBrandon,
-            yorkAnnmarie,
-            serenaTravis,
-            phillisBryon,
-            sydneyDuke
-        };
+            return new List<Student>
+            {
+                CloneStudent(raquelWilson),
+                CloneStudent(landonZoe),
+                CloneStudent(candyceDenzil),
+                CloneStudent(reganMerton),
+                CloneStudent(ethanSunshine),
+                CloneStudent(marionDavis),
+                CloneStudent(lucyCorinne),
+                CloneStudent(madonnaBrandon),
+                CloneStudent(yorkAnnmarie),
+                CloneStudent(serenaTravis),
+                CloneStudent(phillisBryon),
+                CloneStudent(sydneyDuke)
+            };
+        }
+
+        public static Student CloneStudent(Student s)
+        {
+            return new Student
+            {
+                Id = s.Id,
+                FirstName = s.FirstName,
+                LastName = s.LastName,
+                Email = s.Email,
+                CellphoneNumber = s.CellphoneNumber,
+                Grade = CloneGrade(s.Grade),
+                GradeId = s.GradeId,
+                Group = CloneGroup(s.Group),
+                GroupId = s.GroupId,
+                Major = CloneMajor(s.Major),
+                MajorId = s.MajorId,
+                IsDeleted = s.IsDeleted
+            };
+        }
 
         #endregion
 
@@ -1406,121 +1555,182 @@ namespace ADYC.Service.Tests
         };
         #endregion
 
-        public static List<Enrollment> enrollments = new List<Enrollment>
+        public static List<Enrollment> GetEnrollments()
         {
-            raquelWSpring2017, raquelWFall2017, raquelWSpring2018,
-            landonZFall2017, landonZSpring2018,
-            candyceDSpring2018,
-            reganMFall2017,
-            ethanSFall2017, ethanSSpring2018,
-            lucyCFall2017,
-            madonnaBSpring2018,
-            yorkASpring2018,
-            serenaTSpring2017, serenaTFall2017, serenaTSpring2018,
-            phillisBSpring2017, phillisBFall2017, phillisBSpring2018,
-            sydneyDSpring2018
-        };
+            return new List<Enrollment>
+            {
+                CloneEnrollment(raquelWSpring2017),
+                CloneEnrollment(raquelWFall2017),
+                CloneEnrollment(raquelWSpring2018),
+                CloneEnrollment(landonZFall2017),
+                CloneEnrollment(landonZSpring2018),
+                CloneEnrollment(candyceDSpring2018),
+                CloneEnrollment(reganMFall2017),
+                CloneEnrollment(ethanSFall2017),
+                CloneEnrollment(ethanSSpring2018),
+                CloneEnrollment(lucyCFall2017),
+                CloneEnrollment(madonnaBSpring2018),
+                CloneEnrollment(yorkASpring2018),
+                CloneEnrollment(serenaTSpring2017),
+                CloneEnrollment(serenaTFall2017),
+                CloneEnrollment(serenaTSpring2018),
+                CloneEnrollment(phillisBSpring2017),
+                CloneEnrollment(phillisBFall2017),
+                CloneEnrollment(phillisBSpring2018),
+                CloneEnrollment(sydneyDSpring2018)
+            };
+        }
+
+        public static Enrollment CloneEnrollment(Enrollment e)
+        {
+            return new Enrollment
+            {
+                Id = e.Id,
+                Notes = e.Notes,
+                IsCurrentEnrollment = e.IsCurrentEnrollment,
+                EnrollmentDate = e.EnrollmentDate,
+                Student = CloneStudent(e.Student),
+                StudentId = e.StudentId,
+                Offering = CloneOffering(e.Offering),
+                OfferingId = e.OfferingId,
+                Evaluations = CloneEvaluationList(e.Evaluations)
+            };
+        }
 
         #endregion
 
         #region Evaluations
-        public static List<Evaluation> evaluations = new List<Evaluation>
+        public static List<Evaluation> GetEvaluations()
         {
-            raquelWSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
-            raquelWSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
-            raquelWSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
-            raquelWSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+            var evaluations = new List<Evaluation>();
 
-            raquelWFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
-            raquelWFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
-            raquelWFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
-            raquelWFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+            foreach (var e in GetEnrollments())
+            {
+                evaluations.AddRange(CloneEvaluationList(e.Evaluations));
+            }
 
-            raquelWSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
-            raquelWSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
-            raquelWSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
-            raquelWSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+            return evaluations;
+        
+            //raquelWSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            //raquelWSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            //raquelWSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            //raquelWSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
 
-            landonZFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
-            landonZFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
-            landonZFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
-            landonZFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+            //raquelWFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            //raquelWFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            //raquelWFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            //raquelWFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
 
-            landonZSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
-            landonZSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
-            landonZSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
-            landonZSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+            //raquelWSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            //raquelWSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            //raquelWSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            //raquelWSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
 
-            candyceDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
-            candyceDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
-            candyceDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
-            candyceDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+            //landonZFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            //landonZFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            //landonZFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            //landonZFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
 
-            reganMFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
-            reganMFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
-            reganMFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
-            reganMFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+            //landonZSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            //landonZSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            //landonZSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            //landonZSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
 
-            ethanSFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
-            ethanSFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
-            ethanSFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
-            ethanSFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+            //candyceDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            //candyceDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            //candyceDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            //candyceDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
 
-            ethanSSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
-            ethanSSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
-            ethanSSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
-            ethanSSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+            //reganMFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            //reganMFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            //reganMFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            //reganMFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
 
-            lucyCFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
-            lucyCFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
-            lucyCFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
-            lucyCFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+            //ethanSFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            //ethanSFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            //ethanSFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            //ethanSFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
 
-            madonnaBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
-            madonnaBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
-            madonnaBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
-            madonnaBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+            //ethanSSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            //ethanSSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            //ethanSSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            //ethanSSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
 
-            yorkASpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
-            yorkASpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
-            yorkASpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
-            yorkASpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+            //lucyCFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            //lucyCFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            //lucyCFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            //lucyCFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
 
-            serenaTFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
-            serenaTFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
-            serenaTFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
-            serenaTFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+            //madonnaBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            //madonnaBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            //madonnaBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            //madonnaBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
 
-            serenaTSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
-            serenaTSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
-            serenaTSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
-            serenaTSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+            //yorkASpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            //yorkASpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            //yorkASpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            //yorkASpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
 
-            serenaTSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
-            serenaTSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
-            serenaTSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
-            serenaTSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+            //serenaTFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            //serenaTFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            //serenaTFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            //serenaTFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
 
-            phillisBSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
-            phillisBSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
-            phillisBSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
-            phillisBSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+            //serenaTSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            //serenaTSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            //serenaTSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            //serenaTSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
 
-            phillisBFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
-            phillisBFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
-            phillisBFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
-            phillisBFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+            //serenaTSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            //serenaTSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            //serenaTSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            //serenaTSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
 
-            phillisBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
-            phillisBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
-            phillisBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
-            phillisBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+            //phillisBSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            //phillisBSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            //phillisBSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            //phillisBSpring2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
 
-            sydneyDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
-            sydneyDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
-            sydneyDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
-            sydneyDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4)
-        };
+            //phillisBFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            //phillisBFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            //phillisBFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            //phillisBFall2017.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+
+            //phillisBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            //phillisBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            //phillisBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            //phillisBSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4),
+
+            //sydneyDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 1),
+            //sydneyDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 2),
+            //sydneyDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 3),
+            //sydneyDSpring2018.Evaluations.SingleOrDefault(e => e.PeriodId == 4)
+            //};
+        }
+
+        public static Evaluation CloneEvaluation(Evaluation e)
+        {
+            return new Evaluation
+            {
+                EnrollmentId = e.EnrollmentId,
+                PeriodId = e.PeriodId,
+                Notes = e.Notes,
+                PeriodGrade = e.PeriodGrade,
+                PeriodGradeLetter = e.PeriodGradeLetter
+            };
+        }
+
+        public static List<Evaluation> CloneEvaluationList(ICollection<Evaluation> evaluations)
+        {
+            var list = new List<Evaluation>();
+
+            foreach (var e in evaluations)
+            {
+                list.Add(CloneEvaluation(e));
+            }
+
+            return list;
+        }
 
         #endregion
     }
