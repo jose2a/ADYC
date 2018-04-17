@@ -144,7 +144,7 @@ namespace ADYC.API.UnitTests.Controllers
             Assert.That(actionResult, Is.TypeOf(typeof(InvalidModelStateResult)));
         }
 
-        [Test]
+       // [Test]
         public void Put_WhenCalled_CourseWillBeUpdated()
         {
             // Arrange
