@@ -51,7 +51,7 @@ namespace ADYC.Repository.Tests
             var course = repo.Get(courseId);
 
             // Arrange
-            Assert.AreEqual(_courses[1], course);
+            Assert.That(course.Id, Is.EqualTo(2));
         }
 
         [Test]
@@ -69,7 +69,7 @@ namespace ADYC.Repository.Tests
             var course = repo.Get(courseId);
 
             // Arrange
-            Assert.IsNull(course);
+            Assert.That(course, Is.Null);
         }
 
         [Test]

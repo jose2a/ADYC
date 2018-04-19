@@ -35,7 +35,7 @@ namespace ADYC.Service.IntegrationTests
         }
 
         [Test]
-        public void Add_WhenAdded_CourseWillGetNewId()
+        public void CSI_Add_WhenAdded_CourseWillGetNewId()
         {
             // arrange
             var courseToAdd = new Course() { Name = "Swimming", CourseTypeId = externalCTId, IsDeleted = false };
@@ -48,7 +48,7 @@ namespace ADYC.Service.IntegrationTests
         }
 
         [Test]
-        public void Add_CourseAlreadyExist_PreexistingEntityExceptionWillBeThrown()
+        public void CSI_Add_CourseAlreadyExist_PreexistingEntityExceptionWillBeThrown()
         {
             // arrange
             var courseToAdd = new Course() { Name = "Gym", CourseTypeId = externalCTId, IsDeleted = false };
@@ -58,7 +58,7 @@ namespace ADYC.Service.IntegrationTests
         }
 
         [Test]
-        public void FindByCourseType_NotValidCourseType_ReturnsEmpty()
+        public void CSI_FindByCourseType_NotValidCourseType_ReturnsEmpty()
         {
             // arrange
             var newCourseType = new CourseType() { Id = 3, Name = "New type" };
@@ -71,7 +71,7 @@ namespace ADYC.Service.IntegrationTests
         }
 
         [Test]
-        public void Get_WhenCalled_GetCourseWithGivenId()
+        public void CSI_Get_WhenCalled_GetCourseWithGivenId()
         {
             // arrange
             var id = 10;
@@ -84,7 +84,7 @@ namespace ADYC.Service.IntegrationTests
         }
 
         [Test]
-        public void Get_CourseDoesNotExist_NonexistingExceptionWillBeThrown()
+        public void CSI_Get_CourseDoesNotExist_NonexistingExceptionWillBeThrown()
         {
             // arrange
             var id = 30;
@@ -94,7 +94,7 @@ namespace ADYC.Service.IntegrationTests
         }
 
         [Test]
-        public void Remove_WhenCalled_CourseIsRemovedFromTheList()
+        public void CSI_Remove_WhenCalled_CourseIsRemovedFromTheList()
         {
             // arrange
             var courseToRemove = new Course() { Name = "Running", CourseTypeId = externalCTId, IsDeleted = false };
@@ -113,7 +113,7 @@ namespace ADYC.Service.IntegrationTests
         }
 
         [Test]
-        public void Update_CourseExist_CourseWillBeUpdated()
+        public void CSI_Update_CourseExist_CourseWillBeUpdated()
         {
             // arrange            
             var courseId = 7;
