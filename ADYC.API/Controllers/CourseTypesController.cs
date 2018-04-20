@@ -4,11 +4,8 @@ using ADYC.Model;
 using ADYC.Util.Exceptions;
 using ADYC.Util.RestUtils;
 using AutoMapper;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 
@@ -26,7 +23,7 @@ namespace ADYC.API.Controllers
 
         // GET api/<controller>
         [Route("")]
-        [ResponseType(typeof(IEnumerable<CourseType>))]
+        [ResponseType(typeof(IEnumerable<CourseTypeDto>))]
         public IHttpActionResult Get()
         {
             var courseTypes = _courseTypeService.GetAll();
@@ -43,7 +40,7 @@ namespace ADYC.API.Controllers
 
         // GET api/<controller>/5
         [Route("{id}")]
-        [ResponseType(typeof(CourseType))]
+        [ResponseType(typeof(CourseTypeDto))]
         public IHttpActionResult Get(int id)
         {
             var courseType = _courseTypeService.Get(id);
