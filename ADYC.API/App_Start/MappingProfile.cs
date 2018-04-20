@@ -19,6 +19,9 @@ namespace ADYC.API.App_Start
             // Dto to Domain
             CreateMap<CourseForm, Course>()
                 .ForMember(c => c.Id, opt => opt.Ignore());
+
+            CreateMap<CourseTypeForm, CourseType>()
+                .ForMember(c => c.Id, opt => opt.Ignore());
         }
     }
 }

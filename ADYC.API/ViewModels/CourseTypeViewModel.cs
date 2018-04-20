@@ -13,4 +13,12 @@ namespace ADYC.API.ViewModels
         [Required]
         public string Name { get; set; }
     }
+
+    public class CourseTypeForm
+    {
+        public int? Id { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+    }
 }

@@ -25,7 +25,7 @@ namespace ADYC.API.Controllers
 
         // GET api/<controller>
         [Route("")]
-        [ResponseType(typeof(IEnumerable<Course>))]
+        [ResponseType(typeof(IEnumerable<CourseDto>))]
         public IHttpActionResult Get()
         {
             var courses = _courseService.GetAll();
@@ -44,7 +44,7 @@ namespace ADYC.API.Controllers
 
         // GET api/<controller>/5
         [Route("{id}")]
-        [ResponseType(typeof(Course))]
+        [ResponseType(typeof(CourseDto))]
         public IHttpActionResult Get(int id)
         {
             var course = _courseService.Get(id);
@@ -63,7 +63,7 @@ namespace ADYC.API.Controllers
         }
 
         [Route("GetByName/{name}")]
-        [ResponseType(typeof(IEnumerable<Course>))]
+        [ResponseType(typeof(IEnumerable<CourseDto>))]
         public IHttpActionResult GetByName(string name)
         {
             var courses = _courseService.FindByName(name);
@@ -81,7 +81,7 @@ namespace ADYC.API.Controllers
         }
 
         [Route("GetByCourseType/{courseTypeName}")]
-        [ResponseType(typeof(IEnumerable<Course>))]
+        [ResponseType(typeof(IEnumerable<CourseDto>))]
         public IHttpActionResult GetByCourseType(string courseTypeName)
         {
             var courseTypes = _courseTypeService.FindByName(courseTypeName);
@@ -106,7 +106,7 @@ namespace ADYC.API.Controllers
         }
 
         [Route("GetNotTrashed")]
-        [ResponseType(typeof(IEnumerable<Course>))]
+        [ResponseType(typeof(IEnumerable<CourseDto>))]
         public IHttpActionResult GetNotTrashed()
         {
             var courses = _courseService.FindNotTrashedCourses();
@@ -124,7 +124,7 @@ namespace ADYC.API.Controllers
         }
 
         [Route("GetTrashed")]
-        [ResponseType(typeof(IEnumerable<Course>))]
+        [ResponseType(typeof(IEnumerable<CourseDto>))]
         public IHttpActionResult GetTrashed()
         {
             var courses = _courseService.FindTrashedCourses();
@@ -143,7 +143,7 @@ namespace ADYC.API.Controllers
 
         [Route("")]
         [HttpPost]
-        [ResponseType(typeof(Course))]
+        [ResponseType(typeof(CourseDto))]
         // POST api/<controller>
         public IHttpActionResult Post([FromBody] CourseForm form)
         {
