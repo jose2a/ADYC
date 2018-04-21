@@ -6,7 +6,7 @@ namespace ADYC.IService
 {
     public interface IProfessorService
     {
-        Professor Get(int id);
+        Professor Get(Guid id);
         IEnumerable<Professor> GetAll();        
         IEnumerable<Professor> FindByFirstName(string firstName);        
         IEnumerable<Professor> FindByLastName(string lastName);

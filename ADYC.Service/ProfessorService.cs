@@ -88,7 +88,7 @@ namespace ADYC.Service
             return _professorRepository.Find(p => p.IsDeleted == true, o => o.OrderBy(p => p.Id));
         }
 
-        public Professor Get(int id)
+        public Professor Get(Guid id)
         {
             var professor = _professorRepository.Get(id);
 
