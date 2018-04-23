@@ -171,6 +171,7 @@
     <Compile Include="ViewModels\MajorViewModel.cs" />
     <Compile Include="ViewModels\PeriodViewModel.cs" />
     <Compile Include="ViewModels\ProfessorViewModel.cs" />
+    <Compile Include="ViewModels\StudentViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />

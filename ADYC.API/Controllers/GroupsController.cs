@@ -63,7 +63,7 @@ namespace ADYC.API.Controllers
 
             return Ok(groups
                 .Select(g => {
-                    var groupDto = Mapper.Map<Grade, GroupDto>(g);
+                    var groupDto = Mapper.Map<Group, GroupDto>(g);
                     groupDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Groups") + g.Id;
 
                     return groupDto;
