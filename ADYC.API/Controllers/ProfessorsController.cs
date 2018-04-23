@@ -23,7 +23,7 @@ namespace ADYC.API.Controllers
         }
 
         // GET api/<controller>/5
-        [Route("{id:Guid}")]
+        [Route("{id:guid}")]
         [ResponseType(typeof(ProfessorDto))]
         public IHttpActionResult Get(Guid id)
         {
@@ -146,6 +146,23 @@ namespace ADYC.API.Controllers
                 }));
         }
 
+        [Route("{id:guid}/GetOfferings")]
+        [ResponseType(typeof(IEnumerable<ProfessorDto>))]
+        public IHttpActionResult GetOfferings(Guid professorId)
+        {
+            var offerings = _professorService.GetProfessorOfferings(professorId);
+
+            return Ok(offerings
+                .Select(o => {
+                    return o;
+                    // Fixing this
+                    //var professorDto = Mapper.Map<Professor, ProfessorDto>(o);
+                    //professorDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Professors") + o.Id;
+
+                    //return professorDto;
+                }));
+        }
+
         [Route("")]
         [HttpPost]
         [ResponseType(typeof(ProfessorDto))]
@@ -174,7 +191,7 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
-        [Route("{id}")]
+        [Route("{id:guid}")]
         [HttpPut]
         [ResponseType(typeof(void))]
         // PUT api/<controller>/5
@@ -206,7 +223,7 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
-        [Route("{id}")]
+        [Route("{id:guid}")]
         [HttpDelete]
         [ResponseType(typeof(void))]
         // DELETE api/<controller>/5
@@ -233,7 +250,7 @@ namespace ADYC.API.Controllers
             return Ok();
         }
 
-        [Route("Trash/{id}")]
+        [Route("Trash/{id:guid}")]
         [ResponseType(typeof(void))]
         // GET api/<controller>/5
         public IHttpActionResult Trash(Guid id)
@@ -250,7 +267,7 @@ namespace ADYC.API.Controllers
             return Ok();
         }
 
-        [Route("Restore/{id:Guid}")]
+        [Route("Restore/{id:guid}")]
         [ResponseType(typeof(void))]
         // GET api/<controller>/5
         public IHttpActionResult Restore(Guid id)
