@@ -18,6 +18,7 @@ namespace ADYC.API.App_Start
             CreateMap<Grade, GradeDto>();
             CreateMap<Major, MajorDto>();
             CreateMap<Period, PeriodDto>();
+            CreateMap<Professor, ProfessorDto>();
 
             // Dto to Domain
             CreateMap<CourseForm, Course>()
@@ -33,6 +34,9 @@ namespace ADYC.API.App_Start
                 .ForMember(m => m.Id, opt => opt.Ignore());
 
             CreateMap<PeriodDto, Period>()
+                .ForMember(p => p.Id, opt => opt.Ignore());
+
+            CreateMap<ProfessorDto, Professor>()
                 .ForMember(p => p.Id, opt => opt.Ignore());
         }
     }
