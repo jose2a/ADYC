@@ -67,7 +67,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CourseServiceIT.cs" />
+    <Compile Include="CourseService.cs" />
     <Compile Include="CourseTypeService.cs" />
     <Compile Include="EnrollmentService.cs" />
     <Compile Include="GroupService.cs" />

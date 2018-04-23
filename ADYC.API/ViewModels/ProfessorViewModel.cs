@@ -9,6 +9,7 @@ namespace ADYC.API.ViewModels
     public class ProfessorDto
     {
         public string Url { get; set; }
+
         [Required]
         public Guid Id { get; set; }
         [Required]
@@ -23,5 +24,8 @@ namespace ADYC.API.ViewModels
         public string CellphoneNumber { get; set; }
         [Required]
         public bool IsDeleted { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public DateTime? DeletedAt { get; set; }
     }
 }

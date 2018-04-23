@@ -12,8 +12,8 @@ namespace ADYC.IService
         IEnumerable<Professor> FindByLastName(string lastName);
         IEnumerable<Professor> FindByEmail(string email);
         IEnumerable<Professor> FindByCellphoneNumber(string cellphoneNumber);
-        IEnumerable<Professor> FindNotSoftDeletedProfessors();
-        IEnumerable<Professor> FindSoftDeletedProfessors();
+        IEnumerable<Professor> FindNotTrashedProfessors();
+        IEnumerable<Professor> FindTrashedProfessors();
 
         IEnumerable<Offering> GetProfessorOfferings(Guid professorId);
 
@@ -24,7 +24,9 @@ namespace ADYC.IService
 
         void Remove(Professor professor);
         void RemoveRange(IEnumerable<Professor> professors);
-        void SoftDelete(Professor professor);
-        void SoftDeleteRange(IEnumerable<Professor> professors);
+        void Trash(Professor professor);
+        void TrashRange(IEnumerable<Professor> professors);
+        void Restore(Professor professor);
+        void RestoreRange(IEnumerable<Professor> professors);
     }
 }

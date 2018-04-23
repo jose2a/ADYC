@@ -78,26 +78,19 @@ namespace ADYC.Service
             return _professorRepository.Find(p => p.LastName.Contains(lastName), o => o.OrderBy(c => c.LastName));
         }
 
-        public IEnumerable<Professor> FindNotSoftDeletedProfessors()
+        public IEnumerable<Professor> FindNotTrashedProfessors()
         {
             return _professorRepository.Find(p => p.IsDeleted == false, o => o.OrderBy(p => p.Id));
         }
 
-        public IEnumerable<Professor> FindSoftDeletedProfessors()
+        public IEnumerable<Professor> FindTrashedProfessors()
         {
             return _professorRepository.Find(p => p.IsDeleted == true, o => o.OrderBy(p => p.Id));
         }
 
         public Professor Get(Guid id)
         {
-            var professor = _professorRepository.Get(id);
-
-            if (professor == null)
-            {
-                throw new NonexistingEntityException("A professor with the given id does not exist.");
-            }
-
-            return professor;
+            return _professorRepository.Get(id);
         }
 
         public IEnumerable<Professor> GetAll()
@@ -154,7 +147,41 @@ namespace ADYC.Service
             _professorRepository.RemoveRange(professors);
         }
 
-        public void SoftDelete(Professor professor)
+        public void Restore(Professor professor)
+        {
+            if (professor == null)
+            {
+                throw new ArgumentNullException("professor");
+            }
+
+            if (_professorRepository.Get(professor.Id) == null)
+            {
+                throw new NonexistingEntityException("Professor does not currently exist.");
+            }
+
+            professor.IsDeleted = false;
+            professor.DeletedAt = null;
+
+            _professorRepository.Update(professor);
+        }
+
+        public void RestoreRange(IEnumerable<Professor> professors)
+        {
+            if (professors == null)
+            {
+                throw new ArgumentNullException("professors");
+            }
+
+            foreach (var professor in professors)
+            {
+                professor.IsDeleted = false;
+                professor.DeletedAt = null;
+
+                _professorRepository.Update(professor);
+            }
+        }
+
+        public void Trash(Professor professor)
         {
             if (professor == null)
             {
@@ -167,7 +194,7 @@ namespace ADYC.Service
             _professorRepository.Update(professor);
         }
 
-        public void SoftDeleteRange(IEnumerable<Professor> professors)
+        public void TrashRange(IEnumerable<Professor> professors)
         {
             if (professors.Count() == 0 || professors == null)
             {
