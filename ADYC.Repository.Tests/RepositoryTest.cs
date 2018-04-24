@@ -51,6 +51,7 @@ namespace ADYC.Repository.Tests
             var course = repo.Get(courseId);
 
             // Arrange
+            context.Verify(c => c.Set<Course>().Find(It.IsAny<int>()));
             Assert.That(course.Id, Is.EqualTo(2));
         }
 

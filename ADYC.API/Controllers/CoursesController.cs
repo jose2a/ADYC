@@ -4,6 +4,7 @@ using ADYC.Model;
 using ADYC.Util.Exceptions;
 using ADYC.Util.RestUtils;
 using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
@@ -162,7 +163,7 @@ namespace ADYC.API.Controllers
                     courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(courseType);
                     courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + course.CourseTypeId;
 
-                    return CreatedAtRoute("DefaultApi", new { Id = course.Id }, courseDto);
+                    return Created(new Uri(courseDto.Url), courseDto);
                 }
                 catch (PreexistingEntityException pe)
                 {

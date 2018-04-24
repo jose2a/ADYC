@@ -36,7 +36,7 @@ namespace ADYC.API.UnitTests.Controllers
         {
             // Arrange
             courseService.Setup(m => m.GetAll())
-                .Returns(TestDataApi.Courses);
+                .Returns(TestDataApi.GetCourses());
 
             var controller = new CoursesController(courseService.Object, courseTypeService.Object);
             TestHelper.SetUpControllerRequest(controller, "Course");
@@ -50,7 +50,7 @@ namespace ADYC.API.UnitTests.Controllers
             courseService.Verify(m => m.GetAll());
             Assert.That(contentResult, Is.Not.Null);
             Assert.That(contentResult.Content, Is.Not.Null);
-            Assert.That(courseNames, Has.Exactly(1).EqualTo(TestDataApi.computerlab.Name));
+            Assert.That(courseNames, Has.Exactly(1).EqualTo(TestDataApi.CloneCourse(TestDataApi.computerLab).Name));
         }
 
         [Test]
@@ -148,14 +148,7 @@ namespace ADYC.API.UnitTests.Controllers
         public void Put_WhenCalled_CourseWillBeUpdated()
         {
             // Arrange
-            var computerLab = new Course
-            {
-                Id = TestDataApi.computerlab.Id,
-                Name = TestDataApi.computerlab.Name,
-                IsDeleted = TestDataApi.computerlab.IsDeleted,
-                CourseTypeId = TestDataApi.computerlab.CourseTypeId,
-                CourseType = TestDataApi.computerlab.CourseType
-            };
+            var computerLab = TestDataApi.CloneCourse(TestDataApi.computerLab);
 
             var courseForm = new CourseForm {
                 Id = computerLab.Id,
@@ -190,14 +183,7 @@ namespace ADYC.API.UnitTests.Controllers
         public void Delete_WhenCalled_CourseWillBeRemoved()
         {
             // Arrange
-            var computerLab = new Course
-            {
-                Id = TestDataApi.computerlab.Id,
-                Name = TestDataApi.computerlab.Name,
-                IsDeleted = TestDataApi.computerlab.IsDeleted,
-                CourseTypeId = TestDataApi.computerlab.CourseTypeId,
-                CourseType = TestDataApi.computerlab.CourseType
-            };
+            var computerLab = TestDataApi.CloneCourse(TestDataApi.computerLab);
 
             courseService.Setup(m => m.Get(It.IsAny<int>()))
                 .Returns(computerLab);
@@ -224,14 +210,7 @@ namespace ADYC.API.UnitTests.Controllers
         public void SoftDelete_WhenCalled_CourseWillBeRemoved()
         {
             // Arrange
-            var computerLab = new Course
-            {
-                Id = TestDataApi.computerlab.Id,
-                Name = TestDataApi.computerlab.Name,
-                IsDeleted = false,
-                CourseTypeId = TestDataApi.computerlab.CourseTypeId,
-                CourseType = TestDataApi.computerlab.CourseType
-            };
+            var computerLab = TestDataApi.CloneCourse(TestDataApi.computerLab);
 
             courseService.Setup(m => m.Get(It.IsAny<int>()))
                 .Returns(computerLab);
