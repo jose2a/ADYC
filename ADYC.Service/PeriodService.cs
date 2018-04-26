@@ -29,14 +29,7 @@ namespace ADYC.Service
 
         public Period Get(int id)
         {
-            var period = _periodRepository.Get(id);
-
-            if (period == null)
-            {
-                throw new NonexistingEntityException("A period with the given id does not exist.");
-            }
-
-            return period;
+            return _periodRepository.Get(id);
         }
 
         public IEnumerable<Period> GetAll()

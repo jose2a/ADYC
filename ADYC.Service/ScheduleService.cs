@@ -39,14 +39,7 @@ namespace ADYC.Service
 
         public Schedule Get(int id)
         {
-            var schedule = _scheduleRepository.Get(id);
-
-            if (schedule == null)
-            {
-                throw new NonexistingEntityException("There is no schedule with the specific id.");
-            }
-
-            return schedule;
+            return _scheduleRepository.Get(id);
         }
 
         public void Update(IEnumerable<Schedule> schedules)

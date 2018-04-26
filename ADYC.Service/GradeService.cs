@@ -46,14 +46,7 @@ namespace ADYC.Service
 
         public Grade Get(int id)
         {
-            var grade = _gradeRepository.Get(id);
-
-            if (grade == null)
-            {
-                throw new NonexistingEntityException("A grade with the given id does not exist.");
-            }
-
-            return grade;
+            return _gradeRepository.Get(id);
         }
 
         public IEnumerable<Grade> GetAll()

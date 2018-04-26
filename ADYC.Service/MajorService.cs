@@ -44,14 +44,7 @@ namespace ADYC.Service
 
         public Major Get(int id)
         {
-            var major = _majorRepository.Get(id);
-
-            if (major == null)
-            {
-                throw new NonexistingEntityException("A major with the given id does not exist.");
-            }
-
-            return major;
+            return _majorRepository.Get(id);
         }
 
         public IEnumerable<Major> GetAll()

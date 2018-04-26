@@ -13,7 +13,8 @@ namespace ADYC.Service
         private ITermRepository _termRepository;
         private IPeriodDateRepository _periodDateRepository;
 
-        public TermService(ITermRepository termRepository, IPeriodDateRepository periodDateRepository)
+        public TermService(ITermRepository termRepository,
+            IPeriodDateRepository periodDateRepository)
         {
             _termRepository = termRepository;
             _periodDateRepository = periodDateRepository;
@@ -66,14 +67,7 @@ namespace ADYC.Service
 
         public Term Get(int id)
         {
-            var term = _termRepository.Get(id);
-
-            if (term == null)
-            {
-                throw new NonexistingEntityException("There is no a term with the specific id.");
-            }
-
-            return term;
+            return _termRepository.Get(id);
         }
 
         public IEnumerable<Term> GetAll()

@@ -10,7 +10,7 @@ using System.Linq.Expressions;
 
 namespace ADYC.Service.Tests
 {
-    //[Test]
+    [TestFixture]
     public class CourseServiceTest
     {
         private Mock<ICourseRepository> _courseRepository;

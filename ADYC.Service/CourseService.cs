@@ -13,7 +13,8 @@ namespace ADYC.Service
         private ICourseRepository _courseRepository;
         private ICourseTypeRepository _courseTypeRepository;
 
-        public CourseService(ICourseRepository courseRepository, ICourseTypeRepository courseTypeRepository)
+        public CourseService(ICourseRepository courseRepository,
+            ICourseTypeRepository courseTypeRepository)
         {
             _courseRepository = courseRepository;
             _courseTypeRepository = courseTypeRepository;
@@ -31,6 +32,7 @@ namespace ADYC.Service
                 throw new PreexistingEntityException("A course with the same name already exists.", null);
             }
 
+            course.IsDeleted = false;
             _courseRepository.Add(course);
         }
 
@@ -46,6 +48,11 @@ namespace ADYC.Service
             if (_courseRepository.Find(c => courseNames.Contains(c.Name)).Count() > 0)
             {
                 throw new PreexistingEntityException("A course with the name already exists.");
+            }
+
+            foreach (var c in courses)
+            {
+                c.IsDeleted = true;                
             }
 
             _courseRepository.AddRange(courses);

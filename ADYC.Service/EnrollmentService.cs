@@ -41,14 +41,7 @@ namespace ADYC.Service
 
         public Enrollment Get(int id)
         {
-            var enrollment = _enrollmentRepository.Get(id);
-
-            if (enrollment == null)
-            {
-                throw new NonexistingEntityException("An enrollment with the given id does not exist.");
-            }
-
-            return enrollment;
+            return _enrollmentRepository.Get(id);
         }
 
         public IEnumerable<Enrollment> GetAllEnrollments()

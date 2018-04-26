@@ -80,7 +80,10 @@ namespace ADYC.Service
                 throw new ArgumentNullException("cellphoneNumber");
             }
 
-            return _studentRepository.Find(s => s.CellphoneNumber.Contains(cellphoneNumber), o => o.OrderBy(s => s.CellphoneNumber));
+            return _studentRepository.
+                Find(s => s.CellphoneNumber.Contains(cellphoneNumber),
+                o => o.OrderBy(s => s.CellphoneNumber),
+                includeProperties: "Grade,Group,Major");
         }
 
         public IEnumerable<Student> FindByEmail(string email)
@@ -90,7 +93,10 @@ namespace ADYC.Service
                 throw new ArgumentNullException("email");
             }
 
-            return _studentRepository.Find(s => s.Email.Contains(email), o => o.OrderBy(s => s.Email));
+            return _studentRepository.
+                Find(s => s.Email.Contains(email),
+                o => o.OrderBy(s => s.Email),
+                includeProperties: "Grade,Group,Major");
         }
 
         public IEnumerable<Student> FindByFirstName(string firstName)
@@ -100,7 +106,10 @@ namespace ADYC.Service
                 throw new ArgumentNullException("firstName");
             }
 
-            return _studentRepository.Find(s => s.FirstName.Contains(firstName), o => o.OrderBy(s => s.FirstName));
+            return _studentRepository.
+                Find(s => s.FirstName.Contains(firstName),
+                o => o.OrderBy(s => s.FirstName),
+                includeProperties: "Grade,Group,Major");
         }
 
         public IEnumerable<Student> FindByLastName(string lastName)
@@ -110,34 +119,36 @@ namespace ADYC.Service
                 throw new ArgumentNullException("lastName");
             }
 
-            return _studentRepository.Find(s => s.LastName.Contains(lastName), o => o.OrderBy(s => s.LastName));
+            return _studentRepository.
+                Find(s => s.LastName.Contains(lastName),
+                o => o.OrderBy(s => s.LastName),
+                includeProperties: "Grade,Group,Major");
         }
 
         public IEnumerable<Student> FindNotSoftDeletedStudents()
         {
-            return _studentRepository.Find(s => s.IsDeleted == false, o => o.OrderBy(s => s.Id));
+            return _studentRepository.
+                Find(s => s.IsDeleted == false,
+                o => o.OrderBy(s => s.Id),
+                includeProperties: "Grade,Group,Major");
         }
 
         public IEnumerable<Student> FindSoftDeletedStudents()
         {
-            return _studentRepository.Find(s => s.IsDeleted == true, o => o.OrderBy(s => s.Id));
+            return _studentRepository.
+                Find(s => s.IsDeleted == true,
+                o => o.OrderBy(s => s.Id),
+                includeProperties: "Grade,Group,Major");
         }
 
         public Student Get(int id)
         {
-            var student = _studentRepository.Get(id);
-
-            if (student == null)
-            {
-                throw new NonexistingEntityException("A student with the given id does not exist.");
-            }
-
-            return student;
+            return _studentRepository.Get(id);
         }
 
         public IEnumerable<Student> GetAll()
         {
-            return _studentRepository.GetAll();
+            return _studentRepository.GetAll(includeProperties: "Grade,Group,Major");
         }
 
         public IEnumerable<Enrollment> GetStudentEnrollments(Guid studentId)

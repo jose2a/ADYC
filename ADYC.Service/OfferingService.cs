@@ -278,14 +278,7 @@ namespace ADYC.Service
 
         public Offering Get(int id)
         {
-            var offering = _offeringRepository.Get(id);
-
-            if (offering == null)
-            {
-                throw new NonexistingEntityException("The offering with the given id does not exist.");
-            }
-
-            return offering;
+            return _offeringRepository.Get(id);
         }
 
         public IEnumerable<Offering> GetAll()

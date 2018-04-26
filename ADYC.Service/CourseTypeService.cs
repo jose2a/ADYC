@@ -41,14 +41,7 @@ namespace ADYC.Service
 
         public CourseType Get(int id)
         {
-            var courseType = _courseTypeRepository.Get(id);
-
-            if (courseType == null)
-            {
-                throw new NonexistingEntityException("The course type with the given id does no exist.");
-            }
-
-            return courseType;
+            return _courseTypeRepository.Get(id);
         }
 
         public IEnumerable<CourseType> GetAll()

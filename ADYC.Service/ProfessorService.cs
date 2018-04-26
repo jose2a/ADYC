@@ -22,6 +22,7 @@ namespace ADYC.Service
             ValidateProfessor(professor);
 
             professor.CreatedAt = DateTime.Today;
+            professor.IsDeleted = false;
 
             _professorRepository.Add(professor);
         }
@@ -33,6 +34,7 @@ namespace ADYC.Service
             foreach (var professor in professors)
             {
                 professor.CreatedAt = DateTime.Today;
+                professor.IsDeleted = false;
             }
 
             _professorRepository.AddRange(professors);
@@ -95,7 +97,7 @@ namespace ADYC.Service
 
         public IEnumerable<Professor> GetAll()
         {
-            return _professorRepository.GetAll();
+            return _professorRepository.GetAll(orderBy: o => o.OrderBy(p => p.LastName));
         }
 
         public IEnumerable<Offering> GetProfessorOfferings(Guid professorId)

@@ -46,14 +46,7 @@ namespace ADYC.Service
 
         public Group Get(int id)
         {
-            var group = _groupRepository.Get(id);
-
-            if (group == null)
-            {
-                throw new NonexistingEntityException("A group with the given id does not exist.");
-            }
-
-            return group;
+            return _groupRepository.Get(id);
         }
 
         public IEnumerable<Group> GetAll()

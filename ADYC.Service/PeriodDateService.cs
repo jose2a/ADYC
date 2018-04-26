@@ -32,14 +32,7 @@ namespace ADYC.Service
 
         public PeriodDate Get(int periodId, int termId)
         {
-            var periodDate = _periodDateRepository.Get(periodId, termId);
-
-            if (periodDate == null)
-            {
-                throw new NonexistingEntityException("There is no a period dates for the specific term and period.");
-            }
-
-            return periodDate;
+            return _periodDateRepository.Get(periodId, termId);
         }
 
         public IEnumerable<PeriodDate> GetPeriodDatesForTerm(int termId)

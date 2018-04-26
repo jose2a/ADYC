@@ -118,6 +118,10 @@
     <Compile Include="Migrations\201804012339109_AddedFieldCreatedAtUpdateAtAndDeleteAtToProfessorAndStudentTables.Designer.cs">
       <DependentUpon>201804012339109_AddedFieldCreatedAtUpdateAtAndDeleteAtToProfessorAndStudentTables.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201804262230581_ChangedStudentFieldFromEnrollmentToBeEagerLoaded.cs" />
+    <Compile Include="Migrations\201804262230581_ChangedStudentFieldFromEnrollmentToBeEagerLoaded.Designer.cs">
+      <DependentUpon>201804262230581_ChangedStudentFieldFromEnrollmentToBeEagerLoaded.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -152,6 +156,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201804012339109_AddedFieldCreatedAtUpdateAtAndDeleteAtToProfessorAndStudentTables.resx">
       <DependentUpon>201804012339109_AddedFieldCreatedAtUpdateAtAndDeleteAtToProfessorAndStudentTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804262230581_ChangedStudentFieldFromEnrollmentToBeEagerLoaded.resx">
+      <DependentUpon>201804262230581_ChangedStudentFieldFromEnrollmentToBeEagerLoaded.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
