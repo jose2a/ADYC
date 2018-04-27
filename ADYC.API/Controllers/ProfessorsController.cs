@@ -180,7 +180,7 @@ namespace ADYC.API.Controllers
                     var professorDto = Mapper.Map<Professor, ProfessorDto>(professor);
                     professorDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Professors") + professor.Id;
 
-                    return CreatedAtRoute("DefaultApi", new { Id = professor.Id }, professorDto);
+                    return Created(new Uri(professorDto.Url), professorDto);
                 }
                 catch (PreexistingEntityException pe)
                 {

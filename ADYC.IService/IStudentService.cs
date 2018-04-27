@@ -6,14 +6,14 @@ namespace ADYC.IService
 {
     public interface IStudentService
     {
-        Student Get(int id);
+        Student Get(Guid id);
         IEnumerable<Student> GetAll();
         IEnumerable<Student> FindByFirstName(string firstName);
         IEnumerable<Student> FindByLastName(string lastName);
         IEnumerable<Student> FindByEmail(string email);
         IEnumerable<Student> FindByCellphoneNumber(string cellphoneNumber);
-        IEnumerable<Student> FindNotSoftDeletedStudents();
-        IEnumerable<Student> FindSoftDeletedStudents();
+        IEnumerable<Student> FindNotTrashedStudents();
+        IEnumerable<Student> FindTrashedStudents();
 
         IEnumerable<Enrollment> GetStudentEnrollments(Guid studentId);
 
@@ -24,7 +24,10 @@ namespace ADYC.IService
 
         void Remove(Student student);
         void RemoveRange(IEnumerable<Student> students);
-        void SoftDelete(Student student);
-        void SoftDeleteRange(IEnumerable<Student> students);
+        void Trash(Student student);
+        void TrashRange(IEnumerable<Student> students);
+
+        void Restore(Student student);
+        void RestoreRange(IEnumerable<Student> students);
     }
 }

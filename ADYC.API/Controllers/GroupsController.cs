@@ -4,6 +4,7 @@ using ADYC.Model;
 using ADYC.Util.Exceptions;
 using ADYC.Util.RestUtils;
 using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
@@ -87,7 +88,7 @@ namespace ADYC.API.Controllers
                     var groupDto = Mapper.Map<Group, GroupDto>(group);
                     groupDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Groups") + group.Id;
 
-                    return CreatedAtRoute("DefaultApi", new { Id = group.Id }, groupDto);
+                    return Created(new Uri(groupDto.Url), groupDto);
                 }
                 catch (PreexistingEntityException pe)
                 {

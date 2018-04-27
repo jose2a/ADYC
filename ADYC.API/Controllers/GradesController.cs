@@ -4,6 +4,7 @@ using ADYC.Model;
 using ADYC.Util.Exceptions;
 using ADYC.Util.RestUtils;
 using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
@@ -87,7 +88,7 @@ namespace ADYC.API.Controllers
                     var gradeDto = Mapper.Map<Grade, GradeDto>(grade);
                     gradeDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Grades") + grade.Id;
 
-                    return CreatedAtRoute("DefaultApi", new { Id = grade.Id }, gradeDto);
+                    return Created(new Uri(gradeDto.Url), gradeDto);
                 }
                 catch (PreexistingEntityException pe)
                 {

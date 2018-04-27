@@ -22,6 +22,7 @@ namespace ADYC.Service
             ValidateStudent(student);
 
             student.CreatedAt = DateTime.Today;
+            student.IsDeleted = false;
 
             _studentRepository.Add(student);
         }
@@ -49,6 +50,7 @@ namespace ADYC.Service
             foreach (var student in students)
             {
                 student.CreatedAt = DateTime.Today;
+                student.IsDeleted = false;
             }
 
             _studentRepository.AddRange(students);
@@ -125,7 +127,7 @@ namespace ADYC.Service
                 includeProperties: "Grade,Group,Major");
         }
 
-        public IEnumerable<Student> FindNotSoftDeletedStudents()
+        public IEnumerable<Student> FindNotTrashedStudents()
         {
             return _studentRepository.
                 Find(s => s.IsDeleted == false,
@@ -133,7 +135,7 @@ namespace ADYC.Service
                 includeProperties: "Grade,Group,Major");
         }
 
-        public IEnumerable<Student> FindSoftDeletedStudents()
+        public IEnumerable<Student> FindTrashedStudents()
         {
             return _studentRepository.
                 Find(s => s.IsDeleted == true,
@@ -141,7 +143,7 @@ namespace ADYC.Service
                 includeProperties: "Grade,Group,Major");
         }
 
-        public Student Get(int id)
+        public Student Get(Guid id)
         {
             return _studentRepository.Get(id);
         }
@@ -200,7 +202,7 @@ namespace ADYC.Service
             _studentRepository.RemoveRange(students);
         }
 
-        public void SoftDelete(Student student)
+        public void Trash(Student student)
         {
             if (student == null)
             {
@@ -213,7 +215,7 @@ namespace ADYC.Service
             _studentRepository.Update(student);
         }
 
-        public void SoftDeleteRange(IEnumerable<Student> students)
+        public void TrashRange(IEnumerable<Student> students)
         {
             if (students.Count() == 0 || students == null)
             {
@@ -244,6 +246,40 @@ namespace ADYC.Service
             student.UpdatedAt = DateTime.Today;
 
             _studentRepository.Update(student);
+        }
+
+        public void Restore(Student student)
+        {
+            if (student == null)
+            {
+                throw new ArgumentNullException("student");
+            }
+
+            if (_studentRepository.Get(student.Id) == null)
+            {
+                throw new NonexistingEntityException("Student does not currently exist.");
+            }
+
+            student.IsDeleted = false;
+            student.DeletedAt = null;
+
+            _studentRepository.Update(student);
+        }
+
+        public void RestoreRange(IEnumerable<Student> students)
+        {
+            if (students == null)
+            {
+                throw new ArgumentNullException("students");
+            }
+
+            foreach (var student in students)
+            {
+                student.IsDeleted = false;
+                student.DeletedAt = null;
+
+                _studentRepository.Update(student);
+            }
         }
     }
 }
