@@ -162,6 +162,7 @@
     <Compile Include="Controllers\GroupsController.cs" />
     <Compile Include="Controllers\MajorsController.cs" />
     <Compile Include="Controllers\OfferingsController.cs" />
+    <Compile Include="Controllers\PeriodDatesController.cs" />
     <Compile Include="Controllers\PeriodsController.cs" />
     <Compile Include="Controllers\ProfessorsController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
