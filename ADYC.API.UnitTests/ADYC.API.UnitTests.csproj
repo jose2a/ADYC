@@ -152,6 +152,7 @@
     <Reference Include="System.Net.Http.WebRequest" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\TermControllerUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\CourseControllerTest.cs" />
     <Compile Include="TestData.cs" />
@@ -176,6 +177,10 @@
     <ProjectReference Include="..\ADYC.Model\ADYC.Model.csproj">
       <Project>{e6bce3c0-8408-4206-bfa6-9c225b536fb7}</Project>
       <Name>ADYC.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ADYC.Service\ADYC.Service.csproj">
+      <Project>{7D90ED45-D38E-40EC-8A6B-20C211318C98}</Project>
+      <Name>ADYC.Service</Name>
     </ProjectReference>
     <ProjectReference Include="..\ADYC.Util\ADYC.Util.csproj">
       <Project>{8BB0EC84-5C07-408D-BF7C-FC7ECF3429B0}</Project>

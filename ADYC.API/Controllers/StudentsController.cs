@@ -14,6 +14,7 @@ using System.Web.Http.Description;
 
 namespace ADYC.API.Controllers
 {
+    [RoutePrefix("api/Students")]
     public class StudentsController : ApiController
     {
         private IStudentService _studentService;

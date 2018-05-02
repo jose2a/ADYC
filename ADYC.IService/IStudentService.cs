@@ -14,6 +14,7 @@ namespace ADYC.IService
         IEnumerable<Student> FindByCellphoneNumber(string cellphoneNumber);
         IEnumerable<Student> FindNotTrashedStudents();
         IEnumerable<Student> FindTrashedStudents();
+        //IEnumerable<Student> FindStudentsCurrentlyEnrolled();
 
         IEnumerable<Enrollment> GetStudentEnrollments(Guid studentId);
 
