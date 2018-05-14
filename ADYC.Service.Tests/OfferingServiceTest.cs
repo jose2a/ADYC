@@ -18,7 +18,7 @@ namespace ADYC.Service.Tests
         [SetUp]
         public void SetUp()
         {
-            _offeringServ = new OfferingService(new FakeOfferingRepository());
+            //_offeringServ = new OfferingService(new FakeOfferingRepository());
         }
 
         [Test]

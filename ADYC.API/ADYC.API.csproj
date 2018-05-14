@@ -148,9 +148,7 @@
       <Private>True</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Infrastructure\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Compile Include="App_Start\IocConfig.cs" />
     <Compile Include="App_Start\MappingProfile.cs" />
@@ -176,6 +174,7 @@
     <Compile Include="ViewModels\GradeViewModel.cs" />
     <Compile Include="ViewModels\GroupViewModel.cs" />
     <Compile Include="ViewModels\MajorViewModel.cs" />
+    <Compile Include="ViewModels\OfferingViewModel.cs" />
     <Compile Include="ViewModels\PeriodDateViewModel.cs" />
     <Compile Include="ViewModels\PeriodViewModel.cs" />
     <Compile Include="ViewModels\ProfessorViewModel.cs" />

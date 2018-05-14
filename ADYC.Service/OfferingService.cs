@@ -14,10 +14,16 @@ namespace ADYC.Service
     public class OfferingService : IOfferingService
     {
         private IOfferingRepository _offeringRepository;
+        private IEnrollmentRepository _enrollmentRepository;
+        private IEvaluationRepository _evaluationRepository;
 
-        public OfferingService(IOfferingRepository offeringRepository)
+        public OfferingService(IOfferingRepository offeringRepository,
+            IEnrollmentRepository enrollmentRepository,
+            IEvaluationRepository evaluationRepository)
         {
             _offeringRepository = offeringRepository;
+            _enrollmentRepository = enrollmentRepository;
+            _evaluationRepository = evaluationRepository;
         }
 
         public void Add(Offering offering)
@@ -73,6 +79,13 @@ namespace ADYC.Service
             {
                 throw new ArgumentException("The term is not the current term.");
             }
+
+            var offeringExist = _offeringRepository.Find(o => o.Title.Contains(offering.Title));
+
+            if (offeringExist.Count() > 0)
+            {
+                throw new PreexistingEntityException("An offering with the same title was already added.");
+            }
         }
 
         public IEnumerable<Offering> FindByCourseId(int courseId)
@@ -101,7 +114,7 @@ namespace ADYC.Service
 
         public IEnumerable<Offering> FindByCurrentTerm()
         {
-            var offerings = _offeringRepository.Find(o => o.Term.IsCurrentTerm);
+            var offerings = _offeringRepository.Find(o => o.Term.IsCurrentTerm, includeProperties: "Professor,Course,Term");
 
             if (offerings == null || offerings.Count() == 0)
             {
@@ -283,7 +296,7 @@ namespace ADYC.Service
 
         public IEnumerable<Offering> GetAll()
         {
-            return _offeringRepository.GetAll();
+            return _offeringRepository.GetAll(includeProperties : "Professor,Course,Term");
         }
 
         public void Remove(Offering offering, bool forceToRemove)
@@ -297,11 +310,11 @@ namespace ADYC.Service
             {
                 foreach (var enrollment in offering.Enrollments)
                 {
-                    foreach (var evaluation in enrollment.Evaluations)
-                    {
-                        // Remove enrollment evaluations
-                    }
-                    // Remove enrollments
+                    // Remove evaluations
+                    _evaluationRepository.RemoveRange(enrollment.Evaluations);
+
+                    // Remove enrollment
+                    _enrollmentRepository.Remove(enrollment);
                 }
 
                 // send an email to students currently enrolled in the offering that this will be removed

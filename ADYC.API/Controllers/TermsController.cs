@@ -93,7 +93,7 @@ namespace ADYC.API.Controllers
                 }));
         }
 
-        [Route("GetByBetweenDates/{startDate}/{endDate}")]
+        [Route("GetByBetweenDates/StartDate/{startDate}/EndDate/{endDate}")]
         [ResponseType(typeof(IEnumerable<TermDto>))]
         public IHttpActionResult GetByBetweenDates(DateTime startDate, DateTime endDate)
         {
