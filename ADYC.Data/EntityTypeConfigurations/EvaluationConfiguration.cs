@@ -25,10 +25,10 @@ namespace ADYC.Data.EntityTypeConfigurations
 
             // properties
             Property(e => e.PeriodGrade)
-                .IsRequired();
+                .IsOptional();
 
             Property(e => e.PeriodGradeLetter)
-                .IsRequired();
+                .IsOptional();
 
             Property(e => e.Notes)
                 .IsOptional()

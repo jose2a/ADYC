@@ -36,11 +36,12 @@ namespace ADYC.API.Controllers
                 return NotFound();
             }
 
-            var offeringDto = Mapper.Map<Offering, OfferingDto>(offering);
-            offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + offering.Id;
-            offeringDto.Professor = Mapper.Map<Professor, ProfessorDto>(offering.Professor);
-            offeringDto.Course = Mapper.Map<Course, CourseDto>(offering.Course);
-            offeringDto.Term = Mapper.Map<Term, TermDto>(offering.Term);
+            var offeringDto = SetOfferingDto(offering);
+            //    Mapper.Map<Offering, OfferingDto>(offering);
+            //offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + offering.Id;
+            //offeringDto.Professor = Mapper.Map<Professor, ProfessorDto>(offering.Professor);
+            //offeringDto.Course = Mapper.Map<Course, CourseDto>(offering.Course);
+            //offeringDto.Term = Mapper.Map<Term, TermDto>(offering.Term);
 
             return Ok(offeringDto);
         }
@@ -50,20 +51,43 @@ namespace ADYC.API.Controllers
         [ResponseType(typeof(OfferingDto))]
         public IHttpActionResult GetByProfessorIdCourseIdAndTermId(Guid professorId, int courseId, int termId)
         {
-            var offering = _offeringService.FindByProfessorIdCourseIdAndTermId(professorId, courseId, termId);
-
-            if (offering == null)
+            try
             {
-                return NotFound();
-            }
+                var offering = _offeringService.FindByProfessorIdCourseIdAndTermId(professorId, courseId, termId);
 
+                if (offering == null)
+                {
+                    return NotFound();
+                }
+
+                OfferingDto offeringDto = SetOfferingDto(offering);
+
+                return Ok(offeringDto);
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+                return BadRequest(ModelState);                
+            }
+        }
+
+        private OfferingDto SetOfferingDto(Offering offering)
+        {
             var offeringDto = Mapper.Map<Offering, OfferingDto>(offering);
             offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + offering.Id;
-            offeringDto.Professor = Mapper.Map<Professor, ProfessorDto>(offering.Professor);
-            offeringDto.Course = Mapper.Map<Course, CourseDto>(offering.Course);
-            offeringDto.Term = Mapper.Map<Term, TermDto>(offering.Term);
 
-            return Ok(offeringDto);
+            var professorDto = Mapper.Map<Professor, ProfessorDto>(offering.Professor);
+            professorDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Professors") + offering.ProfessorId;
+            offeringDto.Professor = professorDto;
+
+            var courseDto = Mapper.Map<Course, CourseDto>(offering.Course);
+            courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + offering.CourseId;
+            offeringDto.Course = courseDto;
+
+            var termDto = Mapper.Map<Term, TermDto>(offering.Term);
+            termDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + offering.TermId;
+            offeringDto.Term = termDto;
+            return offeringDto;
         }
 
         // GET api/<controller>/GetByTermName/spring 2018

@@ -9,7 +9,7 @@ namespace ADYC.Data
         public AdycDbContext()
             : base("ADYC_DbContext")
         {
-
+            //Database.SetInitializer(new ADYCDbInitializer());
         }
 
         public DbSet<Course> Courses { get; set; }

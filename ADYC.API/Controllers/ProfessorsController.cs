@@ -146,8 +146,9 @@ namespace ADYC.API.Controllers
                 }));
         }
 
-        [Route("{id:guid}/GetOfferings")]
-        [ResponseType(typeof(IEnumerable<ProfessorDto>))]
+        [Route("GetOfferings/{id:guid}")]
+        [HttpGet]
+        //[ResponseType(typeof(IEnumerable<ProfessorDto>))]
         public IHttpActionResult GetOfferings(Guid professorId)
         {
             var offerings = _professorService.GetProfessorOfferings(professorId);
@@ -251,6 +252,7 @@ namespace ADYC.API.Controllers
         }
 
         [Route("Trash/{id:guid}")]
+        [HttpGet]
         [ResponseType(typeof(void))]
         // GET api/<controller>/5
         public IHttpActionResult Trash(Guid id)
@@ -268,6 +270,7 @@ namespace ADYC.API.Controllers
         }
 
         [Route("Restore/{id:guid}")]
+        [HttpGet]
         [ResponseType(typeof(void))]
         // GET api/<controller>/5
         public IHttpActionResult Restore(Guid id)

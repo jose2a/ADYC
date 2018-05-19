@@ -79,14 +79,7 @@ namespace ADYC.Service
         {
             DateTime today = DateTime.Today;
 
-            var term = _termRepository.SingleOrDefault(t => today >= t.StartDate && today <= t.EndDate);
-
-            if (term == null)
-            {
-                throw new NonexistingEntityException("There is no current term.");
-            }
-
-            return term;
+            return _termRepository.SingleOrDefault(t => today >= t.StartDate && today <= t.EndDate);
         }
 
         public IEnumerable<PeriodDate> GetCurrentTermPeriodDates()

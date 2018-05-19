@@ -145,7 +145,8 @@ namespace ADYC.Service
 
         public Student Get(Guid id)
         {
-            return _studentRepository.Get(id);
+            return _studentRepository.Find(s => s.Id.Equals(id),
+                includeProperties: "Grade,Group,Major").FirstOrDefault();
         }
 
         public IEnumerable<Student> GetAll()

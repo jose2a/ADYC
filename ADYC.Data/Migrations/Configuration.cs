@@ -1,5 +1,6 @@
 namespace ADYC.Data.Migrations
 {
+    using Model;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
@@ -18,6 +19,7 @@ namespace ADYC.Data.Migrations
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data.
+
         }
     }
 }

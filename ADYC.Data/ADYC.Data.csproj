@@ -76,6 +76,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdycDbContext.cs" />
+    <Compile Include="ADYCDbInitializer.cs" />
+    <Compile Include="DataTest.cs" />
     <Compile Include="EntityTypeConfigurations\CourseConfiguration.cs" />
     <Compile Include="EntityTypeConfigurations\CourseTypeConfiguration.cs" />
     <Compile Include="EntityTypeConfigurations\EnrollmentConfiguration.cs" />
@@ -122,6 +124,26 @@
     <Compile Include="Migrations\201804262230581_ChangedStudentFieldFromEnrollmentToBeEagerLoaded.Designer.cs">
       <DependentUpon>201804262230581_ChangedStudentFieldFromEnrollmentToBeEagerLoaded.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805150321173_SeedDB.cs" />
+    <Compile Include="Migrations\201805150321173_SeedDB.Designer.cs">
+      <DependentUpon>201805150321173_SeedDB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805160041369_SeedDB1.cs" />
+    <Compile Include="Migrations\201805160041369_SeedDB1.Designer.cs">
+      <DependentUpon>201805160041369_SeedDB1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805160125422_SeedDB2.cs" />
+    <Compile Include="Migrations\201805160125422_SeedDB2.Designer.cs">
+      <DependentUpon>201805160125422_SeedDB2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805180049519_ChangedPeriodAndPeriodGradeLetterToOptional.cs" />
+    <Compile Include="Migrations\201805180049519_ChangedPeriodAndPeriodGradeLetterToOptional.Designer.cs">
+      <DependentUpon>201805180049519_ChangedPeriodAndPeriodGradeLetterToOptional.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805180052372_ChangedPeriodAndPeriodGradeLetterToOptional1.cs" />
+    <Compile Include="Migrations\201805180052372_ChangedPeriodAndPeriodGradeLetterToOptional1.Designer.cs">
+      <DependentUpon>201805180052372_ChangedPeriodAndPeriodGradeLetterToOptional1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -159,6 +181,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201804262230581_ChangedStudentFieldFromEnrollmentToBeEagerLoaded.resx">
       <DependentUpon>201804262230581_ChangedStudentFieldFromEnrollmentToBeEagerLoaded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805150321173_SeedDB.resx">
+      <DependentUpon>201805150321173_SeedDB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805160041369_SeedDB1.resx">
+      <DependentUpon>201805160041369_SeedDB1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805160125422_SeedDB2.resx">
+      <DependentUpon>201805160125422_SeedDB2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805180049519_ChangedPeriodAndPeriodGradeLetterToOptional.resx">
+      <DependentUpon>201805180049519_ChangedPeriodAndPeriodGradeLetterToOptional.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805180052372_ChangedPeriodAndPeriodGradeLetterToOptional1.resx">
+      <DependentUpon>201805180052372_ChangedPeriodAndPeriodGradeLetterToOptional1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

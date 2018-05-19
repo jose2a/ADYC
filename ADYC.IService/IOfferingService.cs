@@ -15,14 +15,17 @@ namespace ADYC.IService
         IEnumerable<Offering> FindByTermName(string termName);
         IEnumerable<Offering> FindByTermId(int termId);
         IEnumerable<Offering> FindByCurrentTerm();
+
         IEnumerable<Offering> FindByCourseName(string courseName);
         IEnumerable<Offering> FindByCourseId(int courseId);
+
         IEnumerable<Offering> FindByProfessorName(string professorName);
         IEnumerable<Offering> FindByProfessorLastName(string professorLastName);
         IEnumerable<Offering> FindByProfessorId(Guid professorId);
         IEnumerable<Offering> FindByProfessorNameAndTermName(string professorName, string termName);
         IEnumerable<Offering> FindByProfessorIdAndTermId(Guid professorId, int termId);
         IEnumerable<Offering> FindByProfessorIdAndCurrentTerm(Guid professorId);
+
         IEnumerable<Offering> FindByTitle(string title);
         IEnumerable<Offering> FindByLocation(string location);
         IEnumerable<Offering> GetAll();

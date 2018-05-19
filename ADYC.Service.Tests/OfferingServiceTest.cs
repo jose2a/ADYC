@@ -3,6 +3,7 @@ using ADYC.IService;
 using ADYC.Model;
 using ADYC.Service.Tests.FakeRepositories;
 using ADYC.Util.Exceptions;
+using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,9 @@ namespace ADYC.Service.Tests
         [SetUp]
         public void SetUp()
         {
-            //_offeringServ = new OfferingService(new FakeOfferingRepository());
+            _offeringServ = new OfferingService(new FakeOfferingRepository(),
+                new Mock<IEnrollmentRepository>().Object,
+                new Mock<IEvaluationRepository>().Object);
         }
 
         [Test]

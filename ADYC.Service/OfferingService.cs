@@ -80,12 +80,12 @@ namespace ADYC.Service
                 throw new ArgumentException("The term is not the current term.");
             }
 
-            var offeringExist = _offeringRepository.Find(o => o.Title.Contains(offering.Title));
+            //var offeringExist = _offeringRepository.Find(o => o.Title.Contains(offering.Title));
 
-            if (offeringExist.Count() > 0)
-            {
-                throw new PreexistingEntityException("An offering with the same title was already added.");
-            }
+            //if (offeringExist.Count() > 0)
+            //{
+            //    throw new PreexistingEntityException("An offering with the same title was already added.");
+            //}
         }
 
         public IEnumerable<Offering> FindByCourseId(int courseId)
@@ -178,14 +178,10 @@ namespace ADYC.Service
             }
 
             var offering = _offeringRepository
-                .SingleOrDefault(o => o.Professor.Id == professorId && o.CourseId == courseId && o.TermId == termId);
+                .Find(o => o.Professor.Id == professorId && o.CourseId == courseId && o.TermId == termId,
+                includeProperties: "Professor,Course,Term");
 
-            if (offering == null)
-            {
-                throw new NonexistingEntityException("Offering for these professor, course and term could not be found or does not exist.");
-            }
-
-            return offering;
+            return offering.FirstOrDefault();
         }
 
         public IEnumerable<Offering> FindByProfessorLastName(string professorLastName)

@@ -42,7 +42,7 @@ namespace ADYC.Service
             return _scheduleRepository.Get(id);
         }
 
-        public void Update(IEnumerable<Schedule> schedules)
+        public void UpdateRange(IEnumerable<Schedule> schedules)
         {
             ValidateSchedules(schedules);
 

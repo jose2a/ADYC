@@ -13,6 +13,6 @@ namespace ADYC.IService
         IEnumerable<Schedule> FindByOfferingId(int offeringId);
 
         void AddRange(IEnumerable<Schedule> schedules);
-        void Update(IEnumerable<Schedule> schedules);
+        void UpdateRange(IEnumerable<Schedule> schedules);
     }
 }
