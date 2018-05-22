@@ -34,6 +34,11 @@ namespace ADYC.Service
 
             course.IsDeleted = false;
             _courseRepository.Add(course);
+
+            if (course.Id != 0)
+            {
+                course.CourseType = _courseTypeRepository.Get(course.CourseTypeId);
+            }
         }
 
         public void AddRange(IEnumerable<Course> courses)

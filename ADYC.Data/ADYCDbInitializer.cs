@@ -1262,7 +1262,7 @@ namespace ADYC.Data
             }
             catch (Exception e)
             {
-                
+                throw e;
             }
         }
     }

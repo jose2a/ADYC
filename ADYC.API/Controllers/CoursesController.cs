@@ -31,17 +31,14 @@ namespace ADYC.API.Controllers
         {
             var courses = _courseService.GetAll();
 
-            return Ok(courses
-                .Select(c => {
-                    var courseDto = Mapper.Map<Course, CourseDto>(c);
-
-                    courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + c.Id;
-                    courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(c.CourseType);
-                    courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request , "CourseTypes") + c.CourseTypeId;
+            return base.Ok(courses
+                .Select(c =>
+                {
+                    CourseDto courseDto = SetCourseDto(c);
 
                     return courseDto;
                 }));
-        }
+        }       
 
         // GET api/<controller>/5
         [Route("{id}")]
@@ -52,10 +49,11 @@ namespace ADYC.API.Controllers
 
             if (course != null)
             {
-                var courseDto = Mapper.Map<Course, CourseDto>(course);
-                courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + course.Id;
-                courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(course.CourseType);
-                courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + course.CourseTypeId;
+                var courseDto = SetCourseDto(course);
+                //var courseDto = Mapper.Map<Course, CourseDto>(course);
+                //courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + course.Id;
+                //courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(course.CourseType);
+                //courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + course.CourseTypeId;
 
                 return Ok(courseDto);
             }
@@ -71,11 +69,12 @@ namespace ADYC.API.Controllers
 
             return Ok(courses
                 .Select(c => {
-                    var courseDto = Mapper.Map<Course, CourseDto>(c);
+                    var courseDto = SetCourseDto(c);
+                    //var courseDto = Mapper.Map<Course, CourseDto>(c);
 
-                    courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + c.Id;
-                    courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(c.CourseType);
-                    courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + c.CourseTypeId;
+                    //courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + c.Id;
+                    //courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(c.CourseType);
+                    //courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + c.CourseTypeId;
 
                     return courseDto;
                 }));
@@ -96,11 +95,12 @@ namespace ADYC.API.Controllers
 
             return Ok(courses
                 .Select(c => {
-                    var courseDto = Mapper.Map<Course, CourseDto>(c);
+                    var courseDto = SetCourseDto(c);
+                    //var courseDto = Mapper.Map<Course, CourseDto>(c);
 
-                    courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + c.Id;
-                    courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(c.CourseType);
-                    courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + c.CourseTypeId;
+                    //courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + c.Id;
+                    //courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(c.CourseType);
+                    //courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + c.CourseTypeId;
 
                     return courseDto;
                 }));
@@ -114,11 +114,12 @@ namespace ADYC.API.Controllers
 
             return Ok(courses
                 .Select(c => {
-                    var courseDto = Mapper.Map<Course, CourseDto>(c);
+                    var courseDto = SetCourseDto(c);
+                    //var courseDto = Mapper.Map<Course, CourseDto>(c);
 
-                    courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + c.Id;
-                    courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(c.CourseType);
-                    courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + c.CourseTypeId;
+                    //courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + c.Id;
+                    //courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(c.CourseType);
+                    //courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + c.CourseTypeId;
 
                     return courseDto;
                 }));
@@ -132,11 +133,12 @@ namespace ADYC.API.Controllers
 
             return Ok(courses
                 .Select(c => {
-                    var courseDto = Mapper.Map<Course, CourseDto>(c);
+                    var courseDto = SetCourseDto(c);
+                    //var courseDto = Mapper.Map<Course, CourseDto>(c);
 
-                    courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + c.Id;
-                    courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(c.CourseType);
-                    courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + c.CourseTypeId;
+                    //courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + c.Id;
+                    //courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(c.CourseType);
+                    //courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + c.CourseTypeId;
 
                     return courseDto;
                 }));
@@ -146,22 +148,25 @@ namespace ADYC.API.Controllers
         [HttpPost]
         [ResponseType(typeof(CourseDto))]
         // POST api/<controller>
-        public IHttpActionResult Post([FromBody] CourseForm form)
+        public IHttpActionResult Post([FromBody] CourseDto form)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var course = Mapper.Map<CourseForm, Course>(form);
+                    var course = Mapper.Map<CourseDto, Course>(form);
 
                     _courseService.Add(course);
 
-                    var courseType = _courseTypeService.Get(course.CourseTypeId);
+                    var courseDto = SetCourseDto(course);
 
-                    var courseDto = Mapper.Map<Course, CourseDto>(course);
-                    courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + course.Id;
-                    courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(courseType);
-                    courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + course.CourseTypeId;
+                    //var courseType = _courseTypeService.Get(course.CourseTypeId);
+
+                    //var courseDto = Mapper.Map<Course, CourseDto>(course);
+                    //courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + course.Id;
+
+                    //courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(course.CourseType);
+                    //courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + course.CourseTypeId;
 
                     return Created(new Uri(courseDto.Url), courseDto);
                 }
@@ -178,7 +183,7 @@ namespace ADYC.API.Controllers
         [HttpPut]
         [ResponseType(typeof(void))]
         // PUT api/<controller>/5
-        public IHttpActionResult Put(int id, [FromBody] CourseForm form)
+        public IHttpActionResult Put(int id, [FromBody] CourseDto form)
         {
             if (ModelState.IsValid)
             {
@@ -235,6 +240,7 @@ namespace ADYC.API.Controllers
 
         [Route("Trash/{id}")]
         [ResponseType(typeof(void))]
+        [HttpGet]
         // GET api/<controller>/5
         public IHttpActionResult Trash(int id)
         {
@@ -252,6 +258,7 @@ namespace ADYC.API.Controllers
 
         [Route("Restore/{id}")]
         [ResponseType(typeof(void))]
+        [HttpGet]
         // GET api/<controller>/5
         public IHttpActionResult Restore(int id)
         {
@@ -265,6 +272,16 @@ namespace ADYC.API.Controllers
             _courseService.Restore(courseInDb);
 
             return Ok();
+        }
+
+        private CourseDto SetCourseDto(Course c)
+        {
+            var courseDto = Mapper.Map<Course, CourseDto>(c);
+
+            courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + c.Id;
+            courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(c.CourseType);
+            courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + c.CourseTypeId;
+            return courseDto;
         }
     }
 }
