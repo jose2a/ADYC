@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ADYC.Model;
 using ADYC.IRepository;
 using ADYC.Util.Exceptions;
@@ -19,6 +17,26 @@ namespace ADYC.Service
             _gradeRepository = gradeRepository;
         }
 
+        public Grade Get(int id)
+        {
+            return _gradeRepository.Get(id);
+        }
+
+        public IEnumerable<Grade> GetAll()
+        {
+            return _gradeRepository.GetAll();
+        }
+
+        public IEnumerable<Grade> FindByName(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("Name should not be empty.");
+            }
+
+            return _gradeRepository.Find(c => c.Name.Contains(name));
+        }
+
         public void Add(Grade grade)
         {
             if (grade == null)
@@ -32,27 +50,7 @@ namespace ADYC.Service
             }
 
             _gradeRepository.Add(grade);
-        }
-
-        public IEnumerable<Grade> FindByName(string name)
-        {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentNullException("Name should not be empty.");
-            }
-
-            return _gradeRepository.Find(c => c.Name.Contains(name));
-        }
-
-        public Grade Get(int id)
-        {
-            return _gradeRepository.Get(id);
-        }
-
-        public IEnumerable<Grade> GetAll()
-        {
-            return _gradeRepository.GetAll();
-        }
+        }        
 
         public void Remove(Grade grade)
         {

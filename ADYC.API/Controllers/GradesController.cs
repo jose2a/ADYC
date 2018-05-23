@@ -32,12 +32,9 @@ namespace ADYC.API.Controllers
             return Ok(grades
                 .Select(g =>
                 {
-                    var gradeDto = Mapper.Map<Grade, GradeDto>(g);
-                    gradeDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Grades") + g.Id;
-
-                    return gradeDto;
+                    return GetGradeDto(g);
                 }));
-        }
+        }        
 
         // GET api/<controller>/5
         [Route("{id}")]
@@ -48,9 +45,7 @@ namespace ADYC.API.Controllers
 
             if (grade != null)
             {
-                var gradeDto = Mapper.Map<Grade, GradeDto>(grade);
-                gradeDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Grades") + grade.Id;
-                return Ok(gradeDto);
+                return Ok(GetGradeDto(grade));
             }
 
             return NotFound();
@@ -60,15 +55,22 @@ namespace ADYC.API.Controllers
         [ResponseType(typeof(IEnumerable<GradeDto>))]
         public IHttpActionResult GetByName(string name)
         {
-            var grades = _gradeService.FindByName(name);
+            try
+            {
+                var grades = _gradeService.FindByName(name);
 
-            return Ok(grades
-                .Select(g => { 
-                    var gradeDto = Mapper.Map<Grade, GradeDto>(g);
-                    gradeDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Grades") + g.Id;
+                return Ok(grades
+                    .Select(g =>
+                    {
+                        return GetGradeDto(g);
+                    }));
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
 
-                    return gradeDto;
-                }));
+            return BadRequest(ModelState);
         }
 
         [Route("")]
@@ -85,10 +87,13 @@ namespace ADYC.API.Controllers
 
                     _gradeService.Add(grade);
 
-                    var gradeDto = Mapper.Map<Grade, GradeDto>(grade);
-                    gradeDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Grades") + grade.Id;
+                    var gradeDto = GetGradeDto(grade);
 
                     return Created(new Uri(gradeDto.Url), gradeDto);
+                }
+                catch(ArgumentNullException ane)
+                {
+                    ModelState.AddModelError("", ane.Message);
                 }
                 catch (PreexistingEntityException pe)
                 {
@@ -111,7 +116,7 @@ namespace ADYC.API.Controllers
 
                 if (gradeInDb == null)
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
 
                 try
@@ -122,9 +127,13 @@ namespace ADYC.API.Controllers
 
                     return Ok();
                 }
-                catch (NonexistingEntityException ne)
+                catch (ArgumentNullException ane)
                 {
-                    ModelState.AddModelError("", ne.Message);
+                    ModelState.AddModelError("", ane.Message);
+                }
+                catch (NonexistingEntityException)
+                {
+                    return NotFound();
                 }
             }
 
@@ -147,15 +156,26 @@ namespace ADYC.API.Controllers
             try
             {
                 _gradeService.Remove(gradeInDb);
+
+                return Ok();
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
             }
             catch (ForeignKeyEntityException fke)
             {
-                ModelState.AddModelError("", fke.Message);
-
-                return BadRequest(ModelState);
+                ModelState.AddModelError("", fke.Message);                
             }
 
-            return Ok();
+            return BadRequest(ModelState);
+        }
+
+        private GradeDto GetGradeDto(Grade g)
+        {
+            var gradeDto = Mapper.Map<Grade, GradeDto>(g);
+            gradeDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Grades") + g.Id;
+            return gradeDto;
         }
     }
 }
