@@ -24,22 +24,6 @@ namespace ADYC.API.Controllers
             _courseTypeService = courseTypeService;
         }
 
-        // GET api/<controller>
-        [Route("")]
-        [ResponseType(typeof(IEnumerable<CourseDto>))]
-        public IHttpActionResult Get()
-        {
-            var courses = _courseService.GetAll();
-
-            return base.Ok(courses
-                .Select(c =>
-                {
-                    CourseDto courseDto = SetCourseDto(c);
-
-                    return courseDto;
-                }));
-        }       
-
         // GET api/<controller>/5
         [Route("{id}")]
         [ResponseType(typeof(CourseDto))]
@@ -49,61 +33,75 @@ namespace ADYC.API.Controllers
 
             if (course != null)
             {
-                var courseDto = SetCourseDto(course);
-                //var courseDto = Mapper.Map<Course, CourseDto>(course);
-                //courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + course.Id;
-                //courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(course.CourseType);
-                //courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + course.CourseTypeId;
-
-                return Ok(courseDto);
+                return Ok(GetCourseDto(course));
             }
 
-            return NotFound();            
+            return NotFound();
+        }
+
+        // GET api/<controller>
+        [Route("")]
+        [ResponseType(typeof(IEnumerable<CourseDto>))]
+        public IHttpActionResult Get()
+        {
+            var courses = _courseService.GetAll();
+
+            return Ok(courses
+                .Select(c =>
+                {
+                    return GetCourseDto(c);
+                }));
         }
 
         [Route("GetByName/{name}")]
         [ResponseType(typeof(IEnumerable<CourseDto>))]
         public IHttpActionResult GetByName(string name)
         {
-            var courses = _courseService.FindByName(name);
+            try
+            {
+                var courses = _courseService.FindByName(name);
 
-            return Ok(courses
-                .Select(c => {
-                    var courseDto = SetCourseDto(c);
-                    //var courseDto = Mapper.Map<Course, CourseDto>(c);
+                return Ok(courses
+                    .Select(c =>
+                    {
+                        return GetCourseDto(c);
+                    }));
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
 
-                    //courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + c.Id;
-                    //courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(c.CourseType);
-                    //courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + c.CourseTypeId;
-
-                    return courseDto;
-                }));
+            return BadRequest(ModelState);
         }
 
         [Route("GetByCourseType/{courseTypeName}")]
         [ResponseType(typeof(IEnumerable<CourseDto>))]
         public IHttpActionResult GetByCourseType(string courseTypeName)
         {
-            var courseTypes = _courseTypeService.FindByName(courseTypeName);
-
-            var courses = new List<Course>();
-
-            foreach (var ct in courseTypes)
+            try
             {
-                courses.AddRange(_courseService.FindByCourseType(ct));
-            }              
+                var courseTypes = _courseTypeService.FindByName(courseTypeName);
 
-            return Ok(courses
-                .Select(c => {
-                    var courseDto = SetCourseDto(c);
-                    //var courseDto = Mapper.Map<Course, CourseDto>(c);
+                var courses = new List<Course>();
 
-                    //courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + c.Id;
-                    //courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(c.CourseType);
-                    //courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + c.CourseTypeId;
+                foreach (var ct in courseTypes)
+                {
+                    courses.AddRange(_courseService.FindByCourseType(ct));
+                }
 
-                    return courseDto;
-                }));
+                return Ok(courses
+                    .Select(c =>
+                    {
+                        return GetCourseDto(c);
+                    }));
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane);
+            }
+
+            return BadRequest(ModelState);
         }
 
         [Route("GetNotTrashed")]
@@ -114,14 +112,7 @@ namespace ADYC.API.Controllers
 
             return Ok(courses
                 .Select(c => {
-                    var courseDto = SetCourseDto(c);
-                    //var courseDto = Mapper.Map<Course, CourseDto>(c);
-
-                    //courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + c.Id;
-                    //courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(c.CourseType);
-                    //courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + c.CourseTypeId;
-
-                    return courseDto;
+                    return GetCourseDto(c);
                 }));
         }
 
@@ -133,14 +124,7 @@ namespace ADYC.API.Controllers
 
             return Ok(courses
                 .Select(c => {
-                    var courseDto = SetCourseDto(c);
-                    //var courseDto = Mapper.Map<Course, CourseDto>(c);
-
-                    //courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + c.Id;
-                    //courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(c.CourseType);
-                    //courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + c.CourseTypeId;
-
-                    return courseDto;
+                    return GetCourseDto(c);
                 }));
         }
 
@@ -158,17 +142,13 @@ namespace ADYC.API.Controllers
 
                     _courseService.Add(course);
 
-                    var courseDto = SetCourseDto(course);
-
-                    //var courseType = _courseTypeService.Get(course.CourseTypeId);
-
-                    //var courseDto = Mapper.Map<Course, CourseDto>(course);
-                    //courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + course.Id;
-
-                    //courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(course.CourseType);
-                    //courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + course.CourseTypeId;
+                    var courseDto = GetCourseDto(course);
 
                     return Created(new Uri(courseDto.Url), courseDto);
+                }
+                catch (ArgumentNullException ane)
+                {
+                    ModelState.AddModelError("", ane.Message);
                 }
                 catch (PreexistingEntityException pe)
                 {
@@ -191,7 +171,7 @@ namespace ADYC.API.Controllers
 
                 if (courseInDb == null)
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
 
                 try
@@ -202,9 +182,13 @@ namespace ADYC.API.Controllers
 
                     return Ok();
                 }
-                catch (NonexistingEntityException ne)
+                catch (ArgumentNullException ane)
                 {
-                    ModelState.AddModelError("", ne.Message);
+                    ModelState.AddModelError("", ane.Message);
+                }
+                catch (NonexistingEntityException)
+                {
+                    return NotFound();
                 }
             }
 
@@ -227,15 +211,18 @@ namespace ADYC.API.Controllers
             try
             {
                 _courseService.Remove(courseInDb);
+                return Ok();
+            }
+            catch(ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
             }
             catch (ForeignKeyEntityException fke)
             {
                 ModelState.AddModelError("", fke.Message);
-
-                return BadRequest(ModelState);
             }
 
-            return Ok();
+            return BadRequest(ModelState);
         }
 
         [Route("Trash/{id}")]
@@ -251,9 +238,17 @@ namespace ADYC.API.Controllers
                 return NotFound();
             }
 
-            _courseService.Trash(courseInDb);
+            try
+            {
+                _courseService.Trash(courseInDb);
+                return Ok();
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
 
-            return Ok();
+            return BadRequest(ModelState);
         }
 
         [Route("Restore/{id}")]
@@ -269,12 +264,25 @@ namespace ADYC.API.Controllers
                 return NotFound();
             }
 
-            _courseService.Restore(courseInDb);
+            try
+            {
+                _courseService.Restore(courseInDb);
 
-            return Ok();
+                return Ok();
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
+            catch (NonexistingEntityException)
+            {
+                return NotFound();
+            }
+
+            return BadRequest(ModelState);
         }
 
-        private CourseDto SetCourseDto(Course c)
+        private CourseDto GetCourseDto(Course c)
         {
             var courseDto = Mapper.Map<Course, CourseDto>(c);
 

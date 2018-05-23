@@ -20,58 +20,21 @@ namespace ADYC.Service
             _courseTypeRepository = courseTypeRepository;
         }
 
-        public void Add(Course course)
+        public Course Get(int id)
         {
-            if (course == null)
+            var course = _courseRepository.Get(id);
+
+            if (course != null)
             {
-                throw new ArgumentNullException("course");
+                SetCourseType(course);
             }
 
-            if (_courseRepository.Find(c => c.Name.Equals(course.Name)).Count() > 0)
-            {
-                throw new PreexistingEntityException("A course with the same name already exists.", null);
-            }
-
-            course.IsDeleted = false;
-            _courseRepository.Add(course);
-
-            if (course.Id != 0)
-            {
-                course.CourseType = _courseTypeRepository.Get(course.CourseTypeId);
-            }
+            return course;
         }
 
-        public void AddRange(IEnumerable<Course> courses)
+        public IEnumerable<Course> GetAll()
         {
-            if (courses == null)
-            {
-                throw new ArgumentNullException("courses");
-            }
-
-            var courseNames = courses.Select(c => c.Name);
-
-            if (_courseRepository.Find(c => courseNames.Contains(c.Name)).Count() > 0)
-            {
-                throw new PreexistingEntityException("A course with the name already exists.");
-            }
-
-            foreach (var c in courses)
-            {
-                c.IsDeleted = true;                
-            }
-
-            _courseRepository.AddRange(courses);
-        }
-
-        public IEnumerable<Course> FindByCourseType(CourseType courseType)
-        {
-            if (courseType == null)
-            {
-                throw new ArgumentNullException("courseType");
-            }
-
-            return _courseRepository.Find(filter: c => c.CourseTypeId == courseType.Id,
-                includeProperties: "CourseType");
+            return _courseRepository.GetAll(includeProperties: "CourseType");
         }
 
         public IEnumerable<Course> FindByName(string name)
@@ -85,10 +48,15 @@ namespace ADYC.Service
                 includeProperties : "CourseType");
         }
 
-        public IEnumerable<Course> FindTrashedCourses()
+        public IEnumerable<Course> FindByCourseType(CourseType courseType)
         {
-            return _courseRepository.Find(c => c.IsDeleted == true, o => o.OrderBy(c => c.Id),
-                "CourseType");
+            if (courseType == null)
+            {
+                throw new ArgumentNullException("courseType");
+            }
+
+            return _courseRepository.Find(filter: c => c.CourseTypeId == courseType.Id,
+                includeProperties: "CourseType");
         }
 
         public IEnumerable<Course> FindNotTrashedCourses()
@@ -98,21 +66,49 @@ namespace ADYC.Service
                 "CourseType");
         }
 
-        public Course Get(int id)
+        public IEnumerable<Course> FindTrashedCourses()
         {
-            var course = _courseRepository.Get(id);
+            return _courseRepository.Find(c => c.IsDeleted == true,
+                o => o.OrderBy(c => c.Id),
+                "CourseType");
+        }
+            
+        public void Add(Course course)
+        {
+            ValidateCourse(course);
 
-            if (course != null)
-            {
-                course.CourseType = _courseTypeRepository.Get(course.CourseTypeId);
-            }
+            course.IsDeleted = false;
+            SetCourseType(course);
 
-            return course;
+            _courseRepository.Add(course);
         }
 
-        public IEnumerable<Course> GetAll()
+        public void AddRange(IEnumerable<Course> courses)
         {
-            return _courseRepository.GetAll(includeProperties: "CourseType");
+            foreach (var c in courses)
+            {
+                ValidateCourse(c);
+
+                c.IsDeleted = false;
+                SetCourseType(c);
+            }
+
+            _courseRepository.AddRange(courses);
+        }
+
+        public void Update(Course course)
+        {
+            if (course == null)
+            {
+                throw new ArgumentNullException("course");
+            }
+
+            if (_courseRepository.Get(course.Id) == null)
+            {
+                throw new NonexistingEntityException("Course does not currently exist.");
+            }
+
+            _courseRepository.Update(course);
         }
 
         public void Remove(Course course)
@@ -172,22 +168,7 @@ namespace ADYC.Service
 
                 _courseRepository.Update(course);
             }
-        }
-
-        public void Update(Course course)
-        {
-            if (course == null)
-            {
-                throw new ArgumentNullException("course");
-            }
-
-            if (_courseRepository.Get(course.Id) == null)
-            {
-                throw new NonexistingEntityException("Course does not currently exist.");
-            }
-
-            _courseRepository.Update(course);
-        }
+        }       
 
         public void Restore(Course course)
         {
@@ -219,6 +200,24 @@ namespace ADYC.Service
 
                 _courseRepository.Update(course);
             }
+        }
+
+        private void ValidateCourse(Course course)
+        {
+            if (course == null)
+            {
+                throw new ArgumentNullException("course");
+            }
+
+            if (_courseRepository.Find(c => c.Name.Equals(course.Name)).Count() > 0)
+            {
+                throw new PreexistingEntityException("A course with the same name already exists.", null);
+            }
+        }
+
+        private void SetCourseType(Course course)
+        {
+            course.CourseType = _courseTypeRepository.Get(course.CourseTypeId);
         }
     }
 }

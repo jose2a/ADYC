@@ -19,14 +19,14 @@ namespace ADYC.Service
             _courseTypeRepository = courseTypeRepository;
         }
 
-        public void Add(CourseType courseType)
+        public CourseType Get(int id)
         {
-            if (courseType == null)
-            {
-                throw new ArgumentNullException("courseType");
-            }
+            return _courseTypeRepository.Get(id);
+        }
 
-            _courseTypeRepository.Add(courseType);
+        public IEnumerable<CourseType> GetAll()
+        {
+            return _courseTypeRepository.GetAll();
         }
 
         public IEnumerable<CourseType> FindByName(string name)
@@ -39,14 +39,14 @@ namespace ADYC.Service
             return _courseTypeRepository.Find(ct => ct.Name.Contains(name));
         }
 
-        public CourseType Get(int id)
+        public void Add(CourseType courseType)
         {
-            return _courseTypeRepository.Get(id);
-        }
+            if (courseType == null)
+            {
+                throw new ArgumentNullException("courseType");
+            }
 
-        public IEnumerable<CourseType> GetAll()
-        {
-            return _courseTypeRepository.GetAll();
+            _courseTypeRepository.Add(courseType);
         }
 
         public void Remove(CourseType courseType)
