@@ -29,13 +29,10 @@ namespace ADYC.API.Controllers
         {
             var majors = _majorService.GetAll();
 
-            return Ok(majors
+            return base.Ok(majors
                 .Select(m =>
                 {
-                    var groupDto = Mapper.Map<Major, MajorDto>(m);
-                    groupDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Majors") + m.Id;
-
-                    return groupDto;
+                    return GetMajorDto(m);
                 }));
         }
 
@@ -44,13 +41,11 @@ namespace ADYC.API.Controllers
         [ResponseType(typeof(MajorDto))]
         public IHttpActionResult Get(int id)
         {
-            var majors = _majorService.Get(id);
+            var major = _majorService.Get(id);
 
-            if (majors != null)
+            if (major != null)
             {
-                var majorDto = Mapper.Map<Major, MajorDto>(majors);
-                majorDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Majors") + majors.Id;
-                return Ok(majorDto);
+                return Ok(GetMajorDto(major));
             }
 
             return NotFound();
@@ -60,15 +55,22 @@ namespace ADYC.API.Controllers
         [ResponseType(typeof(IEnumerable<MajorDto>))]
         public IHttpActionResult GetByName(string name)
         {
-            var majors = _majorService.FindByName(name);
+            try
+            {
+                var majors = _majorService.FindByName(name);
 
-            return Ok(majors
-                .Select(m => {
-                    var majorDto = Mapper.Map<Major, MajorDto>(m);
-                    majorDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Majors") + m.Id;
+                return Ok(majors
+                    .Select(m =>
+                    {
+                        return GetMajorDto(m);
+                    }));
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
 
-                    return majorDto;
-                }));
+            return BadRequest(ModelState);
         }
 
         [Route("")]
@@ -85,10 +87,13 @@ namespace ADYC.API.Controllers
 
                     _majorService.Add(major);
 
-                    var majorDto = Mapper.Map<Major, MajorDto>(major);
-                    majorDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Majors") + major.Id;
+                    var majorDto = GetMajorDto(major);
 
                     return Created(new Uri(majorDto.Url), majorDto);
+                }
+                catch (ArgumentNullException ane)
+                {
+                    ModelState.AddModelError("", ane.Message);
                 }
                 catch (PreexistingEntityException pe)
                 {
@@ -111,7 +116,7 @@ namespace ADYC.API.Controllers
 
                 if (majorInDb == null)
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
 
                 try
@@ -122,9 +127,9 @@ namespace ADYC.API.Controllers
 
                     return Ok();
                 }
-                catch (NonexistingEntityException ne)
+                catch (ForeignKeyEntityException fkee)
                 {
-                    ModelState.AddModelError("", ne.Message);
+                    ModelState.AddModelError("", fkee.Message);
                 }
             }
 
@@ -147,15 +152,21 @@ namespace ADYC.API.Controllers
             try
             {
                 _majorService.Remove(majorInDb);
+                return Ok();
             }
             catch (ForeignKeyEntityException fke)
             {
-                ModelState.AddModelError("", fke.Message);
-
-                return BadRequest(ModelState);
+                ModelState.AddModelError("", fke.Message);                
             }
 
-            return Ok();
+            return BadRequest(ModelState);
+        }
+
+        private MajorDto GetMajorDto(Major m)
+        {
+            var majorDto = Mapper.Map<Major, MajorDto>(m);
+            majorDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Majors") + m.Id;
+            return majorDto;
         }
     }
 }

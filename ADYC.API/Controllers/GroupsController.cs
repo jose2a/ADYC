@@ -29,28 +29,23 @@ namespace ADYC.API.Controllers
         {
             var groups = _groupService.GetAll();
 
-            return Ok(groups
+            return base.Ok(groups
                 .Select(g =>
                 {
-                    var groupDto = Mapper.Map<Group, GroupDto>(g);
-                    groupDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Groups") + g.Id;
-
-                    return groupDto;
+                    return GetGroupDto(g);
                 }));
-        }
+        }        
 
         // GET api/<controller>/5
         [Route("{id}")]
         [ResponseType(typeof(GroupDto))]
         public IHttpActionResult Get(int id)
         {
-            var groups = _groupService.Get(id);
+            var group = _groupService.Get(id);
 
-            if (groups != null)
+            if (group != null)
             {
-                var groupDto = Mapper.Map<Group, GroupDto>(groups);
-                groupDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Groups") + groups.Id;
-                return Ok(groupDto);
+                return Ok(GetGroupDto(group));
             }
 
             return NotFound();
@@ -60,15 +55,22 @@ namespace ADYC.API.Controllers
         [ResponseType(typeof(IEnumerable<GroupDto>))]
         public IHttpActionResult GetByName(string name)
         {
-            var groups = _groupService.FindByName(name);
+            try
+            {
+                var groups = _groupService.FindByName(name);
 
-            return Ok(groups
-                .Select(g => {
-                    var groupDto = Mapper.Map<Group, GroupDto>(g);
-                    groupDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Groups") + g.Id;
+                return Ok(groups
+                    .Select(g =>
+                    {
+                        return GetGroupDto(g);
+                    }));
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
 
-                    return groupDto;
-                }));
+            return BadRequest(ModelState);
         }
 
         [Route("")]
@@ -85,10 +87,13 @@ namespace ADYC.API.Controllers
 
                     _groupService.Add(group);
 
-                    var groupDto = Mapper.Map<Group, GroupDto>(group);
-                    groupDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Groups") + group.Id;
+                    var groupDto = GetGroupDto(group);
 
                     return Created(new Uri(groupDto.Url), groupDto);
+                }
+                catch (ArgumentNullException ane)
+                {
+                    ModelState.AddModelError("", ane.Message);
                 }
                 catch (PreexistingEntityException pe)
                 {
@@ -122,9 +127,9 @@ namespace ADYC.API.Controllers
 
                     return Ok();
                 }
-                catch (NonexistingEntityException ne)
+                catch (ArgumentNullException ane)
                 {
-                    ModelState.AddModelError("", ne.Message);
+                    ModelState.AddModelError("", ane.Message);
                 }
             }
 
@@ -147,15 +152,22 @@ namespace ADYC.API.Controllers
             try
             {
                 _groupService.Remove(groupInDb);
+
+                return Ok();
             }
             catch (ForeignKeyEntityException fke)
             {
-                ModelState.AddModelError("", fke.Message);
-
-                return BadRequest(ModelState);
+                ModelState.AddModelError("", fke.Message);               
             }
 
-            return Ok();
+            return BadRequest(ModelState);
+        }
+
+        private GroupDto GetGroupDto(Group g)
+        {
+            var groupDto = Mapper.Map<Group, GroupDto>(g);
+            groupDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Groups") + g.Id;
+            return groupDto;
         }
     }
 }
