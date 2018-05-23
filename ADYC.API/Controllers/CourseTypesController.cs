@@ -22,6 +22,21 @@ namespace ADYC.API.Controllers
             _courseTypeService = courseTypeService;
         }
 
+        // GET api/<controller>/5
+        [Route("{id}")]
+        [ResponseType(typeof(CourseTypeDto))]
+        public IHttpActionResult Get(int id)
+        {
+            var courseType = _courseTypeService.Get(id);
+
+            if (courseType != null)
+            {
+                return Ok(GetCourseTypeDto(courseType));
+            }
+
+            return NotFound();
+        }
+
         // GET api/<controller>
         [Route("")]
         [ResponseType(typeof(IEnumerable<CourseTypeDto>))]
@@ -32,78 +47,67 @@ namespace ADYC.API.Controllers
             return Ok(courseTypes
                 .Select(ct =>
                 {
-                    var courseTypeDto = Mapper.Map<CourseType, CourseTypeDto>(ct);
-                    courseTypeDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + ct.Id;
-
-                    return courseTypeDto;
+                    return GetCourseTypeDto(ct);
                 }));
         }
-
-        // GET api/<controller>/5
-        [Route("{id}")]
-        [ResponseType(typeof(CourseTypeDto))]
-        public IHttpActionResult Get(int id)
-        {
-            var courseType = _courseTypeService.Get(id);
-
-            if (courseType != null)
-            {
-                var courseTypeDto = Mapper.Map<CourseType, CourseTypeDto>(courseType);
-                courseTypeDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + courseType.Id;
-                return Ok(courseTypeDto);
-            }
-
-            return NotFound();
-        }
-
+        
         [Route("GetByName/{name}")]
         [ResponseType(typeof(IEnumerable<CourseTypeDto>))]
         public IHttpActionResult GetByName(string name)
         {
-            var courseTypes = _courseTypeService.FindByName(name);
+            try
+            {
+                var courseTypes = _courseTypeService.FindByName(name);
 
-            return Ok(courseTypes
-                .Select(ct => {
-                    var courseTypeDto = Mapper.Map<CourseType, CourseTypeDto>(ct);
-                    courseTypeDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + ct.Id;
+                return Ok(courseTypes
+                    .Select(ct =>
+                    {
+                        return GetCourseTypeDto(ct);
+                    }));
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane);
+            }
 
-                    return courseTypeDto;
-                }));
+            return BadRequest(ModelState);
         }
 
         [Route("")]
         [HttpPost]
         [ResponseType(typeof(CourseTypeDto))]
         // POST api/<controller>
-        public IHttpActionResult Post([FromBody] CourseTypeForm form)
+        public IHttpActionResult Post([FromBody] CourseTypeDto form)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var courseType = Mapper.Map<CourseTypeForm, CourseType>(form);
+                    var courseType = Mapper.Map<CourseTypeDto, CourseType>(form);
 
                     _courseTypeService.Add(courseType);
-
-                    var courseTypeDto = Mapper.Map<CourseType, CourseTypeDto>(courseType);
-                    courseTypeDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + courseType.Id;
+                    var courseTypeDto = GetCourseTypeDto(courseType);
 
                     return Created(new Uri(courseTypeDto.Url), courseTypeDto);
                 }
-                catch (PreexistingEntityException pe)
+                catch (ArgumentNullException ane)
                 {
-                    ModelState.AddModelError("", pe.Message);
+                    ModelState.AddModelError("", ane.Message);
+                }
+                catch (PreexistingEntityException)
+                {
+                    return NotFound();
                 }
             }
 
             return BadRequest(ModelState);
-        }
+        }        
 
         [Route("{id}")]
         [HttpPut]
         [ResponseType(typeof(void))]
         // PUT api/<controller>/5
-        public IHttpActionResult Put(int id, [FromBody] CourseTypeForm form)
+        public IHttpActionResult Put(int id, [FromBody] CourseTypeDto form)
         {
             if (ModelState.IsValid)
             {
@@ -111,20 +115,22 @@ namespace ADYC.API.Controllers
 
                 if (courseTypeInDb == null)
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
 
                 try
                 {
                     Mapper.Map(form, courseTypeInDb);
-
                     _courseTypeService.Update(courseTypeInDb);
-
                     return Ok();
                 }
-                catch (NonexistingEntityException ne)
+                catch (ArgumentNullException ane)
                 {
-                    ModelState.AddModelError("", ne.Message);
+                    ModelState.AddModelError("", ane.Message);
+                }
+                catch (NonexistingEntityException)
+                {
+                    return NotFound();
                 }
             }
 
@@ -147,15 +153,25 @@ namespace ADYC.API.Controllers
             try
             {
                 _courseTypeService.Remove(courseTypeInDb);
+                return Ok();
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
             }
             catch (ForeignKeyEntityException fke)
             {
-                ModelState.AddModelError("", fke.Message);
-
-                return BadRequest(ModelState);
+                ModelState.AddModelError("", fke.Message);                
             }
 
-            return Ok();
+            return BadRequest(ModelState);
+        }
+
+        private CourseTypeDto GetCourseTypeDto(CourseType courseType)
+        {
+            var courseTypeDto = Mapper.Map<CourseType, CourseTypeDto>(courseType);
+            courseTypeDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + courseType.Id;
+            return courseTypeDto;
         }
     }
 }

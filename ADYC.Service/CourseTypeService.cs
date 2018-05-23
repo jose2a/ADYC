@@ -46,7 +46,29 @@ namespace ADYC.Service
                 throw new ArgumentNullException("courseType");
             }
 
+            var findCourseType = _courseTypeRepository.Find(ct => ct.Name.Contains(courseType.Name));
+
+            if (findCourseType.Count() > 0)
+            {
+                throw new PreexistingEntityException("Course type already exist.");
+            }
+
             _courseTypeRepository.Add(courseType);
+        }
+
+        public void Update(CourseType courseType)
+        {
+            if (courseType == null)
+            {
+                throw new ArgumentNullException("courseType");
+            }
+
+            if (_courseTypeRepository.Get(courseType.Id) == null)
+            {
+                throw new NonexistingEntityException("Course type does not currently exist.");
+            }
+
+            _courseTypeRepository.Update(courseType);
         }
 
         public void Remove(CourseType courseType)
@@ -58,7 +80,7 @@ namespace ADYC.Service
 
             if (courseType.Courses.Count > 0)
             {
-                throw new ForeignKeyEntityException("The course type can be removed. It has courses associated with it.");
+                throw new ForeignKeyEntityException("The course type cannot be removed. It has courses associated with it.");
             }
 
             _courseTypeRepository.Remove(courseType);
@@ -79,21 +101,6 @@ namespace ADYC.Service
             }
 
             _courseTypeRepository.RemoveRange(courseTypes);
-        }
-
-        public void Update(CourseType courseType)
-        {
-            if (courseType == null)
-            {
-                throw new ArgumentNullException("courseType");
-            }
-
-            if (_courseTypeRepository.Get(courseType.Id) == null)
-            {
-                throw new NonexistingEntityException("Course type does not currently exist.");
-            }
-
-            _courseTypeRepository.Update(courseType);
-        }
+        }        
     }
 }
