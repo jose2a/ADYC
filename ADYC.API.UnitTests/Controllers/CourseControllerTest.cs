@@ -111,7 +111,7 @@ namespace ADYC.API.UnitTests.Controllers
             courseTypeService.Setup(m => m.Get(It.IsAny<int>()))
                 .Returns(TestDataApi.externalCT);
 
-            var courseForm = new CourseForm { Name = "Swimming", CourseTypeId = 2 };
+            var courseForm = new CourseDto { Name = "Swimming", CourseTypeId = 2 };
 
             var controller = new CoursesController(courseService.Object, courseTypeService.Object);
             TestHelper.SetUpControllerRequest(controller, "courses");
@@ -132,7 +132,7 @@ namespace ADYC.API.UnitTests.Controllers
         public void Post_InvalidModel_ReturnsBadRequest()
         {
             // Arrange
-            var courseForm = new CourseForm { Name = "Swimming" };//, CourseTypeId = 1 };
+            var courseForm = new CourseDto { Name = "Swimming" };//, CourseTypeId = 1 };
 
             var controller = new CoursesController(courseService.Object, courseTypeService.Object);
             controller.ModelState.AddModelError("fakeError", "Error");
@@ -150,10 +150,9 @@ namespace ADYC.API.UnitTests.Controllers
             // Arrange
             var computerLab = TestDataApi.CloneCourse(TestDataApi.computerLab);
 
-            var courseForm = new CourseForm {
+            var courseForm = new CourseDto {
                 Id = computerLab.Id,
                 Name = "Cyber Security Workshop",
-                IsDeleted = true,
                 CourseTypeId = 2
             };
 

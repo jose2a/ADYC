@@ -30,7 +30,7 @@ namespace ADYC.API.App_Start
             CreateMap<CourseDto, Course>()
                 .ForMember(c => c.Id, opt => opt.Ignore());
 
-            CreateMap<CourseTypeForm, CourseType>()
+            CreateMap<CourseTypeDto, CourseType>()
                 .ForMember(c => c.Id, opt => opt.Ignore());
 
             CreateMap<GradeDto, Grade>()

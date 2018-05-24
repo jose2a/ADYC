@@ -2,10 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ADYC.Model;
-using ADYC.Repository;
 using ADYC.IRepository;
 using ADYC.Util.Exceptions;
 
@@ -31,107 +28,63 @@ namespace ADYC.Service
             ValidateOffering(offering);
 
             _offeringRepository.Add(offering);
-        }
 
-        private void ValidateOffering(Offering offering)
-        {
-            if (offering == null)
+            if (offering.Id != 0)
             {
-                throw new ArgumentNullException("offering");
+                offering = _offeringRepository.Find(o => o.Id == offering.Id,
+                    includeProperties: "Professor,Course,Course.CourseType,Term")
+                    .SingleOrDefault();
             }
-
-            if (string.IsNullOrEmpty(offering.Title))
-            {
-                throw new ArgumentException("Title should not be empty.");
-            }
-
-            if (string.IsNullOrEmpty(offering.Location))
-            {
-                throw new ArgumentException("Location should not be empty.");
-            }
-
-            if (offering.Professor == null || offering.ProfessorId == null)
-            {
-                throw new ArgumentException("Professor is required.");
-            }
-
-            if (offering.Course == null)
-            {
-                throw new ArgumentException("Course is required.");
-            }
-
-            if (offering.Term == null)
-            {
-                throw new ArgumentException("Term is required.");
-            }
-
-            if (offering.Professor.IsDeleted)
-            {
-                throw new ArgumentException("The professor has been deleted.");
-            }
-
-            if (offering.Course.IsDeleted)
-            {
-                throw new ArgumentException("The course has been deleted.");
-            }
-
-            if (!offering.Term.IsCurrentTerm)
-            {
-                throw new ArgumentException("The term is not the current term.");
-            }
-
-            //var offeringExist = _offeringRepository.Find(o => o.Title.Contains(offering.Title));
-
-            //if (offeringExist.Count() > 0)
-            //{
-            //    throw new PreexistingEntityException("An offering with the same title was already added.");
-            //}
         }
 
         public IEnumerable<Offering> FindByCourseId(int courseId)
         {
-            var offerings = _offeringRepository.Find(o => o.CourseId == courseId);
+            var offerings = _offeringRepository.Find(o => o.CourseId == courseId,
+                includeProperties: "Professor,Course,Course.CourseType,Term");
 
-            if (offerings == null || offerings.Count() == 0)
-            {
-                throw new NonexistingEntityException("Offerings for this course could not be found or do not exist.");
-            }
+            //if (offerings == null || offerings.Count() == 0)
+            //{
+            //    throw new NonexistingEntityException("Offerings for this course could not be found or do not exist.");
+            //}
 
             return offerings;
         }
 
         public IEnumerable<Offering> FindByCourseName(string courseName)
         {
-            var offerings = _offeringRepository.Find(o => o.Course.Name.Contains(courseName));
+            var offerings = _offeringRepository.Find(o => o.Course.Name.Contains(courseName),
+                includeProperties: "Professor,Course,Course.CourseType,Term");
 
-            if (offerings == null || offerings.Count() == 0)
-            {
-                throw new NonexistingEntityException("Offerings for this course name could not be found or do not exist.");
-            }
+            //if (offerings == null || offerings.Count() == 0)
+            //{
+            //    throw new NonexistingEntityException("Offerings for this course name could not be found or do not exist.");
+            //}
 
             return offerings;
         }
 
         public IEnumerable<Offering> FindByCurrentTerm()
         {
-            var offerings = _offeringRepository.Find(o => o.Term.IsCurrentTerm, includeProperties: "Professor,Course,Term");
+            var offerings = _offeringRepository.Find(o => o.Term.IsCurrentTerm,
+                includeProperties: "Professor,Course,Course.CourseType,Term");
 
-            if (offerings == null || offerings.Count() == 0)
-            {
-                throw new NonexistingEntityException("Offerings for current term could not be found or do not exist.");
-            }
+            //if (offerings == null || offerings.Count() == 0)
+            //{
+            //    throw new NonexistingEntityException("Offerings for current term could not be found or do not exist.");
+            //}
 
             return offerings;
         }
 
         public IEnumerable<Offering> FindByLocation(string location)
         {
-            var offerings = _offeringRepository.Find(o => o.Location.Contains(location));
+            var offerings = _offeringRepository.Find(o => o.Location.Contains(location),
+                includeProperties: "Professor,Course,Course.CourseType,Term");
 
-            if (offerings == null || offerings.Count() == 0)
-            {
-                throw new NonexistingEntityException("Offerings for this location could not be found or do not exist.");
-            }
+            //if (offerings == null || offerings.Count() == 0)
+            //{
+            //    throw new NonexistingEntityException("Offerings for this location could not be found or do not exist.");
+            //}
 
             return offerings;
         }
@@ -145,10 +98,10 @@ namespace ADYC.Service
 
             var offerings = _offeringRepository.Find(o => o.Professor.Id == professorId);
 
-            if (offerings == null || offerings.Count() == 0)
-            {
-                throw new NonexistingEntityException("Offerings for this professor could not be found or do not exist.");
-            }
+            //if (offerings == null || offerings.Count() == 0)
+            //{
+            //    throw new NonexistingEntityException("Offerings for this professor could not be found or do not exist.");
+            //}
 
             return offerings;
         }
@@ -160,12 +113,13 @@ namespace ADYC.Service
                 throw new ArgumentNullException("professorId");
             }
 
-            var offerings = _offeringRepository.Find(o => o.Professor.Id == professorId && o.TermId == termId);
+            var offerings = _offeringRepository.Find(o => o.Professor.Id == professorId && o.TermId == termId,
+                includeProperties: "Professor,Course,Course.CourseType,Term");
 
-            if (offerings == null || offerings.Count() == 0)
-            {
-                throw new NonexistingEntityException("Offerings for these professor and term could not be found or do not exist.");
-            }
+            //if (offerings == null || offerings.Count() == 0)
+            //{
+            //    throw new NonexistingEntityException("Offerings for these professor and term could not be found or do not exist.");
+            //}
 
             return offerings;
         }
@@ -179,7 +133,7 @@ namespace ADYC.Service
 
             var offering = _offeringRepository
                 .Find(o => o.Professor.Id == professorId && o.CourseId == courseId && o.TermId == termId,
-                includeProperties: "Professor,Course,Term");
+                includeProperties: "Professor,Course,Course.CourseType,Term");
 
             return offering.FirstOrDefault();
         }
@@ -192,12 +146,13 @@ namespace ADYC.Service
             }
 
             var offerings = _offeringRepository
-                .Find(o => o.Professor.LastName.Contains(professorLastName));
+                .Find(o => o.Professor.LastName.Contains(professorLastName),
+                includeProperties: "Professor,Course,Course.CourseType,Term");
 
-            if (offerings == null)
-            {
-                throw new NonexistingEntityException("Offerings for this professor could not be found or do not exist.");
-            }
+            //if (offerings == null)
+            //{
+            //    throw new NonexistingEntityException("Offerings for this professor could not be found or do not exist.");
+            //}
 
             return offerings;
         }
@@ -210,12 +165,13 @@ namespace ADYC.Service
             }
 
             var offerings = _offeringRepository
-                .Find(o => o.Professor.LastName.Contains(professorName));
+                .Find(o => o.Professor.LastName.Contains(professorName),
+                includeProperties: "Professor,Course,Course.CourseType,Term");
 
-            if (offerings == null)
-            {
-                throw new NonexistingEntityException("Offerings for this professor could not be found or do not exist.");
-            }
+            //if (offerings == null)
+            //{
+            //    throw new NonexistingEntityException("Offerings for this professor could not be found or do not exist.");
+            //}
 
             return offerings;
         }
@@ -233,24 +189,27 @@ namespace ADYC.Service
             }
 
             var offerings = _offeringRepository
-                .Find(o => o.Professor.FirstName.Contains(professorName) && o.Term.Name.Contains(termName));
+                .Find(o => o.Professor.FirstName.Contains(professorName) && o.Term.Name.Contains(termName),
+                includeProperties: "Professor,Course,Course.CourseType,Term");
 
-            if (offerings == null)
-            {
-                throw new NonexistingEntityException("Offerings for these professor and term could not be found or do not exist.");
-            }
+            //if (offerings == null)
+            //{
+            //    throw new NonexistingEntityException("Offerings for these professor and term could not be found or do not exist.");
+            //}
 
             return offerings;
         }
 
         public IEnumerable<Offering> FindByTermId(int termId)
         {
-            var offerings = _offeringRepository.Find(o => o.TermId == termId);
+            var offerings = _offeringRepository
+                .Find(o => o.TermId == termId,
+                includeProperties: "Professor,Course,Course.CourseType,Term");
 
-            if (offerings == null)
-            {
-                throw new NonexistingEntityException("Offerings for this term could not be found or do not exist.");
-            }
+            //if (offerings == null)
+            //{
+            //    throw new NonexistingEntityException("Offerings for this term could not be found or do not exist.");
+            //}
 
             return offerings;
         }
@@ -263,12 +222,13 @@ namespace ADYC.Service
             }
 
             var offerings = _offeringRepository
-                .Find(o => o.Term.Name.Contains(termName));
+                .Find(o => o.Term.Name.Contains(termName),
+                includeProperties: "Professor,Course,Course.CourseType,Term");
 
-            if (offerings == null)
-            {
-                throw new NonexistingEntityException("Offerings for this term could not be found or do not exist.");
-            }
+            //if (offerings == null)
+            //{
+            //    throw new NonexistingEntityException("Offerings for this term could not be found or do not exist.");
+            //}
 
             return offerings;
         }
@@ -287,12 +247,14 @@ namespace ADYC.Service
 
         public Offering Get(int id)
         {
-            return _offeringRepository.Get(id);
+            return _offeringRepository
+                .Find(o => o.Id == id, includeProperties: "Professor,Course,Course.CourseType,Term")
+                .SingleOrDefault();
         }
 
         public IEnumerable<Offering> GetAll()
         {
-            return _offeringRepository.GetAll(includeProperties : "Professor,Course,Term");
+            return _offeringRepository.GetAll(includeProperties: "Professor,Course,Course.CourseType,Term");
         }
 
         public void Remove(Offering offering, bool forceToRemove)
@@ -337,12 +299,13 @@ namespace ADYC.Service
             }
 
             var offerings = _offeringRepository
-                .Find(o => o.ProfessorId == professorId && o.Term.IsCurrentTerm);
+                .Find(o => o.ProfessorId == professorId && o.Term.IsCurrentTerm,
+                includeProperties: "Professor,Course,Course.CourseType,Term");
 
-            if (offerings == null)
-            {
-                throw new NonexistingEntityException("Offerings for this professor and current term could not be found or do not exist.");
-            }
+            //if (offerings == null)
+            //{
+            //    throw new NonexistingEntityException("Offerings for this professor and current term could not be found or do not exist.");
+            //}
 
             return offerings;
         }
@@ -355,14 +318,70 @@ namespace ADYC.Service
             }
 
             var offerings = _offeringRepository
-                .Find(o => o.Title.Contains(title));
+                .Find(o => o.Title.Contains(title),
+                includeProperties: "Professor,Course,Course.CourseType,Term");
 
-            if (offerings == null)
-            {
-                throw new NonexistingEntityException("Offerings with containing this title could not be found or do not exist.");
-            }
+            //if (offerings == null)
+            //{
+            //    throw new NonexistingEntityException("Offerings with containing this title could not be found or do not exist.");
+            //}
 
             return offerings;
+        }
+
+        private void ValidateOffering(Offering offering)
+        {
+            if (offering == null)
+            {
+                throw new ArgumentNullException("offering");
+            }
+
+            if (string.IsNullOrEmpty(offering.Title))
+            {
+                throw new ArgumentNullException("Title should not be empty.");
+            }
+
+            if (string.IsNullOrEmpty(offering.Location))
+            {
+                throw new ArgumentNullException("Location should not be empty.");
+            }
+
+            if (offering.ProfessorId == null)
+            {
+                throw new ArgumentNullException("Professor is required.");
+            }
+
+            if (offering.Course == null)
+            {
+                throw new ArgumentNullException("Course is required.");
+            }
+
+            if (offering.Term == null)
+            {
+                throw new ArgumentNullException("Term is required.");
+            }
+
+            if (offering.Professor.IsDeleted)
+            {
+                throw new ArgumentException("The professor has been deleted.");
+            }
+
+            if (offering.Course.IsDeleted)
+            {
+                throw new ArgumentException("The course has been deleted.");
+            }
+
+            if (!offering.Term.IsCurrentTerm)
+            {
+                throw new ArgumentException("The term is not the current term.");
+            }
+
+            //var offeringExist = _offeringRepository.Find(o => o.Title.Contains(offering.Title));
+
+            //if (offeringExist.Count() > 0)
+            //{
+            //    throw new PreexistingEntityException("An offering with the same title was already added.");
+            //}
         }
     }
 }

@@ -7,8 +7,6 @@ using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 
@@ -36,14 +34,7 @@ namespace ADYC.API.Controllers
                 return NotFound();
             }
 
-            var offeringDto = SetOfferingDto(offering);
-            //    Mapper.Map<Offering, OfferingDto>(offering);
-            //offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + offering.Id;
-            //offeringDto.Professor = Mapper.Map<Professor, ProfessorDto>(offering.Professor);
-            //offeringDto.Course = Mapper.Map<Course, CourseDto>(offering.Course);
-            //offeringDto.Term = Mapper.Map<Term, TermDto>(offering.Term);
-
-            return Ok(offeringDto);
+            return Ok(GetOfferingDto(offering));
         }
 
         // GET api/<controller>/GetByProfessor/3435-fr545-/Course/4/Term/5
@@ -60,56 +51,39 @@ namespace ADYC.API.Controllers
                     return NotFound();
                 }
 
-                OfferingDto offeringDto = SetOfferingDto(offering);
-
-                return Ok(offeringDto);
+                return Ok(GetOfferingDto(offering));
             }
             catch (ArgumentNullException ane)
             {
-                ModelState.AddModelError("", ane.Message);
-                return BadRequest(ModelState);                
+                ModelState.AddModelError("", ane.Message);                                
             }
-        }
 
-        private OfferingDto SetOfferingDto(Offering offering)
-        {
-            var offeringDto = Mapper.Map<Offering, OfferingDto>(offering);
-            offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + offering.Id;
-
-            var professorDto = Mapper.Map<Professor, ProfessorDto>(offering.Professor);
-            professorDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Professors") + offering.ProfessorId;
-            offeringDto.Professor = professorDto;
-
-            var courseDto = Mapper.Map<Course, CourseDto>(offering.Course);
-            courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + offering.CourseId;
-            offeringDto.Course = courseDto;
-
-            var termDto = Mapper.Map<Term, TermDto>(offering.Term);
-            termDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + offering.TermId;
-            offeringDto.Term = termDto;
-            return offeringDto;
-        }
+            return BadRequest(ModelState);
+        }        
 
         // GET api/<controller>/GetByTermName/spring 2018
         [Route("GetByTermName/{termName}")]
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult GetByTermName(string termName)
         {
-            var offerings = _offeringService.FindByTermName(termName);
+            try
+            {
+                var offerings = _offeringService.FindByTermName(termName);
 
-            var offeringsDto = offerings
-                .Select(o =>
-                {
-                    var offeringDto = Mapper.Map<Offering, OfferingDto>(o);
-                    offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + o.Id;
-                    offeringDto.Professor = Mapper.Map<Professor, ProfessorDto>(o.Professor);
-                    offeringDto.Course = Mapper.Map<Course, CourseDto>(o.Course);
-                    offeringDto.Term = Mapper.Map<Term, TermDto>(o.Term);
+                var offeringsDto = offerings
+                    .Select(o =>
+                    {
+                        return GetOfferingDto(o);
+                    });
 
-                    return offeringDto;
-                });
+                return Ok(offeringsDto);
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
 
-            return Ok(offeringsDto);
+            return BadRequest(ModelState);
         }
 
         // GET api/<controller>/GetByTermId/5
@@ -122,13 +96,7 @@ namespace ADYC.API.Controllers
             var offeringsDto = offerings
                 .Select(o =>
                 {
-                    var offeringDto = Mapper.Map<Offering, OfferingDto>(o);
-                    offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + o.Id;
-                    offeringDto.Professor = Mapper.Map<Professor, ProfessorDto>(o.Professor);
-                    offeringDto.Course = Mapper.Map<Course, CourseDto>(o.Course);
-                    offeringDto.Term = Mapper.Map<Term, TermDto>(o.Term);
-
-                    return offeringDto;
+                    return GetOfferingDto(o);
                 });
 
             return Ok(offeringsDto);
@@ -144,13 +112,7 @@ namespace ADYC.API.Controllers
             var offeringsDto = offerings
                 .Select(o =>
                 {
-                    var offeringDto = Mapper.Map<Offering, OfferingDto>(o);
-                    offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + o.Id;
-                    offeringDto.Professor = Mapper.Map<Professor, ProfessorDto>(o.Professor);
-                    offeringDto.Course = Mapper.Map<Course, CourseDto>(o.Course);
-                    offeringDto.Term = Mapper.Map<Term, TermDto>(o.Term);
-
-                    return offeringDto;
+                    return GetOfferingDto(o);
                 });
 
             return Ok(offeringsDto);
@@ -161,21 +123,24 @@ namespace ADYC.API.Controllers
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult GetByCourseName(string courseName)
         {
-            var offerings = _offeringService.FindByCourseName(courseName);
+            try
+            {
+                var offerings = _offeringService.FindByCourseName(courseName);
 
-            var offeringsDto = offerings
-                .Select(o =>
-                {
-                    var offeringDto = Mapper.Map<Offering, OfferingDto>(o);
-                    offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + o.Id;
-                    offeringDto.Professor = Mapper.Map<Professor, ProfessorDto>(o.Professor);
-                    offeringDto.Course = Mapper.Map<Course, CourseDto>(o.Course);
-                    offeringDto.Term = Mapper.Map<Term, TermDto>(o.Term);
+                var offeringsDto = offerings
+                    .Select(o =>
+                    {
+                        return GetOfferingDto(o);
+                    });
 
-                    return offeringDto;
-                });
+                return Ok(offeringsDto);
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
 
-            return Ok(offeringsDto);
+            return BadRequest(ModelState);
         }
 
         // GET api/<controller>/GetByCourseId/4
@@ -188,13 +153,7 @@ namespace ADYC.API.Controllers
             var offeringsDto = offerings
                 .Select(o =>
                 {
-                    var offeringDto = Mapper.Map<Offering, OfferingDto>(o);
-                    offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + o.Id;
-                    offeringDto.Professor = Mapper.Map<Professor, ProfessorDto>(o.Professor);
-                    offeringDto.Course = Mapper.Map<Course, CourseDto>(o.Course);
-                    offeringDto.Term = Mapper.Map<Term, TermDto>(o.Term);
-
-                    return offeringDto;
+                    return GetOfferingDto(o);
                 });
 
             return Ok(offeringsDto);
@@ -205,21 +164,24 @@ namespace ADYC.API.Controllers
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult GetByProfessorName(string professorName)
         {
-            var offerings = _offeringService.FindByProfessorName(professorName);
+            try
+            {
+                var offerings = _offeringService.FindByProfessorName(professorName);
 
-            var offeringsDto = offerings
-                .Select(o =>
-                {
-                    var offeringDto = Mapper.Map<Offering, OfferingDto>(o);
-                    offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + o.Id;
-                    offeringDto.Professor = Mapper.Map<Professor, ProfessorDto>(o.Professor);
-                    offeringDto.Course = Mapper.Map<Course, CourseDto>(o.Course);
-                    offeringDto.Term = Mapper.Map<Term, TermDto>(o.Term);
+                var offeringsDto = offerings
+                    .Select(o =>
+                    {
+                        return GetOfferingDto(o);
+                    });
 
-                    return offeringDto;
-                });
+                return Ok(offeringsDto);
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
 
-            return Ok(offeringsDto);
+            return BadRequest(ModelState);
         }
 
         // GET api/<controller>/GetByProfessorLastName/smith
@@ -227,21 +189,22 @@ namespace ADYC.API.Controllers
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult GetByProfessorLastName(string professorLastName)
         {
-            var offerings = _offeringService.FindByProfessorLastName(professorLastName);
+            try
+            {
+                var offerings = _offeringService.FindByProfessorLastName(professorLastName);
 
-            var offeringsDto = offerings
-                .Select(o =>
-                {
-                    var offeringDto = Mapper.Map<Offering, OfferingDto>(o);
-                    offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + o.Id;
-                    offeringDto.Professor = Mapper.Map<Professor, ProfessorDto>(o.Professor);
-                    offeringDto.Course = Mapper.Map<Course, CourseDto>(o.Course);
-                    offeringDto.Term = Mapper.Map<Term, TermDto>(o.Term);
+                return Ok(offerings
+                    .Select(o =>
+                    {
+                        return GetOfferingDto(o);
+                    }));
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
 
-                    return offeringDto;
-                });
-
-            return Ok(offeringsDto);
+            return BadRequest(ModelState);
         }
 
         // GET api/<controller>/GetByProfessorId/def00-2394
@@ -249,21 +212,24 @@ namespace ADYC.API.Controllers
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult GetByProfessorId(Guid professorId)
         {
-            var offerings = _offeringService.FindByProfessorId(professorId);
+            try
+            {
+                var offerings = _offeringService.FindByProfessorId(professorId);
 
-            var offeringsDto = offerings
-                .Select(o =>
-                {
-                    var offeringDto = Mapper.Map<Offering, OfferingDto>(o);
-                    offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + o.Id;
-                    offeringDto.Professor = Mapper.Map<Professor, ProfessorDto>(o.Professor);
-                    offeringDto.Course = Mapper.Map<Course, CourseDto>(o.Course);
-                    offeringDto.Term = Mapper.Map<Term, TermDto>(o.Term);
+                var offeringsDto = offerings
+                    .Select(o =>
+                    {
+                        return GetOfferingDto(o);
+                    });
 
-                    return offeringDto;
-                });
+                return Ok(offeringsDto);
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
 
-            return Ok(offeringsDto);
+            return BadRequest(ModelState);
         }
 
         // GET api/<controller>/GetByProfessorName/def00-2394-/TermName/spring 2018
@@ -271,21 +237,24 @@ namespace ADYC.API.Controllers
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult GetByProfessorNameAndTermName(string professorName, string termName)
         {
-            var offerings = _offeringService.FindByProfessorNameAndTermName(professorName, termName);
+            try
+            {
+                var offerings = _offeringService.FindByProfessorNameAndTermName(professorName, termName);
 
-            var offeringsDto = offerings
-                .Select(o =>
-                {
-                    var offeringDto = Mapper.Map<Offering, OfferingDto>(o);
-                    offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + o.Id;
-                    offeringDto.Professor = Mapper.Map<Professor, ProfessorDto>(o.Professor);
-                    offeringDto.Course = Mapper.Map<Course, CourseDto>(o.Course);
-                    offeringDto.Term = Mapper.Map<Term, TermDto>(o.Term);
+                var offeringsDto = offerings
+                    .Select(o =>
+                    {
+                        return GetOfferingDto(o);
+                    });
 
-                    return offeringDto;
-                });
+                return Ok(offeringsDto);
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
 
-            return Ok(offeringsDto);
+            return BadRequest(ModelState);
         }
 
         // GET api/<controller>/GetByProfessorId/def00-2394-/TermId/5
@@ -293,21 +262,24 @@ namespace ADYC.API.Controllers
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult GetByProfessorIdAndTermId(Guid professorId, int termId)
         {
-            var offerings = _offeringService.FindByProfessorIdAndTermId(professorId, termId);
+            try
+            {
+                var offerings = _offeringService.FindByProfessorIdAndTermId(professorId, termId);
 
-            var offeringsDto = offerings
-                .Select(o =>
-                {
-                    var offeringDto = Mapper.Map<Offering, OfferingDto>(o);
-                    offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + o.Id;
-                    offeringDto.Professor = Mapper.Map<Professor, ProfessorDto>(o.Professor);
-                    offeringDto.Course = Mapper.Map<Course, CourseDto>(o.Course);
-                    offeringDto.Term = Mapper.Map<Term, TermDto>(o.Term);
+                var offeringsDto = offerings
+                    .Select(o =>
+                    {
+                        return GetOfferingDto(o);
+                    });
 
-                    return offeringDto;
-                });
+                return Ok(offeringsDto);
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
 
-            return Ok(offeringsDto);
+            return BadRequest(ModelState);
         }
 
         // GET api/<controller>/GetByProfessorIdAndCurrentTerm/def00-2394-
@@ -315,21 +287,24 @@ namespace ADYC.API.Controllers
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult GetByProfessorIdAndCurrentTerm(Guid professorId)
         {
-            var offerings = _offeringService.FindByProfessorIdAndCurrentTerm(professorId);
+            try
+            {
+                var offerings = _offeringService.FindByProfessorIdAndCurrentTerm(professorId);
 
-            var offeringsDto = offerings
-                .Select(o =>
-                {
-                    var offeringDto = Mapper.Map<Offering, OfferingDto>(o);
-                    offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + o.Id;
-                    offeringDto.Professor = Mapper.Map<Professor, ProfessorDto>(o.Professor);
-                    offeringDto.Course = Mapper.Map<Course, CourseDto>(o.Course);
-                    offeringDto.Term = Mapper.Map<Term, TermDto>(o.Term);
+                var offeringsDto = offerings
+                    .Select(o =>
+                    {
+                        return GetOfferingDto(o);
+                    });
 
-                    return offeringDto;
-                });
+                return Ok(offeringsDto);
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
 
-            return Ok(offeringsDto);
+            return BadRequest(ModelState);
         }
 
         // GET api/<controller>/GetByTitle/computer science spring 2018 john doe
@@ -337,21 +312,24 @@ namespace ADYC.API.Controllers
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult GetByTitle(string title)
         {
-            var offerings = _offeringService.FindByTitle(title);
+            try
+            {
+                var offerings = _offeringService.FindByTitle(title);
 
-            var offeringsDto = offerings
-                .Select(o =>
-                {
-                    var offeringDto = Mapper.Map<Offering, OfferingDto>(o);
-                    offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + o.Id;
-                    offeringDto.Professor = Mapper.Map<Professor, ProfessorDto>(o.Professor);
-                    offeringDto.Course = Mapper.Map<Course, CourseDto>(o.Course);
-                    offeringDto.Term = Mapper.Map<Term, TermDto>(o.Term);
+                var offeringsDto = offerings
+                    .Select(o =>
+                    {
+                        return GetOfferingDto(o);
+                    });
 
-                    return offeringDto;
-                });
+                return Ok(offeringsDto);
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
 
-            return Ok(offeringsDto);
+            return BadRequest(ModelState);
         }
 
         // GET api/<controller>/GetByLocation/computer lab
@@ -359,21 +337,24 @@ namespace ADYC.API.Controllers
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult GetByLocation(string location)
         {
-            var offerings = _offeringService.FindByLocation(location);
+            try
+            {
+                var offerings = _offeringService.FindByLocation(location);
 
-            var offeringsDto = offerings
-                .Select(o =>
-                {
-                    var offeringDto = Mapper.Map<Offering, OfferingDto>(o);
-                    offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + o.Id;
-                    offeringDto.Professor = Mapper.Map<Professor, ProfessorDto>(o.Professor);
-                    offeringDto.Course = Mapper.Map<Course, CourseDto>(o.Course);
-                    offeringDto.Term = Mapper.Map<Term, TermDto>(o.Term);
+                var offeringsDto = offerings
+                    .Select(o =>
+                    {
+                        return GetOfferingDto(o);
+                    });
 
-                    return offeringDto;
-                });
+                return Ok(offeringsDto);
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
 
-            return Ok(offeringsDto);
+            return BadRequest(ModelState);
         }
 
         // GET api/<controller>
@@ -386,13 +367,7 @@ namespace ADYC.API.Controllers
             var offeringsDto = offerings
                 .Select(o =>
                 {
-                    var offeringDto = Mapper.Map<Offering, OfferingDto>(o);
-                    offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + o.Id;
-                    offeringDto.Professor = Mapper.Map<Professor, ProfessorDto>(o.Professor);
-                    offeringDto.Course = Mapper.Map<Course, CourseDto>(o.Course);
-                    offeringDto.Term = Mapper.Map<Term, TermDto>(o.Term);
-
-                    return offeringDto;
+                    return GetOfferingDto(o);
                 });
 
             return Ok(offeringsDto);
@@ -412,19 +387,18 @@ namespace ADYC.API.Controllers
 
                     _offeringService.Add(offering);
 
-                    var offeringDto = Mapper.Map<Offering, OfferingDto>(offering);
-                    offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + offering.Id;
+                    var offeringDto = GetOfferingDto(offering);
 
                     return Created(new Uri(offeringDto.Url), offeringDto);
-                }
-                catch (PreexistingEntityException pe)
-                {
-                    ModelState.AddModelError("", pe.Message);
                 }
                 catch (ArgumentException ae)
                 {
                     ModelState.AddModelError("", ae.Message);
                 }
+                catch (PreexistingEntityException pe)
+                {
+                    ModelState.AddModelError("", pe.Message);
+                }                
             }
 
             return BadRequest(ModelState);
@@ -442,7 +416,7 @@ namespace ADYC.API.Controllers
 
                 if (offeringInDb == null)
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
 
                 Mapper.Map(form, offeringInDb);
@@ -470,15 +444,46 @@ namespace ADYC.API.Controllers
             try
             {
                 _offeringService.Remove(offeringInDb, forceToRemove);
+
+                return Ok();
             }
             catch (ForeignKeyEntityException fke)
             {
-                ModelState.AddModelError("", fke.Message);
-
-                return BadRequest(ModelState);
+                ModelState.AddModelError("", fke.Message);    
             }
 
-            return Ok();
+            return BadRequest(ModelState);
+        }
+
+        private OfferingDto GetOfferingDto(Offering offering)
+        {
+            var offeringDto = Mapper.Map<Offering, OfferingDto>(offering);
+            offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + offering.Id;
+
+            offeringDto.Professor = Mapper.Map<Professor, ProfessorDto>(offering.Professor);
+            offeringDto.Professor.Url = UrlResoucesUtil.GetBaseUrl(Request, "Professors") + offering.ProfessorId;
+
+            offeringDto.Course = Mapper.Map<Course, CourseDto>(offering.Course);
+            offeringDto.Course.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + offering.CourseId;
+
+            offeringDto.Course.CourseType = Mapper.Map<CourseType, CourseTypeDto>(offering.Course.CourseType);
+            offeringDto.Course.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + offering.Course.CourseTypeId;
+
+            offeringDto.Term = Mapper.Map<Term, TermDto>(offering.Term);
+            offeringDto.Term.Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + offering.TermId;
+            //var professorDto = Mapper.Map<Professor, ProfessorDto>(offering.Professor);
+            //professorDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Professors") + offering.ProfessorId;
+            //offeringDto.Professor = professorDto;
+
+            //var courseDto = Mapper.Map<Course, CourseDto>(offering.Course);
+            //courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + offering.CourseId;
+            //offeringDto.Course = courseDto;
+
+            //var termDto = Mapper.Map<Term, TermDto>(offering.Term);
+            //termDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + offering.TermId;
+            //offeringDto.Term = termDto;
+
+            return offeringDto;
         }
     }
 }
