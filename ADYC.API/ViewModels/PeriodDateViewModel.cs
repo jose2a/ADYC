@@ -22,12 +22,13 @@ namespace ADYC.API.ViewModels
         
 
         public PeriodDto Period { get; set; }
-        public string Term { get; set; }
+        //public string Term { get; set; }
     }
 
     public class PeriodDateListDto
     {
         public string Url { get; set; }
+        public TermDto Term { get; set; }
         public IEnumerable<PeriodDateDto> PeriodDatesDto { get; set; }
     }
 }

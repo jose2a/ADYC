@@ -15,10 +15,13 @@ namespace ADYC.API.Controllers
     public class PeriodDatesController : ApiController
     {
         private IPeriodDateService _periodDateService;
+        private ITermService _termService;
 
-        public PeriodDatesController(IPeriodDateService periodDateService)
+        public PeriodDatesController(IPeriodDateService periodDateService,
+            ITermService termService)
         {
             _periodDateService = periodDateService;
+            _termService = termService;
         }
 
         [Route("{termId}/PeriodDates")]
@@ -26,30 +29,10 @@ namespace ADYC.API.Controllers
         public IHttpActionResult GetPeriodDatesForTerm(int termId)
         {
             var periodDates = _periodDateService.GetPeriodDatesForTerm(termId);
+            var term = _termService.Get(termId);
 
-            var periodDateListDto = new PeriodDateListDto
-            {
-                Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + termId + "/PeriodDates",
-                PeriodDatesDto = periodDates
-                    .Select(pd =>
-                    {
-                        var periodDto = Mapper.Map<Period, PeriodDto>(pd.Period);
-                        periodDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Periods") + pd.PeriodId;
-
-                        return new PeriodDateDto
-                        {
-                            TermId = pd.TermId,
-                            PeriodId = pd.PeriodId,
-                            StartDate = pd.StartDate,
-                            EndDate = pd.EndDate,
-                            Term = pd.Term.Name,
-                            Period = periodDto
-                        };
-                    })
-            };
-
-            return Ok(periodDateListDto);
-        }
+            return Ok(GetPeriodDateListDto(termId, term, periodDates));
+        }        
 
         [Route("{termId}/PeriodDates")]
         [HttpPost]
@@ -59,32 +42,43 @@ namespace ADYC.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                var periodDates = Mapper.Map<IEnumerable<PeriodDateDto>, IEnumerable<PeriodDate>>(form.PeriodDatesDto);
-
-                _periodDateService.AddRange(periodDates);
-
-                var periodDateListDto = new PeriodDateListDto
+                try
                 {
-                    Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + termId + "/PeriodDates",
-                    PeriodDatesDto = periodDates
-                    .Select(pd =>
-                    {
-                        var periodDto = Mapper.Map<Period, PeriodDto>(pd.Period);
-                        periodDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Periods") + pd.PeriodId;
+                    var periodDates = Mapper.Map<IEnumerable<PeriodDateDto>, IEnumerable<PeriodDate>>(form.PeriodDatesDto);
 
-                        return new PeriodDateDto
-                        {
-                            TermId = pd.TermId,
-                            PeriodId = pd.PeriodId,
-                            StartDate = pd.StartDate,
-                            EndDate = pd.EndDate,
-                            Term = pd.Term.Name,
-                            Period = periodDto
-                        };
-                    })
-                };
+                    _periodDateService.AddRange(periodDates);
 
-                return Created(new Uri(periodDateListDto.Url), periodDateListDto);
+                    var term = _termService.Get(termId);
+
+                    var periodDateListDto = GetPeriodDateListDto(termId, term, periodDates);
+
+                    //var periodDateListDto = new PeriodDateListDto
+                    //{
+                    //    Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + termId + "/PeriodDates",
+                    //    PeriodDatesDto = periodDates
+                    //    .Select(pd =>
+                    //    {
+                    //        var periodDto = Mapper.Map<Period, PeriodDto>(pd.Period);
+                    //        periodDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Periods") + pd.PeriodId;
+
+                    //        return new PeriodDateDto
+                    //        {
+                    //            TermId = pd.TermId,
+                    //            PeriodId = pd.PeriodId,
+                    //            StartDate = pd.StartDate,
+                    //            EndDate = pd.EndDate,
+                    //            Term = pd.Term.Name,
+                    //            Period = periodDto
+                    //        };
+                    //    })
+                    //};
+
+                    return Created(new Uri(periodDateListDto.Url), periodDateListDto);
+                }
+                catch (ArgumentException ae)
+                {
+                    ModelState.AddModelError("", ae.Message);
+                }
             }
 
             return BadRequest(ModelState);
@@ -121,5 +115,51 @@ namespace ADYC.API.Controllers
 
             return BadRequest(ModelState);
         }
+
+        private PeriodDateListDto GetPeriodDateListDto(int termId, Term term,
+            IEnumerable<PeriodDate> periodDates)
+        {
+            var periodDateListDto = new PeriodDateListDto
+            {
+                Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + termId + "/PeriodDates",
+                PeriodDatesDto = periodDates
+                    .Select(pd =>
+                    {
+                        var periodDateDto = new PeriodDateDto
+                        {
+                            TermId = pd.TermId,
+                            PeriodId = pd.PeriodId,
+                            StartDate = pd.StartDate,
+                            EndDate = pd.EndDate
+                        };
+
+                        periodDateDto.Period = Mapper.Map<Period, PeriodDto>(pd.Period);
+                        periodDateDto.Period.Url = UrlResoucesUtil.GetBaseUrl(Request, "Periods") + pd.PeriodId;
+
+                        return periodDateDto;
+                    })
+            };
+
+            periodDateListDto.Term = Mapper.Map<Term, TermDto>(term);
+            periodDateListDto.Term.Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + term.Id;
+
+            return periodDateListDto;
+        }
+
+        //private PeriodDateDto GetPeriodDate(PeriodDate pd)
+        //{
+        //    var periodDto = Mapper.Map<Period, PeriodDto>(pd.Period);
+        //    periodDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Periods") + pd.PeriodId;
+
+        //    return new PeriodDateDto
+        //    {
+        //        TermId = pd.TermId,
+        //        PeriodId = pd.PeriodId,
+        //        StartDate = pd.StartDate,
+        //        EndDate = pd.EndDate,
+        //        Term = pd.Term.Name,
+        //        Period = periodDto
+        //    };
+        //}
     }
 }
