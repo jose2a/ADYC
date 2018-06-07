@@ -27,13 +27,10 @@ namespace ADYC.API.Controllers
         {
             var periods = _periodService.GetAll();
 
-            return Ok(periods
+            return base.Ok(periods
                 .Select(p =>
                 {
-                    var periodDto = Mapper.Map<Period, PeriodDto>(p);
-                    periodDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Periods") + p.Id;
-
-                    return periodDto;
+                    return GetPeriodDto(p);
                 }));
         }
 
@@ -46,9 +43,7 @@ namespace ADYC.API.Controllers
 
             if (period != null)
             {
-                var periodDto = Mapper.Map<Period, PeriodDto>(period);
-                periodDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Periods") + period.Id;
-                return Ok(periodDto);
+                return Ok(GetPeriodDto(period));
             }
 
             return NotFound();
@@ -62,11 +57,16 @@ namespace ADYC.API.Controllers
 
             return Ok(periods
                 .Select(p => {
-                    var periodDto = Mapper.Map<Period, PeriodDto>(p);
-                    periodDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Periods") + p.Id;
-
-                    return periodDto;
+                    return GetPeriodDto(p);
                 }));
+        }
+
+        private PeriodDto GetPeriodDto(Period p)
+        {
+            var periodDto = Mapper.Map<Period, PeriodDto>(p);
+            periodDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Periods") + p.Id;
+
+            return periodDto;
         }
     }
 }

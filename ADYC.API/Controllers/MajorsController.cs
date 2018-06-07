@@ -29,7 +29,7 @@ namespace ADYC.API.Controllers
         {
             var majors = _majorService.GetAll();
 
-            return base.Ok(majors
+            return Ok(majors
                 .Select(m =>
                 {
                     return GetMajorDto(m);
