@@ -20,7 +20,7 @@ namespace ADYC.API.ViewModels
         [Required]
         public int OfferingId { get; set; }
 
-        public OfferingDto Offering { get; set; }
+        //public OfferingDto Offering { get; set; }
 
         [Required]
         public byte Day { get; set; }
@@ -31,6 +31,8 @@ namespace ADYC.API.ViewModels
     public class ScheduleListDto
     {
         public string Url { get; set; }
+
+        public OfferingDto Offering { get; set; }
         public IEnumerable<ScheduleDto> SchedulesDto { get; set; }
     }
 }

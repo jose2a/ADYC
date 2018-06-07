@@ -39,7 +39,9 @@ namespace ADYC.Service
 
         public Schedule Get(int id)
         {
-            return _scheduleRepository.Get(id);
+            return _scheduleRepository
+                .Find(s => s.Id == id, includeProperties: "Offering")
+                .SingleOrDefault();
         }
 
         public void UpdateRange(IEnumerable<Schedule> schedules)
