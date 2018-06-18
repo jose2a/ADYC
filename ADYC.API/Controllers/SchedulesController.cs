@@ -177,6 +177,10 @@ namespace ADYC.API.Controllers
 
             scheduleListDto.Offering = Mapper.Map<Offering, OfferingDto>(offering);
             scheduleListDto.Offering.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + offeringId;
+            scheduleListDto.Offering.Professor.Url = UrlResoucesUtil.GetBaseUrl(Request, "Professors") + offering.ProfessorId;
+            scheduleListDto.Offering.Course.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + offering.CourseId;
+            scheduleListDto.Offering.Course.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + offering.Course.CourseTypeId;
+            scheduleListDto.Offering.Term.Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + offering.TermId;
 
             return scheduleListDto;
         }
