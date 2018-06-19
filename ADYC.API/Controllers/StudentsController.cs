@@ -33,13 +33,11 @@ namespace ADYC.API.Controllers
 
             if (student != null)
             {
-                var studentDto = Mapper.Map<Student, StudentDto>(student);
-                studentDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Students") + student.Id;
-                return Ok(studentDto);
+                return Ok(GetStudentDto(student));
             }
 
             return NotFound();
-        }
+        }        
 
         // GET api/<controller>
         [Route("")]
@@ -51,10 +49,7 @@ namespace ADYC.API.Controllers
             return Ok(students
                 .Select(s =>
                 {
-                    var studentDto = Mapper.Map<Student, StudentDto>(s);
-                    studentDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Students") + s.Id;
-
-                    return studentDto;
+                    return GetStudentDto(s);
                 }));
         }
 
@@ -62,60 +57,82 @@ namespace ADYC.API.Controllers
         [ResponseType(typeof(IEnumerable<ProfessorDto>))]
         public IHttpActionResult GetByFirstName(string firstName)
         {
-            var students = _studentService.FindByFirstName(firstName);
+            try
+            {
+                var students = _studentService.FindByFirstName(firstName);
 
-            return Ok(students
-                .Select(s => {
-                    var studentDto = Mapper.Map<Student, StudentDto>(s);
-                    studentDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Students") + s.Id;
+                return Ok(students
+                    .Select(s =>
+                    {
+                        return GetStudentDto(s);
+                    }));
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
 
-                    return studentDto;
-                }));
+            return BadRequest(ModelState);
         }
 
         [Route("GetByLastName/{lastName}")]
         [ResponseType(typeof(IEnumerable<ProfessorDto>))]
         public IHttpActionResult GetByLastName(string lastName)
         {
-            var students = _studentService.FindByLastName(lastName);
+            try
+            {
+                var students = _studentService.FindByLastName(lastName);
 
-            return Ok(students
-                .Select(s => {
-                    var studentDto = Mapper.Map<Student, StudentDto>(s);
-                    studentDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Students") + s.Id;
+                return Ok(students
+                    .Select(s =>
+                    {
+                        return GetStudentDto(s);
+                    }));
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
 
-                    return studentDto;
-                }));
+            return BadRequest(ModelState);
         }
 
         [Route("GetByEmail/{email}")]
         [ResponseType(typeof(IEnumerable<ProfessorDto>))]
         public IHttpActionResult GetByEmail(string email)
         {
-            var students = _studentService.FindByEmail(email);
+            try
+            {
+                var students = _studentService.FindByEmail(email);
 
-            return Ok(students
-                .Select(s => {
-                    var studentDto = Mapper.Map<Student, StudentDto>(s);
-                    studentDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Students") + s.Id;
+                return Ok(students
+                    .Select(s => GetStudentDto(s)));
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
 
-                    return studentDto;
-                }));
+            return BadRequest(ModelState);
         }
 
         [Route("GetByCellphoneNumber/{cellphoneNumber}")]
         [ResponseType(typeof(IEnumerable<ProfessorDto>))]
         public IHttpActionResult GetByCellphoneNumber(string cellphoneNumber)
         {
-            var students = _studentService.FindByCellphoneNumber(cellphoneNumber);
+            try
+            {
+                var students = _studentService.FindByCellphoneNumber(cellphoneNumber);
 
-            return Ok(students
-                .Select(s => {
-                    var studentDto = Mapper.Map<Student, StudentDto>(s);
-                    studentDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Students") + s.Id;
+                return Ok(students
+                    .Select(s => GetStudentDto(s)));
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
 
-                    return studentDto;
-                }));
+            return BadRequest(ModelState);
         }
 
         [Route("GetNotTrashed")]
@@ -125,12 +142,7 @@ namespace ADYC.API.Controllers
             var students = _studentService.FindNotTrashedStudents();
 
             return Ok(students
-                .Select(s => {
-                    var studentDto = Mapper.Map<Student, StudentDto>(s);
-                    studentDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Students") + s.Id;
-
-                    return studentDto;
-                }));
+                .Select(s => GetStudentDto(s)));
         }
 
         [Route("GetTrashed")]
@@ -140,12 +152,7 @@ namespace ADYC.API.Controllers
             var students = _studentService.FindTrashedStudents();
 
             return Ok(students
-                .Select(s => {
-                    var studentDto = Mapper.Map<Student, StudentDto>(s);
-                    studentDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Students") + s.Id;
-
-                    return studentDto;
-                }));
+                .Select(s => GetStudentDto(s)));
         }
 
         //[Route("{id:guid}/GetOfferings")]
@@ -179,10 +186,13 @@ namespace ADYC.API.Controllers
 
                     _studentService.Add(student);
 
-                    var studentDto = Mapper.Map<Student, StudentDto>(student);
-                    studentDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Students") + student.Id;
+                    var studentDto = GetStudentDto(student);
 
                     return Created(new Uri(studentDto.Url), studentDto);
+                }
+                catch (ArgumentNullException ane)
+                {
+                    ModelState.AddModelError("", ane.Message);
                 }
                 catch (PreexistingEntityException pe)
                 {
@@ -205,7 +215,7 @@ namespace ADYC.API.Controllers
 
                 if (studentInDb == null)
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
 
                 try
@@ -215,6 +225,10 @@ namespace ADYC.API.Controllers
                     _studentService.Update(studentInDb);
 
                     return Ok();
+                }
+                catch (ArgumentNullException ane)
+                {
+                    ModelState.AddModelError("", ane.Message);
                 }
                 catch (NonexistingEntityException ne)
                 {
@@ -241,15 +255,18 @@ namespace ADYC.API.Controllers
             try
             {
                 _studentService.Remove(studentInDb);
+                return Ok();
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
             }
             catch (ForeignKeyEntityException fke)
             {
-                ModelState.AddModelError("", fke.Message);
-
-                return BadRequest(ModelState);
+                ModelState.AddModelError("", fke.Message);                
             }
 
-            return Ok();
+            return BadRequest(ModelState);
         }
 
         [Route("Trash/{id:guid}")]
@@ -264,9 +281,18 @@ namespace ADYC.API.Controllers
                 return NotFound();
             }
 
-            _studentService.Trash(studentInDb);
+            try
+            {
+                _studentService.Trash(studentInDb);
 
-            return Ok();
+                return Ok();
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
+
+            return BadRequest(ModelState);
         }
 
         [Route("Restore/{id:guid}")]
@@ -281,9 +307,35 @@ namespace ADYC.API.Controllers
                 return NotFound();
             }
 
-            _studentService.Restore(studentInDb);
+            try
+            {
+                _studentService.Restore(studentInDb);
 
-            return Ok();
+                return Ok();
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
+
+            return BadRequest(ModelState);
+        }
+
+        private StudentDto GetStudentDto(Student student)
+        {
+            var studentDto = Mapper.Map<Student, StudentDto>(student);
+            studentDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Students") + student.Id;
+
+            studentDto.Grade = Mapper.Map<Grade, GradeDto>(student.Grade);
+            studentDto.Grade.Url = UrlResoucesUtil.GetBaseUrl(Request, "Grades") + student.GradeId;
+
+            studentDto.Group = Mapper.Map<Group, GroupDto>(student.Group);
+            studentDto.Group.Url = UrlResoucesUtil.GetBaseUrl(Request, "Groups") + student.GroupId;
+
+            studentDto.Major = Mapper.Map<Major, MajorDto>(student.Major);
+            studentDto.Major.Url = UrlResoucesUtil.GetBaseUrl(Request, "Majors") + student.MajorId;
+
+            return studentDto;
         }
     }
 }
