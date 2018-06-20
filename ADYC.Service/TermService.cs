@@ -38,14 +38,7 @@ namespace ADYC.Service
 
         public IEnumerable<Term> FindByBetweenDates(DateTime startDate, DateTime endDate)
         {
-            var terms = _termRepository.Find(t => t.StartDate > startDate && t.EndDate < endDate);
-
-            if (terms == null || terms.Count() == 0)
-            {
-                throw new NonexistingEntityException("There are no terms in the current date range.");
-            }
-
-            return terms;
+            return _termRepository.Find(t => t.StartDate > startDate && t.EndDate < endDate);
         }
 
         public IEnumerable<Term> FindByName(string name)
@@ -55,14 +48,7 @@ namespace ADYC.Service
                 throw new ArgumentNullException("name");
             }
 
-            var terms = _termRepository.Find(t => t.Name.Contains(name));
-
-            if (terms == null || terms.Count() == 0)
-            {
-                throw new NonexistingEntityException("There are no terms that contain this name.");
-            }
-
-            return terms;
+            return _termRepository.Find(t => t.Name.Contains(name));
         }
 
         public Term Get(int id)
@@ -84,7 +70,7 @@ namespace ADYC.Service
 
         public IEnumerable<PeriodDate> GetCurrentTermPeriodDates()
         {
-            DateTime today = DateTime.Today;
+            var today = DateTime.Today;
 
             var term = _termRepository.SingleOrDefault(t => today >= t.StartDate && today <= t.EndDate);
 

@@ -16,16 +16,16 @@ namespace ADYC.API.Controllers
     public class TermsController : ApiController
     {
         private ITermService _termService;
-        private IPeriodService _periodService;
-        private IPeriodDateService _periodDateService;
+        //private IPeriodService _periodService;
+        //private IPeriodDateService _periodDateService;
 
         public TermsController(ITermService termService,
             IPeriodService periodService,
             IPeriodDateService periodDateService)
         {
             _termService = termService;
-            _periodService = periodService;
-            _periodDateService = periodDateService;
+            //_periodService = periodService;
+            //_periodDateService = periodDateService;
         }
 
         // GET api/<controller>/5
@@ -37,9 +37,7 @@ namespace ADYC.API.Controllers
 
             if (term != null)
             {
-                var termDto = Mapper.Map<Term, TermDto>(term);
-                termDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + term.Id;
-                return Ok(termDto);
+                return Ok(GetTermDto(term));
             }
 
             return NotFound();
@@ -53,9 +51,7 @@ namespace ADYC.API.Controllers
 
             if (term != null)
             {
-                var termDto = Mapper.Map<Term, TermDto>(term);
-                termDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + term.Id;
-                return Ok(termDto);
+                return Ok(GetTermDto(term));
             }
 
             return NotFound();
@@ -69,53 +65,52 @@ namespace ADYC.API.Controllers
             var terms = _termService.GetAll();
 
             return Ok(terms
-                .Select(t =>
-                {
-                    var termDto = Mapper.Map<Term, TermDto>(t);
-                    termDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + t.Id;
-
-                    return termDto;
-                }));
+                .Select(t => GetTermDto(t)));
         }
 
         [Route("GetByName/{name}")]
         [ResponseType(typeof(IEnumerable<TermDto>))]
         public IHttpActionResult GetByName(string name)
         {
-            var terms = _termService.FindByName(name);
+            try
+            {
+                var terms = _termService.FindByName(name);
 
-            return Ok(terms
-                .Select(t => {
-                    var termDto = Mapper.Map<Term, TermDto>(t);
-                    termDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + t.Id;
+                return Ok(terms
+                    .Select(t => GetTermDto(t)));
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
 
-                    return termDto;
-                }));
+            return BadRequest(ModelState);
         }
 
         [Route("GetByBetweenDates/StartDate/{startDate}/EndDate/{endDate}")]
         [ResponseType(typeof(IEnumerable<TermDto>))]
         public IHttpActionResult GetByBetweenDates(DateTime startDate, DateTime endDate)
         {
-            if (ModelState.IsValid)
+            var valid = true;
+
+            if (startDate == null)
             {
-                try
-                {
-                    var terms = _termService.FindByBetweenDates(startDate, endDate);
+                valid = false;
+                ModelState.AddModelError("", "Start date should not be null.");
+            }
 
-                    return Ok(terms
-                        .Select(t =>
-                        {
-                            var termDto = Mapper.Map<Term, TermDto>(t);
-                            termDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + t.Id;
+            if (endDate == null)
+            {
+                valid = false;
+                ModelState.AddModelError("", "End date should not be null.");
+            }
 
-                            return termDto;
-                        }));
-                }
-                catch (NonexistingEntityException nee)
-                {
-                    ModelState.AddModelError("", nee.Message);
-                }
+            if (valid)
+            {
+                var terms = _termService.FindByBetweenDates(startDate, endDate);
+
+                return Ok(terms
+                    .Select(t => GetTermDto(t)));
             }
 
             return BadRequest(ModelState);
@@ -135,8 +130,7 @@ namespace ADYC.API.Controllers
 
                     _termService.Add(term);
 
-                    var termDto = Mapper.Map<Term, TermDto>(term);
-                    termDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + term.Id;
+                    var termDto = GetTermDto(term);
 
                     return Created(new Uri(termDto.Url), termDto);
                 }
@@ -165,7 +159,7 @@ namespace ADYC.API.Controllers
 
                 if (termInDb == null)
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
 
                 Mapper.Map(form, termInDb);
@@ -193,15 +187,22 @@ namespace ADYC.API.Controllers
             try
             {
                 _termService.Remove(termtInDb);
+
+                return Ok();
             }
             catch (ForeignKeyEntityException fke)
             {
-                ModelState.AddModelError("", fke.Message);
-
-                return BadRequest(ModelState);
+                ModelState.AddModelError("", fke.Message);                
             }
 
-            return Ok();
+            return BadRequest(ModelState);
+        }
+
+        private TermDto GetTermDto(Term term)
+        {
+            var termDto = Mapper.Map<Term, TermDto>(term);
+            termDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + term.Id;
+            return termDto;
         }
     }
 }
