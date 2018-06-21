@@ -41,22 +41,27 @@ namespace ADYC.Service
 
         public Enrollment Get(int id)
         {
-            return _enrollmentRepository.Get(id);
+            return _enrollmentRepository
+                .Find(e => e.Id == id,
+                      includeProperties: "Student,Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Term")
+                .SingleOrDefault();
         }
 
         public IEnumerable<Enrollment> GetAllEnrollments()
         {
-            return _enrollmentRepository.GetAll();
+            return _enrollmentRepository.GetAll(includeProperties: "Student,Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Term");
         }
 
         public IEnumerable<Enrollment> GetCurrentTermEnrollments()
         {
-            return _enrollmentRepository.Find(e => e.Offering.Term.IsCurrentTerm);
+            return _enrollmentRepository.Find(e => e.Offering.Term.IsCurrentTerm,
+                includeProperties: "Student,Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Term");
         }
 
         public IEnumerable<Enrollment> GetEnrollmentsByOfferingId(int offeringId)
         {
-            return _enrollmentRepository.Find(e => e.OfferingId == offeringId);
+            return _enrollmentRepository.Find(e => e.OfferingId == offeringId,
+                includeProperties: "Student,Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Term");
         }
 
         public IEnumerable<Enrollment> GetEnrollmentsByStudentId(Guid studentId)
@@ -66,12 +71,14 @@ namespace ADYC.Service
                 throw new ArgumentNullException("studentId");
             }
 
-            return _enrollmentRepository.Find(e => e.StudentId == studentId);
+            return _enrollmentRepository.Find(e => e.StudentId == studentId,
+                includeProperties: "Student,Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Term");
         }
 
         public IEnumerable<Enrollment> GetOfferingEnrollments(Offering offering)
         {
-            return offering.Enrollments;
+            return _enrollmentRepository.Find(e => e.OfferingId == offering.Id,
+                includeProperties: "Student,Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Term");
         }
 
         public Enrollment GetStudentCurrentTermEnrollment(Student student)
@@ -87,7 +94,8 @@ namespace ADYC.Service
 
         public IEnumerable<Enrollment> GetStudentEnrollments(Student student)
         {
-            return _enrollmentRepository.Find(e => e.StudentId == student.Id);
+            return _enrollmentRepository.Find(e => e.StudentId == student.Id,
+                includeProperties: "Student,Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Term");
         }
 
         public void Remove(Enrollment enrollment)

@@ -16,16 +16,10 @@ namespace ADYC.API.Controllers
     public class TermsController : ApiController
     {
         private ITermService _termService;
-        //private IPeriodService _periodService;
-        //private IPeriodDateService _periodDateService;
 
-        public TermsController(ITermService termService,
-            IPeriodService periodService,
-            IPeriodDateService periodDateService)
+        public TermsController(ITermService termService)
         {
             _termService = termService;
-            //_periodService = periodService;
-            //_periodDateService = periodDateService;
         }
 
         // GET api/<controller>/5
