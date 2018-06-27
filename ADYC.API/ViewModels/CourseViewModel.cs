@@ -13,7 +13,7 @@ namespace ADYC.API.ViewModels
         public int? Id { get; set; }
         [Required]
         public string Name { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Course Type is required")]
         public int CourseTypeId { get; set; }
         public CourseTypeDto CourseType { get; set; }
     }

@@ -15,15 +15,18 @@ namespace ADYC.Service
         private IEnrollmentRepository _enrollmentRepository;
         private IEvaluationRepository _evaluationRepository;
         private IPeriodRepository _periodRepository;
+        private ITermRepository _termRepository;
 
         public EnrollmentService(
             IEnrollmentRepository enrollmentRepository,
             IEvaluationRepository evaluationRepository,
-            IPeriodRepository periodRepository)
+            IPeriodRepository periodRepository,
+            ITermRepository termRepository)
         {
             _enrollmentRepository = enrollmentRepository;
             _evaluationRepository = evaluationRepository;
             _periodRepository = periodRepository;
+            _termRepository = termRepository;
         }
 
         public void Add(Enrollment enrollment)
@@ -44,6 +47,14 @@ namespace ADYC.Service
             return _enrollmentRepository
                 .Find(e => e.Id == id,
                       includeProperties: "Student,Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Term")
+                .SingleOrDefault();
+        }
+
+        public Enrollment GetWithEvaluations(int id)
+        {
+            return _enrollmentRepository
+                .Find(e => e.Id == id,
+                      includeProperties: "Evaluations,Student,Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Term")
                 .SingleOrDefault();
         }
 
@@ -83,13 +94,17 @@ namespace ADYC.Service
 
         public Enrollment GetStudentCurrentTermEnrollment(Student student)
         {
-            //_enrollmentRepository.SingleOrDefault(e => e.StudentId == student.Id && e.Offering.Term.IsCurrentTerm);
-            return student.Enrollments.SingleOrDefault(e => e.Offering.Term.IsCurrentTerm);
+            return _enrollmentRepository.Find(e => e.StudentId == student.Id && e.Offering.Term.IsCurrentTerm,
+                includeProperties: "Student,Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Term").
+                SingleOrDefault();
+            //return student.Enrollments.SingleOrDefault(e => e.Offering.Term.IsCurrentTerm);
         }
 
         public Enrollment GetStudentCurrentTermEnrollmentByStudentId(Guid studentId)
         {
-            return _enrollmentRepository.SingleOrDefault(e => e.StudentId == studentId && e.Offering.Term.IsCurrentTerm);
+            return _enrollmentRepository.Find(e => e.StudentId == studentId && e.Offering.Term.IsCurrentTerm,
+                includeProperties: "Student,Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Term").
+                SingleOrDefault();
         }
 
         public IEnumerable<Enrollment> GetStudentEnrollments(Student student)
@@ -145,19 +160,19 @@ namespace ADYC.Service
                 throw new ArgumentNullException("enrollment");
             }
 
-            if (enrollment.StudentId == null || enrollment.Student == null)
+            if (enrollment.StudentId == null)
             {
                 throw new ArgumentNullException("Student");
             }
 
-            if (enrollment.Offering == null)
+            if (enrollment.OfferingId == 0)
             {
                 throw new ArgumentNullException("Offering");
             }
 
             var termStartDate = enrollment.Offering.Term.StartDate;
 
-            if (termStartDate >= DateTime.Today)
+            if (termStartDate.AddDays(1) <= DateTime.Today)
             {
                 throw new ArgumentException("You are not allowed to enroll at this moment. The term start date is: " + termStartDate);
             }

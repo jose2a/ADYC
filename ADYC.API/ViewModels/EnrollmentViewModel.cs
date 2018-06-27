@@ -27,4 +27,23 @@ namespace ADYC.API.ViewModels
         public int OfferingId { get; set; }
         public OfferingDto Offering { get; set; }
     }
+
+    public class EvaluationDto
+    {
+        public int PeriodId { get; set; }
+        public int EnrollmentId { get; set; }
+
+        public Double? PeriodGrade { get; set; }
+        public GradeLetter? PeriodGradeLetter { get; set; }
+        public string Notes { get; set; }
+
+        public PeriodDto Period { get; set; }
+    }
+
+    public class EnrollmentWithEvaluationsDto
+    {
+        public EnrollmentDto Enrollment { get; set; }
+
+        public IEnumerable<EvaluationDto> Evaluations { get; set; }
+    }
 }

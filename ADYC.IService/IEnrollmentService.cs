@@ -10,6 +10,9 @@ namespace ADYC.IService
     public interface IEnrollmentService
     {
         Enrollment Get(int id);
+
+        Enrollment GetWithEvaluations(int id);
+
         Enrollment GetStudentCurrentTermEnrollment(Student student);
         Enrollment GetStudentCurrentTermEnrollmentByStudentId(Guid studentId);
 

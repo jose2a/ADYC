@@ -13,19 +13,33 @@ namespace ADYC.Service
         private IOfferingRepository _offeringRepository;
         private IEnrollmentRepository _enrollmentRepository;
         private IEvaluationRepository _evaluationRepository;
+        private ICourseRepository _courseRepository;
+        private IProfessorRepository _professorRepository;
+        private ITermRepository _termRepository;
 
         public OfferingService(IOfferingRepository offeringRepository,
             IEnrollmentRepository enrollmentRepository,
-            IEvaluationRepository evaluationRepository)
+            IEvaluationRepository evaluationRepository,
+            ICourseRepository courseRepository,
+            IProfessorRepository professorRepository,
+            ITermRepository termRepository
+            )
         {
             _offeringRepository = offeringRepository;
             _enrollmentRepository = enrollmentRepository;
             _evaluationRepository = evaluationRepository;
+            _courseRepository = courseRepository;
+            _professorRepository = professorRepository;
+            _termRepository = termRepository;
         }
 
         public void Add(Offering offering)
         {
-            ValidateOffering(offering);
+            offering.Course = _courseRepository.Get(offering.CourseId);
+            offering.Professor = _professorRepository.Get(offering.ProfessorId);
+            offering.Term = _termRepository.Get(offering.TermId);
+
+            ValidateOffering(offering);          
 
             _offeringRepository.Add(offering);
 
@@ -351,12 +365,12 @@ namespace ADYC.Service
                 throw new ArgumentNullException("Professor is required.");
             }
 
-            if (offering.Course == null)
+            if (offering.CourseId == 0)
             {
                 throw new ArgumentNullException("Course is required.");
             }
 
-            if (offering.Term == null)
+            if (offering.TermId == 0)
             {
                 throw new ArgumentNullException("Term is required.");
             }

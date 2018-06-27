@@ -16,6 +16,9 @@ namespace ADYC.API.Controllers
     public class OfferingsController : ApiController
     {
         private IOfferingService _offeringService;
+        //private ICourseService _courseService;
+        //private IProfessorService _professorService;
+        //private ITermService _termService;
 
         public OfferingsController(IOfferingService offeringService)
         {
