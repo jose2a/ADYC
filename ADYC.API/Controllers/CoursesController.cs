@@ -186,10 +186,6 @@ namespace ADYC.API.Controllers
                 {
                     ModelState.AddModelError("", ane.Message);
                 }
-                catch (NonexistingEntityException)
-                {
-                    return NotFound();
-                }
             }
 
             return BadRequest(ModelState);

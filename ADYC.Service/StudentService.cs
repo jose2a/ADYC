@@ -11,20 +11,38 @@ namespace ADYC.Service
     public class StudentService : IStudentService
     {
         private IStudentRepository _studentRepository;
+        private IGradeRepository _gradeRepository;
+        private IGroupRepository _groupRepository;
+        private IMajorRepository _majorRepository;
 
-        public StudentService(IStudentRepository studentRepository)
+        public StudentService(IStudentRepository studentRepository,
+            IGradeRepository gradeRepository,
+            IGroupRepository groupRepository,
+            IMajorRepository majorRepository)
         {
             _studentRepository = studentRepository;
+            _gradeRepository = gradeRepository;
+            _groupRepository = groupRepository;
+            _majorRepository = majorRepository;
         }
 
         public void Add(Student student)
         {
+            SetStudentSchoolProperties(student);
+
             ValidateStudent(student);
 
             student.CreatedAt = DateTime.Today;
             student.IsDeleted = false;
 
             _studentRepository.Add(student);
+        }
+
+        private void SetStudentSchoolProperties(Student student)
+        {
+            student.Grade = _gradeRepository.Get(student.GradeId);
+            student.Group = _groupRepository.Get(student.GroupId);
+            student.Major = _majorRepository.Get(student.MajorId);
         }
 
         private void ValidateStudent(Student student)
@@ -34,8 +52,23 @@ namespace ADYC.Service
                 throw new ArgumentNullException("student");
             }
 
+            if (student.Grade == null)
+            {
+                throw new ArgumentNullException("grade");
+            }
+
+            if (student.Group == null)
+            {
+                throw new ArgumentNullException("group");
+            }
+
+            if (student.Major == null)
+            {
+                throw new ArgumentNullException("major");
+            }
+
             var studentExist = (_studentRepository.Find(p => p.FirstName.Equals(student.FirstName)).Count() > 0)
-                || (_studentRepository.Find(p => p.LastName.Equals(student.LastName)).Count() > 0);
+                && (_studentRepository.Find(p => p.LastName.Equals(student.LastName)).Count() > 0);
 
             if (studentExist)
             {
@@ -239,10 +272,7 @@ namespace ADYC.Service
                 throw new ArgumentNullException("student");
             }
 
-            if (_studentRepository.Get(student.Id) == null)
-            {
-                throw new NonexistingEntityException("The student does not currently exist.");
-            }
+            SetStudentSchoolProperties(student);
 
             student.UpdatedAt = DateTime.Today;
 
@@ -254,11 +284,6 @@ namespace ADYC.Service
             if (student == null)
             {
                 throw new ArgumentNullException("student");
-            }
-
-            if (_studentRepository.Get(student.Id) == null)
-            {
-                throw new NonexistingEntityException("Student does not currently exist.");
             }
 
             student.IsDeleted = false;

@@ -237,7 +237,7 @@ namespace ADYC.Service
             }
 
             var professorExist = (_professorRepository.Find(p => p.FirstName.Equals(professor.FirstName)).Count() > 0)
-                || (_professorRepository.Find(p => p.LastName.Equals(professor.LastName)).Count() > 0);
+                && (_professorRepository.Find(p => p.LastName.Equals(professor.LastName)).Count() > 0);
 
             if (professorExist)
             {

@@ -35,20 +35,11 @@ namespace ADYC.Service
 
         public void Add(Offering offering)
         {
-            offering.Course = _courseRepository.Get(offering.CourseId);
-            offering.Professor = _professorRepository.Get(offering.ProfessorId);
-            offering.Term = _termRepository.Get(offering.TermId);
+            SetOfferingProperties(offering);
 
-            ValidateOffering(offering);          
+            ValidateOffering(offering);
 
             _offeringRepository.Add(offering);
-
-            if (offering.Id != 0)
-            {
-                offering = _offeringRepository.Find(o => o.Id == offering.Id,
-                    includeProperties: "Professor,Course,Course.CourseType,Term")
-                    .SingleOrDefault();
-            }
         }
 
         public IEnumerable<Offering> FindByCourseId(int courseId)
@@ -110,7 +101,8 @@ namespace ADYC.Service
                 throw new ArgumentNullException("professorId");
             }
 
-            var offerings = _offeringRepository.Find(o => o.Professor.Id == professorId);
+            var offerings = _offeringRepository.Find(o => o.Professor.Id == professorId,
+                includeProperties: "Course,Course.CourseType,Professor,Term");
 
             //if (offerings == null || offerings.Count() == 0)
             //{
@@ -179,7 +171,7 @@ namespace ADYC.Service
             }
 
             var offerings = _offeringRepository
-                .Find(o => o.Professor.LastName.Contains(professorName),
+                .Find(o => o.Professor.FirstName.Contains(professorName),
                 includeProperties: "Professor,Course,Course.CourseType,Term");
 
             //if (offerings == null)
@@ -302,6 +294,11 @@ namespace ADYC.Service
                 throw new ArgumentNullException("offering");
             }
 
+            SetOfferingProperties(offering);
+
+            offering.Enrollments = (ICollection<Enrollment>) _enrollmentRepository
+                .Find(e => e.Id == offering.Id);
+
             _offeringRepository.Update(offering);
         }
 
@@ -341,6 +338,15 @@ namespace ADYC.Service
             //}
 
             return offerings;
+        }
+
+        private void SetOfferingProperties(Offering offering)
+        {
+            offering.Course = _courseRepository
+                .Find(c => c.Id == offering.CourseId, includeProperties: "CourseType")
+                .SingleOrDefault();
+            offering.Professor = _professorRepository.Get(offering.ProfessorId);
+            offering.Term = _termRepository.Get(offering.TermId);
         }
 
         private void ValidateOffering(Offering offering)

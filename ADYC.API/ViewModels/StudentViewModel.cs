@@ -25,8 +25,16 @@ namespace ADYC.API.ViewModels
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
 
+        [Required]
+        public int GradeId { get; set; }
         public GradeDto Grade { get; set; }
+
+        [Required]
+        public int GroupId { get; set; }
         public GroupDto Group { get; set; }
+
+        [Required]
+        public int MajorId { get; set; }
         public MajorDto Major { get; set; }
     }
 }

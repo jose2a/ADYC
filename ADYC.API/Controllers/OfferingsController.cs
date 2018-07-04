@@ -40,8 +40,8 @@ namespace ADYC.API.Controllers
             return Ok(GetOfferingDto(offering));
         }
 
-        // GET api/<controller>/GetByProfessor/3435-fr545-/Course/4/Term/5
-        [Route("GetByProfessor/{professorId}/Course/{courseId}/Term/{termId}")]
+        // GET api/<controller>/GetByProfessorId/3435-fr545-/CourseId/4/TermId/5
+        [Route("GetByProfessorId/{professorId}/CourseId/{courseId}/TermId/{termId}")]
         [ResponseType(typeof(OfferingDto))]
         public IHttpActionResult GetByProfessorIdCourseIdAndTermId(Guid professorId, int courseId, int termId)
         {

@@ -271,6 +271,7 @@ namespace ADYC.API.Controllers
 
         [Route("Trash/{id:guid}")]
         [ResponseType(typeof(void))]
+        [HttpGet]
         // GET api/<controller>/5
         public IHttpActionResult Trash(Guid id)
         {
@@ -297,6 +298,7 @@ namespace ADYC.API.Controllers
 
         [Route("Restore/{id:guid}")]
         [ResponseType(typeof(void))]
+        [HttpGet]
         // GET api/<controller>/5
         public IHttpActionResult Restore(Guid id)
         {

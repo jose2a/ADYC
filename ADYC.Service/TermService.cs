@@ -65,7 +65,8 @@ namespace ADYC.Service
         {
             DateTime today = DateTime.Today;
 
-            return _termRepository.SingleOrDefault(t => today >= t.StartDate && today <= t.EndDate);
+            return _termRepository
+                .SingleOrDefault(t => today >= t.StartDate && today <= t.EndDate || t.IsCurrentTerm);
         }
 
         public IEnumerable<PeriodDate> GetCurrentTermPeriodDates()

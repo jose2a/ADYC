@@ -22,14 +22,9 @@ namespace ADYC.Service
 
         public Course Get(int id)
         {
-            var course = _courseRepository.Get(id);
+            var course = _courseRepository.Find(c => c.Id == id, includeProperties: "CourseType");
 
-            if (course != null)
-            {
-                SetCourseType(course);
-            }
-
-            return course;
+            return course.SingleOrDefault();
         }
 
         public IEnumerable<Course> GetAll()
@@ -75,11 +70,11 @@ namespace ADYC.Service
             
         public void Add(Course course)
         {
+            SetCourseType(course);
+
             ValidateCourse(course);
 
             course.IsDeleted = false;
-            SetCourseType(course);
-
             _courseRepository.Add(course);
         }
 
@@ -87,10 +82,11 @@ namespace ADYC.Service
         {
             foreach (var c in courses)
             {
+                SetCourseType(c);
+
                 ValidateCourse(c);
 
                 c.IsDeleted = false;
-                SetCourseType(c);
             }
 
             _courseRepository.AddRange(courses);
@@ -101,11 +97,6 @@ namespace ADYC.Service
             if (course == null)
             {
                 throw new ArgumentNullException("course");
-            }
-
-            if (_courseRepository.Get(course.Id) == null)
-            {
-                throw new NonexistingEntityException("Course does not currently exist.");
             }
 
             _courseRepository.Update(course);
@@ -207,6 +198,11 @@ namespace ADYC.Service
             if (course == null)
             {
                 throw new ArgumentNullException("course");
+            }
+
+            if (course.CourseType == null)
+            {
+                throw new ArgumentNullException("courseType");
             }
 
             if (_courseRepository.Find(c => c.Name.Equals(course.Name)).Count() > 0)
