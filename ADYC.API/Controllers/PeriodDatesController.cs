@@ -1,6 +1,7 @@
 ﻿using ADYC.API.ViewModels;
 using ADYC.IService;
 using ADYC.Model;
+using ADYC.Util.Exceptions;
 using ADYC.Util.RestUtils;
 using AutoMapper;
 using System;
@@ -52,32 +53,15 @@ namespace ADYC.API.Controllers
 
                     var periodDateListDto = GetPeriodDateListDto(termId, term, periodDates);
 
-                    //var periodDateListDto = new PeriodDateListDto
-                    //{
-                    //    Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + termId + "/PeriodDates",
-                    //    PeriodDatesDto = periodDates
-                    //    .Select(pd =>
-                    //    {
-                    //        var periodDto = Mapper.Map<Period, PeriodDto>(pd.Period);
-                    //        periodDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Periods") + pd.PeriodId;
-
-                    //        return new PeriodDateDto
-                    //        {
-                    //            TermId = pd.TermId,
-                    //            PeriodId = pd.PeriodId,
-                    //            StartDate = pd.StartDate,
-                    //            EndDate = pd.EndDate,
-                    //            Term = pd.Term.Name,
-                    //            Period = periodDto
-                    //        };
-                    //    })
-                    //};
-
                     return Created(new Uri(periodDateListDto.Url), periodDateListDto);
                 }
                 catch (ArgumentException ae)
                 {
                     ModelState.AddModelError("", ae.Message);
+                }
+                catch (PreexistingEntityException pee)
+                {
+                    ModelState.AddModelError("", pee.Message);
                 }
             }
 
@@ -88,11 +72,11 @@ namespace ADYC.API.Controllers
         [HttpPut]
         [ResponseType(typeof(void))]
         // PUT api/<controller>/5
-        public IHttpActionResult PutPeriodDates(int id, [FromBody] PeriodDateListDto form)
+        public IHttpActionResult PutPeriodDates(int termId, [FromBody] PeriodDateListDto form)
         {
             if (ModelState.IsValid)
             {
-                var periodDatesInDb = _periodDateService.GetPeriodDatesForTerm(id);
+                var periodDatesInDb = _periodDateService.GetPeriodDatesForTerm(termId);
 
                 if (periodDatesInDb == null)
                 {

@@ -14,21 +14,32 @@ namespace ADYC.Service
     {
         private IPeriodDateRepository _periodDateRepository;
         private ITermRepository _termRepository;
+        private IPeriodRepository _periodRepository;
 
         private const int totalNumberOfPeriods = 4;
 
-        public PeriodDateService(IPeriodDateRepository periodDateRepository, ITermRepository termRepository)
+        public PeriodDateService(IPeriodDateRepository periodDateRepository,
+            ITermRepository termRepository,
+            IPeriodRepository periodRepository)
         {
             _periodDateRepository = periodDateRepository;
             _termRepository = termRepository;
+            _periodRepository = periodRepository;
         }
 
         public void AddRange(IEnumerable<PeriodDate> periodDates)
         {
             ValidatePeriodDate(periodDates);
 
+            ValidateDuplicatePeriodDate(periodDates);
+
             _periodDateRepository.AddRange(periodDates);
-        }        
+
+            foreach (var pd in periodDates)
+            {
+                pd.Period = _periodRepository.Get(pd.PeriodId);
+            }
+        }
 
         public PeriodDate Get(int periodId, int termId)
         {
@@ -43,16 +54,25 @@ namespace ADYC.Service
         public void UpdateRange(IEnumerable<PeriodDate> periodDates)
         {
             ValidatePeriodDate(periodDates);
+            int termId = GetTermIdFromPerioDates(periodDates);
 
-            foreach (var pd in periodDates)
-            {
-                _periodDateRepository.Update(pd);
-            }
+            var term = _termRepository.Get(termId);
+            term.PeriodDates = periodDates.ToList();
+
+            _termRepository.Update(term);
+        }
+
+        private int GetTermIdFromPerioDates(IEnumerable<PeriodDate> periodDates)
+        {
+            return periodDates
+                            .Select(pd => pd.TermId)
+                            .Distinct()
+                            .SingleOrDefault();
         }
 
         private void ValidatePeriodDate(IEnumerable<PeriodDate> periodDates)
         {
-            if (periodDates.Count() < totalNumberOfPeriods || periodDates.Contains(null))
+            if (periodDates.Count() < totalNumberOfPeriods)
             {
                 throw new ArgumentNullException("periodDates");
             }
@@ -86,7 +106,7 @@ namespace ADYC.Service
 
             var periodIds = periodDates.Select(p => p.PeriodId).ToList();
 
-            for (int i = 4; i > 0; i--)
+            for (int i = totalNumberOfPeriods; i > 0; i--)
             {
                 var periodDate = periodDates.SingleOrDefault(pd => pd.PeriodId == i);
 
@@ -99,6 +119,18 @@ namespace ADYC.Service
                 }
 
                 periodIds.Remove(i);
+            }
+        }
+
+        private void ValidateDuplicatePeriodDate(IEnumerable<PeriodDate> periodDates)
+        {
+            var termId = GetTermIdFromPerioDates(periodDates);
+
+            var periodDatesForTerm = _periodDateRepository.Find(pd => pd.TermId == termId);
+
+            if (periodDatesForTerm.Count() > 0)
+            {
+                throw new PreexistingEntityException("The periods' date range for this term were already assigned.");
             }
         }
     }
