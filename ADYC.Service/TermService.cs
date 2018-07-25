@@ -11,18 +11,18 @@ namespace ADYC.Service
     public class TermService : ITermService
     {
         private ITermRepository _termRepository;
-        private IPeriodDateRepository _periodDateRepository;
 
-        public TermService(ITermRepository termRepository,
-            IPeriodDateRepository periodDateRepository)
+        public IPeriodDateService PeriodDateService { get; set; }
+
+        public TermService(ITermRepository termRepository)
         {
             _termRepository = termRepository;
-            _periodDateRepository = periodDateRepository;
         }
 
         public void Add(Term term)
-        {
+        {            
             ValidateTerm(term);
+            ValidateDuplicatedTerm(term);
 
             if (term.IsCurrentTerm)
             {
@@ -69,32 +69,6 @@ namespace ADYC.Service
                 .SingleOrDefault(t => today >= t.StartDate && today <= t.EndDate || t.IsCurrentTerm);
         }
 
-        public IEnumerable<PeriodDate> GetCurrentTermPeriodDates()
-        {
-            var today = DateTime.Today;
-
-            var term = _termRepository.SingleOrDefault(t => today >= t.StartDate && today <= t.EndDate);
-
-            if (term == null)
-            {
-                throw new NonexistingEntityException("There is no current term.");
-            }
-
-            return term.PeriodDates;
-        }
-
-        public IEnumerable<PeriodDate> GetTermPeriodDates(int termId)
-        {
-            var term = _termRepository.SingleOrDefault(t => t.Id == termId);
-
-            if (term == null)
-            {
-                throw new NonexistingEntityException("The term with the specific id does not exist.");
-            }
-
-            return term.PeriodDates;
-        }
-
         public void Remove(Term term)
         {
             if (term == null)
@@ -107,41 +81,23 @@ namespace ADYC.Service
                 throw new ForeignKeyEntityException("The term could not be removed. It has one or more offerins associated with it.");
             }
 
-            _periodDateRepository.RemoveRange(term.PeriodDates);
+            PeriodDateService.RemoveRange(term.PeriodDates);
             _termRepository.Remove(term);
         }
 
         public void Update(Term term)
         {
-            if (term == null)
-            {
-                throw new ArgumentNullException("term");
-            }
+            ValidateTerm(term);
 
             _termRepository.Update(term);
         }
 
-        private void ValidateTerm(Term term)
+        private void ValidateDuplicatedTerm(Term term)
         {
-            if (term == null)
-            {
-                throw new ArgumentNullException("term");
-            }
-
             if (_termRepository.Find(t => t.Name.Equals(term.Name)
                 || (t.StartDate.Equals(term.StartDate) && t.EndDate.Equals(term.EndDate))).Count() > 0)
             {
                 throw new PreexistingEntityException("A term with the same name or dates already exists.");
-            }
-
-            if (term.StartDate > term.EndDate)
-            {
-                throw new ArgumentException("Start date is after the end date.");
-            }
-
-            if (term.StartDate.Equals(term.EndDate))
-            {
-                throw new ArgumentException("Start date is equals to the end date.");
             }
 
             var startDateExist = _termRepository.Find(t => t.StartDate <= term.StartDate && t.EndDate >= term.StartDate).Count() > 0;
@@ -161,6 +117,24 @@ namespace ADYC.Service
             {
                 throw new ArgumentException("An existing term that contains the end date already exists.");
             }
+        }
+
+        private void ValidateTerm(Term term)
+        {
+            if (term == null)
+            {
+                throw new ArgumentNullException("term");
+            }            
+
+            if (term.StartDate > term.EndDate)
+            {
+                throw new ArgumentException("Start date is after the end date.");
+            }
+
+            if (term.StartDate.Equals(term.EndDate))
+            {
+                throw new ArgumentException("Start date is equals to the end date.");
+            }            
 
             var isEnrollmentDeadLineBeforeStartDate = term.EnrollmentDeadLine <= term.StartDate;
             var isEnrollmentDropDeadLineBeforeStartDate = term.EnrollmentDropDeadLine <= term.StartDate;

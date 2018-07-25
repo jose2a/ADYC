@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ADYC.Model;
 using ADYC.IRepository;
 using ADYC.Util.Exceptions;
@@ -13,23 +11,20 @@ namespace ADYC.Service
     public class PeriodDateService : IPeriodDateService
     {
         private IPeriodDateRepository _periodDateRepository;
-        private ITermRepository _termRepository;
-        private IPeriodRepository _periodRepository;
+
+        public ITermService TermService { get; set; }
+        public IPeriodService PeriodService { get; set; }
 
         private const int totalNumberOfPeriods = 4;
 
-        public PeriodDateService(IPeriodDateRepository periodDateRepository,
-            ITermRepository termRepository,
-            IPeriodRepository periodRepository)
+        public PeriodDateService(IPeriodDateRepository periodDateRepository)
         {
             _periodDateRepository = periodDateRepository;
-            _termRepository = termRepository;
-            _periodRepository = periodRepository;
         }
 
         public void AddRange(IEnumerable<PeriodDate> periodDates)
         {
-            ValidatePeriodDate(periodDates);
+            ValidatePeriodDates(periodDates);
 
             ValidateDuplicatePeriodDate(periodDates);
 
@@ -37,7 +32,7 @@ namespace ADYC.Service
 
             foreach (var pd in periodDates)
             {
-                pd.Period = _periodRepository.Get(pd.PeriodId);
+                pd.Period = PeriodService.Get(pd.PeriodId);
             }
         }
 
@@ -46,45 +41,59 @@ namespace ADYC.Service
             return _periodDateRepository.Get(periodId, termId);
         }
 
+        public IEnumerable<PeriodDate> GetCurrentTermPeriodDates()
+        {
+            var today = DateTime.Today;
+
+            return _periodDateRepository.Find(pd => today >= pd.Term.StartDate && today <= pd.EndDate || pd.Term.IsCurrentTerm);
+        }
+
         public IEnumerable<PeriodDate> GetPeriodDatesForTerm(int termId)
         {
-            return _periodDateRepository.Find(pd => pd.TermId == termId, o => o.OrderBy(pd => pd.PeriodId));
+            return _periodDateRepository.Find(pd => pd.TermId == termId,
+                o => o.OrderBy(pd => pd.PeriodId));
         }
 
         public void UpdateRange(IEnumerable<PeriodDate> periodDates)
         {
-            ValidatePeriodDate(periodDates);
-            int termId = GetTermIdFromPerioDates(periodDates);
+            ValidatePeriodDates(periodDates);
 
-            var term = _termRepository.Get(termId);
+            var term = TermService.Get(GetTermIdFromPeriodDates(periodDates));
             term.PeriodDates = periodDates.ToList();
 
-            _termRepository.Update(term);
+            TermService.Update(term);
         }
 
-        private int GetTermIdFromPerioDates(IEnumerable<PeriodDate> periodDates)
+        public void RemoveRange(IEnumerable<PeriodDate> periodDates)
         {
-            return periodDates
-                            .Select(pd => pd.TermId)
-                            .Distinct()
-                            .SingleOrDefault();
+            if (periodDates.Count() == 0)
+            {
+                throw new ArgumentException("period dates");
+            }
+
+            _periodDateRepository.RemoveRange(periodDates);
         }
 
-        private void ValidatePeriodDate(IEnumerable<PeriodDate> periodDates)
+        private int GetTermIdFromPeriodDates(IEnumerable<PeriodDate> periodDates)
+        {
+            var termIds = periodDates.Select(pd => pd.TermId).Distinct();
+
+            if (termIds.Count() > 1)
+            {
+                throw new ArgumentException("The period dates must be assigned to the same term.");
+            }
+
+            return termIds.SingleOrDefault();
+        }
+
+        private void ValidatePeriodDates(IEnumerable<PeriodDate> periodDates)
         {
             if (periodDates.Count() < totalNumberOfPeriods)
             {
                 throw new ArgumentNullException("periodDates");
             }
 
-            var termIds = periodDates.Select(pd => pd.TermId).Distinct();
-
-            if (termIds.Count() != 1)
-            {
-                throw new ArgumentException("The period dates must be assigned to the same term.");
-            }
-
-            var term = _termRepository.Get(termIds.FirstOrDefault());
+            var term = TermService.Get(GetTermIdFromPeriodDates(periodDates));
 
             var outsideTermRange = periodDates
                 .Count(pd => pd.StartDate < term.StartDate || pd.EndDate > term.EndDate);
@@ -124,7 +133,7 @@ namespace ADYC.Service
 
         private void ValidateDuplicatePeriodDate(IEnumerable<PeriodDate> periodDates)
         {
-            var termId = GetTermIdFromPerioDates(periodDates);
+            var termId = GetTermIdFromPeriodDates(periodDates);
 
             var periodDatesForTerm = _periodDateRepository.Find(pd => pd.TermId == termId);
 

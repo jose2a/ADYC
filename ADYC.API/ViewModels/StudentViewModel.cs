@@ -19,7 +19,6 @@ namespace ADYC.API.ViewModels
         [Required]
         [Phone]
         public string CellphoneNumber { get; set; }
-        [Required]
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }

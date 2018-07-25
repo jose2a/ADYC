@@ -19,15 +19,8 @@ namespace ADYC.Service
 
         public void Add(Major major)
         {
-            if (major == null)
-            {
-                throw new ArgumentNullException("major");
-            }
-
-            if (_majorRepository.Find(c => c.Name.Equals(major.Name)).Count() > 0)
-            {
-                throw new PreexistingEntityException("A majort with the same name already exists.", null);
-            }
+            ValidateMajor(major);
+            ValidateDuplicatedMajor(major);
 
             _majorRepository.Add(major);
         }
@@ -69,7 +62,7 @@ namespace ADYC.Service
 
         public void RemoveRange(IEnumerable<Major> majors)
         {
-            if (majors.Count() == 0 || majors == null)
+            if (majors.Count() == 0)
             {
                 throw new ArgumentNullException("majors");
             }
@@ -86,17 +79,25 @@ namespace ADYC.Service
 
         public void Update(Major major)
         {
+            ValidateMajor(major);
+
+            _majorRepository.Update(major);
+        }
+
+        private void ValidateDuplicatedMajor(Major major)
+        {
+            if (_majorRepository.Find(c => c.Name.Equals(major.Name)).Count() > 0)
+            {
+                throw new PreexistingEntityException("A majort with the same name already exists.", null);
+            }
+        }
+
+        private void ValidateMajor(Major major)
+        {
             if (major == null)
             {
                 throw new ArgumentNullException("major");
             }
-
-            if (_majorRepository.Get(major.Id) == null)
-            {
-                throw new NonexistingEntityException("Major does not currently exist.");
-            }
-
-            _majorRepository.Update(major);
         }
     }
 }

@@ -7,6 +7,7 @@ namespace ADYC.IService
     public interface IProfessorService
     {
         Professor Get(Guid id);
+
         IEnumerable<Professor> GetAll();        
         IEnumerable<Professor> FindByFirstName(string firstName);        
         IEnumerable<Professor> FindByLastName(string lastName);
@@ -15,8 +16,6 @@ namespace ADYC.IService
         IEnumerable<Professor> FindNotTrashedProfessors();
         IEnumerable<Professor> FindTrashedProfessors();
 
-        IEnumerable<Offering> GetProfessorOfferings(Guid professorId);
-
         void Add(Professor professor);
         void AddRange(IEnumerable<Professor> professors);
 
@@ -24,6 +23,7 @@ namespace ADYC.IService
 
         void Remove(Professor professor);
         void RemoveRange(IEnumerable<Professor> professors);
+
         void Trash(Professor professor);
         void TrashRange(IEnumerable<Professor> professors);
         void Restore(Professor professor);

@@ -1,4 +1,7 @@
-﻿using ADYC.Model;
+﻿using ADYC.IRepository;
+using ADYC.IService;
+using ADYC.Model;
+using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -15,9 +18,10 @@ namespace ADYC.Service.Tests
         public void SetUp()
         {
             _periodDateService = new PeriodDateService(
-                new FakeRepositories.FakePeriodDateRepository(),
-                new FakeRepositories.FakeTermRepository()
-                );
+                new FakeRepositories.FakePeriodDateRepository());
+            //    new Mock<ITermService>().Object,
+            //    new Mock<IPeriodService>().Object
+            //    );
 
             spring2018 = FakeRepositories.FakePeriodDateRepository.spring2018;
         }

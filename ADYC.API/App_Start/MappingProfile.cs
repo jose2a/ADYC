@@ -16,6 +16,7 @@ namespace ADYC.API.App_Start
             CreateMap<Course, CourseDto>();
             CreateMap<CourseType, CourseTypeDto>();
             CreateMap<Enrollment, EnrollmentDto>();
+            CreateMap<Evaluation, EvaluationDto>();            
             CreateMap<Grade, GradeDto>();
             CreateMap<Group, GroupDto>();
             CreateMap<Major, MajorDto>();
@@ -36,6 +37,10 @@ namespace ADYC.API.App_Start
 
             CreateMap<EnrollmentDto, Enrollment>()
                 .ForMember(c => c.Id, opt => opt.Ignore());
+                //.ForMember(e => e.Evaluations, opt => opt.MapFrom<EvaluationDto, Evaluation>(e));
+
+            CreateMap<EvaluationDto, Evaluation>();
+            CreateMap<IEnumerable<EvaluationDto>, ICollection<Evaluation>>();
 
             CreateMap<GradeDto, Grade>()
                 .ForMember(g => g.Id, opt => opt.Ignore());

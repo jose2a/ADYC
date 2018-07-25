@@ -12,6 +12,8 @@ namespace ADYC.Service
     {
         private IScheduleRepository _scheduleRepository;
 
+        public IOfferingService _offeringService { get; set; }
+
         public ScheduleService(IScheduleRepository scheduleRepository)
         {
             _scheduleRepository = scheduleRepository;
@@ -19,22 +21,17 @@ namespace ADYC.Service
 
         public void AddRange(IEnumerable<Schedule> schedules)
         {
+            SetSchedulesOffering(schedules);
+
             ValidateSchedules(schedules);
 
             _scheduleRepository.AddRange(schedules);
 
-        }        
+        }
 
         public IEnumerable<Schedule> FindByOfferingId(int offeringId)
         {
-            var schedules = _scheduleRepository.Find(s => s.OfferingId == offeringId);
-
-            if (schedules == null || schedules.Count() == 0)
-            {
-                throw new NonexistingEntityException("There are no schedules for the current offering.");
-            }
-
-            return schedules;
+            return _scheduleRepository.Find(s => s.OfferingId == offeringId, includeProperties: "Offering");
         }
 
         public Schedule Get(int id)
@@ -46,11 +43,37 @@ namespace ADYC.Service
 
         public void UpdateRange(IEnumerable<Schedule> schedules)
         {
+            var offeringId = schedules.Select(s => s.OfferingId).Distinct().SingleOrDefault();
+
+            var schedulesToRemove = _scheduleRepository.Find(s => s.OfferingId == offeringId);
+
+            _scheduleRepository.RemoveRange(schedulesToRemove);
+
+            SetSchedulesOffering(schedules);
+
             ValidateSchedules(schedules);
 
-            foreach (var schedule in schedules)
+            _scheduleRepository.AddRange(schedules);
+        }
+
+        public void RemoveRange(IEnumerable<Schedule> schedules)
+        {
+            if (schedules.Count() == 0)
             {
-                _scheduleRepository.Update(schedule);
+                throw new ArgumentException("schedules");
+            }
+
+            _scheduleRepository.RemoveRange(schedules);
+        }
+
+        private void SetSchedulesOffering(IEnumerable<Schedule> schedules)
+        {
+            
+            var offeringId = schedules.Select(s => s.OfferingId).Distinct().SingleOrDefault();
+
+            foreach (var s in schedules)
+            {
+                s.Offering = _offeringService.Get(offeringId);
             }
         }
 
@@ -61,7 +84,10 @@ namespace ADYC.Service
                 throw new ArgumentNullException("schedules");
             }
 
-            var offeringForSchedules = schedulesToAdd.Select(s => s.Offering).Distinct().SingleOrDefault();
+            var offeringForSchedules = schedulesToAdd
+                .Select(s => s.Offering)
+                .Distinct()
+                .SingleOrDefault();
 
             var schedulesByProfessorAndTerm = _scheduleRepository
                 .Find(s => s.Offering.ProfessorId == offeringForSchedules.ProfessorId &&

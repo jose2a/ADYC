@@ -153,6 +153,7 @@
     <Compile Include="App_Start\IocConfig.cs" />
     <Compile Include="App_Start\MappingProfile.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ADYCBasedApiController.cs" />
     <Compile Include="Controllers\CoursesController.cs" />
     <Compile Include="Controllers\CourseTypesController.cs" />
     <Compile Include="Controllers\EnrollmentsController.cs" />

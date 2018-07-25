@@ -1,9 +1,5 @@
 ﻿using ADYC.Model;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ADYC.IService
 {
@@ -14,6 +10,8 @@ namespace ADYC.IService
         IEnumerable<PeriodDate> GetPeriodDatesForTerm(int termId);
 
         void AddRange(IEnumerable<PeriodDate> periodDates);
-        void UpdateRange(IEnumerable<PeriodDate> periodDates);        
+        void UpdateRange(IEnumerable<PeriodDate> periodDates);
+
+        void RemoveRange(IEnumerable<PeriodDate> periodDates);     
     }
 }

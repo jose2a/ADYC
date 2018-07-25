@@ -40,9 +40,7 @@ namespace ADYC.API.UnitTests.Controllers
             termService.Setup(m => m.Get(It.IsAny<int>()))
                 .Returns(spring2018);
 
-            var controller = new TermsController(termService.Object,
-                periodService.Object,
-                periodDateService.Object);
+            var controller = new TermsController(termService.Object);
 
             TestHelper.SetUpControllerRequest(controller, "terms");
 
@@ -66,7 +64,7 @@ namespace ADYC.API.UnitTests.Controllers
             termService.Setup(m => m.GetCurrentTerm())
                 .Returns(spring2018);
 
-            var controller = new TermsController(termService.Object, periodService.Object, periodDateService.Object);
+            var controller = new TermsController(termService.Object);
 
             TestHelper.SetUpControllerRequest(controller, "terms");
 

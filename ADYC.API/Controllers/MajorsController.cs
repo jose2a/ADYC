@@ -2,7 +2,6 @@
 using ADYC.IService;
 using ADYC.Model;
 using ADYC.Util.Exceptions;
-using ADYC.Util.RestUtils;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,7 @@ using System.Web.Http.Description;
 namespace ADYC.API.Controllers
 {
     [RoutePrefix("api/Majors")]
-    public class MajorsController : ApiController
+    public class MajorsController : ADYCBasedApiController
     {
         private IMajorService _majorService;
 
@@ -160,13 +159,6 @@ namespace ADYC.API.Controllers
             }
 
             return BadRequest(ModelState);
-        }
-
-        private MajorDto GetMajorDto(Major m)
-        {
-            var majorDto = Mapper.Map<Major, MajorDto>(m);
-            majorDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Majors") + m.Id;
-            return majorDto;
         }
     }
 }

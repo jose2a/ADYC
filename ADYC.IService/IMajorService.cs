@@ -6,6 +6,7 @@ namespace ADYC.IService
     public interface IMajorService
     {
         Major Get(int id);
+
         IEnumerable<Major> GetAll();
         IEnumerable<Major> FindByName(string name);
 

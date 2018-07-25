@@ -13,7 +13,7 @@ namespace ADYC.API.ViewModels
 
         public int Id { get; set; }
         public Double? FinalGrade { get; set; }
-        public byte? FinalGradeLetter { get; set; }
+        public string FinalGradeLetter { get; set; }
         public string Notes { get; set; }
         public bool IsCurrentEnrollment { get; set; }
         public DateTime EnrollmentDate { get; set; }
@@ -34,7 +34,7 @@ namespace ADYC.API.ViewModels
         public int EnrollmentId { get; set; }
 
         public Double? PeriodGrade { get; set; }
-        public GradeLetter? PeriodGradeLetter { get; set; }
+        public string PeriodGradeLetter { get; set; }
         public string Notes { get; set; }
 
         public PeriodDto Period { get; set; }

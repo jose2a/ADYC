@@ -13,9 +13,6 @@ namespace ADYC.IService
         IEnumerable<Term> FindByName(string name);
         IEnumerable<Term> FindByBetweenDates(DateTime startDate, DateTime endDate);
 
-        IEnumerable<PeriodDate> GetTermPeriodDates(int termId);
-        IEnumerable<PeriodDate> GetCurrentTermPeriodDates();
-
         void Add(Term term);
         void Update(Term term);
 

@@ -6,9 +6,10 @@ namespace ADYC.IService
     public interface ICourseService
     {
         Course Get(int id);
+
         IEnumerable<Course> GetAll();
         IEnumerable<Course> FindByName(string name);
-        IEnumerable<Course> FindByCourseType(CourseType courseType);
+        IEnumerable<Course> FindByCourseTypeId(int courseTypeId);
         IEnumerable<Course> FindNotTrashedCourses();
         IEnumerable<Course> FindTrashedCourses();
 
@@ -19,6 +20,7 @@ namespace ADYC.IService
 
         void Remove(Course course);
         void RemoveRange(IEnumerable<Course> courses);
+
         void Trash(Course course);
         void TrashRange(IEnumerable<Course> courses);
         void Restore(Course course);

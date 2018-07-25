@@ -2,7 +2,6 @@
 using ADYC.IService;
 using ADYC.Model;
 using ADYC.Util.Exceptions;
-using ADYC.Util.RestUtils;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,7 @@ using System.Web.Http.Description;
 namespace ADYC.API.Controllers
 {
     [RoutePrefix("api/CourseTypes")]
-    public class CourseTypesController : ApiController
+    public class CourseTypesController : ADYCBasedApiController
     {
         private ICourseTypeService _courseTypeService;
 
@@ -165,13 +164,6 @@ namespace ADYC.API.Controllers
             }
 
             return BadRequest(ModelState);
-        }
-
-        private CourseTypeDto GetCourseTypeDto(CourseType courseType)
-        {
-            var courseTypeDto = Mapper.Map<CourseType, CourseTypeDto>(courseType);
-            courseTypeDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + courseType.Id;
-            return courseTypeDto;
         }
     }
 }

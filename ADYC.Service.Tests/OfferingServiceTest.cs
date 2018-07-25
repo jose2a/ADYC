@@ -19,9 +19,7 @@ namespace ADYC.Service.Tests
         [SetUp]
         public void SetUp()
         {
-            _offeringServ = new OfferingService(new FakeOfferingRepository(),
-                new Mock<IEnrollmentRepository>().Object,
-                new Mock<IEvaluationRepository>().Object);
+            _offeringServ = new OfferingService(new FakeOfferingRepository());
         }
 
         [Test]

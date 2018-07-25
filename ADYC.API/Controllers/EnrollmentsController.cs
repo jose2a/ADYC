@@ -2,29 +2,23 @@
 using ADYC.IService;
 using ADYC.Model;
 using ADYC.Util.Exceptions;
-using ADYC.Util.RestUtils;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 
 namespace ADYC.API.Controllers
 {
     [RoutePrefix("api/Enrollments")]
-    public class EnrollmentsController : ApiController
+    public class EnrollmentsController : ADYCBasedApiController
     {
         private IEnrollmentService _enrollmentService;
-        private IOfferingService _offeringService;
 
-        public EnrollmentsController(IEnrollmentService enrollmentService,
-            IOfferingService offeringService)
+        public EnrollmentsController(IEnrollmentService enrollmentService)
         {
             _enrollmentService = enrollmentService;
-            _offeringService = offeringService;
         }
 
         // GET api/<controller>/5
@@ -37,6 +31,21 @@ namespace ADYC.API.Controllers
             if (enrollment != null)
             {
                 return Ok(GetEnrollmentDto(enrollment));
+            }
+
+            return NotFound();
+        }
+
+        // GET api/<controller>/GetWithEvaluations/5
+        [Route("GetWithEvaluations/{id}")]
+        [ResponseType(typeof(EnrollmentDto))]
+        public IHttpActionResult GetWithEvaluations(int id)
+        {
+            var enrollment = _enrollmentService.GetWithEvaluations(id);
+
+            if (enrollment != null)
+            {
+                return Ok(GetEnrollmentWithEvaluationsDto(enrollment));
             }
 
             return NotFound();
@@ -98,32 +107,6 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
-        [Route("GetOfferingEnrollments")]
-        [ResponseType(typeof(IEnumerable<EnrollmentDto>))]
-        [HttpPost]
-        public IHttpActionResult GetOfferingEnrollments([FromBody] Offering offering)
-        {
-            var enrollments = _enrollmentService.GetOfferingEnrollments(offering);
-
-            return Ok(enrollments
-                .Select(e => GetEnrollmentDto(e)));
-        }
-
-        [Route("GetStudentCurrentTermEnrollment")]
-        [ResponseType(typeof(EnrollmentDto))]
-        [HttpPost]
-        public IHttpActionResult GetStudentCurrentTermEnrollment([FromBody] Student student)
-        {
-            var enrollment = _enrollmentService.GetStudentCurrentTermEnrollment(student);
-
-            if (enrollment == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(GetEnrollmentDto(enrollment));
-        }
-
         [Route("GetStudentCurrentTermEnrollmentByStudentId/{studentId:guid}")]
         [ResponseType(typeof(EnrollmentDto))]
         [HttpGet]
@@ -139,16 +122,6 @@ namespace ADYC.API.Controllers
             return Ok(GetEnrollmentDto(enrollment));
         }
 
-        [Route("GetStudentEnrollments")]
-        [ResponseType(typeof(IEnumerable<EnrollmentDto>))]
-        [HttpPost]
-        public IHttpActionResult GetStudentEnrollments([FromBody] Student student)
-        {
-            var enrollments = _enrollmentService.GetStudentEnrollments(student);
-
-            return Ok(enrollments.Select(e => GetEnrollmentDto(e)));
-        }
-
         [Route("")]
         [HttpPost]
         [ResponseType(typeof(EnrollmentDto))]
@@ -160,8 +133,6 @@ namespace ADYC.API.Controllers
                 try
                 {
                     var enrollment = Mapper.Map<EnrollmentDto, Enrollment>(form);
-
-                    enrollment.Offering = _offeringService.Get(enrollment.OfferingId);
 
                     _enrollmentService.Add(enrollment);
 
@@ -199,7 +170,15 @@ namespace ADYC.API.Controllers
 
                 try
                 {
-                    Mapper.Map(form, enrollmentInDb);
+                    Mapper.Map(form.Enrollment, enrollmentInDb);
+
+                    int i = 0;
+
+                    foreach (var ev in enrollmentInDb.Evaluations)
+                    {
+                        Mapper.Map(form.Evaluations.ElementAt(i), ev);
+                        i++;
+                    }
 
                     _enrollmentService.Update(enrollmentInDb);
 
@@ -242,10 +221,11 @@ namespace ADYC.API.Controllers
 
         [Route("Withdrop/{id}")]
         [ResponseType(typeof(void))]
+        [HttpGet]
         // GET api/<controller>/5
         public IHttpActionResult Withdrop(int id)
         {
-            var enrollmentInDb = _enrollmentService.Get(id);
+            var enrollmentInDb = _enrollmentService.GetWithEvaluations(id);
 
             if (enrollmentInDb == null)
             {
@@ -264,38 +244,6 @@ namespace ADYC.API.Controllers
             }
 
             return BadRequest(ModelState);
-        }
-
-        private EnrollmentDto GetEnrollmentDto(Enrollment enrollment)
-        {
-            var enrollmentDto = Mapper.Map<Enrollment, EnrollmentDto>(enrollment);
-            enrollmentDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Enrollments") + enrollment.Id;
-
-            enrollmentDto.Student = Mapper.Map<Student, StudentDto>(enrollment.Student);
-            enrollmentDto.Student.Url = UrlResoucesUtil.GetBaseUrl(Request, "Students") + enrollment.StudentId;
-
-            enrollmentDto.Student.Grade = Mapper.Map<Grade, GradeDto>(enrollment.Student.Grade);
-            enrollmentDto.Student.Grade.Url = UrlResoucesUtil.GetBaseUrl(Request, "Grades") + enrollment.Student.GradeId;
-
-            enrollmentDto.Student.Group = Mapper.Map<Group, GroupDto>(enrollment.Student.Group);
-            enrollmentDto.Student.Group.Url = UrlResoucesUtil.GetBaseUrl(Request, "Groups") + enrollment.Student.GroupId;
-
-            enrollmentDto.Student.Major = Mapper.Map<Major, MajorDto>(enrollment.Student.Major);
-            enrollmentDto.Student.Major.Url = UrlResoucesUtil.GetBaseUrl(Request, "Majors") + enrollment.Student.MajorId;
-
-            enrollmentDto.Offering = Mapper.Map<Offering, OfferingDto>(enrollment.Offering);
-            enrollmentDto.Offering.Url = UrlResoucesUtil.GetBaseUrl(Request, "Enrollments") + enrollment.OfferingId;
-
-            enrollmentDto.Offering.Professor = Mapper.Map<Professor, ProfessorDto>(enrollment.Offering.Professor);
-            enrollmentDto.Offering.Professor.Url = UrlResoucesUtil.GetBaseUrl(Request, "Professors") + enrollment.Offering.ProfessorId;
-
-            enrollmentDto.Offering.Course = Mapper.Map<Course, CourseDto>(enrollment.Offering.Course);
-            enrollmentDto.Offering.Course.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + enrollment.Offering.CourseId;
-
-            enrollmentDto.Offering.Term = Mapper.Map<Term, TermDto>(enrollment.Offering.Term);
-            enrollmentDto.Offering.Term.Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + enrollment.Offering.TermId;
-
-            return enrollmentDto;
         }
     }
 }

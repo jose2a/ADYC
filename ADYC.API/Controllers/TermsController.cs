@@ -2,7 +2,6 @@
 using ADYC.IService;
 using ADYC.Model;
 using ADYC.Util.Exceptions;
-using ADYC.Util.RestUtils;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,7 @@ using System.Web.Http.Description;
 namespace ADYC.API.Controllers
 {
     [RoutePrefix("api/Terms")]
-    public class TermsController : ApiController
+    public class TermsController : ADYCBasedApiController
     {
         private ITermService _termService;
 
@@ -190,13 +189,6 @@ namespace ADYC.API.Controllers
             }
 
             return BadRequest(ModelState);
-        }
-
-        private TermDto GetTermDto(Term term)
-        {
-            var termDto = Mapper.Map<Term, TermDto>(term);
-            termDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + term.Id;
-            return termDto;
         }
     }
 }

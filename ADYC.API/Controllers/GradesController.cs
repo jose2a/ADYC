@@ -2,7 +2,6 @@
 using ADYC.IService;
 using ADYC.Model;
 using ADYC.Util.Exceptions;
-using ADYC.Util.RestUtils;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,7 @@ using System.Web.Http.Description;
 namespace ADYC.API.Controllers
 {
     [RoutePrefix("api/Grades")]
-    public class GradesController : ApiController
+    public class GradesController : ADYCBasedApiController
     {
         private IGradeService _gradeService;
 
@@ -169,13 +168,6 @@ namespace ADYC.API.Controllers
             }
 
             return BadRequest(ModelState);
-        }
-
-        private GradeDto GetGradeDto(Grade g)
-        {
-            var gradeDto = Mapper.Map<Grade, GradeDto>(g);
-            gradeDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Grades") + g.Id;
-            return gradeDto;
-        }
+        }        
     }
 }

@@ -11,19 +11,14 @@ namespace ADYC.Service
     public class StudentService : IStudentService
     {
         private IStudentRepository _studentRepository;
-        private IGradeRepository _gradeRepository;
-        private IGroupRepository _groupRepository;
-        private IMajorRepository _majorRepository;
 
-        public StudentService(IStudentRepository studentRepository,
-            IGradeRepository gradeRepository,
-            IGroupRepository groupRepository,
-            IMajorRepository majorRepository)
+        public IGradeService GradeService { get; set; }
+        public IGroupService GroupService { get; set; }
+        public IMajorService MajorService { get; set; }
+
+        public StudentService(IStudentRepository studentRepository)
         {
             _studentRepository = studentRepository;
-            _gradeRepository = gradeRepository;
-            _groupRepository = groupRepository;
-            _majorRepository = majorRepository;
         }
 
         public void Add(Student student)
@@ -31,6 +26,7 @@ namespace ADYC.Service
             SetStudentSchoolProperties(student);
 
             ValidateStudent(student);
+            ValidateDuplicatedStudent(student);
 
             student.CreatedAt = DateTime.Today;
             student.IsDeleted = false;
@@ -38,74 +34,19 @@ namespace ADYC.Service
             _studentRepository.Add(student);
         }
 
-        private void SetStudentSchoolProperties(Student student)
-        {
-            student.Grade = _gradeRepository.Get(student.GradeId);
-            student.Group = _groupRepository.Get(student.GroupId);
-            student.Major = _majorRepository.Get(student.MajorId);
-        }
-
-        private void ValidateStudent(Student student)
-        {
-            if (student == null)
-            {
-                throw new ArgumentNullException("student");
-            }
-
-            if (student.Grade == null)
-            {
-                throw new ArgumentNullException("grade");
-            }
-
-            if (student.Group == null)
-            {
-                throw new ArgumentNullException("group");
-            }
-
-            if (student.Major == null)
-            {
-                throw new ArgumentNullException("major");
-            }
-
-            var studentExist = (_studentRepository.Find(p => p.FirstName.Equals(student.FirstName)).Count() > 0)
-                && (_studentRepository.Find(p => p.LastName.Equals(student.LastName)).Count() > 0);
-
-            if (studentExist)
-            {
-                throw new PreexistingEntityException("A student with the same first name and last name already exists.");
-            }
-        }
-
         public void AddRange(IEnumerable<Student> students)
         {
-            ValidateStudentRange(students);
-
             foreach (var student in students)
             {
+                SetStudentSchoolProperties(student);
+
                 student.CreatedAt = DateTime.Today;
                 student.IsDeleted = false;
             }
 
+            ValidateStudentRange(students);
+
             _studentRepository.AddRange(students);
-        }
-
-        private void ValidateStudentRange(IEnumerable<Student> students)
-        {
-            if (students == null)
-            {
-                throw new ArgumentNullException("student");
-            }
-
-            var studentFirstNames = students.Select(s => s.FirstName);
-            var studentLastNames = students.Select(s => s.LastName);
-
-            var studentExist = (_studentRepository.Find(s => studentFirstNames.Contains(s.FirstName)).Count() > 0)
-                || (_studentRepository.Find(s => studentLastNames.Contains(s.LastName)).Count() > 0);
-
-            if (studentExist)
-            {
-                throw new PreexistingEntityException("A student with the first name and last name already exists.");
-            }
         }
 
         public IEnumerable<Student> FindByCellphoneNumber(string cellphoneNumber)
@@ -187,23 +128,6 @@ namespace ADYC.Service
             return _studentRepository.GetAll(includeProperties: "Grade,Group,Major");
         }
 
-        public IEnumerable<Enrollment> GetStudentEnrollments(Guid studentId)
-        {
-            if (studentId == null)
-            {
-                throw new ArgumentNullException("studentId");
-            }
-
-            var student = _studentRepository.Get(studentId);
-
-            if (student == null)
-            {
-                throw new NonexistingEntityException("A student with the given id does not exist.");
-            }
-
-            return student.Enrollments;
-        }
-
         public void Remove(Student student)
         {
             if (student == null)
@@ -221,7 +145,7 @@ namespace ADYC.Service
 
         public void RemoveRange(IEnumerable<Student> students)
         {
-            if (students.Count() == 0 || students == null)
+            if (students.Count() == 0)
             {
                 throw new ArgumentNullException("students");
             }
@@ -251,7 +175,7 @@ namespace ADYC.Service
 
         public void TrashRange(IEnumerable<Student> students)
         {
-            if (students.Count() == 0 || students == null)
+            if (students.Count() == 0)
             {
                 throw new ArgumentNullException("students");
             }
@@ -267,12 +191,9 @@ namespace ADYC.Service
 
         public void Update(Student student)
         {
-            if (student == null)
-            {
-                throw new ArgumentNullException("student");
-            }
-
             SetStudentSchoolProperties(student);
+
+            ValidateStudent(student);
 
             student.UpdatedAt = DateTime.Today;
 
@@ -305,6 +226,56 @@ namespace ADYC.Service
                 student.DeletedAt = null;
 
                 _studentRepository.Update(student);
+            }
+        }
+
+        private void SetStudentSchoolProperties(Student student)
+        {
+            student.Grade = GradeService.Get(student.GradeId);
+            student.Group = GroupService.Get(student.GroupId);
+            student.Major = MajorService.Get(student.MajorId);
+        }
+
+        private void ValidateStudentRange(IEnumerable<Student> students)
+        {
+            foreach (var s in students)
+            {
+                ValidateStudent(s);
+                ValidateDuplicatedStudent(s);
+            }
+        }
+
+        private void ValidateStudent(Student student)
+        {
+            if (student == null)
+            {
+                throw new ArgumentNullException("student");
+            }
+
+            if (student.Grade == null)
+            {
+                throw new ArgumentNullException("grade");
+            }
+
+            if (student.Group == null)
+            {
+                throw new ArgumentNullException("group");
+            }
+
+            if (student.Major == null)
+            {
+                throw new ArgumentNullException("major");
+            }
+        }
+
+        private void ValidateDuplicatedStudent(Student student)
+        {
+            var studentExist = (_studentRepository.Find(p => p.FirstName.Equals(student.FirstName)).Count() > 0)
+                            && (_studentRepository.Find(p => p.LastName.Equals(student.LastName)).Count() > 0);
+
+            if (studentExist)
+            {
+                throw new PreexistingEntityException("A student with the same first name and last name already exists.");
             }
         }
     }

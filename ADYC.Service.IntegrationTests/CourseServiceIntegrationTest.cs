@@ -27,8 +27,9 @@ namespace ADYC.Service.IntegrationTests
         {
             var context = new AdycDbContext();
 
-            courseService = new CourseService(new CourseRepository(context), new CourseTypeRepository(context));
+            courseService = new CourseService(new CourseRepository(context));
             courseTypeService = new CourseTypeService(new CourseTypeRepository(context));
+            ((CourseService)courseService).CourseTypeService = courseTypeService;
 
             internalCT = courseTypeService.Get(internalCTId);
             externalCT = courseTypeService.Get(externalCTId);
@@ -64,7 +65,7 @@ namespace ADYC.Service.IntegrationTests
             var newCourseType = new CourseType() { Id = 3, Name = "New type" };
 
             // act
-            var result = courseService.FindByCourseType(newCourseType);
+            var result = courseService.FindByCourseTypeId(newCourseType.Id);
 
             // assert
             Assert.IsEmpty(result);

@@ -2,20 +2,17 @@
 using ADYC.IService;
 using ADYC.Model;
 using ADYC.Util.Exceptions;
-using ADYC.Util.RestUtils;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 
 namespace ADYC.API.Controllers
 {
     [RoutePrefix("api/Students")]
-    public class StudentsController : ApiController
+    public class StudentsController : ADYCBasedApiController
     {
         private IStudentService _studentService;
 
@@ -183,7 +180,6 @@ namespace ADYC.API.Controllers
                 try
                 {
                     var student = Mapper.Map<StudentDto, Student>(form);
-
                     _studentService.Add(student);
 
                     var studentDto = GetStudentDto(student);
@@ -221,7 +217,6 @@ namespace ADYC.API.Controllers
                 try
                 {
                     Mapper.Map(form, studentInDb);
-
                     _studentService.Update(studentInDb);
 
                     return Ok();
@@ -229,10 +224,6 @@ namespace ADYC.API.Controllers
                 catch (ArgumentNullException ane)
                 {
                     ModelState.AddModelError("", ane.Message);
-                }
-                catch (NonexistingEntityException ne)
-                {
-                    ModelState.AddModelError("", ne.Message);
                 }
             }
 
@@ -321,23 +312,6 @@ namespace ADYC.API.Controllers
             }
 
             return BadRequest(ModelState);
-        }
-
-        private StudentDto GetStudentDto(Student student)
-        {
-            var studentDto = Mapper.Map<Student, StudentDto>(student);
-            studentDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Students") + student.Id;
-
-            studentDto.Grade = Mapper.Map<Grade, GradeDto>(student.Grade);
-            studentDto.Grade.Url = UrlResoucesUtil.GetBaseUrl(Request, "Grades") + student.GradeId;
-
-            studentDto.Group = Mapper.Map<Group, GroupDto>(student.Group);
-            studentDto.Group.Url = UrlResoucesUtil.GetBaseUrl(Request, "Groups") + student.GroupId;
-
-            studentDto.Major = Mapper.Map<Major, MajorDto>(student.Major);
-            studentDto.Major.Url = UrlResoucesUtil.GetBaseUrl(Request, "Majors") + student.MajorId;
-
-            return studentDto;
         }
     }
 }

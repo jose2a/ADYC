@@ -16,6 +16,7 @@ namespace ADYC.Service.Tests
         private Mock<IEnrollmentRepository> _enrollmentRepository;
         private Mock<IEvaluationRepository> _evaluationRepository;
         private Mock<IPeriodRepository> _periodRepository;
+        private Mock<ITermRepository> _termRepository;
 
         private List<Enrollment> _enrollments;
         private List<Evaluation> _evaluations;
@@ -27,6 +28,7 @@ namespace ADYC.Service.Tests
             _enrollmentRepository = new Mock<IEnrollmentRepository>();
             _evaluationRepository = new Mock<IEvaluationRepository>();
             _periodRepository = new Mock<IPeriodRepository>();
+            _termRepository = new Mock<ITermRepository>();
 
             _enrollments = TestData.GetEnrollments();
             _evaluations = TestData.GetEvaluations();
@@ -68,8 +70,9 @@ namespace ADYC.Service.Tests
         {
             return new EnrollmentService(
                 _enrollmentRepository.Object,
-                _evaluationRepository.Object,
-                _periodRepository.Object);
+                _evaluationRepository.Object);//,
+                //_periodRepository.Object,
+                //_termRepository.Object);
         }
 
         [TearDown]

@@ -7,6 +7,7 @@ namespace ADYC.IService
     public interface IStudentService
     {
         Student Get(Guid id);
+
         IEnumerable<Student> GetAll();
         IEnumerable<Student> FindByFirstName(string firstName);
         IEnumerable<Student> FindByLastName(string lastName);
@@ -14,9 +15,6 @@ namespace ADYC.IService
         IEnumerable<Student> FindByCellphoneNumber(string cellphoneNumber);
         IEnumerable<Student> FindNotTrashedStudents();
         IEnumerable<Student> FindTrashedStudents();
-        //IEnumerable<Student> FindStudentsCurrentlyEnrolled();
-
-        IEnumerable<Enrollment> GetStudentEnrollments(Guid studentId);
 
         void Add(Student student);
         void AddRange(IEnumerable<Student> students);
@@ -25,6 +23,7 @@ namespace ADYC.IService
 
         void Remove(Student student);
         void RemoveRange(IEnumerable<Student> students);
+
         void Trash(Student student);
         void TrashRange(IEnumerable<Student> students);
 

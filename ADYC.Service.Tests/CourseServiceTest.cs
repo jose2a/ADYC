@@ -7,6 +7,7 @@ using ADYC.IRepository;
 using ADYC.Util.Exceptions;
 using System.Linq;
 using System.Linq.Expressions;
+using ADYC.IService;
 
 namespace ADYC.Service.Tests
 {
@@ -14,7 +15,7 @@ namespace ADYC.Service.Tests
     public class CourseServiceTest
     {
         private Mock<ICourseRepository> _courseRepository;
-        private Mock<ICourseTypeRepository> _courseTypeRepository;
+        private Mock<ICourseTypeService> _courseTypeService;
 
         private List<Course> _courses;
         private List<CourseType> _courseTypes;
@@ -28,7 +29,13 @@ namespace ADYC.Service.Tests
             _courseTypes = TestData.GetCourseTypes();
 
             _courseRepository = new Mock<ICourseRepository>();
-            _courseTypeRepository = new Mock<ICourseTypeRepository>();
+            _courseTypeService = new Mock<ICourseTypeService>();
+
+            _courseTypeService.Setup(m => m.Get(It.IsAny<int>()))
+                .Returns((int id) =>
+                {
+                    return _internalCT;
+                });
         }
 
         [Test]
@@ -43,7 +50,8 @@ namespace ADYC.Service.Tests
                     c.Id = expectedId;
                 });
 
-            var courseService = new CourseService(_courseRepository.Object, _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+            courseService.CourseTypeService = _courseTypeService.Object;
 
             // act
             courseService.Add(courseToAdd);
@@ -57,7 +65,8 @@ namespace ADYC.Service.Tests
         public void Add_CourseIsNull_ArgumentNullExceptionWillBeThrown()
         {
             // arrange
-            var courseService = new CourseService(_courseRepository.Object, _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+            courseService.CourseTypeService = _courseTypeService.Object;
 
             // act and assert
             Assert.Throws<ArgumentNullException>(() => courseService.Add(null));
@@ -75,9 +84,10 @@ namespace ADYC.Service.Tests
                     {
                         new Course()
                     };
-                });            
+                });
 
-            var courseService = new CourseService(_courseRepository.Object, _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+            courseService.CourseTypeService = _courseTypeService.Object;
 
             // act and assert
             Assert.Throws<PreexistingEntityException>(() => courseService.Add(courseToAdd));
@@ -99,8 +109,9 @@ namespace ADYC.Service.Tests
 
             _courseRepository.Setup(m => m.AddRange(It.IsAny<IEnumerable<Course>>()))
                 .Callback((IEnumerable<Course> courses) => {});
-            
-            var courseService = new CourseService(_courseRepository.Object, _courseTypeRepository.Object);
+
+            var courseService = new CourseService(_courseRepository.Object);
+            courseService.CourseTypeService = _courseTypeService.Object;
 
             // act
             courseService.AddRange(newCourses);
@@ -113,7 +124,8 @@ namespace ADYC.Service.Tests
         public void AddRange_CoursesListIsEmptyOrNull_ArgumentNullExceptionWillBeThrown()
         {
             // arrange
-            var courseService = new CourseService(_courseRepository.Object, _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+            courseService.CourseTypeService = _courseTypeService.Object;
 
             // act and assert
             Assert.Throws<ArgumentNullException>(() => courseService.AddRange(null));
@@ -137,7 +149,8 @@ namespace ADYC.Service.Tests
                     };
                 });
 
-            var courseService = new CourseService(_courseRepository.Object, _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+            courseService.CourseTypeService = _courseTypeService.Object;
 
             // act and assert
             Assert.Throws<PreexistingEntityException>(() => courseService.AddRange(newCourses));
@@ -153,11 +166,11 @@ namespace ADYC.Service.Tests
                     return _courses.Where(c => c.CourseTypeId == _internalCT.Id);
                 });
 
-            var courseService = new CourseService(_courseRepository.Object,
-                _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+            courseService.CourseTypeService = _courseTypeService.Object;
 
             // act
-            var resultCourses = courseService.FindByCourseType(_internalCT);
+            var resultCourses = courseService.FindByCourseTypeId(_internalCT.Id);
 
             // assert
             _courseRepository.Verify(cr => cr.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, It.IsAny<string>()));
@@ -175,26 +188,15 @@ namespace ADYC.Service.Tests
                     return new List<Course>();
                 });
 
-            var courseService = new CourseService(_courseRepository.Object,
-                _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+            courseService.CourseTypeService = _courseTypeService.Object;
 
             // act
-            var result = courseService.FindByCourseType(newCourseType);
+            var result = courseService.FindByCourseTypeId(newCourseType.Id);
 
             // assert
             _courseRepository.Verify(cr => cr.Find(It.IsAny<Expression<Func<Course, bool>>>(), null, It.IsAny<string>()));
             Assert.That(result, Is.Empty);
-        }
-
-        [Test]
-        public void FindByCourseType_CourseTypeIsNull_ArgumentNullExceptionWillBeThrown()
-        {
-            // arrange
-            var courseService = new CourseService(_courseRepository.Object,
-                _courseTypeRepository.Object);
-
-            // act and assert
-            Assert.Throws<ArgumentNullException>(() => courseService.FindByCourseType(null));
         }
 
         [Test]
@@ -208,8 +210,8 @@ namespace ADYC.Service.Tests
                     return _courses.Where(c => c.Name.Contains("Bas"));
                 });
 
-            var courseService = new CourseService(_courseRepository.Object,
-                _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+            courseService.CourseTypeService = _courseTypeService.Object;
 
             // act
             var result = courseService.FindByName(courseNameToFind);
@@ -230,7 +232,8 @@ namespace ADYC.Service.Tests
                     return new List<Course>();
                 });
 
-            var courseService = new CourseService(_courseRepository.Object, _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+            courseService.CourseTypeService = _courseTypeService.Object;
 
             // act
             var result = courseService.FindByName(courseName);
@@ -244,7 +247,8 @@ namespace ADYC.Service.Tests
         public void FindByName_CourseNameIsEmpty_ThrowsArgumentNullException()
         {
             // arrange
-            var courseService = new CourseService(_courseRepository.Object, _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+            courseService.CourseTypeService = _courseTypeService.Object;
 
             // act and assert
             Assert.Throws<ArgumentNullException>(() => courseService.FindByName(string.Empty));
@@ -261,8 +265,8 @@ namespace ADYC.Service.Tests
                     return _courses.Where(c => c.IsDeleted == true).OrderBy(c => c.Id);
                 });
 
-            var courseService = new CourseService(_courseRepository.Object,
-                _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+            courseService.CourseTypeService = _courseTypeService.Object;
 
             // act
             var result = courseService.FindTrashedCourses();
@@ -283,8 +287,8 @@ namespace ADYC.Service.Tests
                     return _courses.SingleOrDefault(c => c.Id == id);
                 });
 
-            var courseService = new CourseService(_courseRepository.Object,
-                _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+            courseService.CourseTypeService = _courseTypeService.Object;
 
             // act
             var result = courseService.Get(id);
@@ -303,8 +307,8 @@ namespace ADYC.Service.Tests
                     return _courses;
                 });
 
-            var courseService = new CourseService(_courseRepository.Object,
-                _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+            courseService.CourseTypeService = _courseTypeService.Object;
 
             // act 
             var result = courseService.GetAll();
@@ -325,8 +329,8 @@ namespace ADYC.Service.Tests
                     return _courses.Where(c => c.IsDeleted == false);
                 });
 
-            var courseService = new CourseService(_courseRepository.Object,
-                _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+            courseService.CourseTypeService = _courseTypeService.Object;
 
             // act 
             var result = courseService.FindNotTrashedCourses();
@@ -346,8 +350,8 @@ namespace ADYC.Service.Tests
                 .Callback((Course course) => {
                 });
 
-            var courseService = new CourseService(_courseRepository.Object,
-                _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+            courseService.CourseTypeService = _courseTypeService.Object;
 
             // act 
             courseService.Remove(courseToRemove);
@@ -360,8 +364,8 @@ namespace ADYC.Service.Tests
         public void Remove_CourseIsNull_ArgumentNullExceptionWillBeThrown()
         {
             // arrange
-            var courseService = new CourseService(_courseRepository.Object,
-                _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+            courseService.CourseTypeService = _courseTypeService.Object;
 
             // act and assert
             Assert.Throws<ArgumentNullException>(() => courseService.Remove(null));
@@ -374,8 +378,8 @@ namespace ADYC.Service.Tests
             var courseToRemove = _courses.SingleOrDefault(c => c.Id == 3);
             courseToRemove.Offerings.Add(new Offering());
 
-            var courseService = new CourseService(_courseRepository.Object,
-                _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+            courseService.CourseTypeService = _courseTypeService.Object;
 
             // act and assert
             Assert.Throws<ForeignKeyEntityException>(() => courseService.Remove(courseToRemove));
@@ -394,8 +398,8 @@ namespace ADYC.Service.Tests
                 .Callback((IEnumerable<Course> courses) => {
                 });
 
-            var courseService = new CourseService(_courseRepository.Object,
-                _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+            courseService.CourseTypeService = _courseTypeService.Object;
 
             // act
             courseService.RemoveRange(coursesToRemove);
@@ -410,8 +414,8 @@ namespace ADYC.Service.Tests
             // arrange
             var coursesToRemove = new List<Course>();
 
-            var courseService = new CourseService(_courseRepository.Object,
-                _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+            courseService.CourseTypeService = _courseTypeService.Object;
 
             // act and assert
             Assert.Throws<ArgumentNullException>(() => courseService.RemoveRange(coursesToRemove));
@@ -430,8 +434,8 @@ namespace ADYC.Service.Tests
 
             coursesToRemove[0].Offerings.Add(new Offering());
 
-            var courseService = new CourseService(_courseRepository.Object,
-                _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+                courseService.CourseTypeService = _courseTypeService.Object;
 
             // act and assert
             Assert.Throws<ForeignKeyEntityException>(() => courseService.RemoveRange(coursesToRemove));
@@ -448,8 +452,8 @@ namespace ADYC.Service.Tests
                     course.IsDeleted = true;
                 });
 
-            var courseService = new CourseService(_courseRepository.Object,
-                _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+                courseService.CourseTypeService = _courseTypeService.Object;
 
             // act 
             courseService.Trash(courseToRemove);
@@ -463,8 +467,8 @@ namespace ADYC.Service.Tests
         public void Trash_CourseIsNull_ArgumentNullExceptionWillBeThrown()
         {
             // arrange
-            var courseService = new CourseService(_courseRepository.Object,
-                _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+                courseService.CourseTypeService = _courseTypeService.Object;
 
             // act and assert
             Assert.Throws<ArgumentNullException>(() => courseService.Trash(null));
@@ -483,8 +487,8 @@ namespace ADYC.Service.Tests
                     courseToUpdate.IsDeleted = true;
                 });
 
-            var courseService = new CourseService(_courseRepository.Object,
-                _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+                courseService.CourseTypeService = _courseTypeService.Object;
 
             // act
             courseService.TrashRange(coursesToRemove);
@@ -499,8 +503,8 @@ namespace ADYC.Service.Tests
             // arrange
             var coursesToRemove = new List<Course>();
 
-            var courseService = new CourseService(_courseRepository.Object,
-                _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+                courseService.CourseTypeService = _courseTypeService.Object;
 
             // act and assert
             Assert.Throws<ArgumentNullException>(() => courseService.TrashRange(coursesToRemove));
@@ -524,8 +528,8 @@ namespace ADYC.Service.Tests
                 .Callback((Course course) => {
                 });
 
-            var courseService = new CourseService(_courseRepository.Object,
-                _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+                courseService.CourseTypeService = _courseTypeService.Object;
 
             // act
             courseService.Update(courseToUpdate);
@@ -547,8 +551,8 @@ namespace ADYC.Service.Tests
                     return null;
                 });
 
-            var courseService = new CourseService(_courseRepository.Object,
-                _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+                courseService.CourseTypeService = _courseTypeService.Object;
 
             // act and assert            
             Assert.Throws<NonexistingEntityException>(() => courseService.Update(newCourse));
@@ -564,8 +568,8 @@ namespace ADYC.Service.Tests
                     return null;
                 });
 
-            var courseService = new CourseService(_courseRepository.Object,
-                _courseTypeRepository.Object);
+            var courseService = new CourseService(_courseRepository.Object);
+                courseService.CourseTypeService = _courseTypeService.Object;
 
             // act and assert            
             Assert.Throws<ArgumentNullException>(() => courseService.Update(null));

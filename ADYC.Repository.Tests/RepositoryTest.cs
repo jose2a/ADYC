@@ -236,6 +236,7 @@ namespace ADYC.Repository.Tests
             Assert.IsNull(repo.Get(coursesToRemove[1].Id));
         }
 
+        [Test]
         public void Update_WhenCalled_CourseWillGetNewValues()
         {
             //Arrange
@@ -248,7 +249,7 @@ namespace ADYC.Repository.Tests
                 courseToUpdate.Name = "Soccer I";
             });
 
-            var repo = new Repository<Course>(context.Object);
+            var repo = new CourseRepository(context.Object);
             //var courseToUpdate = repo.Get(idToUpdate);
             //courseToUpdate.Name = "Soccer I";
 

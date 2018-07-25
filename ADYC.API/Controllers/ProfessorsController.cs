@@ -2,7 +2,6 @@
 using ADYC.IService;
 using ADYC.Model;
 using ADYC.Util.Exceptions;
-using ADYC.Util.RestUtils;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,7 @@ using System.Web.Http.Description;
 namespace ADYC.API.Controllers
 {
     [RoutePrefix("api/Professors")]
-    public class ProfessorsController : ApiController
+    public class ProfessorsController : ADYCBasedApiController
     {
         private IProfessorService _professorService;
 
@@ -163,23 +162,23 @@ namespace ADYC.API.Controllers
                 }));
         }
 
-        [Route("GetOfferings/{id:guid}")]
-        [HttpGet]
-        //[ResponseType(typeof(IEnumerable<ProfessorDto>))]
-        public IHttpActionResult GetOfferings(Guid professorId)
-        {
-            var offerings = _professorService.GetProfessorOfferings(professorId);
+        //[Route("GetOfferings/{id:guid}")]
+        //[HttpGet]
+        ////[ResponseType(typeof(IEnumerable<ProfessorDto>))]
+        //public IHttpActionResult GetOfferings(Guid professorId)
+        //{
+        //    var offerings = _professorService.GetProfessorOfferings(professorId);
 
-            return Ok(offerings
-                .Select(o => {
-                    return o;
-                    // Fixing this
-                    //var professorDto = Mapper.Map<Professor, ProfessorDto>(o);
-                    //professorDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Professors") + o.Id;
+        //    return Ok(offerings
+        //        .Select(o => {
+        //            return o;
+        //            // Fixing this
+        //            //var professorDto = Mapper.Map<Professor, ProfessorDto>(o);
+        //            //professorDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Professors") + o.Id;
 
-                    //return professorDto;
-                }));
-        }
+        //            //return professorDto;
+        //        }));
+        //}
 
         [Route("")]
         [HttpPost]
@@ -234,10 +233,6 @@ namespace ADYC.API.Controllers
                     _professorService.Update(professorInDb);
 
                     return Ok();
-                }
-                catch (NonexistingEntityException ne)
-                {
-                    ModelState.AddModelError("", ne.Message);
                 }
                 catch (ArgumentNullException ane)
                 {
@@ -308,14 +303,6 @@ namespace ADYC.API.Controllers
             _professorService.Restore(professorInDb);
 
             return Ok();
-        }
-
-        private ProfessorDto GetProfessorDto(Professor professor)
-        {
-            var professorDto = Mapper.Map<Professor, ProfessorDto>(professor);
-            professorDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Professors") + professor.Id;
-
-            return professorDto;
         }
     }
 }

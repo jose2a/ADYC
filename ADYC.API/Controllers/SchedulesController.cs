@@ -2,7 +2,6 @@
 using ADYC.IService;
 using ADYC.Model;
 using ADYC.Util.Exceptions;
-using ADYC.Util.RestUtils;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,7 @@ using System.Web.Http.Description;
 namespace ADYC.API.Controllers
 {
     [RoutePrefix("api/Offerings")]
-    public class SchedulesController : ApiController
+    public class SchedulesController : ADYCBasedApiController
     {
         private IScheduleService _scheduleService;
         private IOfferingService _offeringService;
@@ -25,57 +24,15 @@ namespace ADYC.API.Controllers
             _offeringService = offeringService;
         }
 
-        // GET api/<controller>/5
-        //[Route("Schedules/{id}")]
-        //[ResponseType(typeof(ScheduleDto))]
-        //public IHttpActionResult Get(int id)
-        //{
-        //    var schedule = _scheduleService.Get(id);
-
-        //    if (schedule != null)
-        //    {
-        //        var scheduleDto = GetScheduleDto(schedule);
-        //        return Ok(scheduleDto);
-        //    }
-
-        //    return NotFound();
-        //}
-
         // GET api/<controller>
         [Route("{offeringId}/Schedules")]
         [ResponseType(typeof(IEnumerable<ScheduleDto>))]
         public IHttpActionResult GetByOfferingId(int offeringId)
         {
-            try
-            {
-                var schedules = _scheduleService.FindByOfferingId(offeringId);
-                var offering = _offeringService.Get(offeringId);
+            var schedules = _scheduleService.FindByOfferingId(offeringId);
+            var offering = _offeringService.Get(offeringId);
 
-                //var scheduleListDto = new ScheduleListDto
-                //{
-                //    Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + offeringId + "/Schedules",
-                //    SchedulesDto = schedules
-                //    .Select(s =>
-                //    {
-                //        var offeringDto = Mapper.Map<Offering, OfferingDto>(s.Offering);
-                //        offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + s.OfferingId;
-
-                //        var scheduleDto = Mapper.Map<Schedule, ScheduleDto>(s);
-                //        scheduleDto.DayName = s.Day.ToString();
-                //        scheduleDto.Offering = offeringDto;
-
-                //        return scheduleDto;
-                //    })
-                //};
-
-                return Ok(GetScheduleListDto(offeringId, offering, schedules));
-            }
-            catch (NonexistingEntityException nee)
-            {
-                ModelState.AddModelError("", nee.Message);
-            }
-
-            return BadRequest(ModelState);
+            return Ok(GetScheduleListDto(offeringId, offering, schedules));
         }
 
         [Route("{offeringId}/Schedules")]
@@ -94,23 +51,6 @@ namespace ADYC.API.Controllers
                     _scheduleService.AddRange(schedules);
 
                     var scheduleListDto = GetScheduleListDto(offeringId, offering, schedules);
-
-                    //var scheduleListDto = new ScheduleListDto
-                    //{
-                    //    Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + offeringId + "/Schedules",
-                    //    SchedulesDto = schedules
-                    //    .Select(s =>
-                    //    {
-                    //        var offeringDto = Mapper.Map<Offering, OfferingDto>(s.Offering);
-                    //        offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + s.OfferingId;
-
-                    //        var scheduleDto = Mapper.Map<Schedule, ScheduleDto>(s);
-                    //        scheduleDto.DayName = s.Day.ToString();
-                    //        scheduleDto.Offering = offeringDto;
-
-                    //        return scheduleDto;
-                    //    })
-                    //};
 
                     return Created(new Uri(scheduleListDto.Url), scheduleListDto);
                 }
@@ -131,13 +71,13 @@ namespace ADYC.API.Controllers
         [HttpPut]
         [ResponseType(typeof(void))]
         // PUT api/<controller>/5
-        public IHttpActionResult PutPeriodDates(int id, [FromBody] ScheduleListDto form)
+        public IHttpActionResult PutPeriodDates(int offeringId, [FromBody] ScheduleListDto form)
         {
             if (ModelState.IsValid)
             {
-                var schedulesInDb = _scheduleService.FindByOfferingId(id);
+                var schedulesInDb = _scheduleService.FindByOfferingId(offeringId);
 
-                if (schedulesInDb == null)
+                if (schedulesInDb == null || schedulesInDb.Count() == 0)
                 {
                     return BadRequest();
                 }
@@ -157,32 +97,6 @@ namespace ADYC.API.Controllers
             }
 
             return BadRequest(ModelState);
-        }
-
-        private ScheduleListDto GetScheduleListDto(int offeringId, Offering offering,
-            IEnumerable<Schedule> schedules)
-        {
-            var scheduleListDto = new ScheduleListDto
-            {
-                Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + offeringId + "/Schedules",
-                SchedulesDto = schedules
-                    .Select(s =>
-                    {
-                        var scheduleDto = Mapper.Map<Schedule, ScheduleDto>(s);
-                        scheduleDto.DayName = s.Day.ToString();
-
-                        return scheduleDto;
-                    })
-            };
-
-            scheduleListDto.Offering = Mapper.Map<Offering, OfferingDto>(offering);
-            scheduleListDto.Offering.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + offeringId;
-            scheduleListDto.Offering.Professor.Url = UrlResoucesUtil.GetBaseUrl(Request, "Professors") + offering.ProfessorId;
-            scheduleListDto.Offering.Course.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + offering.CourseId;
-            scheduleListDto.Offering.Course.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + offering.Course.CourseTypeId;
-            scheduleListDto.Offering.Term.Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + offering.TermId;
-
-            return scheduleListDto;
         }
     }
 }

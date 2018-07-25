@@ -2,7 +2,6 @@
 using ADYC.IService;
 using ADYC.Model;
 using ADYC.Util.Exceptions;
-using ADYC.Util.RestUtils;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,7 @@ using System.Web.Http.Description;
 namespace ADYC.API.Controllers
 {
     [RoutePrefix("api/Groups")]
-    public class GroupsController : ApiController
+    public class GroupsController : ADYCBasedApiController
     {
         private IGroupService _groupService;
 
@@ -161,13 +160,6 @@ namespace ADYC.API.Controllers
             }
 
             return BadRequest(ModelState);
-        }
-
-        private GroupDto GetGroupDto(Group g)
-        {
-            var groupDto = Mapper.Map<Group, GroupDto>(g);
-            groupDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Groups") + g.Id;
-            return groupDto;
         }
     }
 }

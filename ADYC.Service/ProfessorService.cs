@@ -20,6 +20,7 @@ namespace ADYC.Service
         public void Add(Professor professor)
         {
             ValidateProfessor(professor);
+            ValidateDuplicatedProfessor(professor);
 
             professor.CreatedAt = DateTime.Today;
             professor.IsDeleted = false;
@@ -77,7 +78,8 @@ namespace ADYC.Service
                 throw new ArgumentNullException("lastName");
             }
 
-            return _professorRepository.Find(p => p.LastName.Contains(lastName), o => o.OrderBy(c => c.LastName));
+            return _professorRepository
+                .Find(p => p.LastName.Contains(lastName), o => o.OrderBy(c => c.LastName));
         }
 
         public IEnumerable<Professor> FindNotTrashedProfessors()
@@ -100,23 +102,6 @@ namespace ADYC.Service
             return _professorRepository.GetAll(orderBy: o => o.OrderBy(p => p.LastName));
         }
 
-        public IEnumerable<Offering> GetProfessorOfferings(Guid professorId)
-        {
-            if (professorId == null)
-            {
-                throw new ArgumentNullException("professorId");
-            }
-
-            var professor = _professorRepository.Get(professorId);
-
-            if (professor == null)
-            {
-                throw new NonexistingEntityException("A professor with the given id does not exist.");
-            }
-
-            return professor.Offerings;
-        }
-
         public void Remove(Professor professor)
         {
             if (professor == null)
@@ -134,7 +119,7 @@ namespace ADYC.Service
 
         public void RemoveRange(IEnumerable<Professor> professors)
         {
-            if (professors.Count() == 0 || professors == null)
+            if (professors.Count() == 0)
             {
                 throw new ArgumentNullException("professors");
             }
@@ -154,11 +139,6 @@ namespace ADYC.Service
             if (professor == null)
             {
                 throw new ArgumentNullException("professor");
-            }
-
-            if (_professorRepository.Get(professor.Id) == null)
-            {
-                throw new NonexistingEntityException("Professor does not currently exist.");
             }
 
             professor.IsDeleted = false;
@@ -198,7 +178,7 @@ namespace ADYC.Service
 
         public void TrashRange(IEnumerable<Professor> professors)
         {
-            if (professors.Count() == 0 || professors == null)
+            if (professors.Count() == 0)
             {
                 throw new ArgumentNullException("professors");
             }
@@ -214,15 +194,7 @@ namespace ADYC.Service
 
         public void Update(Professor professor)
         {
-            if (professor == null)
-            {
-                throw new ArgumentNullException("professor");
-            }
-
-            if (_professorRepository.Get(professor.Id) == null)
-            {
-                throw new NonexistingEntityException("The professor does not currently exist.");
-            }
+            ValidateProfessor(professor);
 
             professor.UpdatedAt = DateTime.Today;
 
@@ -235,9 +207,12 @@ namespace ADYC.Service
             {
                 throw new ArgumentNullException("professor");
             }
+        }
 
+        private void ValidateDuplicatedProfessor(Professor professor)
+        {
             var professorExist = (_professorRepository.Find(p => p.FirstName.Equals(professor.FirstName)).Count() > 0)
-                && (_professorRepository.Find(p => p.LastName.Equals(professor.LastName)).Count() > 0);
+                            && (_professorRepository.Find(p => p.LastName.Equals(professor.LastName)).Count() > 0);
 
             if (professorExist)
             {
@@ -247,20 +222,10 @@ namespace ADYC.Service
 
         private void ValidateProfessorRange(IEnumerable<Professor> professors)
         {
-            if (professors == null)
+            foreach (var p in professors)
             {
-                throw new ArgumentNullException("professors");
-            }
-
-            var professorFirstNames = professors.Select(p => p.FirstName);
-            var professorLastNames = professors.Select(p => p.LastName);
-
-            var professorExist = (_professorRepository.Find(p => professorFirstNames.Contains(p.FirstName)).Count() > 0)
-                || (_professorRepository.Find(p => professorLastNames.Contains(p.LastName)).Count() > 0);
-
-            if (professorExist)
-            {
-                throw new PreexistingEntityException("A professor with the first name and last name already exists.");
+                ValidateProfessor(p);
+                ValidateDuplicatedProfessor(p);
             }
         }
     }

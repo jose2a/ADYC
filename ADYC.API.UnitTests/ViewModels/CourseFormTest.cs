@@ -10,7 +10,7 @@ namespace ADYC.API.UnitTests.ViewModels
         public void Validate_NameIsNull_ReturnsOneValidationError()
         {
             // Arrange
-            var courseForm = new CourseForm { CourseTypeId = 1 };
+            var courseForm = new CourseDto { CourseTypeId = 1 };
 
             // Act
             var results = TestHelper.Validate(courseForm);
@@ -24,7 +24,7 @@ namespace ADYC.API.UnitTests.ViewModels
         public void Validate_CourseIsValid_ReturnsNoValidationErrors()
         {
             // Arrange
-            var courseForm = new CourseForm { Name = "French Club", CourseTypeId = 1 };
+            var courseForm = new CourseDto { Name = "French Club", CourseTypeId = 1 };
 
             // Act
             var results = TestHelper.Validate(courseForm);

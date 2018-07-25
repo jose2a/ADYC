@@ -2,7 +2,6 @@
 using ADYC.IService;
 using ADYC.Model;
 using ADYC.Util.Exceptions;
-using ADYC.Util.RestUtils;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -13,12 +12,9 @@ using System.Web.Http.Description;
 namespace ADYC.API.Controllers
 {
     [RoutePrefix("api/Offerings")]
-    public class OfferingsController : ApiController
+    public class OfferingsController : ADYCBasedApiController
     {
         private IOfferingService _offeringService;
-        //private ICourseService _courseService;
-        //private IProfessorService _professorService;
-        //private ITermService _termService;
 
         public OfferingsController(IOfferingService offeringService)
         {
@@ -456,37 +452,6 @@ namespace ADYC.API.Controllers
             }
 
             return BadRequest(ModelState);
-        }
-
-        private OfferingDto GetOfferingDto(Offering offering)
-        {
-            var offeringDto = Mapper.Map<Offering, OfferingDto>(offering);
-            offeringDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + offering.Id;
-
-            offeringDto.Professor = Mapper.Map<Professor, ProfessorDto>(offering.Professor);
-            offeringDto.Professor.Url = UrlResoucesUtil.GetBaseUrl(Request, "Professors") + offering.ProfessorId;
-
-            offeringDto.Course = Mapper.Map<Course, CourseDto>(offering.Course);
-            offeringDto.Course.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + offering.CourseId;
-
-            offeringDto.Course.CourseType = Mapper.Map<CourseType, CourseTypeDto>(offering.Course.CourseType);
-            offeringDto.Course.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + offering.Course.CourseTypeId;
-
-            offeringDto.Term = Mapper.Map<Term, TermDto>(offering.Term);
-            offeringDto.Term.Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + offering.TermId;
-            //var professorDto = Mapper.Map<Professor, ProfessorDto>(offering.Professor);
-            //professorDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Professors") + offering.ProfessorId;
-            //offeringDto.Professor = professorDto;
-
-            //var courseDto = Mapper.Map<Course, CourseDto>(offering.Course);
-            //courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + offering.CourseId;
-            //offeringDto.Course = courseDto;
-
-            //var termDto = Mapper.Map<Term, TermDto>(offering.Term);
-            //termDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + offering.TermId;
-            //offeringDto.Term = termDto;
-
-            return offeringDto;
         }
     }
 }

@@ -40,17 +40,22 @@ namespace ADYC.API.App_Start
             // Services
             builder.RegisterType<CourseService>().As<ICourseService>().InstancePerRequest();
             builder.RegisterType<CourseTypeService>().As<ICourseTypeService>().InstancePerRequest();
-            builder.RegisterType<EnrollmentService>().As<IEnrollmentService>().InstancePerRequest();
+            builder.RegisterType<EnrollmentService>().As<IEnrollmentService>().InstancePerLifetimeScope()
+                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
             builder.RegisterType<GradeService>().As<IGradeService>().InstancePerRequest();
             builder.RegisterType<GroupService>().As<IGroupService>().InstancePerRequest();
             builder.RegisterType<MajorService>().As<IMajorService>().InstancePerRequest();
-            builder.RegisterType<OfferingService>().As<IOfferingService>().InstancePerRequest();
-            builder.RegisterType<PeriodDateService>().As<IPeriodDateService>().InstancePerRequest();
+            builder.RegisterType<OfferingService>().As<IOfferingService>().InstancePerLifetimeScope()
+                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
+            builder.RegisterType<PeriodDateService>().As<IPeriodDateService>().InstancePerLifetimeScope()
+                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
             builder.RegisterType<PeriodService>().As<IPeriodService>().InstancePerRequest();
             builder.RegisterType<ProfessorService>().As<IProfessorService>().InstancePerRequest();
-            builder.RegisterType<ScheduleService>().As<IScheduleService>().InstancePerRequest();
+            builder.RegisterType<ScheduleService>().As<IScheduleService>().InstancePerLifetimeScope()
+                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
             builder.RegisterType<StudentService>().As<IStudentService>().InstancePerRequest();
-            builder.RegisterType<TermService>().As<ITermService>().InstancePerRequest();
+            builder.RegisterType<TermService>().As<ITermService>().InstancePerRequest()
+                .InstancePerLifetimeScope().PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
 
             var container = builder.Build();
             var resolver = new AutofacWebApiDependencyResolver(container);

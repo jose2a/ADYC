@@ -17,14 +17,12 @@ namespace ADYC.Service
             _gradeRepository = gradeRepository;
         }
 
-        public Grade Get(int id)
+        public void Add(Grade grade)
         {
-            return _gradeRepository.Get(id);
-        }
+            ValidateGrade(grade);
+            ValidateDuplicatedGrade(grade);
 
-        public IEnumerable<Grade> GetAll()
-        {
-            return _gradeRepository.GetAll();
+            _gradeRepository.Add(grade);
         }
 
         public IEnumerable<Grade> FindByName(string name)
@@ -37,19 +35,14 @@ namespace ADYC.Service
             return _gradeRepository.Find(c => c.Name.Contains(name));
         }
 
-        public void Add(Grade grade)
+        public Grade Get(int id)
         {
-            if (grade == null)
-            {
-                throw new ArgumentNullException("grade");
-            }
+            return _gradeRepository.Get(id);
+        }
 
-            if (_gradeRepository.Find(c => c.Name.Equals(grade.Name)).Count() > 0)
-            {
-                throw new PreexistingEntityException("A grade with the same name already exists.", null);
-            }
-
-            _gradeRepository.Add(grade);
+        public IEnumerable<Grade> GetAll()
+        {
+            return _gradeRepository.GetAll();
         }        
 
         public void Remove(Grade grade)
@@ -69,7 +62,7 @@ namespace ADYC.Service
 
         public void RemoveRange(IEnumerable<Grade> grades)
         {
-            if (grades.Count() == 0 || grades == null)
+            if (grades.Count() == 0)
             {
                 throw new ArgumentNullException("grades");
             }
@@ -86,17 +79,25 @@ namespace ADYC.Service
 
         public void Update(Grade grade)
         {
+            ValidateDuplicatedGrade(grade);
+
+            _gradeRepository.Update(grade);
+        }
+
+        private void ValidateDuplicatedGrade(Grade grade)
+        {
+            if (_gradeRepository.Find(c => c.Name.Equals(grade.Name)).Count() > 0)
+            {
+                throw new PreexistingEntityException("A grade with the same name already exists.", null);
+            }
+        }
+
+        private void ValidateGrade(Grade grade)
+        {
             if (grade == null)
             {
                 throw new ArgumentNullException("grade");
             }
-
-            if (_gradeRepository.Get(grade.Id) == null)
-            {
-                throw new NonexistingEntityException("Grade does not currently exist.");
-            }
-
-            _gradeRepository.Update(grade);
         }
     }
 }

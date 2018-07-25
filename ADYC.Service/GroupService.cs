@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ADYC.Model;
 using ADYC.IRepository;
 using ADYC.Util.Exceptions;
@@ -21,15 +19,8 @@ namespace ADYC.Service
 
         public void Add(Group group)
         {
-            if (group == null)
-            {
-                throw new ArgumentNullException("group");
-            }
-
-            if (_groupRepository.Find(c => c.Name.Equals(group.Name)).Count() > 0)
-            {
-                throw new PreexistingEntityException("A group with the same name already exists.", null);
-            }
+            ValidateGroup(group);
+            ValidateDuplicatedGroup(group);
 
             _groupRepository.Add(group);
         }
@@ -71,7 +62,7 @@ namespace ADYC.Service
 
         public void RemoveRange(IEnumerable<Group> groups)
         {
-            if (groups.Count() == 0 || groups == null)
+            if (groups.Count() == 0)
             {
                 throw new ArgumentNullException("groups");
             }
@@ -88,17 +79,25 @@ namespace ADYC.Service
 
         public void Update(Group group)
         {
+            ValidateGroup(group);
+
+            _groupRepository.Update(group);
+        }
+
+        private void ValidateDuplicatedGroup(Group group)
+        {
+            if (_groupRepository.Find(c => c.Name.Equals(group.Name)).Count() > 0)
+            {
+                throw new PreexistingEntityException("A group with the same name already exists.", null);
+            }
+        }
+
+        private void ValidateGroup(Group group)
+        {
             if (group == null)
             {
                 throw new ArgumentNullException("group");
             }
-
-            if (_groupRepository.Get(group.Id) == null)
-            {
-                throw new NonexistingEntityException("Group does not currently exist.");
-            }
-
-            _groupRepository.Update(group);
         }
     }
 }

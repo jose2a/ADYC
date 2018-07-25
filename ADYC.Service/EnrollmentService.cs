@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ADYC.Model;
 using ADYC.IRepository;
 using ADYC.Util.Exceptions;
@@ -14,23 +12,24 @@ namespace ADYC.Service
     {
         private IEnrollmentRepository _enrollmentRepository;
         private IEvaluationRepository _evaluationRepository;
-        private IPeriodRepository _periodRepository;
-        private ITermRepository _termRepository;
+
+        public IPeriodService PeriodService { get; set; }
+        public ITermService TermService { get; set; }
+        public IOfferingService OfferingService { get; set; }
+        public IStudentService StudentService { get; set; }
 
         public EnrollmentService(
             IEnrollmentRepository enrollmentRepository,
-            IEvaluationRepository evaluationRepository,
-            IPeriodRepository periodRepository,
-            ITermRepository termRepository)
+            IEvaluationRepository evaluationRepository)
         {
             _enrollmentRepository = enrollmentRepository;
             _evaluationRepository = evaluationRepository;
-            _periodRepository = periodRepository;
-            _termRepository = termRepository;
         }
 
         public void Add(Enrollment enrollment)
         {
+            SetEnrollmentProperties(enrollment);
+
             ValidateEnrollment(enrollment);
 
             SetCurrentEnrollment(enrollment);
@@ -40,21 +39,15 @@ namespace ADYC.Service
             _enrollmentRepository.Add(enrollment);
 
             AddEvaluationsToEnrollment(enrollment);
-        }        
+
+            _evaluationRepository.AddRange(enrollment.Evaluations);
+        }
 
         public Enrollment Get(int id)
         {
             return _enrollmentRepository
                 .Find(e => e.Id == id,
                       includeProperties: "Student,Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Term")
-                .SingleOrDefault();
-        }
-
-        public Enrollment GetWithEvaluations(int id)
-        {
-            return _enrollmentRepository
-                .Find(e => e.Id == id,
-                      includeProperties: "Evaluations,Student,Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Term")
                 .SingleOrDefault();
         }
 
@@ -86,31 +79,19 @@ namespace ADYC.Service
                 includeProperties: "Student,Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Term");
         }
 
-        public IEnumerable<Enrollment> GetOfferingEnrollments(Offering offering)
-        {
-            return _enrollmentRepository.Find(e => e.OfferingId == offering.Id,
-                includeProperties: "Student,Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Term");
-        }
-
-        public Enrollment GetStudentCurrentTermEnrollment(Student student)
-        {
-            return _enrollmentRepository.Find(e => e.StudentId == student.Id && e.Offering.Term.IsCurrentTerm,
-                includeProperties: "Student,Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Term").
-                SingleOrDefault();
-            //return student.Enrollments.SingleOrDefault(e => e.Offering.Term.IsCurrentTerm);
-        }
-
         public Enrollment GetStudentCurrentTermEnrollmentByStudentId(Guid studentId)
         {
-            return _enrollmentRepository.Find(e => e.StudentId == studentId && e.Offering.Term.IsCurrentTerm,
-                includeProperties: "Student,Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Term").
+            return _enrollmentRepository.Find(e => e.StudentId == studentId && e.Offering.Term.IsCurrentTerm && e.IsCurrentEnrollment,
+                includeProperties: "Evaluations,Evaluations.Period,Student,Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Term").
                 SingleOrDefault();
         }
 
-        public IEnumerable<Enrollment> GetStudentEnrollments(Student student)
+        public Enrollment GetWithEvaluations(int id)
         {
-            return _enrollmentRepository.Find(e => e.StudentId == student.Id,
-                includeProperties: "Student,Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Term");
+            return _enrollmentRepository
+                .Find(e => e.Id == id,
+                      includeProperties: "Evaluations,Evaluations.Period,Student,Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Term")
+                .SingleOrDefault();
         }
 
         public void Remove(Enrollment enrollment)
@@ -123,6 +104,21 @@ namespace ADYC.Service
             _evaluationRepository.RemoveRange(enrollment.Evaluations);
 
             _enrollmentRepository.Remove(enrollment);
+        }
+
+        public void RemoveRange(IEnumerable<Enrollment> enrollments)
+        {
+            if (enrollments.Count() == 0)
+            {
+                throw new ArgumentNullException("enrollments");
+            }
+
+            foreach (var enrollment in enrollments)
+            {
+                _evaluationRepository.RemoveRange(enrollment.Evaluations);
+
+                _enrollmentRepository.Remove(enrollment);
+            }
         }
 
         public void Update(Enrollment enrollment)
@@ -172,20 +168,20 @@ namespace ADYC.Service
 
             var termStartDate = enrollment.Offering.Term.StartDate;
 
-            if (termStartDate.AddDays(1) <= DateTime.Today)
+            if (termStartDate > DateTime.Today)
             {
                 throw new ArgumentException("You are not allowed to enroll at this moment. The term start date is: " + termStartDate);
             }
 
             var termDeadLineDate = enrollment.Offering.Term.EnrollmentDeadLine;
 
-            if (termDeadLineDate.AddDays(1) <= DateTime.Today)
+            if (termDeadLineDate.AddDays(1) < DateTime.Today)
             {
                 throw new ArgumentException("You are not allowed to enroll at this moment. The dead line was: " + termDeadLineDate);
             }
 
             var isStudentCurrentlyEnrolled = _enrollmentRepository
-                .Find(e => e.StudentId == enrollment.StudentId && e.Offering.Term.IsCurrentTerm);
+                .Find(e => e.StudentId == enrollment.StudentId && e.Offering.Term.IsCurrentTerm && e.WithdropDate == null);
 
             if (isStudentCurrentlyEnrolled.Count() > 0)
             {
@@ -197,8 +193,6 @@ namespace ADYC.Service
         {
             if (enrollment.Offering.Term.IsCurrentTerm)
             {
-                enrollment.IsCurrentEnrollment = true;
-
                 var studentEnrollments = _enrollmentRepository.Find(e => e.StudentId == enrollment.StudentId);
 
                 foreach (var prevEnrollment in studentEnrollments)
@@ -206,15 +200,16 @@ namespace ADYC.Service
                     prevEnrollment.IsCurrentEnrollment = false;
                     _enrollmentRepository.Update(prevEnrollment);
                 }
+
+                enrollment.IsCurrentEnrollment = true;
             }
         }
 
         private void AddEvaluationsToEnrollment(Enrollment enrollment)
         {
-            foreach (var period in _periodRepository.GetAll())
+            foreach (var period in PeriodService.GetAll())
             {
                 var evaluation = new Evaluation { EnrollmentId = enrollment.Id, PeriodId = period.Id };
-                _evaluationRepository.Add(evaluation);
             }
         }
 
@@ -256,7 +251,13 @@ namespace ADYC.Service
             return GradeLetter.F;
         }
 
-        private static void ValidateEnrollmentWithdrop(Enrollment enrollment)
+        private void SetEnrollmentProperties(Enrollment enrollment)
+        {
+            enrollment.Offering = OfferingService.Get(enrollment.OfferingId);
+            enrollment.Student = StudentService.Get(enrollment.StudentId);
+        }
+
+        private void ValidateEnrollmentWithdrop(Enrollment enrollment)
         {
             if (enrollment == null)
             {
@@ -274,7 +275,7 @@ namespace ADYC.Service
             }
         }
 
-        private static void SetEnrollmentToWithdrop(Enrollment enrollment)
+        private void SetEnrollmentToWithdrop(Enrollment enrollment)
         {
             enrollment.WithdropDate = DateTime.Today;
             enrollment.FinalGrade = null;

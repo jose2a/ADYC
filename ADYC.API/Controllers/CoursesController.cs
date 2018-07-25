@@ -2,7 +2,6 @@
 using ADYC.IService;
 using ADYC.Model;
 using ADYC.Util.Exceptions;
-using ADYC.Util.RestUtils;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -13,12 +12,13 @@ using System.Web.Http.Description;
 namespace ADYC.API.Controllers
 {
     [RoutePrefix("api/Courses")]
-    public class CoursesController : ApiController
+    public class CoursesController : ADYCBasedApiController
     {
         private ICourseService _courseService;
         private ICourseTypeService _courseTypeService;
 
-        public CoursesController(ICourseService courseService, ICourseTypeService courseTypeService)
+        public CoursesController(ICourseService courseService,
+            ICourseTypeService courseTypeService)
         {
             _courseService = courseService;
             _courseTypeService = courseTypeService;
@@ -87,7 +87,7 @@ namespace ADYC.API.Controllers
 
                 foreach (var ct in courseTypes)
                 {
-                    courses.AddRange(_courseService.FindByCourseType(ct));
+                    courses.AddRange(_courseService.FindByCourseTypeId(ct.Id));
                 }
 
                 return Ok(courses
@@ -270,22 +270,8 @@ namespace ADYC.API.Controllers
             {
                 ModelState.AddModelError("", ane.Message);
             }
-            catch (NonexistingEntityException)
-            {
-                return NotFound();
-            }
 
             return BadRequest(ModelState);
-        }
-
-        private CourseDto GetCourseDto(Course c)
-        {
-            var courseDto = Mapper.Map<Course, CourseDto>(c);
-
-            courseDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Courses") + c.Id;
-            courseDto.CourseType = Mapper.Map<CourseType, CourseTypeDto>(c.CourseType);
-            courseDto.CourseType.Url = UrlResoucesUtil.GetBaseUrl(Request, "CourseTypes") + c.CourseTypeId;
-            return courseDto;
         }
     }
 }

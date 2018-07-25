@@ -15,7 +15,8 @@ namespace ADYC.Service.Tests
         [SetUp]
         public void SetUp()
         {
-            _termService = new TermService(new FakeTermRepository(), new FakePeriodDateRepository());
+            _termService = new TermService(new FakeTermRepository());
+            //, new FakePeriodDateRepository());
         }
 
         [TearDown]
@@ -340,52 +341,6 @@ namespace ADYC.Service.Tests
             // assert
             Assert.AreEqual(expected, currentTerm);
             Assert.AreEqual(expected.Name, currentTerm.Name);
-        }
-
-        [Test]
-        public void GetCurrentTermPeriodDates_CurrentTermDoesNotExist_ThrowsNonexistingEntityException()
-        {
-            // arrange
-            // act and assert
-            var ex = Assert.Throws<NonexistingEntityException>(() => _termService.GetCurrentTermPeriodDates());
-        }
-
-        [Test]
-        public void GetCurrentTermPeriodDates_CurrentTermExist_GetCurrentTermPeriodDates()
-        {
-            // arrange
-            FakeTermRepository.terms.Add(FakeTermRepository.spring2018);
-            var expected = FakeTermRepository.spring2018.PeriodDates;
-
-            // act
-            var result = _termService.GetCurrentTermPeriodDates();
-
-            // assert
-            Assert.AreEqual(expected, result);
-        }
-
-        [Test]
-        public void GetTermPeriodDates_TermIdEqualsTwo_ReturnFall2017PeriodDates()
-        {
-            // arrange
-            var expected = FakeTermRepository.fall2016.PeriodDates;
-            var termId = 2;
-
-            // act
-            var result = _termService.GetTermPeriodDates(termId);
-
-            // assert
-            Assert.AreEqual(expected, result);
-        }
-
-        [Test]
-        public void GetTermPeriodDates_TermDoesNotExist_ThrowsNonexistingEntityException()
-        {
-            // arrange
-            var termId = 12;
-
-            // act and assert
-            var ex = Assert.Throws<NonexistingEntityException>(() => _termService.GetTermPeriodDates(termId));
         }
 
         [Test]

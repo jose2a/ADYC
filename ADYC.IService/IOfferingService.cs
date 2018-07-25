@@ -25,6 +25,7 @@ namespace ADYC.IService
 
         IEnumerable<Offering> FindByTitle(string title);
         IEnumerable<Offering> FindByLocation(string location);
+
         IEnumerable<Offering> GetAll();
 
         IEnumerable<Enrollment> FindEnrollmentsByOfferingId(int offeringId);

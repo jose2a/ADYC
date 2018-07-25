@@ -1,8 +1,5 @@
 ﻿using ADYC.API.ViewModels;
 using ADYC.IService;
-using ADYC.Model;
-using ADYC.Util.RestUtils;
-using AutoMapper;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
@@ -11,7 +8,7 @@ using System.Web.Http.Description;
 namespace ADYC.API.Controllers
 {
     [RoutePrefix("api/Periods")]
-    public class PeriodsController : ApiController
+    public class PeriodsController : ADYCBasedApiController
     {
         private IPeriodService _periodService;
 
@@ -59,14 +56,6 @@ namespace ADYC.API.Controllers
                 .Select(p => {
                     return GetPeriodDto(p);
                 }));
-        }
-
-        private PeriodDto GetPeriodDto(Period p)
-        {
-            var periodDto = Mapper.Map<Period, PeriodDto>(p);
-            periodDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Periods") + p.Id;
-
-            return periodDto;
         }
     }
 }

@@ -1,15 +1,12 @@
 ﻿using ADYC.Model;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ADYC.IService
 {
     public interface IGroupService
     {
         Group Get(int id);
+
         IEnumerable<Group> GetAll();
         IEnumerable<Group> FindByName(string name);
 
