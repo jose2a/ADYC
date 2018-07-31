@@ -38,8 +38,9 @@ namespace ADYC.API.App_Start
             builder.RegisterType<TermRepository>().As<ITermRepository>().InstancePerRequest();
 
             // Services
-            builder.RegisterType<CourseService>().As<ICourseService>().InstancePerRequest();
-            builder.RegisterType<CourseTypeService>().As<ICourseTypeService>().InstancePerRequest();
+            builder.RegisterType<CourseService>().As<ICourseService>().InstancePerRequest().PropertiesAutowired();
+            builder.RegisterType<CourseTypeService>().As<ICourseTypeService>().InstancePerLifetimeScope()
+                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
             builder.RegisterType<EnrollmentService>().As<IEnrollmentService>().InstancePerLifetimeScope()
                 .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
             builder.RegisterType<GradeService>().As<IGradeService>().InstancePerRequest();
@@ -54,8 +55,8 @@ namespace ADYC.API.App_Start
             builder.RegisterType<ScheduleService>().As<IScheduleService>().InstancePerLifetimeScope()
                 .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
             builder.RegisterType<StudentService>().As<IStudentService>().InstancePerRequest();
-            builder.RegisterType<TermService>().As<ITermService>().InstancePerRequest()
-                .InstancePerLifetimeScope().PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
+            builder.RegisterType<TermService>().As<ITermService>().InstancePerRequest().InstancePerLifetimeScope()
+                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
 
             var container = builder.Build();
             var resolver = new AutofacWebApiDependencyResolver(container);

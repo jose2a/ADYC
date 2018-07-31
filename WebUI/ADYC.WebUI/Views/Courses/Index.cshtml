@@ -1,0 +1,79 @@
+﻿@model IEnumerable<ADYC.WebUI.Models.Course>
+
+@{
+    ViewBag.Title = "Courses";
+}
+
+<h2>Courses</h2>
+
+<p>
+    @if (TempData["Msg"] != null)
+    {
+        @TempData["Msg"]
+    }
+</p>
+
+<div class="btn-toolbar">
+    <div class="btn-group">
+        <a href="@Url.Action("new")" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-plus"></i> Create Course</a>
+    </div>
+</div>
+
+<table class="table table-bordered table-striped">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(m => m.Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(m => m.Name)
+        </th>
+        <th>
+            Type
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var course in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(m => course.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(m => course.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(m => course.CourseType.Name)
+            </td>
+            <td>
+                <a href="@Url.Action("edit", new {course.Id})" class="btn btn-xs btn-primary">
+                    <i class="glyphicon glyphicon-edit"></i> Edit
+                </a>
+
+                @if (!course.IsDeleted)
+                {
+                    <div class="btn-group btn-group-xs">
+                        <a href="@Url.Action("trash", new { course.Id })" class="btn btn-danger" data-post="Are you sure you want to trash this course?">
+                            <i class="glyphicon glyphicon-remove"></i> Trash
+                        </a>
+                        <a href="#" class="btn btn-danger dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="@Url.Action("delete", new { course.Id })" data-post="Are you sure you want to delete this course FOREVER?">
+                                    <i class="glyphicon glyphicon-remove"></i> Delete
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <a href="@Url.Action("restore", new { course.Id })" class="btn btn-xs btn-success" data-post="">
+                        <i class="glyphicon glyphicon-plus-sign"></i> Restore
+                    </a>
+                }
+            </td>
+        </tr>
+    }
+
+</table>
