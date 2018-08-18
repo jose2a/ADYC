@@ -1,7 +1,8 @@
-﻿using ADYC.WebUI.Models;
+﻿using ADYC.Model;
+using ADYC.WebUI.Infrastructure;
 using ADYC.WebUI.Repositories;
 using ADYC.WebUI.ViewModels;
-using System.Net.Http;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -30,6 +31,7 @@ namespace ADYC.WebUI.Controllers
         {
             var viewModel = new CourseFormViewModel
             {
+                IsNew = true,
                 CourseTypes = await _courseTypeRepository.GetCourseTypesAsync()
             };
 
@@ -51,47 +53,155 @@ namespace ADYC.WebUI.Controllers
 
                 viewModel = new CourseFormViewModel(course)
                 {
+                    IsNew = false,
                     CourseTypes = await _courseTypeRepository.GetCourseTypesAsync()
                 };
             }
-            catch (HttpRequestException hre)
+            catch (AdycHttpRequestException ahre)
             {
-                ModelState.AddModelError("", hre.Message);
+                if (ahre.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return HttpNotFound();
+                }
+
+                foreach (var error in ahre.Errors)
+                {
+                    ModelState.AddModelError("", ahre.Message); 
+                }
             }
 
             return View("CourseForm", viewModel);
         }
 
         [HttpPost]
-        public async Task<ActionResult> Save(Course course)
+        public async Task<ActionResult> Save(CourseFormViewModel form)
         {
+            form.IsNew = form.Id == null;
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    if (course.Id.Value == 0)
+                    Course course;
+
+                    if (form.IsNew)
+                    {
+                        course = new Course();
+                        course.Name = form.Name;
+                    }
+                    else
+                    {
+                        course = await _courseRepository.GetCourseAsync(form.Id.Value);
+                    }
+                    
+                    course.CourseTypeId = form.CourseTypeId;
+
+                    if (form.IsNew)
                     {
                         await _courseRepository.PostCourseAsync(course);
                     }
                     else
                     {
-                        await _courseRepository.PutCourseAsync(course.Id.Value, course);
+                        await _courseRepository.PutCourseAsync(course.Id, course);
                     }
 
                     return RedirectToAction("Index");
                 }
-                catch (HttpRequestException hre)
+                catch (AdycHttpRequestException ahre)
                 {
-                    ModelState.AddModelError("", hre.Message);
+                    foreach (var error in ahre.Errors)
+                    {
+                        ModelState.AddModelError("", error);
+                    }
                 }
             }
 
-            var viewModel = new CourseFormViewModel(course)
-            {
-                CourseTypes = await _courseTypeRepository.GetCourseTypesAsync()
-            };
+            form.CourseTypes = await _courseTypeRepository.GetCourseTypesAsync();
 
-            return View("CourseForm", viewModel);
+            return View("CourseForm", form);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Delete(int id)
+        {
+            try
+            {
+                var statusCode = await _courseRepository.DeleteCourseAsync(id);
+
+                if (statusCode == HttpStatusCode.NotFound)
+                {
+                    return HttpNotFound();
+                }
+
+                return new HttpStatusCodeResult(HttpStatusCode.OK);
+            }
+            catch (AdycHttpRequestException ahre)
+            {
+                var errorString = "";
+
+                foreach (var error in ahre.Errors)
+                {
+                    errorString += error;
+                }
+
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
+            }
+            
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Trash(int id)
+        {
+            try
+            {
+                var statusCode = await _courseRepository.TrashCourseAsync(id);
+
+                if (statusCode == HttpStatusCode.NotFound)
+                {
+                    return HttpNotFound();
+                }
+            }
+            catch (AdycHttpRequestException ahre)
+            {
+                var errorString = "";
+
+                foreach (var error in ahre.Errors)
+                {
+                    errorString += error;
+                }
+
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
+            }
+
+            return PartialView("pv_CourseRow", await _courseRepository.GetCourseAsync(id));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Restore(int id)
+        {
+            try
+            {
+                var statusCode = await _courseRepository.RestoreCourseAsync(id);
+
+                if (statusCode == HttpStatusCode.NotFound)
+                {
+                    return HttpNotFound();
+                }
+
+            }
+            catch (AdycHttpRequestException ahre)
+            {
+                var errorString = "";
+
+                foreach (var error in ahre.Errors)
+                {
+                    errorString += error;
+                }
+
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
+            }
+
+            return PartialView("pv_CourseRow", await _courseRepository.GetCourseAsync(id));
         }
     }
 }

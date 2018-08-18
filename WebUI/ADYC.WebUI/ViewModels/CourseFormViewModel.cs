@@ -1,4 +1,5 @@
-﻿using ADYC.WebUI.Models;
+﻿//using ADYC.WebUI.Models;
+using ADYC.Model;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -6,10 +7,11 @@ namespace ADYC.WebUI.ViewModels
 {
     public class CourseFormViewModel
     {
+        public bool IsNew { get; set; }
+
         public int? Id { get; set; }
-       // [Required]
+        [Required]
         public string Name { get; set; }
-        public bool IsDeleted { get; set; }
 
         [Display(Name = "Course Type")]
         [Required]
@@ -19,20 +21,19 @@ namespace ADYC.WebUI.ViewModels
         {
             get
             {
-                return (Id != 0) ? "Edit Course" : "New Course";
+                return IsNew ? "New Course" : "Edit Course";
             }
         }
 
         public CourseFormViewModel()
         {
-            Id = 0;
+
         }
 
         public CourseFormViewModel(Course course)
         {
             Id = course.Id;
             Name = course.Name;
-            IsDeleted = course.IsDeleted;
             CourseTypeId = course.CourseTypeId;
         }
         

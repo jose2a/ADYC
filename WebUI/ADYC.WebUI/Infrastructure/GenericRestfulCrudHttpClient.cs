@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -41,21 +42,24 @@ namespace ADYC.WebUI.Infrastructure
 
         public async Task<T> GetAsync(string addressSuffix)
         {
-            var responseMessage = await httpClient.GetAsync(addressSuffix);            
-            responseMessage.EnsureSuccessStatusCode();
+            var responseMessage = await httpClient.GetAsync(addressSuffix);
+            await VerifyResponseStatus(responseMessage);
+
             return await responseMessage.Content.ReadAsAsync<T>();
+        }
+
+        public async Task<HttpStatusCode> GetAsyncWithStatusCode(string addressSuffix)
+        {
+            var responseMessage = await httpClient.GetAsync(addressSuffix);
+            await VerifyResponseStatus(responseMessage);
+
+            return responseMessage.StatusCode;
         }
 
         public async Task<T> PostAsync(string addressSuffix, T model)
         {
-
             var responseMessage = await httpClient.PostAsJsonAsync(addressSuffix, model);
-
-            if (!responseMessage.IsSuccessStatusCode)
-            {
-                var message = await responseMessage.Content.ReadAsStringAsync();
-                throw new HttpRequestException(message);
-            }
+            await VerifyResponseStatus(responseMessage);
 
             return await responseMessage.Content.ReadAsAsync<T>();
         }
@@ -63,12 +67,7 @@ namespace ADYC.WebUI.Infrastructure
         public async Task<HttpStatusCode> PutAsync(string addressSuffix, T model)
         {
             var responseMessage = await httpClient.PutAsJsonAsync(addressSuffix, model);
-
-            if (!responseMessage.IsSuccessStatusCode)
-            {
-                var message = await responseMessage.Content.ReadAsStringAsync();
-                throw new HttpRequestException(message);
-            }
+            await VerifyResponseStatus(responseMessage);
 
             return responseMessage.StatusCode;
         }
@@ -76,14 +75,46 @@ namespace ADYC.WebUI.Infrastructure
         public async Task<HttpStatusCode> DeleteAsync(string addressSuffix)
         {
             var responseMessage = await httpClient.DeleteAsync(addressSuffix);
-
-            if (!responseMessage.IsSuccessStatusCode)
-            {
-                var message = await responseMessage.Content.ReadAsStringAsync();
-                throw new HttpRequestException(message);
-            }
+            await VerifyResponseStatus(responseMessage);
 
             return responseMessage.StatusCode;
+        }
+
+        private List<string> GetModelStateErrors(string content)
+        {
+            List<string> errors = new List<string>();
+
+            var contentObject = JObject.Parse(content);
+            var modelState = contentObject.GetValue("ModelState").ToObject<JObject>();
+
+            foreach (var property in modelState)
+            {
+                var arr = JArray.Parse(property.Value.ToString());
+
+                foreach (var item in arr)
+                {
+                    errors.Add(item.Value<string>());
+                }
+            }
+
+            return errors;
+        }
+
+        private async Task VerifyResponseStatus(HttpResponseMessage responseMessage)
+        {
+            if (!responseMessage.IsSuccessStatusCode)
+            {
+                var content = await responseMessage.Content.ReadAsStringAsync();
+
+                if (!string.IsNullOrEmpty(content))
+                {
+                    var errors = GetModelStateErrors(content);
+
+                    throw new AdycHttpRequestException(responseMessage.StatusCode,
+                        responseMessage.ReasonPhrase,
+                        errors);
+                }                
+            }
         }
 
         #region IDisposable Members

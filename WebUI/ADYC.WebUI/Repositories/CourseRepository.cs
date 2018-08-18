@@ -1,5 +1,5 @@
-﻿using ADYC.WebUI.Infrastructure;
-using ADYC.WebUI.Models;
+﻿using ADYC.Model;
+using ADYC.WebUI.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -38,6 +38,16 @@ namespace ADYC.WebUI.Repositories
         public async Task<HttpStatusCode> DeleteCourseAsync(int id)
         {
             return await courseClient.DeleteAsync(addressPreffix + id);
+        }
+
+        public async Task<HttpStatusCode> TrashCourseAsync(int id)
+        {
+            return await courseClient.GetAsyncWithStatusCode(addressPreffix + "Trash/" + id);
+        }
+
+        public async Task<HttpStatusCode> RestoreCourseAsync(int id)
+        {
+            return await courseClient.GetAsyncWithStatusCode(addressPreffix + "Restore/" + id);
         }
 
         public void Dispose()

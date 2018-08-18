@@ -127,6 +127,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\AdycHttpRequestException.cs" />
     <Compile Include="Infrastructure\GenericRestfulCrudHttpClient.cs" />
     <Compile Include="Models\Course.cs" />
     <Compile Include="Models\CourseType.cs" />
@@ -156,6 +157,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\adyc.table.utils.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -173,6 +175,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Courses\Index.cshtml" />
     <Content Include="Views\Courses\CourseForm.cshtml" />
+    <Content Include="Views\Courses\pv_CourseRow.cshtml" />
+    <Content Include="Scripts\table.utils.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -184,6 +188,12 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ADYC.Model\ADYC.Model.csproj">
+      <Project>{E6BCE3C0-8408-4206-BFA6-9C225B536FB7}</Project>
+      <Name>ADYC.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

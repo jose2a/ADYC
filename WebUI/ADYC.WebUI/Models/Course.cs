@@ -8,7 +8,7 @@ namespace ADYC.WebUI.Models
     public class Course
     {
         public string Url { get; set; }
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public bool IsDeleted { get; set; }
 
