@@ -61,6 +61,8 @@
     <Content Include="coffee-script.js" />
     <Content Include="config.js" />
     <Content Include="cs.js" />
+    <Content Include="dependencies\bootbox.js" />
+    <Content Include="dependencies\bootstrap.js" />
     <Content Include="dependencies\chai.js" />
     <Content Include="dependencies\mocha.css" />
     <Content Include="dependencies\mocha.js" />
