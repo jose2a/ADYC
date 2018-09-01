@@ -18,26 +18,29 @@
     </div>
 </div>
 
-<table id="courses" class="table table-bordered table-striped">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(m => m.Id)
-        </th>
-        <th>
-            @Html.DisplayNameFor(m => m.Name)
-        </th>
-        <th>
-            Type
-        </th>
-        <th></th>
-    </tr>
+<table id="courses" class="table table-bordered table-striped display">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(m => m.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Name)
+            </th>
+            <th>
+                Type
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
 
-    @foreach (var course in Model)
-    {
-        @Html.Partial("pv_CourseRow", course)
-        
-    }
+        @foreach (var course in Model)
+        {
+            @Html.Partial("pv_CourseRow", course)
 
+        }
+    </tbody>
 </table>
 
 @section scripts
@@ -52,7 +55,11 @@
                 addRestoreEvent: true,
                 addDeleteEvent: true
             });
+
+            $('#courses').DataTable();
         });
     </script>
-<script type="text/javascript" src="~/Scripts/adyc.table.utils.js"></script>
+    <script type="text/javascript" src="~/Scripts/adyc.table.utils.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
 }
