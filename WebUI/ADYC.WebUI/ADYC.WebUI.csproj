@@ -123,6 +123,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CoursesController.cs" />
+    <Compile Include="Controllers\CourseTypesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -134,7 +135,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CourseRepository.cs" />
     <Compile Include="Repositories\CourseTypeRepository.cs" />
+    <Compile Include="Repositories\GradeRepository.cs" />
+    <Compile Include="Repositories\GroupRepository.cs" />
+    <Compile Include="Repositories\MajorRepository.cs" />
+    <Compile Include="Repositories\PeriodRepository.cs" />
     <Compile Include="ViewModels\CourseFormViewModel.cs" />
+    <Compile Include="ViewModels\CourseTypeFormViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -183,6 +189,9 @@
     <Content Include="Views\Courses\CourseForm.cshtml" />
     <Content Include="Views\Courses\pv_CourseRow.cshtml" />
     <Content Include="Scripts\table.utils.js" />
+    <Content Include="Views\CourseTypes\Index.cshtml" />
+    <Content Include="Views\CourseTypes\pv_CourseTypeRow.cshtml" />
+    <Content Include="Views\CourseTypes\CourseTypeForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

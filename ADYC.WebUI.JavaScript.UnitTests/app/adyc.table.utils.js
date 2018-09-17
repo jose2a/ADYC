@@ -66,20 +66,25 @@
 
             var link = $(this);
             var tr = link.closest("tr");
+            console.log(tr);
 
             bootbox.confirm(link.attr("data-name"), function (result) {
                 if (result) {
-                    $.ajax({
-                        url: link.attr("href"),
-                        method: "GET",
-                        success: function (data) {
-                            tr.replaceWith(data);
-                            self.isTableModified = true;
-                        },
-                        error: function (data) {
-                            self.showErrorMsg(data.statusText, "warning");
-                        }
-                    });
+                    trashCourseAjax(link, tr);
+                }
+            });
+        },
+
+        trashCourseAjax: function (link, tr) {
+            $.ajax({
+                url: link,
+                method: "GET",
+                success: function (data) {
+                    tr.replaceWith(data);
+                    self.isTableModified = true;
+                },
+                error: function (data) {
+                    self.showErrorMsg(data.statusText, "warning");
                 }
             });
         },

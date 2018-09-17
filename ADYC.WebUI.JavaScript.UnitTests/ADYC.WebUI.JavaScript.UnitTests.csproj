@@ -91,7 +91,6 @@
     <Content Include="test\adyc.table.utils.js" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="mocha-phantomjs.coffee" />
     <None Include="packages.config" />
     <None Include="runTests.bat" />
   </ItemGroup>

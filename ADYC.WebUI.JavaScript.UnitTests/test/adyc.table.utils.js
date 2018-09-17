@@ -6,9 +6,11 @@ describe('adyc.table.utils', function () {
     describe('constructor', function () {
 
 
-        it('should call TableHelper function', function () {
+        it('should call TableHelper init function', function () {
+            // arrange
             var tableHelperInit = sinon.stub(TH$, 'init');
 
+            // act
             var tableHelper = TH$({
                 table: "courses",
                 messageDiv: "#msg-div",
@@ -16,15 +18,19 @@ describe('adyc.table.utils', function () {
                 addRestoreEvent: true,
                 addDeleteEvent: true
             });
+            
+            // assert
+            sinon.assert.calledOnce(tableHelperInit);
 
             tableHelperInit.restore();
-            sinon.assert.calledOnce(tableHelperInit);
         });
 
-        it('should call TableHelper.init', function () {
+        it('should call TableHelper addAjaxStopListener and addEvents', function () {
+            // arrange
             var addAjaxStopListener = sinon.stub(TH$.prototype, 'addAjaxStopListener');
             var addEvents = sinon.stub(TH$.prototype, 'addEvents');
 
+            // act
             var tableHelper = TH$({
                 table: "courses",
                 messageDiv: "#msg-div",
@@ -33,20 +39,22 @@ describe('adyc.table.utils', function () {
                 addDeleteEvent: true
             });
 
-            addAjaxStopListener.restore();
-            addEvents.restore();
-
+            // assert
             sinon.assert.calledOnce(addAjaxStopListener);
             sinon.assert.calledOnce(addEvents);
+
+            addAjaxStopListener.restore();
+            addEvents.restore();
         });
     });
 
     describe('trashCourseAjax', function () {
         var table;
+        var tr;
 
         beforeEach(function () {
             table = $("<table id='courses'>");
-            var tr = "<tr>" +
+            tr = "<tr>" +
                 "<td>1</td>" +
                 "<td>Gym</td>" +
                 "<td>External</td>" +
@@ -70,11 +78,9 @@ describe('adyc.table.utils', function () {
             $(document.body).append(table);
         });
 
-        it('"should call courses/trash/1 on the server', function () {
-            var bootboxCfrm = sinon.stub(bootbox, 'confirm');
-            bootboxCfrm.withArgs('Are you sure you want to trash Gym?', sinon.stub().returns(true));
-
-            var addAjaxStopListener = sinon.stub(TH$.prototype, 'addAjaxStopListener');
+        it('"should call link.click() event and bootbox.confirm() should be called', function () {
+            // arrange
+            var bootboxCfrm = sinon.stub(bootbox, 'confirm').returns(true);
 
             var tableHelper = TH$({
                 table: "courses",
@@ -84,15 +90,39 @@ describe('adyc.table.utils', function () {
                 addDeleteEvent: false
             });
 
+            // act
             $("#courses a.js-trash")[0].click();
 
-            bootboxCfrm.restore();
+            // assert
             sinon.assert.calledOnce(bootboxCfrm);
+
+            bootboxCfrm.restore();
+        });
+
+        it('"should call trashCourseAjax', function (done) {
+            var ajaxStub = sinon.stub($, "ajax").yieldsTo("success", "");
+
+            var tableHelper = TH$({
+                table: "courses",
+                messageDiv: "#msg-div",
+                addTrashEvent: true,
+                addRestoreEvent: false,
+                addDeleteEvent: false
+            });
+
+            tableHelper.trashCourseAjax("/courses/trash/2", $("#courses").closest("tr"));
+
+            done();
+            
+            // assertions 
+            sinon.assert.calledOnce(ajaxStub);
+            ajaxStub.restore();
         });
 
         afterEach(function () {
             table.remove();
             table = null;
+            tr = null;
         });
     });
 });
