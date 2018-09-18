@@ -8,31 +8,31 @@ using System.Web.Mvc;
 
 namespace ADYC.WebUI.Controllers
 {
-    public class CourseTypesController : Controller
+    public class GroupsController : Controller
     {
-        private CourseTypeRepository _courseTypeRepository;
+        private GroupRepository _groupRepository;
 
-        public CourseTypesController()
+        public GroupsController()
         {
-            _courseTypeRepository = new CourseTypeRepository();
+            _groupRepository = new GroupRepository();
         }
 
         // GET: CourseTypes
         public async Task<ActionResult> Index()
         {
-            var courseTypes = await _courseTypeRepository.GetCourseTypesAsync();
+            var groups = await _groupRepository.GetGroupAsync();
 
-            return View(courseTypes);
+            return View(groups);
         }
 
         public ActionResult New()
         {
-            var viewModel = new CourseTypeFormViewModel
+            var viewModel = new GroupFormViewModel
             {
                 IsNew = true
             };
 
-            return View("CourseTypeForm", viewModel);
+            return View("GroupForm", viewModel);
         }
 
         public async Task<ActionResult> Edit(int? id)
@@ -42,13 +42,13 @@ namespace ADYC.WebUI.Controllers
                 return HttpNotFound();
             }
 
-            CourseTypeFormViewModel viewModel = null;
+            GroupFormViewModel viewModel = null;
 
             try
             {
-                var courseType = await _courseTypeRepository.GetCourseTypeAsync(id.Value);
+                var group = await _groupRepository.GetGroupAsync(id.Value);
 
-                viewModel = new CourseTypeFormViewModel(courseType)
+                viewModel = new GroupFormViewModel(group)
                 {
                     IsNew = false
                 };
@@ -66,11 +66,11 @@ namespace ADYC.WebUI.Controllers
                 }
             }
 
-            return View("CourseTypeForm", viewModel);
+            return View("GroupForm", viewModel);
         }
 
         [HttpPost]
-        public async Task<ActionResult> Save(CourseTypeFormViewModel form)
+        public async Task<ActionResult> Save(GroupFormViewModel form)
         {
             form.IsNew = form.Id == null;
 
@@ -78,19 +78,19 @@ namespace ADYC.WebUI.Controllers
             {
                 try
                 {
-                    CourseType courseType = (form.IsNew)
-                        ? new CourseType()
-                        : await _courseTypeRepository.GetCourseTypeAsync(form.Id.Value);
+                    Group group = (form.IsNew)
+                        ? new Group()
+                        : await _groupRepository.GetGroupAsync(form.Id.Value);
 
-                    courseType.Name = form.Name;
+                    group.Name = form.Name;
 
                     if (form.IsNew)
                     {
-                        await _courseTypeRepository.PostCourseTypeAsync(courseType);
+                        await _groupRepository.PostGroupAsync(group);
                     }
                     else
                     {
-                        await _courseTypeRepository.PutCourseTypeAsync(courseType.Id, courseType);
+                        await _groupRepository.PutGroupAsync(group.Id, group);
                     }
 
                     return RedirectToAction("Index");
@@ -104,7 +104,7 @@ namespace ADYC.WebUI.Controllers
                 }
             }
 
-            return View("CourseTypeForm", form);
+            return View("GroupForm", form);
         }
 
         [HttpGet]
@@ -112,7 +112,7 @@ namespace ADYC.WebUI.Controllers
         {
             try
             {
-                var statusCode = await _courseTypeRepository.DeleteCourseTypeAsync(id);
+                var statusCode = await _groupRepository.DeleteGroupAsync(id);
 
                 if (statusCode == HttpStatusCode.NotFound)
                 {

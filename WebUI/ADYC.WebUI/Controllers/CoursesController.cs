@@ -82,18 +82,11 @@ namespace ADYC.WebUI.Controllers
             {
                 try
                 {
-                    Course course;
+                    Course course = (form.IsNew)
+                        ? new Course()
+                        : await _courseRepository.GetCourseAsync(form.Id.Value);
 
-                    if (form.IsNew)
-                    {
-                        course = new Course();
-                        course.Name = form.Name;
-                    }
-                    else
-                    {
-                        course = await _courseRepository.GetCourseAsync(form.Id.Value);
-                    }
-                    
+                    course.Name = form.Name;
                     course.CourseTypeId = form.CourseTypeId;
 
                     if (form.IsNew)

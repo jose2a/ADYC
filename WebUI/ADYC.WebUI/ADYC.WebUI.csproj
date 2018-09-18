@@ -124,7 +124,11 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CoursesController.cs" />
     <Compile Include="Controllers\CourseTypesController.cs" />
+    <Compile Include="Controllers\GradesController.cs" />
+    <Compile Include="Controllers\GroupsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MajorsController.cs" />
+    <Compile Include="Controllers\PeriodsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -141,6 +145,9 @@
     <Compile Include="Repositories\PeriodRepository.cs" />
     <Compile Include="ViewModels\CourseFormViewModel.cs" />
     <Compile Include="ViewModels\CourseTypeFormViewModel.cs" />
+    <Compile Include="ViewModels\GradeFormViewModel.cs" />
+    <Compile Include="ViewModels\GroupFormViewModel.cs" />
+    <Compile Include="ViewModels\MajorFormViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -192,6 +199,17 @@
     <Content Include="Views\CourseTypes\Index.cshtml" />
     <Content Include="Views\CourseTypes\pv_CourseTypeRow.cshtml" />
     <Content Include="Views\CourseTypes\CourseTypeForm.cshtml" />
+    <Content Include="Views\Grades\GradeForm.cshtml" />
+    <Content Include="Views\Grades\Index.cshtml" />
+    <Content Include="Views\Grades\pv_GradeRow.cshtml" />
+    <Content Include="Views\Groups\GroupForm.cshtml" />
+    <Content Include="Views\Groups\Index.cshtml" />
+    <Content Include="Views\Groups\pv_GroupRow.cshtml" />
+    <Content Include="Views\Majors\MajorForm.cshtml" />
+    <Content Include="Views\Majors\Index.cshtml" />
+    <Content Include="Views\Majors\pv_MajorRow.cshtml" />
+    <Content Include="Views\Periods\Index.cshtml" />
+    <Content Include="Views\Periods\pv_PeriodRow.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

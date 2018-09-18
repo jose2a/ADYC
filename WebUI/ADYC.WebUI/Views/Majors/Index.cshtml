@@ -1,10 +1,10 @@
-﻿@model IEnumerable<ADYC.Model.CourseType>
+﻿@model IEnumerable<ADYC.Model.Major>
 
 @{
-    ViewBag.Title = "Course Types";
+    ViewBag.Title = "Majors";
 }
 
-<h2>Course Types</h2>
+<h2>Majors</h2>
 
 @{
     var message = (TempData["Msg"] != null) ? TempData["Msg"].ToString() : "";
@@ -14,11 +14,11 @@
 
 <div class="btn-toolbar">
     <div class="btn-group">
-        <a href="@Url.Action("new")" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-plus"></i> Create Course Type</a>
+        <a href="@Url.Action("new")" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-plus"></i> Create Major</a>
     </div>
 </div>
 
-<table id="courseTypes" class="table table-bordered table-striped display">
+<table id="majors" class="table table-bordered table-striped display">
     <thead>
         <tr>
             <th>
@@ -32,9 +32,9 @@
     </thead>
     <tbody>
 
-        @foreach (var courseType in Model)
+        @foreach (var major in Model)
         {
-            @Html.Partial("pv_CourseTypeRow", courseType)
+            @Html.Partial("pv_MajorRow", major)
 
         }
     </tbody>
@@ -46,12 +46,12 @@
         $(document).ready(function () {
 
             var tableHelper = TH$({
-                table: "courseTypes",
+                table: "majors",
                 messageDiv: "#msg-div",
                 addDeleteEvent: true
             });
 
-            $('#courseTypes').DataTable();
+            $('#majors').DataTable();
         });
     </script>
     <script type="text/javascript" src="~/Scripts/adyc.table.utils.js"></script>

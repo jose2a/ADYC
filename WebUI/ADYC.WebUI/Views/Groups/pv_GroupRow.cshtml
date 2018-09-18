@@ -1,0 +1,19 @@
+﻿@model ADYC.Model.Group
+
+<tr>
+    <td>
+        @Html.DisplayFor(m => m.Id)
+    </td>
+    <td>
+        @Html.DisplayFor(m => m.Name)
+    </td>
+    <td>
+        <a href="@Url.Action("edit", new {Model.Id})" class="btn btn-xs btn-primary">
+            <i class="glyphicon glyphicon-edit"></i> Edit
+        </a>
+
+        <a href="@Url.Action("delete", new { Model.Id })" data-id="@Model.Id" class="btn btn-xs btn-danger js-delete" data-name="Are you sure you want to delete @Model.Name FOREVER?">
+            <i class="glyphicon glyphicon-remove"></i> Delete
+        </a>
+    </td>
+</tr>
