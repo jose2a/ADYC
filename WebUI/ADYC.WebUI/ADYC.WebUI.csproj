@@ -129,6 +129,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MajorsController.cs" />
     <Compile Include="Controllers\PeriodsController.cs" />
+    <Compile Include="Controllers\ProfessorsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -143,11 +144,13 @@
     <Compile Include="Repositories\GroupRepository.cs" />
     <Compile Include="Repositories\MajorRepository.cs" />
     <Compile Include="Repositories\PeriodRepository.cs" />
+    <Compile Include="Repositories\ProfessorRepository.cs" />
     <Compile Include="ViewModels\CourseFormViewModel.cs" />
     <Compile Include="ViewModels\CourseTypeFormViewModel.cs" />
     <Compile Include="ViewModels\GradeFormViewModel.cs" />
     <Compile Include="ViewModels\GroupFormViewModel.cs" />
     <Compile Include="ViewModels\MajorFormViewModel.cs" />
+    <Compile Include="ViewModels\ProfessorFormViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -210,6 +213,9 @@
     <Content Include="Views\Majors\pv_MajorRow.cshtml" />
     <Content Include="Views\Periods\Index.cshtml" />
     <Content Include="Views\Periods\pv_PeriodRow.cshtml" />
+    <Content Include="Views\Professors\ProfessorForm.cshtml" />
+    <Content Include="Views\Professors\Index.cshtml" />
+    <Content Include="Views\Professors\pv_ProfessorRow.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
