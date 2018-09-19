@@ -9,13 +9,16 @@ namespace ADYC.WebUI.ViewModels
         public bool IsNew { get; set; }
 
         public Guid? Id { get; set; }
+        [Display(Name = "First Name")]
         [Required]
         public string FirstName { get; set; }
+        [Display(Name = "Last Name")]
         [Required]
         public string LastName { get; set; }
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+        [Display(Name = "Cellphone Number")]
         [Required]
         [Phone]
         public string CellphoneNumber { get; set; }

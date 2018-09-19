@@ -17,7 +17,7 @@ namespace ADYC.WebUI.Repositories
         private GenericRestfulCrudHttpClient<Major> majorClient =
             new GenericRestfulCrudHttpClient<Major>("http://localhost:19016/");
 
-        public async Task<IEnumerable<Major>> GetMajorAsync()
+        public async Task<IEnumerable<Major>> GetMajorsAsync()
         {
             return await majorClient.GetManyAsync(addressPreffix);
         }

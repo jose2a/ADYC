@@ -122,6 +122,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ADYCBasedController.cs" />
     <Compile Include="Controllers\CoursesController.cs" />
     <Compile Include="Controllers\CourseTypesController.cs" />
     <Compile Include="Controllers\GradesController.cs" />
@@ -130,6 +131,8 @@
     <Compile Include="Controllers\MajorsController.cs" />
     <Compile Include="Controllers\PeriodsController.cs" />
     <Compile Include="Controllers\ProfessorsController.cs" />
+    <Compile Include="Controllers\StudentsController.cs" />
+    <Compile Include="Controllers\TermsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -145,12 +148,16 @@
     <Compile Include="Repositories\MajorRepository.cs" />
     <Compile Include="Repositories\PeriodRepository.cs" />
     <Compile Include="Repositories\ProfessorRepository.cs" />
+    <Compile Include="Repositories\StudentRepository.cs" />
+    <Compile Include="Repositories\TermRepository.cs" />
     <Compile Include="ViewModels\CourseFormViewModel.cs" />
     <Compile Include="ViewModels\CourseTypeFormViewModel.cs" />
     <Compile Include="ViewModels\GradeFormViewModel.cs" />
     <Compile Include="ViewModels\GroupFormViewModel.cs" />
     <Compile Include="ViewModels\MajorFormViewModel.cs" />
     <Compile Include="ViewModels\ProfessorFormViewModel.cs" />
+    <Compile Include="ViewModels\StudentFormViewModel.cs" />
+    <Compile Include="ViewModels\TermFormViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -216,9 +223,14 @@
     <Content Include="Views\Professors\ProfessorForm.cshtml" />
     <Content Include="Views\Professors\Index.cshtml" />
     <Content Include="Views\Professors\pv_ProfessorRow.cshtml" />
+    <Content Include="Views\Students\Index.cshtml" />
+    <Content Include="Views\Students\StudentForm.cshtml" />
+    <Content Include="Views\Students\pv_StudentRow.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\ADYCBase\" />
+    <Folder Include="Views\Terms\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

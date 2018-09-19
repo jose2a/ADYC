@@ -17,7 +17,7 @@ namespace ADYC.WebUI.Repositories
         private GenericRestfulCrudHttpClient<Grade> gradeClient =
             new GenericRestfulCrudHttpClient<Grade>("http://localhost:19016/");
 
-        public async Task<IEnumerable<Grade>> GetGradeAsync()
+        public async Task<IEnumerable<Grade>> GetGradesAsync()
         {
             return await gradeClient.GetManyAsync(addressPreffix);
         }

@@ -20,7 +20,7 @@ namespace ADYC.WebUI.Controllers
         // GET: CourseTypes
         public async Task<ActionResult> Index()
         {
-            var courseTypes = await _gradeRepository.GetGradeAsync();
+            var courseTypes = await _gradeRepository.GetGradesAsync();
 
             return View(courseTypes);
         }

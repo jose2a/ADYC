@@ -1,0 +1,54 @@
+﻿@model ADYC.Model.Student
+
+<tr>
+    <td>
+        @Html.DisplayFor(m => m.Id).ToString().Split('-')[0]...
+    </td>
+    <td>
+        @Html.DisplayFor(m => m.FirstName)
+    </td>
+    <td>
+        @Html.DisplayFor(m => m.LastName)
+    </td>
+    <td>
+        @Html.DisplayFor(m => m.Email)
+    </td>
+    <td>
+        @Html.DisplayFor(m => m.CellphoneNumber)
+    </td>
+    <td>
+        @Html.DisplayFor(m => m.Grade.Name)
+    </td>
+    <td>
+        @Html.DisplayFor(m => m.Group.Name)
+    </td>
+    <td>
+        @Html.DisplayFor(m => m.Major.Name)
+    </td>
+    <td>
+        <a href="@Url.Action("edit", new {Model.Id})" class="btn btn-xs btn-primary">
+            <i class="glyphicon glyphicon-edit"></i> Edit
+        </a>
+
+        @if (!Model.IsDeleted)
+        {
+            <div class="btn-group btn-group-xs">
+                <a href="@Url.Action("trash", new { Model.Id })" data-id="@Model.Id" class="btn btn-danger js-trash" data-name="Are you sure you want to trash @Model.FirstName?"><i class="glyphicon glyphicon-remove"></i> Trash</a>
+                <a href="#" class="btn btn-danger dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="@Url.Action("delete", new { Model.Id })" data-id="@Model.Id" class="js-delete" data-name="Are you sure you want to delete @Model.FirstName FOREVER?">
+                            <i class="glyphicon glyphicon-remove"></i> Delete
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        }
+        else
+        {
+            <a href="@Url.Action("restore", new { Model.Id })" class="btn btn-xs btn-success js-restore" data-post="">
+                <i class="glyphicon glyphicon-plus-sign"></i> Restore
+            </a>
+        }
+    </td>
+</tr>

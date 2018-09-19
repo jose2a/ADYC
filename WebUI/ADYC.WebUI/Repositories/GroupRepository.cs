@@ -17,7 +17,7 @@ namespace ADYC.WebUI.Repositories
         private GenericRestfulCrudHttpClient<Group> groupClient =
             new GenericRestfulCrudHttpClient<Group>("http://localhost:19016/");
 
-        public async Task<IEnumerable<Group>> GetGroupAsync()
+        public async Task<IEnumerable<Group>> GetGroupsAsync()
         {
             return await groupClient.GetManyAsync(addressPreffix);
         }
