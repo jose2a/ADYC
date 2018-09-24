@@ -1,0 +1,185 @@
+﻿@model ADYC.WebUI.ViewModels.TermFormViewModel
+
+@{
+    ViewBag.Title = Model.Title;
+}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<h1>@Model.Title</h1>
+
+
+@using (Html.BeginForm("Save", "Terms", FormMethod.Post))
+{
+
+
+    if (!Model.IsNew)
+    {
+        @Html.HiddenFor(m => m.Id)
+    }
+
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "Please fix the following errors:", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.StartDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.StartDate, new { htmlAttributes = new { @class = "form-control date" } })
+                @Html.ValidationMessageFor(m => m.StartDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.EndDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.EndDate, new { htmlAttributes = new { @class = "form-control date" } })
+                @Html.ValidationMessageFor(m => m.EndDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.EnrollmentDeadLine, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.EnrollmentDeadLine, new { htmlAttributes = new { @class = "form-control date" } })
+                @Html.ValidationMessageFor(m => m.EnrollmentDeadLine, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.EnrollmentDropDeadLine, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.EnrollmentDropDeadLine, new { htmlAttributes = new { @class = "form-control date" } })
+                @Html.ValidationMessageFor(m => m.EnrollmentDropDeadLine, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <label>
+                    @Html.CheckBoxFor(m => m.IsCurrentTerm) Current Term?
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            var startDate = $("#StartDate");
+            var endDate = $("#EndDate");
+
+            var enrollmentDeadLine = $("#EnrollmentDeadLine");
+            var enrollmentDropDeadLine = $("#EnrollmentDropDeadLine");
+
+            console.log($("#Id").val());
+
+            if ($("#Id").val() === undefined) {
+
+                endDate.prop('disabled', true);
+                enrollmentDeadLine.prop('disabled', true);
+                enrollmentDropDeadLine.prop('disabled', true);
+            }
+
+            var dateFormat = "mm/dd/yy";
+
+            startDate.datepicker({
+                showButtonPanel: true,
+                changeMonth: true,
+                changeYear: true,
+                numberOfMonths: 2
+            })
+            .on("change", function () {
+                console.log("Changing");
+                var thisDate = getDate(this);
+                var enrollmentDropDeadlineDate = enrollmentDropDeadLine.datepicker("getDate");
+                var endD = endDate.datepicker("getDate");
+
+                console.log(thisDate);
+                console.log(enrollmentDropDeadlineDate);
+
+                endDate.datepicker("option", "minDate", thisDate);
+                enrollmentDeadLine.datepicker("option", "minDate", thisDate);
+                enrollmentDropDeadLine.datepicker("option", "minDate", thisDate);
+
+                if (enrollmentDropDeadlineDate !== null && thisDate >= enrollmentDropDeadlineDate) {
+                    console.log("Setting date");
+                    enrollmentDeadLine.datepicker("option", "maxDate", endD);
+                    enrollmentDropDeadLine.datepicker( "setDate", endD);
+                }
+
+                endDate.prop('disabled', false);
+            });
+
+            endDate.datepicker({
+                showButtonPanel: true,
+                changeMonth: true,
+                changeYear: true,
+                numberOfMonths: 2
+            })
+            .on("change", function () {
+                startDate.datepicker("option", "maxDate", getDate(this));
+                enrollmentDeadLine.datepicker("option", "maxDate", getDate(this));
+                enrollmentDropDeadLine.datepicker("option", "maxDate", getDate(this));
+
+                enrollmentDeadLine.prop('disabled', false);
+            });
+
+            enrollmentDeadLine.datepicker({
+                showButtonPanel: true,
+                changeMonth: true,
+                changeYear: true,
+                numberOfMonths: 2
+            })
+            .on("change", function () {
+                enrollmentDropDeadLine.datepicker("option", "minDate", getDate(this));
+
+                enrollmentDropDeadLine.prop('disabled', false);
+            });
+
+            enrollmentDropDeadLine.datepicker({
+                showButtonPanel: true,
+                changeMonth: true,
+                changeYear: true,
+                numberOfMonths: 2
+            })
+            .on("change", function () {
+                enrollmentDeadLine.datepicker("option", "maxDate", getDate(this));
+            });
+
+            function getDate(element) {
+                var date;
+                try {
+                    date = $.datepicker.parseDate(dateFormat, element.value);
+                } catch (error) {
+                    date = null;
+                }
+
+                return date;
+            }
+        });
+    </script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+}

@@ -1,0 +1,81 @@
+﻿@model IEnumerable<ADYC.Model.Term>
+
+@{
+    ViewBag.Title = "Terms";
+}
+
+<h2>Terms</h2>
+
+@{
+    var message = (TempData["Msg"] != null) ? TempData["Msg"].ToString() : "";
+}
+<div id="msg-div">
+</div>
+
+<div class="btn-toolbar">
+    <div class="btn-group">
+        <a href="@Url.Action("new")" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-plus"></i> Create Term</a>
+    </div>
+</div>
+
+<table id="terms" class="table table-bordered table-striped display">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(m => m.Id)
+            </th>
+            <th>
+               Term Name
+            </th>
+            <th>
+                Start Date
+            </th>
+            <th>
+                End Date
+            </th>
+            <th>
+                Enrollment Deadline
+            </th>
+            <th>
+                Enrollment Withdraw</th>
+            <th>
+                Current
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var term in Model)
+        {
+            @Html.Partial("pv_TermRow", term)
+
+        }
+    </tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            var tableHelper = TH$({
+                table: "terms",
+                messageDiv: "#msg-div",
+                addDeleteEvent: true
+            });
+
+            $('#terms').DataTable();
+
+            $('.date').each(function (index, dateElem) {
+                var $dateElem = $(dateElem);
+                var formatted = moment($dateElem.text()).format('MM/DD/YY');
+                $dateElem.text(formatted);
+            });
+        });
+    </script>
+    <script type="text/javascript" src="~/Scripts/adyc.table.utils.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
+}

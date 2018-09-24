@@ -52,3 +52,7 @@ table.dataTable thead .sorting_asc_disabled {
 table.dataTable thead .sorting_desc_disabled {
   background-image: url("/Content/images/sort_desc_disabled.png");
 }
+
+.checkbox {
+    margin-left: 40px;
+}

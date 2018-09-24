@@ -20,21 +20,28 @@ namespace ADYC.Service
         }
 
         public void Add(Term term)
-        {            
+        {
             ValidateTerm(term);
             ValidateDuplicatedTerm(term);
+            ChangeCurrentTerm(term);
 
+            _termRepository.Add(term);
+        }
+
+        private void ChangeCurrentTerm(Term term)
+        {
             if (term.IsCurrentTerm)
             {
                 foreach (var termToUpdate in _termRepository.GetAll())
                 {
-                    termToUpdate.IsCurrentTerm = false;
-                    _termRepository.Update(termToUpdate);
+                    if (termToUpdate != term)
+                    {
+                        termToUpdate.IsCurrentTerm = false;
+                        _termRepository.Update(termToUpdate);
+                    }                    
                 }
             }
-
-            _termRepository.Add(term);
-        }        
+        }
 
         public IEnumerable<Term> FindByBetweenDates(DateTime startDate, DateTime endDate)
         {
@@ -88,6 +95,7 @@ namespace ADYC.Service
         public void Update(Term term)
         {
             ValidateTerm(term);
+            ChangeCurrentTerm(term);
 
             _termRepository.Update(term);
         }

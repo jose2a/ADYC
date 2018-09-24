@@ -12,14 +12,18 @@ namespace ADYC.WebUI.ViewModels
         [Required]
         public string Name { get; set; }
         [Required]
-        public DateTime StartDate { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime? StartDate { get; set; }
         [Required]
-        public DateTime EndDate { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime? EndDate { get; set; }
         public bool IsCurrentTerm { get; set; }
         [Required]
-        public DateTime EnrollmentDeadLine { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime? EnrollmentDeadLine { get; set; }
         [Required]
-        public DateTime EnrollmentDropDeadLine { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime? EnrollmentDropDeadLine { get; set; }
 
         public string Title
         {

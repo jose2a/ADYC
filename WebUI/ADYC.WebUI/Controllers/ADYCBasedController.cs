@@ -9,7 +9,7 @@ namespace ADYC.WebUI.Controllers
         {
             foreach (var error in ahre.Errors)
             {
-                ModelState.AddModelError("", ahre.Message);
+                ModelState.AddModelError("", error);
             }
         }
     }
