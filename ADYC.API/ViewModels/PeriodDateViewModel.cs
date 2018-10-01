@@ -29,6 +29,6 @@ namespace ADYC.API.ViewModels
     {
         public string Url { get; set; }
         public TermDto Term { get; set; }
-        public IEnumerable<PeriodDateDto> PeriodDatesDto { get; set; }
+        public IEnumerable<PeriodDateDto> PeriodDates { get; set; }
     }
 }

@@ -3,6 +3,8 @@ using ADYC.WebUI.Infrastructure;
 using ADYC.WebUI.Repositories;
 using ADYC.WebUI.ViewModels;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -12,10 +14,14 @@ namespace ADYC.WebUI.Controllers
     public class TermsController : ADYCBasedController
     {
         private TermRepository _termRepository;
+        private PeriodRepository _periodRepository;
+        private PeriodDateRepository _periodDateRepository;
 
         public TermsController()
         {
             _termRepository = new TermRepository();
+            _periodRepository = new PeriodRepository();
+            _periodDateRepository = new PeriodDateRepository();
         }
 
         // GET: Terms
@@ -138,5 +144,95 @@ namespace ADYC.WebUI.Controllers
             }
 
         }
+
+        public async Task<ActionResult> PeriodDates(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return HttpNotFound();
+            }
+
+            PeriodDateListViewModel viewModel = null;
+
+            try
+            {
+                var periodDatesList = await _periodDateRepository.GetPeriodDatesForTerm(id.Value);
+                var term = periodDatesList.Term;
+                var periods = await _periodRepository.GetPeriodAsync();
+
+                List<PeriodDateViewModel> periodDates = null;
+                bool isNew = false;
+
+                if (periodDatesList.PeriodDates == null || periodDatesList.PeriodDates.Count == 0)
+                {
+                    isNew = true;
+                    periodDates = new List<PeriodDateViewModel>();
+
+                    foreach (var p in periods)
+                    {
+                        periodDates.Add(new PeriodDateViewModel
+                        {
+                            PeriodId = p.Id,
+                            TermId = term.Id,
+                            StartDate = null,
+                            EndDate = null
+                        });
+                    }
+                }
+                else
+                {
+                    isNew = false;
+                    periodDates = periodDatesList.PeriodDates;
+                }
+
+                viewModel = new PeriodDateListViewModel(id.Value, term, periodDates)
+                {
+                    Periods = await _periodRepository.GetPeriodAsync(),
+                    IsNew = isNew
+                };
+            }
+            catch (AdycHttpRequestException ahre)
+            {
+                if (ahre.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return HttpNotFound();
+                }
+
+                ProcessAdycHttpException(ahre, ModelState);
+            }
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> SavePeriodDates(PeriodDateListViewModel form)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    if (form.IsNew)
+                    {
+                        await _periodDateRepository.PostPeriodDateAsync(form);
+                    }
+                    else
+                    {
+                        await _periodDateRepository.PutPeriodDateAsync(form.TermId, form);
+                    }
+
+                    return RedirectToAction("Index");
+                }
+                catch (AdycHttpRequestException ahre)
+                {
+                    ProcessAdycHttpException(ahre, ModelState);
+                }
+            }
+
+            form.Term = await _termRepository.GetTermAsync(form.TermId);
+            form.Periods = await _periodRepository.GetPeriodAsync();
+
+            return View("PeriodDates", form);
+        }
+
     }
 }

@@ -4,6 +4,12 @@
     ViewBag.Title = "Terms";
 }
 
+<style>
+    #terms a.js-delete {
+        visibility: hidden;
+    }
+</style>
+
 <h2>Terms</h2>
 
 @{
@@ -12,70 +18,130 @@
 <div id="msg-div">
 </div>
 
-<div class="btn-toolbar">
-    <div class="btn-group">
-        <a href="@Url.Action("new")" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-plus"></i> Create Term</a>
+<div class="btn-group">
+    <button type="button" class="btn btn-default" aria-label="Left Align">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="btn btn-default" aria-label="Left Align">
+        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+    </button>
     </div>
-</div>
 
-<table id="terms" class="table table-bordered table-striped display">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(m => m.Id)
-            </th>
-            <th>
-               Term Name
-            </th>
-            <th>
-                Start Date
-            </th>
-            <th>
-                End Date
-            </th>
-            <th>
-                Enrollment Deadline
-            </th>
-            <th>
-                Enrollment Withdraw</th>
-            <th>
-                Current
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
+    <div class="btn-toolbar">
+        <div class="btn-group">
+            <a href="@Url.Action("new")" class="btn btn-primary btn-sm">
+                <i class="glyphicon glyphicon-plus"></i> Create Term
+            </a>
+            <a href="@Url.Action("edit")" id="editBtn" class="btn btn-sm btn-default">
+                <i class="glyphicon glyphicon-edit"></i> Edit
+            </a>
+            <a href="@Url.Action("periodDates")" id="periodDatesBtn" class="btn btn-sm btn-default">
+                <i class="glyphicon glyphicon-calendar"></i> Periods' dates
+            </a>
+            <a href="@Url.Action("delete")" id="deleteBtn" data-id="" class="btn btn-sm btn-danger js-delete" data-name="">
+                <i class="glyphicon glyphicon-remove"></i> Delete
+            </a>
+        </div>
+    </div>
 
-        @foreach (var term in Model)
-        {
-            @Html.Partial("pv_TermRow", term)
+    <table id="terms" class="table table-bordered table-striped display">
+        <thead>
+            <tr>
+                <th>
+                    SEL.
+                </th>
+                <th>
+                    Term Name
+                </th>
+                <th>
+                    Start Date
+                </th>
+                <th>
+                    End Date
+                </th>
+                <th>
+                    Enrollment Deadline
+                </th>
+                <th>
+                    Enrollment Withdraw
+                </th>
+                <th>
+                    Current
+                </th>
+            </tr>
+        </thead>
+        <tbody>
 
-        }
-    </tbody>
-</table>
+            @foreach (var term in Model)
+            {
+                @Html.Partial("pv_TermRow", term)
 
-@section scripts
+            }
+        </tbody>
+    </table>
+
+    @section scripts
 {
-    <script>
-        $(document).ready(function () {
+        <script>
+            $(document).ready(function () {
 
-            var tableHelper = TH$({
-                table: "terms",
-                messageDiv: "#msg-div",
-                addDeleteEvent: true
+                var tableHelper = TH$({
+                    table: "terms",
+                    messageDiv: "#msg-div",
+                    addDeleteEvent: true
+                });
+
+                var periodDatesBtn = $("#periodDatesBtn");
+                var editBtn = $("#editBtn");
+                var deleteBtn = $("#deleteBtn");
+                var deleteBtnHref = deleteBtn.attr("href");
+
+                $('#terms').DataTable();
+
+                periodDatesBtn.attr("disabled", true);
+                editBtn.attr("disabled", true);
+                deleteBtn.attr("disabled", true);
+
+                periodDatesBtn.on("click", function (e) {
+                    e.preventDefault();
+
+                    var tId = $('input[name=tId]:checked').val();
+
+                    if (tId) {
+                        window.location = $(this).attr("href") + "/" + tId;
+                    }
+                });
+
+                editBtn.on("click", function (e) {
+                    e.preventDefault();
+
+                    var tId = $('input[name=tId]:checked').val();
+
+                    if (tId) {
+                        window.location = $(this).attr("href") + "/" + tId;
+                    }
+                });
+
+                deleteBtn.on("click", function (e) {
+                    e.preventDefault();
+
+                    var tId = $('input[name=tId]:checked').val();
+
+                    if (tId) {
+                        var link = $('input[name=tId]:checked').next("a.js-delete");
+                        link.click();
+                    }
+                });
+
+                $('input[name=tId]').on("click", function () {
+                    periodDatesBtn.attr("disabled", false);
+                    editBtn.attr("disabled", false);
+                    deleteBtn.attr("disabled", false);
+                });
+
             });
-
-            $('#terms').DataTable();
-
-            $('.date').each(function (index, dateElem) {
-                var $dateElem = $(dateElem);
-                var formatted = moment($dateElem.text()).format('MM/DD/YY');
-                $dateElem.text(formatted);
-            });
-        });
-    </script>
-    <script type="text/javascript" src="~/Scripts/adyc.table.utils.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
-    <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
-}
+        </script>
+        <script type="text/javascript" src="~/Scripts/adyc.table.utils.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+    }

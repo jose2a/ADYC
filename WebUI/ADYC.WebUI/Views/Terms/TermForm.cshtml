@@ -70,6 +70,7 @@
                 </label>
             </div>
         </div>
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -92,17 +93,6 @@
             var enrollmentDeadLine = $("#EnrollmentDeadLine");
             var enrollmentDropDeadLine = $("#EnrollmentDropDeadLine");
 
-            console.log($("#Id").val());
-
-            if ($("#Id").val() === undefined) {
-
-                endDate.prop('disabled', true);
-                enrollmentDeadLine.prop('disabled', true);
-                enrollmentDropDeadLine.prop('disabled', true);
-            }
-
-            var dateFormat = "mm/dd/yy";
-
             startDate.datepicker({
                 showButtonPanel: true,
                 changeMonth: true,
@@ -110,25 +100,15 @@
                 numberOfMonths: 2
             })
             .on("change", function () {
-                console.log("Changing");
                 var thisDate = getDate(this);
-                var enrollmentDropDeadlineDate = enrollmentDropDeadLine.datepicker("getDate");
-                var endD = endDate.datepicker("getDate");
-
-                console.log(thisDate);
-                console.log(enrollmentDropDeadlineDate);
+                thisDate.setDate(thisDate.getDate() + 1);
 
                 endDate.datepicker("option", "minDate", thisDate);
                 enrollmentDeadLine.datepicker("option", "minDate", thisDate);
                 enrollmentDropDeadLine.datepicker("option", "minDate", thisDate);
 
-                if (enrollmentDropDeadlineDate !== null && thisDate >= enrollmentDropDeadlineDate) {
-                    console.log("Setting date");
-                    enrollmentDeadLine.datepicker("option", "maxDate", endD);
-                    enrollmentDropDeadLine.datepicker( "setDate", endD);
-                }
-
-                endDate.prop('disabled', false);
+                enrollmentDeadLine.val("");
+                enrollmentDropDeadLine.val("");
             });
 
             endDate.datepicker({
@@ -142,7 +122,8 @@
                 enrollmentDeadLine.datepicker("option", "maxDate", getDate(this));
                 enrollmentDropDeadLine.datepicker("option", "maxDate", getDate(this));
 
-                enrollmentDeadLine.prop('disabled', false);
+                enrollmentDeadLine.val("");
+                enrollmentDropDeadLine.val("");
             });
 
             enrollmentDeadLine.datepicker({
@@ -154,7 +135,7 @@
             .on("change", function () {
                 enrollmentDropDeadLine.datepicker("option", "minDate", getDate(this));
 
-                enrollmentDropDeadLine.prop('disabled', false);
+                enrollmentDropDeadLine.val("");
             });
 
             enrollmentDropDeadLine.datepicker({
@@ -165,7 +146,11 @@
             })
             .on("change", function () {
                 enrollmentDeadLine.datepicker("option", "maxDate", getDate(this));
+
+                enrollmentDeadLine.val("");
             });
+
+            var dateFormat = "mm/dd/yy";
 
             function getDate(element) {
                 var date;

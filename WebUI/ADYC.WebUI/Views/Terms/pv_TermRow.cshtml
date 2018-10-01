@@ -2,22 +2,23 @@
 
 <tr>
     <td>
-        @Html.DisplayFor(m => m.Id)
+        <input type="radio" name="tId" data-name="@Model.Name" value="@Model.Id" />
+        <a href="@Url.Action("delete", new { Model.Id })" data-id="@Model.Id" class="js-delete" data-name="Are you sure you want to delete @Model.Name FOREVER?"></a>
     </td>
     <td>
         @Html.DisplayFor(m => m.Name)
     </td>
-    <td class="date">
-        @Html.DisplayFor(m => m.StartDate)
+    <td>
+        @Model.StartDate.ToString("MMMM dd, yyyy")
     </td>
-    <td class="date">
-        @Html.DisplayFor(m => m.EndDate)
+    <td>
+        @Model.EndDate.ToString("MMMM dd, yyyy")
     </td>
-    <td class="date">
-        @Html.DisplayFor(m => m.EnrollmentDeadLine)
+    <td>
+        @Model.EnrollmentDeadLine.ToString("MMMM dd, yyyy")
     </td>
-    <td class="date">
-        @Html.DisplayFor(m => m.EnrollmentDropDeadLine)
+    <td>
+        @Model.EnrollmentDropDeadLine.ToString("MMMM dd, yyyy")
     </td>
     <td>
         @if (Model.IsCurrentTerm)
@@ -28,14 +29,5 @@
         {
             <i class="glyphicon glyphicon-remove"></i>
         }
-    </td>
-    <td>
-        <a href="@Url.Action("edit", new {Model.Id})" class="btn btn-xs btn-primary">
-            <i class="glyphicon glyphicon-edit"></i> Edit
-        </a>
-
-        <a href="@Url.Action("delete", new { Model.Id })" data-id="@Model.Id" class="btn btn-xs btn-danger js-delete" data-name="Are you sure you want to delete @Model.Name FOREVER?">
-            <i class="glyphicon glyphicon-remove"></i> Delete
-        </a>
     </td>
 </tr>

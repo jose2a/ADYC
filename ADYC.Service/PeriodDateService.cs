@@ -66,11 +66,6 @@ namespace ADYC.Service
 
         public void RemoveRange(IEnumerable<PeriodDate> periodDates)
         {
-            if (periodDates.Count() == 0)
-            {
-                throw new ArgumentException("period dates");
-            }
-
             _periodDateRepository.RemoveRange(periodDates);
         }
 

@@ -43,7 +43,7 @@ namespace ADYC.API.Controllers
             {
                 try
                 {
-                    var periodDates = Mapper.Map<IEnumerable<PeriodDateDto>, IEnumerable<PeriodDate>>(form.PeriodDatesDto);
+                    var periodDates = Mapper.Map<IEnumerable<PeriodDateDto>, IEnumerable<PeriodDate>>(form.PeriodDates);
 
                     _periodDateService.AddRange(periodDates);
 
@@ -83,7 +83,7 @@ namespace ADYC.API.Controllers
 
                 try
                 {
-                    Mapper.Map(form.PeriodDatesDto, periodDatesInDb);
+                    Mapper.Map(form.PeriodDates, periodDatesInDb);
 
                     _periodDateService.UpdateRange(periodDatesInDb);
 

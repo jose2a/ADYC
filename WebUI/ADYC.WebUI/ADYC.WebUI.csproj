@@ -148,6 +148,7 @@
     <Compile Include="Repositories\GradeRepository.cs" />
     <Compile Include="Repositories\GroupRepository.cs" />
     <Compile Include="Repositories\MajorRepository.cs" />
+    <Compile Include="Repositories\PeriodDateRepository.cs" />
     <Compile Include="Repositories\PeriodRepository.cs" />
     <Compile Include="Repositories\ProfessorRepository.cs" />
     <Compile Include="Repositories\StudentRepository.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="ViewModels\GradeFormViewModel.cs" />
     <Compile Include="ViewModels\GroupFormViewModel.cs" />
     <Compile Include="ViewModels\MajorFormViewModel.cs" />
+    <Compile Include="ViewModels\PeriodDateViewModel.cs" />
     <Compile Include="ViewModels\ProfessorFormViewModel.cs" />
     <Compile Include="ViewModels\StudentFormViewModel.cs" />
     <Compile Include="ViewModels\TermFormViewModel.cs" />
@@ -245,6 +247,7 @@
     <Content Include="Views\Terms\TermForm.cshtml" />
     <Content Include="Views\Terms\Index.cshtml" />
     <Content Include="Views\Terms\pv_TermRow.cshtml" />
+    <Content Include="Views\Terms\PeriodDates.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

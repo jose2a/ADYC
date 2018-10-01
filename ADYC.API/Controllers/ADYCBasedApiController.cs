@@ -127,7 +127,7 @@ namespace ADYC.API.Controllers
             var periodDateListDto = new PeriodDateListDto
             {
                 Url = UrlResoucesUtil.GetBaseUrl(Request, "Terms") + termId + "/PeriodDates",
-                PeriodDatesDto = periodDates
+                PeriodDates = periodDates
                     .Select(pd =>
                     {
                         var periodDateDto = new PeriodDateDto
