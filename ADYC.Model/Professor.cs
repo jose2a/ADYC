@@ -35,5 +35,10 @@ namespace ADYC.Model
             CellphoneNumber = cellphoneNumber;
         }
 
+        public override string ToString()
+        {
+            return $"{LastName}, {FirstName}";
+        }
+
     }
 }

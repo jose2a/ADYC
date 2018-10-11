@@ -22,5 +22,10 @@ namespace ADYC.Model
             IsDeleted = false;
             Offerings = new List<Offering>();
         }
+
+        public override string ToString()
+        {
+            return $"{Name} - {CourseType}";
+        }
     }
 }

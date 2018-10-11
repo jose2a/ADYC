@@ -10,12 +10,9 @@ namespace ADYC.API.ViewModels
     public class ScheduleDto
     {
         public int? Id { get; set; }
-        [Required]
-        [Timestamp]
-        public TimeSpan StartTime { get; set; }
-        [Required]
-        [Timestamp]
-        public TimeSpan EndTime { get; set; }
+        
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
 
         [Required]
         public int OfferingId { get; set; }
@@ -33,6 +30,6 @@ namespace ADYC.API.ViewModels
         public string Url { get; set; }
 
         public OfferingDto Offering { get; set; }
-        public IEnumerable<ScheduleDto> SchedulesDto { get; set; }
+        public IEnumerable<ScheduleDto> Schedules { get; set; }
     }
 }

@@ -1,0 +1,146 @@
+﻿@model ADYC.WebUI.ViewModels.ScheduleListViewModel
+
+@{
+    ViewBag.Title = Model.Title;
+}
+
+<link href="~/Content/jquery.timepicker.css" rel="stylesheet" />
+
+<h1>@Model.Title</h1>
+
+@using (Html.BeginForm("SaveSchedules", "Offerings", FormMethod.Post))
+{
+    @Html.HiddenFor(m => Model.OfferingId)
+    @Html.HiddenFor(m => Model.Offering.Title)
+    @Html.HiddenFor(m => Model.Offering.Location)
+    @Html.HiddenFor(m => Model.Offering.TermId)
+    @Html.HiddenFor(m => Model.IsNew)
+
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-sm-8">
+            <ul class="term-info">
+                @*<li><h5><strong>TERM NAME: </strong>@Model.Term.Name</h5></li>
+                <li>
+                    <h5><strong>FROM: </strong>@Model.Term.StartDate.ToString("MMMM dd, yyyy")</h5>
+                    <h5><strong>TO: </strong>@Model.Term.EndDate.ToString("MMMM dd, yyyy")</h5>
+                </li>
+                <li>
+                    <h5><strong>ENROLLMENT DEADLINE: </strong>@Model.Term.EnrollmentDeadLine.ToString("MMMM dd, yyyy")</h5>
+                    <h5><strong>ENROLLMENT WITHDRAW: </strong>@Model.Term.EnrollmentDropDeadLine.ToString("MMMM dd, yyyy")</h5>
+                </li>
+                <li>
+                    <h5><strong>CURRENT TERM: </strong> @((Model.Term.IsCurrentTerm) ? "Yes" : "No")</h5>
+                </li>*@
+            </ul>
+        </div>
+    </div>
+
+    <div class="form-horizontal">
+        
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <table id="terms" class="table table-bordered table-striped display">
+            <thead>
+                <tr>
+                    <th>
+                        Day
+                    </th>
+                    <th>
+                        Start Time
+                    </th>
+                    <th>
+                        End Time
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Days.Count(); i++)
+                {
+                    <tr>
+                        <td>
+                            @Html.HiddenFor(m => Model.Schedules[i].Id)
+                            @Html.HiddenFor(m => Model.Schedules[i].OfferingId)
+                            @Html.HiddenFor(m => Model.Schedules[i].Day)
+                            @Model.Days.ElementAt(i).Name
+                        </td>
+                        <td>
+                            @Html.EditorFor(model => Model.Schedules[i].StartTime, new { htmlAttributes = new { @class = "form-control", data_id= @Model.Days.ElementAt(i).Id } })
+                            @Html.ValidationMessageFor(model => Model.Schedules[i].StartTime, "", new { @class = "text-danger" })
+                        </td>
+                        <td>
+                            @Html.EditorFor(model => Model.Schedules[i].EndTime, new { htmlAttributes = new { @class = "form-control", data_id = @Model.Days.ElementAt(i).Id } })
+                            @Html.ValidationMessageFor(model => Model.Schedules[i].EndTime, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="form-group">
+            <div class="col-md-10">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to Offerings", "View", new { id = Model.Offering.TermId })
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var startTimeElements = $("[id$=__StartTime]");
+            var endTimeElements = $("[id$=__EndTime]");
+
+            startTimeElements.each(function (index) {
+                var tp = $(this);
+                tp.attr("data-val", false);
+
+                tp.timepicker({
+                    'minTime': '6:00am',
+                    'maxTime': '12:00am'
+                });
+
+                tp.on('change', function () {
+                    var id = tp.attr("data-id");
+
+                    $("#Schedules_" + id + "__EndTime").timepicker('remove');
+
+                    $("#Schedules_" + id + "__EndTime").timepicker({
+                        'minTime': $(this).val(),
+                        'maxTime': '12:00am'
+                    });
+                });
+            });
+
+            endTimeElements.each(function (index) {
+                var tp = $(this);
+                tp.attr("data-val", false);
+
+                tp.timepicker({
+                    'minTime': '6:00am',
+                    'maxTime': '12:00am'
+                });
+
+                tp.on('change', function () {
+                    var id = tp.attr("data-id");
+                    
+                    $("#Schedules_" + id + "__StartTime").timepicker('remove');
+
+                    $("#Schedules_" + id + "__StartTime").timepicker({
+                        'minTime': '6:00am',
+                        'maxTime': $(this).val()
+                    });
+                });
+            });
+        });
+    </script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="~/Scripts/jquery.timepicker.min.js"></script>
+}

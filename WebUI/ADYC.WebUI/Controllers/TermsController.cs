@@ -220,7 +220,7 @@ namespace ADYC.WebUI.Controllers
                         await _periodDateRepository.PutPeriodDateAsync(form.TermId, form);
                     }
 
-                    return RedirectToAction("Index");
+                    return RedirectToAction("PeriodDates", new { id = form.TermId });
                 }
                 catch (AdycHttpRequestException ahre)
                 {

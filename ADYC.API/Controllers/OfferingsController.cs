@@ -427,7 +427,7 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
-        [Route("{id}")]
+        [Route("{id}/Force/{forceToRemove}")]
         [HttpDelete]
         [ResponseType(typeof(void))]
         // DELETE api/<controller>/5/Force/{forceToRemove}

@@ -4,12 +4,6 @@
     ViewBag.Title = "Terms";
 }
 
-<style>
-    #terms a.js-delete {
-        visibility: hidden;
-    }
-</style>
-
 <h2>Terms</h2>
 
 @{
@@ -18,28 +12,19 @@
 <div id="msg-div">
 </div>
 
-<div class="btn-group">
-    <button type="button" class="btn btn-default" aria-label="Left Align">
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-    </button>
-    <button type="button" class="btn btn-default" aria-label="Left Align">
-        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-    </button>
-    </div>
-
     <div class="btn-toolbar">
         <div class="btn-group">
-            <a href="@Url.Action("new")" class="btn btn-primary btn-sm">
+            <a href="@Url.Action("new")" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Create term">
                 <i class="glyphicon glyphicon-plus"></i> Create Term
             </a>
-            <a href="@Url.Action("edit")" id="editBtn" class="btn btn-sm btn-default">
-                <i class="glyphicon glyphicon-edit"></i> Edit
+            <a href="@Url.Action("edit")" id="editBtn" class="btn btn-sm btn-default" data-toggle="tooltip" data-placement="top" title="Edite term">
+                <i class="glyphicon glyphicon-edit"></i> Edit Term
             </a>
-            <a href="@Url.Action("periodDates")" id="periodDatesBtn" class="btn btn-sm btn-default">
+            <a href="@Url.Action("periodDates")" id="periodDatesBtn" class="btn btn-sm btn-default" data-toggle="tooltip" data-placement="top" title="Edit periods' dates for the term">
                 <i class="glyphicon glyphicon-calendar"></i> Periods' dates
             </a>
-            <a href="@Url.Action("delete")" id="deleteBtn" data-id="" class="btn btn-sm btn-danger js-delete" data-name="">
-                <i class="glyphicon glyphicon-remove"></i> Delete
+            <a href="@Url.Action("delete")" id="deleteBtn" class="btn btn-sm btn-danger js-delete" data-toggle="tooltip" data-placement="top" title="Delete term">
+                <i class="glyphicon glyphicon-remove"></i> Delete Term
             </a>
         </div>
     </div>
@@ -91,12 +76,25 @@
                     addDeleteEvent: true
                 });
 
+                $('[data-toggle="tooltip"]').tooltip();
+
                 var periodDatesBtn = $("#periodDatesBtn");
                 var editBtn = $("#editBtn");
                 var deleteBtn = $("#deleteBtn");
                 var deleteBtnHref = deleteBtn.attr("href");
 
-                $('#terms').DataTable();
+                $('#terms').DataTable({
+                    "aaSorting": [[ 1, "asc" ]],
+                    "aoColumns": [
+                        { "bSortable": false },
+                        { "bSortable": true },
+                        { "bSortable": true },
+                        { "bSortable": true },
+                        { "bSortable": true },
+                        { "bSortable": true },
+                        { "bSortable": false }
+                    ]
+                });
 
                 periodDatesBtn.attr("disabled", true);
                 editBtn.attr("disabled", true);

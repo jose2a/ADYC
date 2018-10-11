@@ -41,11 +41,14 @@ namespace ADYC.API.Controllers
         // POST api/<controller>
         public IHttpActionResult PostPeriodDates(int offeringId, [FromBody] ScheduleListDto form)
         {
+            //ModelState.Remove("Offering.Title");
+            //ModelState.Remove("Offering.Location");
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var schedules = Mapper.Map<IEnumerable<ScheduleDto>, IEnumerable<Schedule>>(form.SchedulesDto);
+                    var schedules = Mapper.Map<IEnumerable<ScheduleDto>, IEnumerable<Schedule>>(form.Schedules);
                     var offering = _offeringService.Get(offeringId);
 
                     _scheduleService.AddRange(schedules);
@@ -84,7 +87,7 @@ namespace ADYC.API.Controllers
 
                 try
                 {
-                    Mapper.Map(form.SchedulesDto, schedulesInDb);
+                    Mapper.Map(form.Schedules, schedulesInDb);
 
                     _scheduleService.UpdateRange(schedulesInDb);
 

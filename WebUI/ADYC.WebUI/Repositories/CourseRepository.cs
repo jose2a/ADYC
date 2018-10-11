@@ -20,6 +20,11 @@ namespace ADYC.WebUI.Repositories
             return await courseClient.GetManyAsync(addressPreffix);
         }
 
+        public async Task<IEnumerable<Course>> GetNotTrashedCoursesAsync()
+        {
+            return await courseClient.GetManyAsync(addressPreffix + "GetNotTrashed");
+        }
+
         public async Task<Course> GetCourseAsync(int id)
         {
             return await courseClient.GetAsync(addressPreffix + id);

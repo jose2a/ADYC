@@ -246,8 +246,8 @@ namespace ADYC.Repository.IntegrationTests
             //},
             Schedules = new List<Schedule>
             {
-                new Schedule { Id = 1, Day = Day.Monday, OfferingId = 1, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Id = 2, Day = Day.Wednesday, OfferingId = 1, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) }
+                new Schedule { Id = 1, Day = Day.Monday, OfferingId = 1, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Id = 2, Day = Day.Wednesday, OfferingId = 1, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) }
             }
         };
 
@@ -264,8 +264,8 @@ namespace ADYC.Repository.IntegrationTests
             TermId = spring2017.Id,
             Schedules = new List<Schedule>
             {
-                new Schedule { Id = 3, Day = Day.Tuesday, OfferingId = 2, Offering = baseballBruceWSpring2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Id = 4, Day = Day.Thrusday, OfferingId = 2, Offering = baseballBruceWSpring2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) }
+                new Schedule { Id = 3, Day = Day.Tuesday, OfferingId = 2, Offering = baseballBruceWSpring2017, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Id = 4, Day = Day.Thrusday, OfferingId = 2, Offering = baseballBruceWSpring2017, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) }
             }
         };
 
@@ -282,8 +282,8 @@ namespace ADYC.Repository.IntegrationTests
             TermId = spring2017.Id,
             Schedules = new List<Schedule>
             {
-                new Schedule { Id = 5, Day = Day.Monday, OfferingId = 3, Offering = gymOliverQSpring2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Id = 6, Day = Day.Wednesday, OfferingId = 3, Offering = gymOliverQSpring2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) }
+                new Schedule { Id = 5, Day = Day.Monday, OfferingId = 3, Offering = gymOliverQSpring2017, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Id = 6, Day = Day.Wednesday, OfferingId = 3, Offering = gymOliverQSpring2017, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) }
             }
         };
 
@@ -300,8 +300,8 @@ namespace ADYC.Repository.IntegrationTests
             TermId = spring2017.Id,
             Schedules = new List<Schedule>
             {
-                new Schedule { Id = 7, Day = Day.Tuesday, OfferingId = 4, Offering = compDesignJohnDFall2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Id = 8, Day = Day.Thrusday, OfferingId = 4, Offering = compDesignJohnDFall2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) }
+                new Schedule { Id = 7, Day = Day.Tuesday, OfferingId = 4, Offering = compDesignJohnDFall2017, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Id = 8, Day = Day.Thrusday, OfferingId = 4, Offering = compDesignJohnDFall2017, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) }
             }
         };
 
@@ -318,8 +318,8 @@ namespace ADYC.Repository.IntegrationTests
             TermId = fall2017.Id,
             Schedules = new List<Schedule>
             {
-                new Schedule { Id = 9, Day = Day.Monday, OfferingId = 5, Offering = computerLabJohnDFall2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Id = 10, Day = Day.Wednesday, OfferingId = 5, Offering = computerLabJohnDFall2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) }
+                new Schedule { Id = 9, Day = Day.Monday, OfferingId = 5, Offering = computerLabJohnDFall2017, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Id = 10, Day = Day.Wednesday, OfferingId = 5, Offering = computerLabJohnDFall2017, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) }
             }
         };
 
@@ -336,8 +336,8 @@ namespace ADYC.Repository.IntegrationTests
             TermId = fall2017.Id,
             Schedules = new List<Schedule>
             {
-                new Schedule { Id = 11, Day = Day.Tuesday, OfferingId = 6, Offering = baseballBruceWFall2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Id = 12, Day = Day.Thrusday, OfferingId = 6, Offering = baseballBruceWFall2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) }
+                new Schedule { Id = 11, Day = Day.Tuesday, OfferingId = 6, Offering = baseballBruceWFall2017, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Id = 12, Day = Day.Thrusday, OfferingId = 6, Offering = baseballBruceWFall2017, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) }
             }
         };
 
@@ -354,8 +354,8 @@ namespace ADYC.Repository.IntegrationTests
             TermId = fall2017.Id,
             Schedules = new List<Schedule>
             {
-                new Schedule { Id = 13, Day = Day.Monday, OfferingId = 7, Offering = gymOliverQFall2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Id = 14, Day = Day.Wednesday, OfferingId = 7, Offering = gymOliverQFall2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) }
+                new Schedule { Id = 13, Day = Day.Monday, OfferingId = 7, Offering = gymOliverQFall2017, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Id = 14, Day = Day.Wednesday, OfferingId = 7, Offering = gymOliverQFall2017, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) }
             }
         };
 
@@ -372,8 +372,8 @@ namespace ADYC.Repository.IntegrationTests
             TermId = spring2018.Id,
             Schedules = new List<Schedule>
             {
-                new Schedule { Id = 15, Day = Day.Tuesday, OfferingId = 8, Offering = TestData.computerLabJohnDSpring2018, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Id = 16, Day = Day.Thrusday, OfferingId = 8, Offering = TestData.computerLabJohnDSpring2018, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) }
+                new Schedule { Id = 15, Day = Day.Tuesday, OfferingId = 8, Offering = TestData.computerLabJohnDSpring2018, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Id = 16, Day = Day.Thrusday, OfferingId = 8, Offering = TestData.computerLabJohnDSpring2018, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) }
             }
         };
 
@@ -390,8 +390,8 @@ namespace ADYC.Repository.IntegrationTests
             TermId = spring2018.Id,
             Schedules = new List<Schedule>
             {
-                new Schedule { Id = 17, Day = Day.Monday, OfferingId = 9, Offering = baseballBruceWSpring2018, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Id = 18, Day = Day.Wednesday, OfferingId = 9, Offering = baseballBruceWSpring2018, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) }
+                new Schedule { Id = 17, Day = Day.Monday, OfferingId = 9, Offering = baseballBruceWSpring2018, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Id = 18, Day = Day.Wednesday, OfferingId = 9, Offering = baseballBruceWSpring2018, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) }
             }
         };
 
@@ -408,8 +408,8 @@ namespace ADYC.Repository.IntegrationTests
             TermId = spring2018.Id,
             Schedules = new List<Schedule>
             {
-                new Schedule { Id = 19, Day = Day.Tuesday, OfferingId = 10, Offering = gymOliverQSpring2018, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Id = 20, Day = Day.Thrusday, OfferingId = 10, Offering = gymOliverQSpring2018, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) }
+                new Schedule { Id = 19, Day = Day.Tuesday, OfferingId = 10, Offering = gymOliverQSpring2018, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Id = 20, Day = Day.Thrusday, OfferingId = 10, Offering = gymOliverQSpring2018, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) }
             }
         };
 
@@ -426,8 +426,8 @@ namespace ADYC.Repository.IntegrationTests
             TermId = spring2018.Id,
             Schedules = new List<Schedule>
             {
-                new Schedule { Id = 21, Day = Day.Monday, OfferingId = 11, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Id = 22, Day = Day.Wednesday, OfferingId = 11, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) }
+                new Schedule { Id = 21, Day = Day.Monday, OfferingId = 11, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Id = 22, Day = Day.Wednesday, OfferingId = 11, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) }
             }
         };
 

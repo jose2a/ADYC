@@ -134,8 +134,6 @@
             })
             .on("change", function () {
                 enrollmentDropDeadLine.datepicker("option", "minDate", getDate(this));
-
-                enrollmentDropDeadLine.val("");
             });
 
             enrollmentDropDeadLine.datepicker({
@@ -146,8 +144,6 @@
             })
             .on("change", function () {
                 enrollmentDeadLine.datepicker("option", "maxDate", getDate(this));
-
-                enrollmentDeadLine.val("");
             });
 
             var dateFormat = "mm/dd/yy";

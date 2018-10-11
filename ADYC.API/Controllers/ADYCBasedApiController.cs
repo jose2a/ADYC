@@ -173,7 +173,7 @@ namespace ADYC.API.Controllers
             var scheduleListDto = new ScheduleListDto
             {
                 Url = UrlResoucesUtil.GetBaseUrl(Request, "Offerings") + offeringId + "/Schedules",
-                SchedulesDto = schedules
+                Schedules = schedules
                     .Select(s =>
                     {
                         return GetScheduleDto(s);

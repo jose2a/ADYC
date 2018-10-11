@@ -144,6 +144,10 @@
     <Compile Include="Migrations\201805180052372_ChangedPeriodAndPeriodGradeLetterToOptional1.Designer.cs">
       <DependentUpon>201805180052372_ChangedPeriodAndPeriodGradeLetterToOptional1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810090049307_ChangeScheduleTimeSpansToDateTime.cs" />
+    <Compile Include="Migrations\201810090049307_ChangeScheduleTimeSpansToDateTime.Designer.cs">
+      <DependentUpon>201810090049307_ChangeScheduleTimeSpansToDateTime.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -196,6 +200,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805180052372_ChangedPeriodAndPeriodGradeLetterToOptional1.resx">
       <DependentUpon>201805180052372_ChangedPeriodAndPeriodGradeLetterToOptional1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810090049307_ChangeScheduleTimeSpansToDateTime.resx">
+      <DependentUpon>201810090049307_ChangeScheduleTimeSpansToDateTime.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

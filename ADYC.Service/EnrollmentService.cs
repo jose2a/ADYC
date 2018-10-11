@@ -108,16 +108,14 @@ namespace ADYC.Service
 
         public void RemoveRange(IEnumerable<Enrollment> enrollments)
         {
-            if (enrollments.Count() == 0)
+            if (enrollments.Count() > 0)
             {
-                throw new ArgumentNullException("enrollments");
-            }
+                foreach (var enrollment in enrollments)
+                {
+                    _evaluationRepository.RemoveRange(enrollment.Evaluations);
 
-            foreach (var enrollment in enrollments)
-            {
-                _evaluationRepository.RemoveRange(enrollment.Evaluations);
-
-                _enrollmentRepository.Remove(enrollment);
+                    _enrollmentRepository.Remove(enrollment);
+                }
             }
         }
 

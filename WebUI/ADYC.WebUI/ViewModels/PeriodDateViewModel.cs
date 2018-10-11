@@ -44,9 +44,9 @@ namespace ADYC.WebUI.ViewModels
 
         public PeriodDateListViewModel(int termId, Term term, List<PeriodDateViewModel> periodDates)
         {
-            this.TermId = termId;
-            this.Term = term;
-            this.PeriodDates = periodDates;
+            TermId = termId;
+            Term = term;
+            PeriodDates = periodDates;
         }
     }
 }

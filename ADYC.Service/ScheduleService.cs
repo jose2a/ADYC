@@ -58,12 +58,10 @@ namespace ADYC.Service
 
         public void RemoveRange(IEnumerable<Schedule> schedules)
         {
-            if (schedules.Count() == 0)
+            if (schedules.Count() > 0)
             {
-                throw new ArgumentException("schedules");
+                _scheduleRepository.RemoveRange(schedules);
             }
-
-            _scheduleRepository.RemoveRange(schedules);
         }
 
         private void SetSchedulesOffering(IEnumerable<Schedule> schedules)
@@ -110,14 +108,16 @@ namespace ADYC.Service
 
             if (overlapedSchedules.Count > 0)
             {
-                var message = "The following schedules overlap:\n";
+                var message = "<p>The following schedules overlap:</p>\n";
+                    message += "<ul>\n";
 
                 foreach (var s in overlapedSchedules)
                 {
-                    message += $"{s.Day.ToString()} : {s.StartTime} - {s.EndTime} \n";
+                    message += $"<li>{s.Day.ToString()} : {s.StartTime.Value.ToString("{0:h: mmtt}")} - {s.EndTime.Value.ToString("{0:h: mmtt}")}</li>\n";
                 }
+                message += "</ul>";
 
-                throw new PreexistingEntityException($"The offering's schedules overlaped.\n {message}");
+                throw new PreexistingEntityException(message);
             }
 
             var isStartTimeNull = schedulesToAdd.Count(s => s.StartTime == null);
@@ -149,7 +149,7 @@ namespace ADYC.Service
 
             if (isEndTimeBeforeStart.Count() > 0)
             {
-                throw new ArgumentException("A schedule end time should be after the end time.");
+                throw new ArgumentException("A schedule end time should be after the start time.");
             }
         }
     }

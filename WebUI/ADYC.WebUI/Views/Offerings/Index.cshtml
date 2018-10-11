@@ -1,0 +1,55 @@
+﻿@model IEnumerable<ADYC.Model.Term>
+
+@{
+    ViewBag.Title = "Offerings";
+}
+
+<link href="~/Content/jPages.css" rel="stylesheet" />
+
+<h2>Terms</h2>
+
+<p>
+    Select term to see offerings.
+</p>
+
+<div class="holder"></div>
+
+<ul id="itemContainer" class="w3-ul w3-card-4">
+    @foreach (var term in Model)
+    {
+        <li>
+            <a href="@Url.Action("view", new { termId = term.Id})">
+                @if (term.IsCurrentTerm)
+                {
+                    <span class="glyphicon glyphicon-ok"></span>
+                }
+                else
+                {
+                    <span class="glyphicon glyphicon-minus"></span>
+                }
+
+                <span class="glyphicon glyphicon-calendar"></span>
+                <h5>@term.Name</h5>
+                <span class="w3-medium w3-opacity">@term.StartDate.ToString("MMMM dd, yyyy") - @term.EndDate.ToString("MMMM dd, yyyy")</span>
+            </a>
+        </li>
+    }
+</ul>
+
+<div class="holder"></div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $("div.holder").jPages({
+                containerID: "itemContainer",
+                perPage: 5,
+                callback: function (pages, items) {
+                    console.log(pages.current);
+                }
+            });
+        });
+    </script>
+
+<script src="~/Scripts/jPages.min.js"></script>
+}

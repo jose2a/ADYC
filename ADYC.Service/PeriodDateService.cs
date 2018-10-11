@@ -66,7 +66,10 @@ namespace ADYC.Service
 
         public void RemoveRange(IEnumerable<PeriodDate> periodDates)
         {
-            _periodDateRepository.RemoveRange(periodDates);
+            if (periodDates.Count() > 0)
+            {
+                _periodDateRepository.RemoveRange(periodDates); 
+            }
         }
 
         private int GetTermIdFromPeriodDates(IEnumerable<PeriodDate> periodDates)

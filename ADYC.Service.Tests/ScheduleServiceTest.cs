@@ -25,10 +25,10 @@ namespace ADYC.Service.Tests
             // Arrange
             var schedules = new List<Schedule>
             {
-                new Schedule { Day = Day.Monday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Wednesday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Tuesday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) },
-                new Schedule { Day = Day.Thrusday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) },
+                new Schedule { Day = Day.Monday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Day = Day.Wednesday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Day = Day.Tuesday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new DateTime(new TimeSpan(13, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(15, 0, 0).Ticks) },
+                new Schedule { Day = Day.Thrusday, OfferingId = 3, Offering = FakeScheduleRepository.computerLabJohnDSpring2017, StartTime = new DateTime(new TimeSpan(13, 15, 0).Ticks) , EndTime = new DateTime(new TimeSpan(15, 0, 0).Ticks) },
                 null
             };
 
@@ -45,10 +45,10 @@ namespace ADYC.Service.Tests
 
             var schedules = new List<Schedule>
             {
-                new Schedule { Day = Day.Monday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Wednesday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Tuesday, OfferingId = offering.Id, Offering = offering, EndTime = new TimeSpan(15, 0, 0) },
-                new Schedule { Day = Day.Thrusday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) }
+                new Schedule { Day = Day.Monday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Day = Day.Wednesday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Day = Day.Tuesday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(13, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(15, 0, 0).Ticks) },
+                new Schedule { Day = Day.Thrusday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(13, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(15, 0, 0).Ticks) }
             };
 
             // Act and Assert
@@ -64,10 +64,10 @@ namespace ADYC.Service.Tests
 
             var schedules = new List<Schedule>
             {
-                new Schedule { Day = Day.Monday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Wednesday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Tuesday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(13, 15, 0) },
-                new Schedule { Day = Day.Thrusday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) }
+                new Schedule { Day = Day.Monday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Day = Day.Wednesday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Day = Day.Tuesday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(13, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(15, 0, 0).Ticks) },
+                new Schedule { Day = Day.Thrusday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(13, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(15, 0, 0).Ticks) }
             };
 
             // Act and Assert
@@ -83,10 +83,10 @@ namespace ADYC.Service.Tests
 
             var schedules = new List<Schedule>
             {
-                new Schedule { Day = Day.Monday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Wednesday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
+                new Schedule { Day = Day.Monday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Day = Day.Wednesday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
                 new Schedule { Day = Day.Tuesday, OfferingId = offering.Id, Offering = offering},
-                new Schedule { Day = Day.Thrusday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) }
+                new Schedule { Day = Day.Thrusday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(13, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(15, 0, 0).Ticks) }
             };
 
             // Act and Assert
@@ -101,10 +101,10 @@ namespace ADYC.Service.Tests
             // Arrange
             var schedules = new List<Schedule>
             {
-                new Schedule { Day = Day.Monday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Wednesday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Tuesday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(13, 15, 0) },
-                new Schedule { Day = Day.Thrusday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) }
+                new Schedule { Day = Day.Monday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Day = Day.Wednesday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Day = Day.Tuesday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(13, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(13, 15, 0).Ticks) },
+                new Schedule { Day = Day.Thrusday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(13, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(15, 0, 0).Ticks) }
             };
 
             // Act and Assert
@@ -120,10 +120,10 @@ namespace ADYC.Service.Tests
 
             var schedules = new List<Schedule>
             {
-                new Schedule { Day = Day.Monday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Wednesday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Tuesday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(15, 15, 0), EndTime = new TimeSpan(13, 15, 0) },
-                new Schedule { Day = Day.Thrusday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) }
+                new Schedule { Day = Day.Monday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Day = Day.Wednesday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Day = Day.Tuesday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(15, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(13, 15, 0).Ticks) },
+                new Schedule { Day = Day.Thrusday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(13, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(15, 0, 0).Ticks) }
             };
 
             // Act and Assert
@@ -139,10 +139,10 @@ namespace ADYC.Service.Tests
 
             var schedules = new List<Schedule>
             {
-                new Schedule { Day = Day.Monday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Wednesday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                new Schedule { Day = Day.Tuesday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) },
-                new Schedule { Day = Day.Thrusday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) }
+                new Schedule { Day = Day.Monday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Day = Day.Wednesday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                new Schedule { Day = Day.Tuesday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(13, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(15, 0, 0).Ticks) },
+                new Schedule { Day = Day.Thrusday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(13, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(15, 0, 0).Ticks) }
             };
 
             var nextId = 23;
@@ -164,13 +164,13 @@ namespace ADYC.Service.Tests
         {
             yield return new TestCaseData(new List<Schedule>
                 {
-                    new Schedule { Day = Day.Monday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) },
-                    new Schedule { Day = Day.Wednesday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) }
+                    new Schedule { Day = Day.Monday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) },
+                    new Schedule { Day = Day.Wednesday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) }
                 });
             yield return new TestCaseData(new List<Schedule>
                 {
-                    new Schedule { Day = Day.Monday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(13, 15, 0), EndTime = new TimeSpan(15, 0, 0) },
-                    new Schedule { Day = Day.Wednesday, OfferingId = offering.Id, Offering = offering, StartTime = new TimeSpan(8, 15, 0), EndTime = new TimeSpan(10, 0, 0) }
+                    new Schedule { Day = Day.Monday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(13, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(15, 0, 0).Ticks) },
+                    new Schedule { Day = Day.Wednesday, OfferingId = offering.Id, Offering = offering, StartTime = new DateTime(new TimeSpan(8, 15, 0).Ticks), EndTime = new DateTime(new TimeSpan(10, 0, 0).Ticks) }
                 });
         }
 
