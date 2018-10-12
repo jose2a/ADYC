@@ -1,65 +1,37 @@
 ﻿using ADYC.Model;
-using ADYC.WebUI.Infrastructure;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace ADYC.WebUI.Repositories
 {
-    public class MajorRepository : IDisposable
+    public class MajorRepository : BaseRepository<Major>
     {
-        private bool disposed = false;
         private string addressPreffix = "api/Majors/";
 
-        private GenericRestfulCrudHttpClient<Major> majorClient =
-            new GenericRestfulCrudHttpClient<Major>("http://localhost:19016/");
-
-        public async Task<IEnumerable<Major>> GetMajorsAsync()
+        public async Task<IEnumerable<Major>> GetMajors()
         {
-            return await majorClient.GetManyAsync(addressPreffix);
+            return await restClient.GetManyAsync(addressPreffix);
         }
 
-        public async Task<Major> GetMajorAsync(int id)
+        public async Task<Major> GetMajorById(int id)
         {
-            return await majorClient.GetAsync(addressPreffix + id);
+            return await restClient.GetAsync(addressPreffix + id);
         }
 
-        public async Task<Major> PostMajorAsync(Major major)
+        public async Task<Major> PostMajor(Major major)
         {
-            return await majorClient.PostAsync(addressPreffix, major);
+            return await restClient.PostAsync(addressPreffix, major);
         }
 
-        public async Task<HttpStatusCode> PutMajorAsync(int id, Major major)
+        public async Task<HttpStatusCode> PutMajor(int id, Major major)
         {
-            return await majorClient.PutAsync(addressPreffix + id, major);
+            return await restClient.PutAsync(addressPreffix + id, major);
         }
 
-        public async Task<HttpStatusCode> DeleteGradeAsync(int id)
+        public async Task<HttpStatusCode> DeleteGrade(int id)
         {
-            return await majorClient.DeleteAsync(addressPreffix + id);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (!disposed && disposing)
-            {
-                if (majorClient != null)
-                {
-                    var mc = majorClient;
-                    majorClient = null;
-                    mc.Dispose();
-                }
-                disposed = true;
-            }
+            return await restClient.DeleteAsync(addressPreffix + id);
         }
     }
 }

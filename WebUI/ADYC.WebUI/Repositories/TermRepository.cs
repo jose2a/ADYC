@@ -1,5 +1,4 @@
 ﻿using ADYC.Model;
-using ADYC.WebUI.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -7,67 +6,43 @@ using System.Threading.Tasks;
 
 namespace ADYC.WebUI.Repositories
 {
-    public class TermRepository : IDisposable
+    public class TermRepository : BaseRepository<Term>
     {
-        private bool disposed = false;
         private string addressPreffix = "api/Terms/";
-
-        private GenericRestfulCrudHttpClient<Term> termClient =
-            new GenericRestfulCrudHttpClient<Term>("http://localhost:19016/");
-
-        public async Task<IEnumerable<Term>> GetTermsAsync()
+        
+        public async Task<IEnumerable<Term>> GetTerms()
         {
-            return await termClient.GetManyAsync(addressPreffix);
+            return await restClient.GetManyAsync(addressPreffix);
         }
 
-        public async Task<Term> GetTermAsync(int id)
+        public async Task<Term> GetTermById(int id)
         {
-            return await termClient.GetAsync(addressPreffix + id);
+            return await restClient.GetAsync(addressPreffix + id);
         }
 
-        public async Task<Term> GetCurrentTermAsync()
+        public async Task<Term> GetCurrentTerm()
         {
-            return await termClient.GetAsync(addressPreffix + "GetCurrentTerm/");
+            return await restClient.GetAsync(addressPreffix + "GetCurrentTerm/");
         }
 
-        public async Task<Term> GetByBetweenDateAsync(DateTime startDate, DateTime endDate)
+        public async Task<Term> GetByBetweenDates(DateTime startDate, DateTime endDate)
         {
-            return await termClient.GetAsync(addressPreffix + "GetByBetweenDates/StartDate/" + startDate + "/EndDate/" + endDate + "/");
+            return await restClient.GetAsync(addressPreffix + "GetByBetweenDates/StartDate/" + startDate + "/EndDate/" + endDate + "/");
         }
 
-        public async Task<Term> PostTermAsync(Term term)
+        public async Task<Term> PostTerm(Term term)
         {
-            return await termClient.PostAsync(addressPreffix, term);
+            return await restClient.PostAsync(addressPreffix, term);
         }
 
-        public async Task<HttpStatusCode> PutTermAsync(int id, Term term)
+        public async Task<HttpStatusCode> PutTerm(int id, Term term)
         {
-            return await termClient.PutAsync(addressPreffix + id, term);
+            return await restClient.PutAsync(addressPreffix + id, term);
         }
 
-        public async Task<HttpStatusCode> DeleteTermAsync(int id)
+        public async Task<HttpStatusCode> DeleteTerm(int id)
         {
-            return await termClient.DeleteAsync(addressPreffix + id);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (!disposed && disposing)
-            {
-                if (termClient != null)
-                {
-                    var mc = termClient;
-                    termClient = null;
-                    mc.Dispose();
-                }
-                disposed = true;
-            }
+            return await restClient.DeleteAsync(addressPreffix + id);
         }
     }
 }

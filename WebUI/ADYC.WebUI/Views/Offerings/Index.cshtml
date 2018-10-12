@@ -9,7 +9,7 @@
 <h2>Terms</h2>
 
 <p>
-    Select term to see offerings.
+    Please select a term to see its offerings.
 </p>
 
 <div class="holder"></div>
@@ -41,13 +41,18 @@
 @section scripts {
     <script>
         $(document).ready(function () {
+            var currentPage = sessionStorage.getItem("currentPage") || 1;
+
             $("div.holder").jPages({
                 containerID: "itemContainer",
                 perPage: 5,
+                startPage: currentPage,
                 callback: function (pages, items) {
-                    console.log(pages.current);
+                    sessionStorage.setItem("currentPage", pages.current);
                 }
             });
+
+            $("div.holder").jPages(currentPage);
         });
     </script>
 

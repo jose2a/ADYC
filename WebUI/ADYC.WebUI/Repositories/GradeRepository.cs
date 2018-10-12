@@ -1,65 +1,37 @@
 ﻿using ADYC.Model;
-using ADYC.WebUI.Infrastructure;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace ADYC.WebUI.Repositories
 {
-    public class GradeRepository : IDisposable
+    public class GradeRepository : BaseRepository<Grade>
     {
-        private bool disposed = false;
         private string addressPreffix = "api/Grades/";
 
-        private GenericRestfulCrudHttpClient<Grade> gradeClient =
-            new GenericRestfulCrudHttpClient<Grade>("http://localhost:19016/");
-
-        public async Task<IEnumerable<Grade>> GetGradesAsync()
+        public async Task<IEnumerable<Grade>> GetGrades()
         {
-            return await gradeClient.GetManyAsync(addressPreffix);
+            return await restClient.GetManyAsync(addressPreffix);
         }
 
-        public async Task<Grade> GetGradeAsync(int id)
+        public async Task<Grade> GetGradeById(int id)
         {
-            return await gradeClient.GetAsync(addressPreffix + id);
+            return await restClient.GetAsync(addressPreffix + id);
         }
 
-        public async Task<Grade> PostGradeAsync(Grade grade)
+        public async Task<Grade> PostGrade(Grade grade)
         {
-            return await gradeClient.PostAsync(addressPreffix, grade);
+            return await restClient.PostAsync(addressPreffix, grade);
         }
 
-        public async Task<HttpStatusCode> PutGradeAsync(int id, Grade grade)
+        public async Task<HttpStatusCode> PutGrade(int id, Grade grade)
         {
-            return await gradeClient.PutAsync(addressPreffix + id, grade);
+            return await restClient.PutAsync(addressPreffix + id, grade);
         }
 
-        public async Task<HttpStatusCode> DeleteGradeAsync(int id)
+        public async Task<HttpStatusCode> DeleteGrade(int id)
         {
-            return await gradeClient.DeleteAsync(addressPreffix + id);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (!disposed && disposing)
-            {
-                if (gradeClient != null)
-                {
-                    var mc = gradeClient;
-                    gradeClient = null;
-                    mc.Dispose();
-                }
-                disposed = true;
-            }
+            return await restClient.DeleteAsync(addressPreffix + id);
         }
     }
 }

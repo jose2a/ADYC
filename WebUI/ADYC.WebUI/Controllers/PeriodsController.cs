@@ -4,7 +4,7 @@ using System.Web.Mvc;
 
 namespace ADYC.WebUI.Controllers
 {
-    public class PeriodsController : Controller
+    public class PeriodsController : ADYCBasedController
     {
         private PeriodRepository _periodRepository;
 
@@ -16,7 +16,7 @@ namespace ADYC.WebUI.Controllers
         // GET: CourseTypes
         public async Task<ActionResult> Index()
         {
-            var periods = await _periodRepository.GetPeriodAsync();
+            var periods = await _periodRepository.GetPeriods();
 
             return View(periods);
         }

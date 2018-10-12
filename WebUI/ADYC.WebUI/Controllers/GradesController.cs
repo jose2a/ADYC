@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace ADYC.WebUI.Controllers
 {
-    public class GradesController : Controller
+    public class GradesController : ADYCBasedController
     {
         private GradeRepository _gradeRepository;
 
@@ -20,7 +20,7 @@ namespace ADYC.WebUI.Controllers
         // GET: CourseTypes
         public async Task<ActionResult> Index()
         {
-            var grades = await _gradeRepository.GetGradesAsync();
+            var grades = await _gradeRepository.GetGrades();
 
             return View(grades);
         }
@@ -46,7 +46,7 @@ namespace ADYC.WebUI.Controllers
 
             try
             {
-                var grade = await _gradeRepository.GetGradeAsync(id.Value);
+                var grade = await _gradeRepository.GetGradeById(id.Value);
 
                 viewModel = new GradeFormViewModel(grade)
                 {
@@ -60,10 +60,7 @@ namespace ADYC.WebUI.Controllers
                     return HttpNotFound();
                 }
 
-                foreach (var error in ahre.Errors)
-                {
-                    ModelState.AddModelError("", ahre.Message);
-                }
+                AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
             }
 
             return View("GradeForm", viewModel);
@@ -72,35 +69,30 @@ namespace ADYC.WebUI.Controllers
         [HttpPost]
         public async Task<ActionResult> Save(GradeFormViewModel form)
         {
-            form.IsNew = form.Id == null;
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    Grade grade = (form.IsNew) 
-                        ? new Grade() 
-                        : await _gradeRepository.GetGradeAsync(form.Id.Value);
+                    Grade grade = (form.IsNew)
+                        ? new Grade()
+                        : await _gradeRepository.GetGradeById(form.Id.Value);
 
                     grade.Name = form.Name;
 
                     if (form.IsNew)
                     {
-                        await _gradeRepository.PostGradeAsync(grade);
+                        await _gradeRepository.PostGrade(grade);
                     }
                     else
                     {
-                        await _gradeRepository.PutGradeAsync(grade.Id, grade);
+                        await _gradeRepository.PutGrade(grade.Id, grade);
                     }
 
                     return RedirectToAction("Index");
                 }
                 catch (AdycHttpRequestException ahre)
                 {
-                    foreach (var error in ahre.Errors)
-                    {
-                        ModelState.AddModelError("", error);
-                    }
+                    AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
                 }
             }
 
@@ -112,7 +104,7 @@ namespace ADYC.WebUI.Controllers
         {
             try
             {
-                var statusCode = await _gradeRepository.DeleteGradeAsync(id);
+                var statusCode = await _gradeRepository.DeleteGrade(id);
 
                 if (statusCode == HttpStatusCode.NotFound)
                 {
@@ -123,16 +115,10 @@ namespace ADYC.WebUI.Controllers
             }
             catch (AdycHttpRequestException ahre)
             {
-                var errorString = "";
-
-                foreach (var error in ahre.Errors)
-                {
-                    errorString += error;
-                }
+                var errorString = GetErrorsFromAdycHttpExceptionToString(ahre);
 
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
             }
-
         }
     }
 }

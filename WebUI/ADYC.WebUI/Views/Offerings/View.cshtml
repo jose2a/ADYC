@@ -1,14 +1,10 @@
 ﻿@model ADYC.WebUI.ViewModels.OfferingListViewModel
 
 @{
-    ViewBag.Title = "Offerings for " + Model.Term.Name;
+    ViewBag.Title = "Offerings";
 }
 
-<h2>Offerings for @Model.Term.Name</h2>
-
-@{
-    var message = (TempData["Msg"] != null) ? TempData["Msg"].ToString() : "";
-}
+<h2>Offerings</h2>
 
 <div id="msg-div">
 </div>
@@ -35,7 +31,7 @@
 <div class="btn-toolbar">
     <div class="btn-group">
         <a id="newOfferingBtn" href="@Url.Action("new")" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-plus"></i> Create Offering</a>
-        <a href="@Url.Action("Index")" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-circle-arrow-left"></i> Back to list</a>
+        <a href="@Url.Action("Index")" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-circle-arrow-left"></i> Back to list of terms</a>
     </div>
 </div>
 
@@ -83,12 +79,6 @@
 {
     <script>
         $(document).ready(function () {
-
-            //var tableHelper = TH$({
-            //    table: "offerings",
-            //    messageDiv: "#msg-div",
-            //    addDeleteEvent: true
-            //});
 
             function addDeleteEvent() {
                 $(".js-delete").on("click", deleteFn);
@@ -175,6 +165,7 @@
 
         });
     </script>
+
     <script type="text/javascript" src="~/Scripts/adyc.table.utils.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>

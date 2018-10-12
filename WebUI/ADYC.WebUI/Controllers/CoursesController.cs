@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace ADYC.WebUI.Controllers
 {
-    public class CoursesController : Controller
+    public class CoursesController : ADYCBasedController
     {
         private CourseRepository _courseRepository;
         private CourseTypeRepository _courseTypeRepository;
@@ -22,7 +22,7 @@ namespace ADYC.WebUI.Controllers
         // GET: Courses
         public async Task<ActionResult> Index()
         {
-            var courses = await _courseRepository.GetCoursesAsync();
+            var courses = await _courseRepository.GetCourses();
 
             return View(courses);
         }
@@ -32,7 +32,7 @@ namespace ADYC.WebUI.Controllers
             var viewModel = new CourseFormViewModel
             {
                 IsNew = true,
-                CourseTypes = await _courseTypeRepository.GetCourseTypesAsync()
+                CourseTypes = await _courseTypeRepository.GetCourseTypes()
             };
 
             return View("CourseForm", viewModel);
@@ -49,12 +49,12 @@ namespace ADYC.WebUI.Controllers
 
             try
             {
-                var course = await _courseRepository.GetCourseAsync(id.Value);
+                var course = await _courseRepository.GetCourseById(id.Value);
 
                 viewModel = new CourseFormViewModel(course)
                 {
                     IsNew = false,
-                    CourseTypes = await _courseTypeRepository.GetCourseTypesAsync()
+                    CourseTypes = await _courseTypeRepository.GetCourseTypes()
                 };
             }
             catch (AdycHttpRequestException ahre)
@@ -64,10 +64,7 @@ namespace ADYC.WebUI.Controllers
                     return HttpNotFound();
                 }
 
-                foreach (var error in ahre.Errors)
-                {
-                    ModelState.AddModelError("", ahre.Message); 
-                }
+                AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
             }
 
             return View("CourseForm", viewModel);
@@ -76,40 +73,35 @@ namespace ADYC.WebUI.Controllers
         [HttpPost]
         public async Task<ActionResult> Save(CourseFormViewModel form)
         {
-            form.IsNew = form.Id == null;
-
             if (ModelState.IsValid)
             {
                 try
                 {
                     Course course = (form.IsNew)
                         ? new Course()
-                        : await _courseRepository.GetCourseAsync(form.Id.Value);
+                        : await _courseRepository.GetCourseById(form.Id.Value);
 
                     course.Name = form.Name;
                     course.CourseTypeId = form.CourseTypeId;
 
                     if (form.IsNew)
                     {
-                        await _courseRepository.PostCourseAsync(course);
+                        await _courseRepository.PostCourse(course);
                     }
                     else
                     {
-                        await _courseRepository.PutCourseAsync(course.Id, course);
+                        await _courseRepository.PutCourse(course.Id, course);
                     }
 
                     return RedirectToAction("Index");
                 }
                 catch (AdycHttpRequestException ahre)
                 {
-                    foreach (var error in ahre.Errors)
-                    {
-                        ModelState.AddModelError("", error);
-                    }
+                    AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
                 }
             }
 
-            form.CourseTypes = await _courseTypeRepository.GetCourseTypesAsync();
+            form.CourseTypes = await _courseTypeRepository.GetCourseTypes();
 
             return View("CourseForm", form);
         }
@@ -119,7 +111,7 @@ namespace ADYC.WebUI.Controllers
         {
             try
             {
-                var statusCode = await _courseRepository.DeleteCourseAsync(id);
+                var statusCode = await _courseRepository.DeleteCourse(id);
 
                 if (statusCode == HttpStatusCode.NotFound)
                 {
@@ -130,16 +122,10 @@ namespace ADYC.WebUI.Controllers
             }
             catch (AdycHttpRequestException ahre)
             {
-                var errorString = "";
-
-                foreach (var error in ahre.Errors)
-                {
-                    errorString += error;
-                }
+                var errorString = GetErrorsFromAdycHttpExceptionToString(ahre);
 
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
             }
-            
         }
 
         [HttpGet]
@@ -147,7 +133,7 @@ namespace ADYC.WebUI.Controllers
         {
             try
             {
-                var statusCode = await _courseRepository.TrashCourseAsync(id);
+                var statusCode = await _courseRepository.TrashCourse(id);
 
                 if (statusCode == HttpStatusCode.NotFound)
                 {
@@ -156,17 +142,12 @@ namespace ADYC.WebUI.Controllers
             }
             catch (AdycHttpRequestException ahre)
             {
-                var errorString = "";
-
-                foreach (var error in ahre.Errors)
-                {
-                    errorString += error;
-                }
+                var errorString = GetErrorsFromAdycHttpExceptionToString(ahre);
 
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
             }
 
-            return PartialView("pv_CourseRow", await _courseRepository.GetCourseAsync(id));
+            return PartialView("pv_CourseRow", await _courseRepository.GetCourseById(id));
         }
 
         [HttpGet]
@@ -174,27 +155,21 @@ namespace ADYC.WebUI.Controllers
         {
             try
             {
-                var statusCode = await _courseRepository.RestoreCourseAsync(id);
+                var statusCode = await _courseRepository.RestoreCourse(id);
 
                 if (statusCode == HttpStatusCode.NotFound)
                 {
                     return HttpNotFound();
                 }
-
             }
             catch (AdycHttpRequestException ahre)
             {
-                var errorString = "";
-
-                foreach (var error in ahre.Errors)
-                {
-                    errorString += error;
-                }
+                var errorString = GetErrorsFromAdycHttpExceptionToString(ahre);
 
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
             }
 
-            return PartialView("pv_CourseRow", await _courseRepository.GetCourseAsync(id));
+            return PartialView("pv_CourseRow", await _courseRepository.GetCourseById(id));
         }
     }
 }

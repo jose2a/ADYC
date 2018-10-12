@@ -1,75 +1,48 @@
 ﻿using ADYC.Model;
-using ADYC.WebUI.Infrastructure;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace ADYC.WebUI.Repositories
 {
-    public class StudentRepository : IDisposable
+    public class StudentRepository : BaseRepository<Student>
     {
-        private bool disposed = false;
         private string addressPreffix = "api/Students/";
 
-        private GenericRestfulCrudHttpClient<Student> studentClient =
-            new GenericRestfulCrudHttpClient<Student>("http://localhost:19016/");
-
-        public async Task<IEnumerable<Student>> GetStudentsAsync()
+        public async Task<IEnumerable<Student>> GetStudents()
         {
-            return await studentClient.GetManyAsync(addressPreffix);
+            return await restClient.GetManyAsync(addressPreffix);
         }
 
-        public async Task<Student> GetStudentAsync(Guid id)
+        public async Task<Student> GetStudentById(Guid id)
         {
-            return await studentClient.GetAsync(addressPreffix + id);
+            return await restClient.GetAsync(addressPreffix + id);
         }
 
-        public async Task<Student> PostStudentAsync(Student student)
+        public async Task<Student> PostStudent(Student student)
         {
-            return await studentClient.PostAsync(addressPreffix, student);
+            return await restClient.PostAsync(addressPreffix, student);
         }
 
-        public async Task<HttpStatusCode> PutStudentAsync(Guid id, Student student)
+        public async Task<HttpStatusCode> PutStudent(Guid id, Student student)
         {
-            return await studentClient.PutAsync(addressPreffix + id, student);
+            return await restClient.PutAsync(addressPreffix + id, student);
         }
 
-        public async Task<HttpStatusCode> DeleteStudentAsync(Guid id)
+        public async Task<HttpStatusCode> DeleteStudent(Guid id)
         {
-            return await studentClient.DeleteAsync(addressPreffix + id);
+            return await restClient.DeleteAsync(addressPreffix + id);
         }
 
-        public async Task<HttpStatusCode> TrashStudentAsync(Guid id)
+        public async Task<HttpStatusCode> TrashStudent(Guid id)
         {
-            return await studentClient.GetAsyncWithStatusCode(addressPreffix + "Trash/" + id);
+            return await restClient.GetAsyncWithStatusCode(addressPreffix + "Trash/" + id);
         }
 
-        public async Task<HttpStatusCode> RestoreStudentAsync(Guid id)
+        public async Task<HttpStatusCode> RestoreStudent(Guid id)
         {
-            return await studentClient.GetAsyncWithStatusCode(addressPreffix + "Restore/" + id);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (!disposed && disposing)
-            {
-                if (studentClient != null)
-                {
-                    var mc = studentClient;
-                    studentClient = null;
-                    mc.Dispose();
-                }
-                disposed = true;
-            }
+            return await restClient.GetAsyncWithStatusCode(addressPreffix + "Restore/" + id);
         }
     }
 }

@@ -2,11 +2,20 @@
 
 @{
     ViewBag.Title = Model.Title;
+
+    var isCurrentTerm = Model.Offering.Term.IsCurrentTerm;
 }
 
 <link href="~/Content/jquery.timepicker.css" rel="stylesheet" />
 
 <h1>@Model.Title</h1>
+
+@if (!isCurrentTerm)
+{
+    <div class="alert alert-info" role="alert">
+        This term is not the current term, you are not allowed to make changes at this time.
+    </div>
+}
 
 @using (Html.BeginForm("SaveSchedules", "Offerings", FormMethod.Post))
 {
@@ -21,25 +30,32 @@
     <div class="row">
         <div class="col-sm-8">
             <ul class="term-info">
-                @*<li><h5><strong>TERM NAME: </strong>@Model.Term.Name</h5></li>
+                <li><h5><strong>Offering: </strong>@Model.Offering.Title</h5></li>
+                <li><h5><strong>Location: </strong>@Model.Offering.Location</h5></li>
+                <li><h5><strong>Course: </strong>@Model.Offering.Course.Name</h5></li>
+                <li><h5><strong>Professor: </strong>@Model.Offering.Professor</h5></li>
                 <li>
-                    <h5><strong>FROM: </strong>@Model.Term.StartDate.ToString("MMMM dd, yyyy")</h5>
-                    <h5><strong>TO: </strong>@Model.Term.EndDate.ToString("MMMM dd, yyyy")</h5>
+                    <h5>
+                        <strong>Term: </strong>@Model.Offering.Term.Name @if (@Model.Offering.Term.IsCurrentTerm)
+                        {
+                            <span class="badge">Current</span>
+                        }
+                        (@Model.Offering.Term.StartDate.ToString("MMMM dd, yyyy") - @Model.Offering.Term.EndDate.ToString("MMMM dd, yyyy"))
+
+                    </h5>
                 </li>
                 <li>
-                    <h5><strong>ENROLLMENT DEADLINE: </strong>@Model.Term.EnrollmentDeadLine.ToString("MMMM dd, yyyy")</h5>
-                    <h5><strong>ENROLLMENT WITHDRAW: </strong>@Model.Term.EnrollmentDropDeadLine.ToString("MMMM dd, yyyy")</h5>
+                    <h5>
+                        <strong>Notes: </strong>@Model.Offering.Notes
+                    </h5>
                 </li>
-                <li>
-                    <h5><strong>CURRENT TERM: </strong> @((Model.Term.IsCurrentTerm) ? "Yes" : "No")</h5>
-                </li>*@
             </ul>
         </div>
     </div>
 
     <div class="form-horizontal">
-        
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.ValidationSummary(true, "Please fix the following errors:", new { @class = "text-danger" })
 
         <table id="terms" class="table table-bordered table-striped display">
             <thead>
@@ -66,28 +82,45 @@
                             @Model.Days.ElementAt(i).Name
                         </td>
                         <td>
-                            @Html.EditorFor(model => Model.Schedules[i].StartTime, new { htmlAttributes = new { @class = "form-control", data_id= @Model.Days.ElementAt(i).Id } })
-                            @Html.ValidationMessageFor(model => Model.Schedules[i].StartTime, "", new { @class = "text-danger" })
+                            @if (isCurrentTerm)
+                            {
+                                @Html.EditorFor(model => Model.Schedules[i].StartTime, new { htmlAttributes = new { @class = "form-control", data_id = @Model.Days.ElementAt(i).Id } })
+                                @Html.ValidationMessageFor(model => Model.Schedules[i].StartTime, "", new { @class = "text-danger" })
+                            }
+                            else
+                            {
+                                @Html.EditorFor(model => Model.Schedules[i].StartTime, new { htmlAttributes = new { @class = "form-control", data_id = @Model.Days.ElementAt(i).Id, disabled = "disabled" } })
+                            }
                         </td>
                         <td>
-                            @Html.EditorFor(model => Model.Schedules[i].EndTime, new { htmlAttributes = new { @class = "form-control", data_id = @Model.Days.ElementAt(i).Id } })
-                            @Html.ValidationMessageFor(model => Model.Schedules[i].EndTime, "", new { @class = "text-danger" })
+                            @if (isCurrentTerm)
+                            {
+                                @Html.EditorFor(model => Model.Schedules[i].EndTime, new { htmlAttributes = new { @class = "form-control", data_id = @Model.Days.ElementAt(i).Id } })
+                                @Html.ValidationMessageFor(model => Model.Schedules[i].EndTime, "", new { @class = "text-danger" })
+                            }
+                            else
+                            {
+                                @Html.EditorFor(model => Model.Schedules[i].EndTime, new { htmlAttributes = new { @class = "form-control", data_id = @Model.Days.ElementAt(i).Id, disabled = "disabled" } })
+                            }
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
 
-        <div class="form-group">
-            <div class="col-md-10">
-                <input type="submit" value="Save" class="btn btn-primary" />
+        @if (isCurrentTerm)
+        {
+            <div class="form-group">
+                <div class="col-md-10">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
             </div>
-        </div>
+        }
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to Offerings", "View", new { id = Model.Offering.TermId })
+    @Html.ActionLink("Back to offerings", "View", new { termId = Model.Offering.TermId })
 </div>
 
 @section Scripts {
@@ -128,7 +161,7 @@
 
                 tp.on('change', function () {
                     var id = tp.attr("data-id");
-                    
+
                     $("#Schedules_" + id + "__StartTime").timepicker('remove');
 
                     $("#Schedules_" + id + "__StartTime").timepicker({
@@ -142,5 +175,5 @@
 
     @Scripts.Render("~/bundles/jqueryval")
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="~/Scripts/jquery.timepicker.min.js"></script>
+    <script src="~/Scripts/jquery.timepicker.min.js"></script>
 }

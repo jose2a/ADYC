@@ -1,78 +1,52 @@
 ﻿using ADYC.Model;
-using ADYC.WebUI.Infrastructure;
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
 namespace ADYC.WebUI.Repositories
 {
-    public class CourseRepository : IDisposable
+    public class CourseRepository : BaseRepository<Course>
     {
-        private bool disposed = false;
         private string addressPreffix = "api/Courses/";
 
-        private GenericRestfulCrudHttpClient<Course> courseClient =
-            new GenericRestfulCrudHttpClient<Course>("http://localhost:19016/");
-
-        public async Task<IEnumerable<Course>> GetCoursesAsync()
+        public async Task<IEnumerable<Course>> GetCourses()
         {
-            return await courseClient.GetManyAsync(addressPreffix);
+            return await restClient.GetManyAsync(addressPreffix);
         }
 
-        public async Task<IEnumerable<Course>> GetNotTrashedCoursesAsync()
+        public async Task<IEnumerable<Course>> GetNotTrashedCourses()
         {
-            return await courseClient.GetManyAsync(addressPreffix + "GetNotTrashed");
+            return await restClient.GetManyAsync(addressPreffix + "GetNotTrashed");
         }
 
-        public async Task<Course> GetCourseAsync(int id)
+        public async Task<Course> GetCourseById(int id)
         {
-            return await courseClient.GetAsync(addressPreffix + id);
+            return await restClient.GetAsync(addressPreffix + id);
         }
 
-        public async Task<Course> PostCourseAsync(Course course)
+        public async Task<Course> PostCourse(Course course)
         {
-            return await courseClient.PostAsync(addressPreffix, course);
+            return await restClient.PostAsync(addressPreffix, course);
         }
 
-        public async Task<HttpStatusCode> PutCourseAsync(int id, Course course)
+        public async Task<HttpStatusCode> PutCourse(int id, Course course)
         {
-            return await courseClient.PutAsync(addressPreffix + id, course);
+            return await restClient.PutAsync(addressPreffix + id, course);
         }
 
-        public async Task<HttpStatusCode> DeleteCourseAsync(int id)
+        public async Task<HttpStatusCode> DeleteCourse(int id)
         {
-            return await courseClient.DeleteAsync(addressPreffix + id);
+            return await restClient.DeleteAsync(addressPreffix + id);
         }
 
-        public async Task<HttpStatusCode> TrashCourseAsync(int id)
+        public async Task<HttpStatusCode> TrashCourse(int id)
         {
-            return await courseClient.GetAsyncWithStatusCode(addressPreffix + "Trash/" + id);
+            return await restClient.GetAsyncWithStatusCode(addressPreffix + "Trash/" + id);
         }
 
-        public async Task<HttpStatusCode> RestoreCourseAsync(int id)
+        public async Task<HttpStatusCode> RestoreCourse(int id)
         {
-            return await courseClient.GetAsyncWithStatusCode(addressPreffix + "Restore/" + id);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (!disposed && disposing)
-            {
-                if (courseClient != null)
-                {
-                    var mc = courseClient;
-                    courseClient = null;
-                    mc.Dispose();
-                }
-                disposed = true;
-            }
+            return await restClient.GetAsyncWithStatusCode(addressPreffix + "Restore/" + id);
         }
     }
 }

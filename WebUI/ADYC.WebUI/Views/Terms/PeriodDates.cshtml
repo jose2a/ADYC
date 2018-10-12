@@ -36,7 +36,7 @@
 
     <div class="form-horizontal">
         
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.ValidationSummary(true, "Please fix the following errors:", new { @class = "text-danger" })
 
         <table id="terms" class="table table-bordered table-striped display">
             <thead>
@@ -83,7 +83,7 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to list of terms", "Index")
 </div>
 
 @section Scripts {

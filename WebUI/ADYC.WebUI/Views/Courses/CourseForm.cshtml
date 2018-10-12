@@ -9,12 +9,8 @@
 
 @using (Html.BeginForm("Save", "Courses", FormMethod.Post))
 {
-    
-
-    if (!Model.IsNew)
-    {
-        @Html.HiddenFor(m => m.Id)
-    }
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.IsNew)
 
     @Html.AntiForgeryToken()
 
@@ -47,7 +43,7 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to list of courses", "Index")
 </div>
 
 @section Scripts {

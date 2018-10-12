@@ -27,7 +27,7 @@ namespace ADYC.WebUI.Controllers
         // GET: Terms
         public async Task<ActionResult> Index()
         {
-            var terms = await _termRepository.GetTermsAsync();
+            var terms = await _termRepository.GetTerms();
 
             return View(terms);
         }
@@ -57,7 +57,7 @@ namespace ADYC.WebUI.Controllers
 
             try
             {
-                var term = await _termRepository.GetTermAsync(id.Value);
+                var term = await _termRepository.GetTermById(id.Value);
 
                 viewModel = new TermFormViewModel(term)
                 {
@@ -71,7 +71,7 @@ namespace ADYC.WebUI.Controllers
                     return HttpNotFound();
                 }
 
-                ProcessAdycHttpException(ahre, ModelState);
+                AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
             }
 
             return View("TermForm", viewModel);
@@ -80,15 +80,13 @@ namespace ADYC.WebUI.Controllers
         [HttpPost]
         public async Task<ActionResult> Save(TermFormViewModel form)
         {
-            form.IsNew = form.Id == null;
-
             if (ModelState.IsValid)
             {
                 try
                 {
                     Term term = (form.IsNew)
                         ? new Term()
-                        : await _termRepository.GetTermAsync(form.Id.Value);
+                        : await _termRepository.GetTermById(form.Id.Value);
 
                     term.Name = form.Name;
                     term.StartDate = form.StartDate.Value;
@@ -99,18 +97,18 @@ namespace ADYC.WebUI.Controllers
 
                     if (form.IsNew)
                     {
-                        await _termRepository.PostTermAsync(term);
+                        await _termRepository.PostTerm(term);
                     }
                     else
                     {
-                        await _termRepository.PutTermAsync(term.Id, term);
+                        await _termRepository.PutTerm(term.Id, term);
                     }
 
                     return RedirectToAction("Index");
                 }
                 catch (AdycHttpRequestException ahre)
                 {
-                    ProcessAdycHttpException(ahre, ModelState);
+                    AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
                 }
             }
 
@@ -122,7 +120,7 @@ namespace ADYC.WebUI.Controllers
         {
             try
             {
-                var statusCode = await _termRepository.DeleteTermAsync(id);
+                var statusCode = await _termRepository.DeleteTerm(id);
 
                 if (statusCode == HttpStatusCode.NotFound)
                 {
@@ -133,16 +131,10 @@ namespace ADYC.WebUI.Controllers
             }
             catch (AdycHttpRequestException ahre)
             {
-                var errorString = "";
-
-                foreach (var error in ahre.Errors)
-                {
-                    errorString += error;
-                }
+                var errorString = GetErrorsFromAdycHttpExceptionToString(ahre);
 
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
             }
-
         }
 
         public async Task<ActionResult> PeriodDates(int? id)
@@ -156,9 +148,9 @@ namespace ADYC.WebUI.Controllers
 
             try
             {
-                var periodDatesList = await _periodDateRepository.GetPeriodDatesForTerm(id.Value);
+                var periodDatesList = await _periodDateRepository.GetPeriodDatesByTermId(id.Value);
                 var term = periodDatesList.Term;
-                var periods = await _periodRepository.GetPeriodAsync();
+                var periods = await _periodRepository.GetPeriods();
 
                 List<PeriodDateViewModel> periodDates = null;
                 bool isNew = false;
@@ -187,7 +179,7 @@ namespace ADYC.WebUI.Controllers
 
                 viewModel = new PeriodDateListViewModel(id.Value, term, periodDates)
                 {
-                    Periods = await _periodRepository.GetPeriodAsync(),
+                    Periods = await _periodRepository.GetPeriods(),
                     IsNew = isNew
                 };
             }
@@ -198,7 +190,7 @@ namespace ADYC.WebUI.Controllers
                     return HttpNotFound();
                 }
 
-                ProcessAdycHttpException(ahre, ModelState);
+                AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
             }
 
             return View(viewModel);
@@ -213,23 +205,23 @@ namespace ADYC.WebUI.Controllers
                 {
                     if (form.IsNew)
                     {
-                        await _periodDateRepository.PostPeriodDateAsync(form);
+                        await _periodDateRepository.PostPeriodDateList(form);
                     }
                     else
                     {
-                        await _periodDateRepository.PutPeriodDateAsync(form.TermId, form);
+                        await _periodDateRepository.PutPeriodDateList(form.TermId, form);
                     }
 
                     return RedirectToAction("PeriodDates", new { id = form.TermId });
                 }
                 catch (AdycHttpRequestException ahre)
                 {
-                    ProcessAdycHttpException(ahre, ModelState);
+                    AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
                 }
             }
 
-            form.Term = await _termRepository.GetTermAsync(form.TermId);
-            form.Periods = await _periodRepository.GetPeriodAsync();
+            form.Term = await _termRepository.GetTermById(form.TermId);
+            form.Periods = await _periodRepository.GetPeriods();
 
             return View("PeriodDates", form);
         }

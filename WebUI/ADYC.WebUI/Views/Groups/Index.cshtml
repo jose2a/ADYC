@@ -6,9 +6,6 @@
 
 <h2>Groups</h2>
 
-@{
-    var message = (TempData["Msg"] != null) ? TempData["Msg"].ToString() : "";
-}
 <div id="msg-div">
 </div>
 
@@ -54,6 +51,7 @@
             $('#groups').DataTable();
         });
     </script>
+
     <script type="text/javascript" src="~/Scripts/adyc.table.utils.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>

@@ -3,9 +3,7 @@ using ADYC.WebUI.Infrastructure;
 using ADYC.WebUI.Repositories;
 using ADYC.WebUI.ViewModels;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -33,7 +31,8 @@ namespace ADYC.WebUI.Controllers
         // GET: Offerings
         public async Task<ActionResult> Index()
         {
-            var terms = await _termRepository.GetTermsAsync();
+            var terms = await _termRepository.GetTerms();
+
             return View(terms);
         }
 
@@ -44,14 +43,14 @@ namespace ADYC.WebUI.Controllers
                 return HttpNotFound();
             }
 
-            var term = await _termRepository.GetTermAsync(termId.Value);
+            var term = await _termRepository.GetTermById(termId.Value);
 
             if (term == null)
             {
                 return HttpNotFound();
             }
 
-            var offerings = await _offeringRepository.GetOfferingsByTermIdAsync(termId.Value);
+            var offerings = _offeringRepository.GetOfferingsByTermId(termId.Value);
 
             return View(new OfferingListViewModel
             {
@@ -68,16 +67,15 @@ namespace ADYC.WebUI.Controllers
                 return HttpNotFound();
             }
 
-            var professors = await _professorRepository.GetNotTrashedProfessorsAsync();
-            //var professorsVMList = GetProfessorVMList(professors);
+            var professors = await _professorRepository.GetNotTrashedProfessors();
 
             var viewModel = new OfferingFormViewModel
             {
                 IsNew = true,
                 TermId = form.TermId.Value,
-                Courses = await _courseRepository.GetNotTrashedCoursesAsync(),
-                Professors = professors,//professorsVMList,
-                Terms = await _termRepository.GetTermsAsync()
+                Courses = await _courseRepository.GetNotTrashedCourses(),
+                Professors = professors,
+                Terms = await _termRepository.GetTerms()
             };
 
             return View("OfferingForm", viewModel);
@@ -95,7 +93,7 @@ namespace ADYC.WebUI.Controllers
 
             try
             {
-                var offering = await _offeringRepository.GetOfferingAsync(form.OfferingId.Value);
+                var offering = await _offeringRepository.GetOfferingById(form.OfferingId.Value);
 
                 viewModel = new OfferingFormViewModel(offering)
                 {
@@ -109,12 +107,12 @@ namespace ADYC.WebUI.Controllers
                     return HttpNotFound();
                 }
 
-                ProcessAdycHttpException(ahre, ModelState);
+                AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
             }
 
-            viewModel.Courses = await _courseRepository.GetNotTrashedCoursesAsync();
-            viewModel.Professors = await _professorRepository.GetNotTrashedProfessorsAsync();//GetProfessorVMList(await _professorRepository.GetNotTrashedProfessorsAsync());
-            viewModel.Terms = await _termRepository.GetTermsAsync();
+            viewModel.Courses = await _courseRepository.GetNotTrashedCourses();
+            viewModel.Professors = await _professorRepository.GetNotTrashedProfessors();
+            viewModel.Terms = await _termRepository.GetTerms();
 
             return View("OfferingForm", viewModel);
         }
@@ -128,7 +126,7 @@ namespace ADYC.WebUI.Controllers
                 {
                     Offering offering = (form.IsNew)
                         ? new Offering()
-                        : await _offeringRepository.GetOfferingAsync(form.Id.Value);
+                        : await _offeringRepository.GetOfferingById(form.Id.Value);
 
                     offering.Title = form.Title;
                     offering.Location = form.Location;
@@ -140,24 +138,24 @@ namespace ADYC.WebUI.Controllers
 
                     if (form.IsNew)
                     {
-                        await _offeringRepository.PostOfferingAsync(offering);
+                        await _offeringRepository.PostOffering(offering);
                     }
                     else
                     {
-                        await _offeringRepository.PutOfferingAsync(offering.Id, offering);
+                        await _offeringRepository.PutOffering(offering.Id, offering);
                     }
 
-                    return RedirectToAction("View", new { Id = form.TermId });
+                    return RedirectToAction("View", new { termId = form.TermId });
                 }
                 catch (AdycHttpRequestException ahre)
                 {
-                    ProcessAdycHttpException(ahre, ModelState);
+                    AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
                 }
             }
 
-            form.Courses = await _courseRepository.GetNotTrashedCoursesAsync();
-            form.Professors = await _professorRepository.GetNotTrashedProfessorsAsync();//GetProfessorVMList(await _professorRepository.GetNotTrashedProfessorsAsync());
-            form.Terms = await _termRepository.GetTermsAsync();
+            form.Courses = await _courseRepository.GetNotTrashedCourses();
+            form.Professors = await _professorRepository.GetNotTrashedProfessors();
+            form.Terms = await _termRepository.GetTerms();
 
             return View("OfferingForm", form);
         }
@@ -172,7 +170,7 @@ namespace ADYC.WebUI.Controllers
 
             try
             {
-                var statusCode = await _offeringRepository.DeleteOfferingAsync(id.Value, force);
+                var statusCode = await _offeringRepository.DeleteOffering(id.Value, force);
 
                 if (statusCode == HttpStatusCode.NotFound)
                 {
@@ -183,16 +181,10 @@ namespace ADYC.WebUI.Controllers
             }
             catch (AdycHttpRequestException ahre)
             {
-                var errorString = "";
-
-                foreach (var error in ahre.Errors)
-                {
-                    errorString += error;
-                }
+                var errorString = GetErrorsFromAdycHttpExceptionToString(ahre);
 
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
             }
-
         }
 
         public async Task<ActionResult> Schedules(int? offeringId)
@@ -206,7 +198,7 @@ namespace ADYC.WebUI.Controllers
 
             try
             {
-                var scheduleList = await _scheduleRepository.GetSchedulesForOffering(offeringId.Value);
+                var scheduleList = await _scheduleRepository.GetSchedulesByOfferingId(offeringId.Value);
                 var offering = scheduleList.Offering;
                 var days = GetDayEnumViewModelList();
 
@@ -223,7 +215,7 @@ namespace ADYC.WebUI.Controllers
                     return HttpNotFound();
                 }
 
-                ProcessAdycHttpException(ahre, ModelState);
+                AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
             }
 
             return View(viewModel);
@@ -240,23 +232,23 @@ namespace ADYC.WebUI.Controllers
 
                     if (form.IsNew)
                     {
-                        await _scheduleRepository.PostSchedulesAsync(form);
+                        await _scheduleRepository.PostScheduleList(form);
                     }
                     else
                     {
-                        await _scheduleRepository.PutSchedulesAsync(form.OfferingId, form);
+                        await _scheduleRepository.PutScheduleList(form.OfferingId, form);
                     }
 
-                    return RedirectToAction("View", new { Id = form.Offering.TermId });
+                    return RedirectToAction("View", new { termId = form.Offering.TermId });
                 }
                 catch (AdycHttpRequestException ahre)
                 {
-                    ProcessAdycHttpException(ahre, ModelState);
+                    AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
                 }
             }
 
             var days = GetDayEnumViewModelList();
-            var offering = await _offeringRepository.GetOfferingAsync(form.OfferingId);
+            var offering = await _offeringRepository.GetOfferingById(form.OfferingId);
 
             form.Offering = offering;
             form.Schedules = GetScheduleList(offering.Id, form.Schedules, days);

@@ -1,58 +1,26 @@
-﻿using ADYC.WebUI.Infrastructure;
-using ADYC.WebUI.ViewModels;
-using System;
+﻿using ADYC.WebUI.ViewModels;
 using System.Net;
 using System.Threading.Tasks;
 
 namespace ADYC.WebUI.Repositories
 {
-    public class ScheduleRepository : IDisposable
+    public class ScheduleRepository : BaseRepository<ScheduleListViewModel>
     {
-        private bool disposed = false;
         private string addressPreffix = "api/Offerings/";
 
-        private GenericRestfulCrudHttpClient<ScheduleListViewModel> scheduleClient =
-            new GenericRestfulCrudHttpClient<ScheduleListViewModel>("http://localhost:19016/");
-
-        public async Task<ScheduleListViewModel> GetSchedulesForOffering(int id)
+        public async Task<ScheduleListViewModel> GetSchedulesByOfferingId(int id)
         {
-            var scheduleList = await scheduleClient.GetAsync(addressPreffix + id + "/Schedules");
-            return scheduleList;
+            return await restClient.GetAsync(addressPreffix + id + "/Schedules");
         }
 
-        public async Task<ScheduleListViewModel> PostSchedulesAsync(ScheduleListViewModel scheduleList)
+        public async Task<ScheduleListViewModel> PostScheduleList(ScheduleListViewModel scheduleList)
         {
-            return await scheduleClient.PostAsync(addressPreffix + scheduleList.OfferingId + "/Schedules", scheduleList);
+            return await restClient.PostAsync(addressPreffix + scheduleList.OfferingId + "/Schedules", scheduleList);
         }
 
-        public async Task<HttpStatusCode> PutSchedulesAsync(int id, ScheduleListViewModel schedulesList)
+        public async Task<HttpStatusCode> PutScheduleList(int id, ScheduleListViewModel schedulesList)
         {
-            return await scheduleClient.PutAsync(addressPreffix + id + "/Schedules", schedulesList);
-        }
-
-        //public async Task<HttpStatusCode> DeleteTermAsync(int id)
-        //{
-        //    return await periodDateClient.DeleteAsync(addressPreffix + id);
-        //}
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (!disposed && disposing)
-            {
-                if (scheduleClient != null)
-                {
-                    var mc = scheduleClient;
-                    scheduleClient = null;
-                    mc.Dispose();
-                }
-                disposed = true;
-            }
+            return await restClient.PutAsync(addressPreffix + id + "/Schedules", schedulesList);
         }
     }
 }

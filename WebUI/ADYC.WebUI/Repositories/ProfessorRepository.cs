@@ -1,5 +1,4 @@
 ﻿using ADYC.Model;
-using ADYC.WebUI.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -7,72 +6,48 @@ using System.Threading.Tasks;
 
 namespace ADYC.WebUI.Repositories
 {
-    public class ProfessorRepository : IDisposable
+    public class ProfessorRepository : BaseRepository<Professor>
     {
-        private bool disposed = false;
         private string addressPreffix = "api/Professors/";
 
-        private GenericRestfulCrudHttpClient<Professor> professorClient =
-            new GenericRestfulCrudHttpClient<Professor>("http://localhost:19016/");
-
-        public async Task<IEnumerable<Professor>> GetProfessorsAsync()
+        public async Task<IEnumerable<Professor>> GetProfessors()
         {
-            return await professorClient.GetManyAsync(addressPreffix);
+            return await restClient.GetManyAsync(addressPreffix);
         }
 
-        public async Task<IEnumerable<Professor>> GetNotTrashedProfessorsAsync()
+        public async Task<IEnumerable<Professor>> GetNotTrashedProfessors()
         {
-            return await professorClient.GetManyAsync(addressPreffix + "GetNotTrashed");
+            return await restClient.GetManyAsync(addressPreffix + "GetNotTrashed");
         }
 
-        public async Task<Professor> GetProfessorAsync(Guid id)
+        public async Task<Professor> GetProfessorById(Guid id)
         {
-            return await professorClient.GetAsync(addressPreffix + id);
+            return await restClient.GetAsync(addressPreffix + id);
         }
 
-        public async Task<Professor> PostProfessorAsync(Professor professor)
+        public async Task<Professor> PostProfessor(Professor professor)
         {
-            return await professorClient.PostAsync(addressPreffix, professor);
+            return await restClient.PostAsync(addressPreffix, professor);
         }
 
-        public async Task<HttpStatusCode> PutProfessorAsync(Guid id, Professor professor)
+        public async Task<HttpStatusCode> PutProfessor(Guid id, Professor professor)
         {
-            return await professorClient.PutAsync(addressPreffix + id, professor);
+            return await restClient.PutAsync(addressPreffix + id, professor);
         }
 
-        public async Task<HttpStatusCode> DeleteProfessorAsync(Guid id)
+        public async Task<HttpStatusCode> DeleteProfessor(Guid id)
         {
-            return await professorClient.DeleteAsync(addressPreffix + id);
+            return await restClient.DeleteAsync(addressPreffix + id);
         }
 
-        public async Task<HttpStatusCode> TrashProfessorAsync(Guid id)
+        public async Task<HttpStatusCode> TrashProfessor(Guid id)
         {
-            return await professorClient.GetAsyncWithStatusCode(addressPreffix + "Trash/" + id);
+            return await restClient.GetAsyncWithStatusCode(addressPreffix + "Trash/" + id);
         }
 
-        public async Task<HttpStatusCode> RestoreProfessorAsync(Guid id)
+        public async Task<HttpStatusCode> RestoreProfessor(Guid id)
         {
-            return await professorClient.GetAsyncWithStatusCode(addressPreffix + "Restore/" + id);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (!disposed && disposing)
-            {
-                if (professorClient != null)
-                {
-                    var mc = professorClient;
-                    professorClient = null;
-                    mc.Dispose();
-                }
-                disposed = true;
-            }
+            return await restClient.GetAsyncWithStatusCode(addressPreffix + "Restore/" + id);
         }
     }
 }

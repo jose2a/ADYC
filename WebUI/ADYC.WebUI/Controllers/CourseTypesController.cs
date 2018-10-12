@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace ADYC.WebUI.Controllers
 {
-    public class CourseTypesController : Controller
+    public class CourseTypesController : ADYCBasedController
     {
         private CourseTypeRepository _courseTypeRepository;
 
@@ -20,7 +20,7 @@ namespace ADYC.WebUI.Controllers
         // GET: CourseTypes
         public async Task<ActionResult> Index()
         {
-            var courseTypes = await _courseTypeRepository.GetCourseTypesAsync();
+            var courseTypes = await _courseTypeRepository.GetCourseTypes();
 
             return View(courseTypes);
         }
@@ -46,7 +46,7 @@ namespace ADYC.WebUI.Controllers
 
             try
             {
-                var courseType = await _courseTypeRepository.GetCourseTypeAsync(id.Value);
+                var courseType = await _courseTypeRepository.GetCourseTypeById(id.Value);
 
                 viewModel = new CourseTypeFormViewModel(courseType)
                 {
@@ -60,10 +60,7 @@ namespace ADYC.WebUI.Controllers
                     return HttpNotFound();
                 }
 
-                foreach (var error in ahre.Errors)
-                {
-                    ModelState.AddModelError("", ahre.Message);
-                }
+                AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
             }
 
             return View("CourseTypeForm", viewModel);
@@ -72,35 +69,30 @@ namespace ADYC.WebUI.Controllers
         [HttpPost]
         public async Task<ActionResult> Save(CourseTypeFormViewModel form)
         {
-            form.IsNew = form.Id == null;
-
             if (ModelState.IsValid)
             {
                 try
                 {
                     CourseType courseType = (form.IsNew)
                         ? new CourseType()
-                        : await _courseTypeRepository.GetCourseTypeAsync(form.Id.Value);
+                        : await _courseTypeRepository.GetCourseTypeById(form.Id.Value);
 
                     courseType.Name = form.Name;
 
                     if (form.IsNew)
                     {
-                        await _courseTypeRepository.PostCourseTypeAsync(courseType);
+                        await _courseTypeRepository.PostCourseType(courseType);
                     }
                     else
                     {
-                        await _courseTypeRepository.PutCourseTypeAsync(courseType.Id, courseType);
+                        await _courseTypeRepository.PutCourseType(courseType.Id, courseType);
                     }
 
                     return RedirectToAction("Index");
                 }
                 catch (AdycHttpRequestException ahre)
                 {
-                    foreach (var error in ahre.Errors)
-                    {
-                        ModelState.AddModelError("", error);
-                    }
+                    AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
                 }
             }
 
@@ -112,7 +104,7 @@ namespace ADYC.WebUI.Controllers
         {
             try
             {
-                var statusCode = await _courseTypeRepository.DeleteCourseTypeAsync(id);
+                var statusCode = await _courseTypeRepository.DeleteCourseType(id);
 
                 if (statusCode == HttpStatusCode.NotFound)
                 {
@@ -123,16 +115,10 @@ namespace ADYC.WebUI.Controllers
             }
             catch (AdycHttpRequestException ahre)
             {
-                var errorString = "";
-
-                foreach (var error in ahre.Errors)
-                {
-                    errorString += error;
-                }
+                var errorString = GetErrorsFromAdycHttpExceptionToString(ahre);
 
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
             }
-
         }
     }
 }

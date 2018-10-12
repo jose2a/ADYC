@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace ADYC.WebUI.Controllers
 {
-    public class GroupsController : Controller
+    public class GroupsController : ADYCBasedController
     {
         private GroupRepository _groupRepository;
 
@@ -20,7 +20,7 @@ namespace ADYC.WebUI.Controllers
         // GET: CourseTypes
         public async Task<ActionResult> Index()
         {
-            var groups = await _groupRepository.GetGroupsAsync();
+            var groups = await _groupRepository.GetGroups();
 
             return View(groups);
         }
@@ -46,7 +46,7 @@ namespace ADYC.WebUI.Controllers
 
             try
             {
-                var group = await _groupRepository.GetGroupAsync(id.Value);
+                var group = await _groupRepository.GetGroupById(id.Value);
 
                 viewModel = new GroupFormViewModel(group)
                 {
@@ -60,10 +60,7 @@ namespace ADYC.WebUI.Controllers
                     return HttpNotFound();
                 }
 
-                foreach (var error in ahre.Errors)
-                {
-                    ModelState.AddModelError("", ahre.Message);
-                }
+                AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
             }
 
             return View("GroupForm", viewModel);
@@ -72,35 +69,30 @@ namespace ADYC.WebUI.Controllers
         [HttpPost]
         public async Task<ActionResult> Save(GroupFormViewModel form)
         {
-            form.IsNew = form.Id == null;
-
             if (ModelState.IsValid)
             {
                 try
                 {
                     Group group = (form.IsNew)
                         ? new Group()
-                        : await _groupRepository.GetGroupAsync(form.Id.Value);
+                        : await _groupRepository.GetGroupById(form.Id.Value);
 
                     group.Name = form.Name;
 
                     if (form.IsNew)
                     {
-                        await _groupRepository.PostGroupAsync(group);
+                        await _groupRepository.PostGroup(group);
                     }
                     else
                     {
-                        await _groupRepository.PutGroupAsync(group.Id, group);
+                        await _groupRepository.PutGroup(group.Id, group);
                     }
 
                     return RedirectToAction("Index");
                 }
                 catch (AdycHttpRequestException ahre)
                 {
-                    foreach (var error in ahre.Errors)
-                    {
-                        ModelState.AddModelError("", error);
-                    }
+                    AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
                 }
             }
 
@@ -112,7 +104,7 @@ namespace ADYC.WebUI.Controllers
         {
             try
             {
-                var statusCode = await _groupRepository.DeleteGroupAsync(id);
+                var statusCode = await _groupRepository.DeleteGroup(id);
 
                 if (statusCode == HttpStatusCode.NotFound)
                 {
@@ -123,16 +115,10 @@ namespace ADYC.WebUI.Controllers
             }
             catch (AdycHttpRequestException ahre)
             {
-                var errorString = "";
-
-                foreach (var error in ahre.Errors)
-                {
-                    errorString += error;
-                }
+                var errorString = GetErrorsFromAdycHttpExceptionToString(ahre);
 
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
             }
-
         }
     }
 }

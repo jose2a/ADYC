@@ -21,7 +21,7 @@ namespace ADYC.WebUI.Controllers
         // GET: Professors
         public async Task<ActionResult> Index()
         {
-            var professors = await _professorRepository.GetProfessorsAsync();
+            var professors = await _professorRepository.GetProfessors();
 
             return View(professors);
         }
@@ -47,7 +47,7 @@ namespace ADYC.WebUI.Controllers
 
             try
             {
-                var professor = await _professorRepository.GetProfessorAsync(id.Value);
+                var professor = await _professorRepository.GetProfessorById(id.Value);
 
                 viewModel = new ProfessorFormViewModel(professor)
                 {
@@ -61,7 +61,7 @@ namespace ADYC.WebUI.Controllers
                     return HttpNotFound();
                 }
 
-                ProcessAdycHttpException(ahre, ModelState);
+                AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
             }
 
             return View("ProfessorForm", viewModel);
@@ -70,15 +70,13 @@ namespace ADYC.WebUI.Controllers
         [HttpPost]
         public async Task<ActionResult> Save(ProfessorFormViewModel form)
         {
-            form.IsNew = !form.Id.HasValue;
-
             if (ModelState.IsValid)
             {
                 try
                 {
                     Professor professor = (form.IsNew)
                         ? new Professor()
-                        : await _professorRepository.GetProfessorAsync(form.Id.Value);
+                        : await _professorRepository.GetProfessorById(form.Id.Value);
 
                     professor.FirstName = form.FirstName;
                     professor.LastName = form.LastName;
@@ -88,21 +86,18 @@ namespace ADYC.WebUI.Controllers
                     if (form.IsNew)
                     {
                         professor.Id = new System.Guid(); // Get this from Auth service
-                        await _professorRepository.PostProfessorAsync(professor);
+                        await _professorRepository.PostProfessor(professor);
                     }
                     else
                     {
-                        await _professorRepository.PutProfessorAsync(professor.Id, professor);
+                        await _professorRepository.PutProfessor(professor.Id, professor);
                     }
 
                     return RedirectToAction("Index");
                 }
                 catch (AdycHttpRequestException ahre)
                 {
-                    foreach (var error in ahre.Errors)
-                    {
-                        ModelState.AddModelError("", error);
-                    }
+                    AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
                 }
             }
 
@@ -114,7 +109,7 @@ namespace ADYC.WebUI.Controllers
         {
             try
             {
-                var statusCode = await _professorRepository.DeleteProfessorAsync(id);
+                var statusCode = await _professorRepository.DeleteProfessor(id);
 
                 if (statusCode == HttpStatusCode.NotFound)
                 {
@@ -125,16 +120,10 @@ namespace ADYC.WebUI.Controllers
             }
             catch (AdycHttpRequestException ahre)
             {
-                var errorString = "";
-
-                foreach (var error in ahre.Errors)
-                {
-                    errorString += error;
-                }
+                var errorString = GetErrorsFromAdycHttpExceptionToString(ahre);
 
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
             }
-
         }
 
         [HttpGet]
@@ -142,7 +131,7 @@ namespace ADYC.WebUI.Controllers
         {
             try
             {
-                var statusCode = await _professorRepository.TrashProfessorAsync(id);
+                var statusCode = await _professorRepository.TrashProfessor(id);
 
                 if (statusCode == HttpStatusCode.NotFound)
                 {
@@ -151,17 +140,12 @@ namespace ADYC.WebUI.Controllers
             }
             catch (AdycHttpRequestException ahre)
             {
-                var errorString = "";
-
-                foreach (var error in ahre.Errors)
-                {
-                    errorString += error;
-                }
+                var errorString = GetErrorsFromAdycHttpExceptionToString(ahre);
 
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
             }
 
-            return PartialView("pv_ProfessorRow", await _professorRepository.GetProfessorAsync(id));
+            return PartialView("pv_ProfessorRow", await _professorRepository.GetProfessorById(id));
         }
 
         [HttpGet]
@@ -169,27 +153,21 @@ namespace ADYC.WebUI.Controllers
         {
             try
             {
-                var statusCode = await _professorRepository.RestoreProfessorAsync(id);
+                var statusCode = await _professorRepository.RestoreProfessor(id);
 
                 if (statusCode == HttpStatusCode.NotFound)
                 {
                     return HttpNotFound();
                 }
-
             }
             catch (AdycHttpRequestException ahre)
             {
-                var errorString = "";
-
-                foreach (var error in ahre.Errors)
-                {
-                    errorString += error;
-                }
+                var errorString = GetErrorsFromAdycHttpExceptionToString(ahre);
 
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
             }
 
-            return PartialView("pv_ProfessorRow", await _professorRepository.GetProfessorAsync(id));
+            return PartialView("pv_ProfessorRow", await _professorRepository.GetProfessorById(id));
         }
     }
 }

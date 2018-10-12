@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace ADYC.WebUI.Controllers
 {
-    public class MajorsController : Controller
+    public class MajorsController : ADYCBasedController
     {
         private MajorRepository _majorRepository;
 
@@ -20,7 +20,7 @@ namespace ADYC.WebUI.Controllers
         // GET: CourseTypes
         public async Task<ActionResult> Index()
         {
-            var majors = await _majorRepository.GetMajorsAsync();
+            var majors = await _majorRepository.GetMajors();
 
             return View(majors);
         }
@@ -46,7 +46,7 @@ namespace ADYC.WebUI.Controllers
 
             try
             {
-                var major = await _majorRepository.GetMajorAsync(id.Value);
+                var major = await _majorRepository.GetMajorById(id.Value);
 
                 viewModel = new MajorFormViewModel(major)
                 {
@@ -60,10 +60,7 @@ namespace ADYC.WebUI.Controllers
                     return HttpNotFound();
                 }
 
-                foreach (var error in ahre.Errors)
-                {
-                    ModelState.AddModelError("", ahre.Message);
-                }
+                AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
             }
 
             return View("MajorForm", viewModel);
@@ -72,35 +69,30 @@ namespace ADYC.WebUI.Controllers
         [HttpPost]
         public async Task<ActionResult> Save(MajorFormViewModel form)
         {
-            form.IsNew = form.Id == null;
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    Major major = (form.IsNew) 
+                    Major major = (form.IsNew)
                         ? new Major()
-                        : await _majorRepository.GetMajorAsync(form.Id.Value);
+                        : await _majorRepository.GetMajorById(form.Id.Value);
 
                     major.Name = form.Name;
 
                     if (form.IsNew)
                     {
-                        await _majorRepository.PostMajorAsync(major);
+                        await _majorRepository.PostMajor(major);
                     }
                     else
                     {
-                        await _majorRepository.PutMajorAsync(major.Id, major);
+                        await _majorRepository.PutMajor(major.Id, major);
                     }
 
                     return RedirectToAction("Index");
                 }
                 catch (AdycHttpRequestException ahre)
                 {
-                    foreach (var error in ahre.Errors)
-                    {
-                        ModelState.AddModelError("", error);
-                    }
+                    AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
                 }
             }
 
@@ -112,7 +104,7 @@ namespace ADYC.WebUI.Controllers
         {
             try
             {
-                var statusCode = await _majorRepository.DeleteGradeAsync(id);
+                var statusCode = await _majorRepository.DeleteGrade(id);
 
                 if (statusCode == HttpStatusCode.NotFound)
                 {
@@ -123,16 +115,10 @@ namespace ADYC.WebUI.Controllers
             }
             catch (AdycHttpRequestException ahre)
             {
-                var errorString = "";
-
-                foreach (var error in ahre.Errors)
-                {
-                    errorString += error;
-                }
+                var errorString = GetErrorsFromAdycHttpExceptionToString(ahre);
 
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
             }
-
         }
     }
 
