@@ -260,9 +260,9 @@ namespace ADYC.Service.Tests
             var evaluation = TestData.GetEvaluations().SingleOrDefault(e => e.PeriodId == 3 && e.EnrollmentId == enrollment.Id);
             evaluation.PeriodGrade = 85;
 
-            _evaluationRepository
-                .Setup(m => m.UpdateRange(It.IsAny<List<Evaluation>>()))
-                .Callback(() => { });
+            //_evaluationRepository
+            //    .Setup(m => m.UpdateRange(It.IsAny<List<Evaluation>>()))
+            //    .Callback(() => { });
 
             _enrollmentRepository
                 .Setup(m => m.Update(It.IsAny<Enrollment>()))
@@ -275,7 +275,7 @@ namespace ADYC.Service.Tests
             Assert.That(enrollment.FinalGrade, Is.EqualTo(65.5));
             Assert.That(enrollment.FinalGradeLetter, Is.EqualTo(GradeLetter.F));
 
-            _evaluationRepository.Verify(m => m.UpdateRange(It.IsAny<List<Evaluation>>()));
+            //_evaluationRepository.Verify(m => m.UpdateRange(It.IsAny<List<Evaluation>>()));
             _enrollmentRepository.Verify(m => m.Update(It.IsAny<Enrollment>()));
         }
 
@@ -289,9 +289,9 @@ namespace ADYC.Service.Tests
 
             enrollment.Offering = offering;
 
-            _evaluationRepository
-                .Setup(m => m.UpdateRange(It.IsAny<List<Evaluation>>()))
-                .Callback(() => { });
+            //_evaluationRepository
+            //    .Setup(m => m.UpdateRange(It.IsAny<List<Evaluation>>()))
+            //    .Callback(() => { });
 
             _enrollmentRepository
                 .Setup(m => m.Update(It.IsAny<Enrollment>()))
@@ -305,7 +305,7 @@ namespace ADYC.Service.Tests
             Assert.That(enrollment.FinalGradeLetter, Is.EqualTo(GradeLetter.W));
             Assert.That(enrollment.Evaluations.First().PeriodGradeLetter, Is.EqualTo(GradeLetter.W));
 
-            _evaluationRepository.Verify(m => m.UpdateRange(It.IsAny<List<Evaluation>>()));
+            //_evaluationRepository.Verify(m => m.UpdateRange(It.IsAny<List<Evaluation>>()));
             _enrollmentRepository.Verify(m => m.Update(It.IsAny<Enrollment>()));
         }
 

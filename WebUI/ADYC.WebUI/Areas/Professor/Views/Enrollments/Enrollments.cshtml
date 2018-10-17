@@ -1,0 +1,113 @@
+﻿@model ADYC.WebUI.ViewModels.EnrollmentListViewModel
+
+@{
+    ViewBag.Title = "Enrollments";
+}
+
+<h2>Enrollments</h2>
+
+<div id="msg-div">
+</div>
+
+<div class="row">
+    <div class="col-sm-8">
+        <ul class="term-info">
+            <li><h5><strong>Offering: </strong>@Model.Offering.Title</h5></li>
+            <li><h5><strong>Location: </strong>@Model.Offering.Location</h5></li>
+            <li><h5><strong>Days offered: </strong>@Model.Offering.OfferingDays</h5></li>
+            <li><h5><strong>Course: </strong>@Model.Offering.Course</h5></li>
+            <li>
+                <h5>
+                    <strong>Professor:</strong> @Model.Offering.Professor
+                </h5>
+            </li>
+            <li>
+                <h5>
+                    <strong>Term: </strong>@Model.Offering.Term.Name (@Model.Offering.Term.StartDate.ToString("MMMM dd, yyyy") - @Model.Offering.Term.EndDate.ToString("MMMM dd, yyyy"))</h5>
+            </li>
+            <li>
+                <h5><strong>CURRENT TERM: </strong> @((Model.Offering.Term.IsCurrentTerm) ? "Yes" : "No")</h5>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="btn-toolbar">
+    <div class="btn-group">
+        <a href="@Url.Action("View", new { termId = Model.Offering.TermId })" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-circle-arrow-left"></i> Back to list of terms</a>
+    </div>
+</div>
+
+<table id="enrollmets" class="table table-bordered table-striped display">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>
+                Student Last Name
+            </th>
+            <th>
+                Student First Name
+            </th>
+            <th>
+                EnrollmentDate
+            </th>
+            <th>
+                Withdraw Date
+            </th>
+            <th>
+                Notes
+            </th>
+            <th>
+                FinalGrade
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var enrollment in Model.Enrollments)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => enrollment.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => enrollment.Student.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => enrollment.Student.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => enrollment.EnrollmentDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => enrollment.WithdropDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => enrollment.Notes)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => enrollment.FinalGrade)
+                </td>
+                <td>
+                    @Html.ActionLink("Evaluations", "Evaluations", new { enrollmentId = enrollment.Id })
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            $('#enrollmets').DataTable();
+
+        });
+    </script>
+
+    <script type="text/javascript" src="~/Scripts/adyc.table.utils.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+}

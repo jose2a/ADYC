@@ -108,7 +108,7 @@ ul.term-info {
 
 .w3-ul li > a > h5 {
     display: inline-block;
-    width: 15%;
+    width: 25%;
     text-transform: uppercase;
     font-weight: bold;
 }
@@ -132,8 +132,8 @@ ul.term-info {
     height: 100%;
     cursor: pointer;
     text-decoration: none;
-    -webkit-transition-duration: 0.6s; /* Safari */
-    transition-duration: 0.6s;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
 }
 
 .w3-ul li:hover, ul li > a:hover {

@@ -22,16 +22,17 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Couses", "Index", "Courses")</li>
-                    <li>@Html.ActionLink("Couse Types", "Index", "CourseTypes")</li>
-                    <li>@Html.ActionLink("Grades", "Index", "Grades")</li>
-                    <li>@Html.ActionLink("Groups", "Index", "Groups")</li>
-                    <li>@Html.ActionLink("Majors", "Index", "Majors")</li>
-                    <li>@Html.ActionLink("Periods", "Index", "Periods")</li>
-                    <li>@Html.ActionLink("Professors", "Index", "Professors")</li>
-                    <li>@Html.ActionLink("Students", "Index", "Students")</li>
-                    <li>@Html.ActionLink("Terms", "Index", "Terms")</li>
-                    <li>@Html.ActionLink("Offerings", "Index", "Offerings")</li>
+                    <li>@Html.ActionLink("Couses", "Index", new { Controller = "Courses", Area = "" })</li>
+                    <li>@Html.ActionLink("Couse Types", "Index", new { Controller = "CourseTypes", Area = "" })</li>
+                    <li>@Html.ActionLink("Grades", "Index", new { Controller = "Grades", Area = "" })</li>
+                    <li>@Html.ActionLink("Groups", "Index", new { Controller = "Groups", Area = "" })</li>
+                    <li>@Html.ActionLink("Majors", "Index", new { Controller = "Majors", Area = "" })</li>
+                    <li>@Html.ActionLink("Periods", "Index", new { Controller = "Periods", Area = "" })</li>
+                    <li>@Html.ActionLink("Professors", "Index", new { Controller = "Professors", Area = "" } )</li>
+                    <li>@Html.ActionLink("Students", "Index", new { Controller = "Students", Area = "" })</li>
+                    <li>@Html.ActionLink("Terms", "Index", new { Controller = "Terms", Area = "" })</li>
+                    <li>@Html.ActionLink("Offerings", "Index", new { Controller = "Offerings", Area = "" })</li>
+                    <li>@Html.ActionLink("Enrollments", "Index", new { Controller = "Enrollments", Area = "Professor" })</li>
                 </ul>
             </div>
         </div>

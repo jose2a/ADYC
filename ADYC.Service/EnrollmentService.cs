@@ -126,15 +126,25 @@ namespace ADYC.Service
                 throw new ArgumentNullException("enrollment");
             }
 
-            if (!enrollment.IsCurrentEnrollment)
+            if (!enrollment.Offering.Term.IsCurrentTerm)
             {
                 throw new ArgumentException("This enrollment is not for the current term.");
             }
 
-            SetEnrollmentGrades(enrollment);
+            // update enrollment and evaluation grades
+            SetEnrollmentAndEvaluationsGrades(enrollment);
 
-            _evaluationRepository.UpdateRange(enrollment.Evaluations);
-            _enrollmentRepository.Update(enrollment);
+            // copy updated evaluations
+            var evaluations = new List<Evaluation>(enrollment.Evaluations);
+
+            // remove old evaluations
+            _evaluationRepository.RemoveRange(enrollment.Evaluations);
+
+            // update enrollment
+            _enrollmentRepository.Update(enrollment);            
+
+            // add update evaluations
+            _evaluationRepository.AddRange(evaluations);                        
         }        
 
         public void Withdrop(Enrollment enrollment)
@@ -143,8 +153,17 @@ namespace ADYC.Service
 
             SetEnrollmentToWithdrop(enrollment);
 
-            _evaluationRepository.UpdateRange(enrollment.Evaluations);
+            // copy update evaluations
+            var evaluations = new List<Evaluation>(enrollment.Evaluations);
+
+            // remove old evaluations
+            _evaluationRepository.RemoveRange(enrollment.Evaluations);
+
+            // update enrollment
             _enrollmentRepository.Update(enrollment);
+
+            // add update enrollments
+            _evaluationRepository.AddRange(evaluations);
         }
 
         private void ValidateEnrollment(Enrollment enrollment)
@@ -211,7 +230,23 @@ namespace ADYC.Service
             }
         }
 
-        private void SetEnrollmentGrades(Enrollment enrollment)
+        private List<Evaluation> GetEvaluationsWithGradesFromEnrollment(Enrollment enrollment)
+        {
+            var evaluations = new List<Evaluation>();
+
+            foreach (var evaluation in enrollment.Evaluations)
+            {
+                if (evaluation.PeriodGrade.HasValue)
+                {
+                    evaluation.PeriodGradeLetter = GetGradeLetter(evaluation.PeriodGrade.Value);
+                }
+                evaluations.Add(evaluation);
+            }
+
+            return evaluations;
+        } 
+
+        private void SetEnrollmentAndEvaluationsGrades(Enrollment enrollment)
         {
             var finalGrade = 0.0;
 
@@ -222,9 +257,21 @@ namespace ADYC.Service
                     finalGrade += evaluation.PeriodGrade.Value;
                     evaluation.PeriodGradeLetter = GetGradeLetter(evaluation.PeriodGrade.Value);
                 }
+                //evaluations.Add(evaluation);
             }
 
-            finalGrade = finalGrade / enrollment.Evaluations.Count;
+            //var res = enrollment.Evaluations
+            //    .Where(ev => ev.PeriodGrade.HasValue)
+            //    .Select(e => e.PeriodGrade.Value);
+
+            //foreach (var evaluation in res)
+            //{
+            //    finalGrade += evaluation;//evaluation.PeriodGrade.Value;
+            //        //evaluation.PeriodGradeLetter = GetGradeLetter(evaluation.PeriodGrade.Value);
+            // //   }
+            //}
+
+            finalGrade = finalGrade / enrollment.Evaluations.Count; //enrollment.Evaluations.Count;
             enrollment.FinalGrade = finalGrade;
             enrollment.FinalGradeLetter = GetGradeLetter(enrollment.FinalGrade.Value);
         }

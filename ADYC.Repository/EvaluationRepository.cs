@@ -20,12 +20,12 @@ namespace ADYC.Repository
             return Entity.Find(new object[] { enrollmentId, periodId});
         }
 
-        public void UpdateRange(IEnumerable<Evaluation> evaluations)
-        {
-            foreach (var evaluation in evaluations)
-            {
-                Update(evaluation);
-            }
-        }
+        //public void UpdateRange(IEnumerable<Evaluation> evaluations)
+        //{
+        //    foreach (var evaluation in evaluations.ToList())
+        //    {
+        //        Update(evaluation);
+        //    }
+        //}
     }
 }

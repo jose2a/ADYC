@@ -11,6 +11,8 @@ namespace ADYC.IRepository
     {
         Evaluation Get(int enrollmentId, int periodId);
 
-        void UpdateRange(IEnumerable<Evaluation> evaluations);
+        //void UpdateRange(IEnumerable<Evaluation> evaluations);
+
+        void RemoveRange(IEnumerable<Evaluation> evaluations);
     }
 }
