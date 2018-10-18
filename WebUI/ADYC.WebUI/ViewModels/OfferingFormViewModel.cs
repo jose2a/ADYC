@@ -1,4 +1,5 @@
-﻿using ADYC.Model;
+﻿using ADYC.API.ViewModels;
+using ADYC.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -57,12 +58,12 @@ namespace ADYC.WebUI.ViewModels
 
         public IEnumerable<Professor> Professors { get; set; }
         public IEnumerable<Course> Courses { get; set; }
-        public IEnumerable<Term> Terms { get; set; }
+        public IEnumerable<TermDto> Terms { get; set; }
     }
 
     public class OfferingListViewModel
     {
-        public Term Term { get; set; }
+        public TermDto Term { get; set; }
 
         public IEnumerable<Offering> Offerings { get; set; }
     }

@@ -1,4 +1,5 @@
-﻿using ADYC.Model;
+﻿using ADYC.API.ViewModels;
+using ADYC.Model;
 using ADYC.WebUI.Infrastructure;
 using ADYC.WebUI.Repositories;
 using ADYC.WebUI.ViewModels;
@@ -84,8 +85,8 @@ namespace ADYC.WebUI.Controllers
             {
                 try
                 {
-                    Term term = (form.IsNew)
-                        ? new Term()
+                    TermDto term = (form.IsNew)
+                        ? new TermDto()
                         : await _termRepository.GetTermById(form.Id.Value);
 
                     term.Name = form.Name;
@@ -101,7 +102,7 @@ namespace ADYC.WebUI.Controllers
                     }
                     else
                     {
-                        await _termRepository.PutTerm(term.Id, term);
+                        await _termRepository.PutTerm(term.Id.Value, term);
                     }
 
                     return RedirectToAction("Index");
@@ -165,7 +166,7 @@ namespace ADYC.WebUI.Controllers
                         periodDates.Add(new PeriodDateViewModel
                         {
                             PeriodId = p.Id,
-                            TermId = term.Id,
+                            TermId = term.Id.Value,
                             StartDate = null,
                             EndDate = null
                         });

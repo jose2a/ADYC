@@ -1,4 +1,4 @@
-﻿using ADYC.Model;
+﻿using ADYC.API.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -6,36 +6,36 @@ using System.Threading.Tasks;
 
 namespace ADYC.WebUI.Repositories
 {
-    public class TermRepository : BaseRepository<Term>
+    public class TermRepository : BaseRepository<TermDto>
     {
         private string addressPreffix = "api/Terms/";
         
-        public async Task<IEnumerable<Term>> GetTerms()
+        public async Task<IEnumerable<TermDto>> GetTerms()
         {
             return await restClient.GetManyAsync(addressPreffix);
         }
 
-        public async Task<Term> GetTermById(int id)
+        public async Task<TermDto> GetTermById(int id)
         {
             return await restClient.GetAsync(addressPreffix + id);
         }
 
-        public async Task<Term> GetCurrentTerm()
+        public async Task<TermDto> GetCurrentTerm()
         {
             return await restClient.GetAsync(addressPreffix + "GetCurrentTerm/");
         }
 
-        public async Task<Term> GetByBetweenDates(DateTime startDate, DateTime endDate)
+        public async Task<TermDto> GetByBetweenDates(DateTime startDate, DateTime endDate)
         {
             return await restClient.GetAsync(addressPreffix + "GetByBetweenDates/StartDate/" + startDate + "/EndDate/" + endDate + "/");
         }
 
-        public async Task<Term> PostTerm(Term term)
+        public async Task<TermDto> PostTerm(TermDto term)
         {
             return await restClient.PostAsync(addressPreffix, term);
         }
 
-        public async Task<HttpStatusCode> PutTerm(int id, Term term)
+        public async Task<HttpStatusCode> PutTerm(int id, TermDto term)
         {
             return await restClient.PutAsync(addressPreffix + id, term);
         }

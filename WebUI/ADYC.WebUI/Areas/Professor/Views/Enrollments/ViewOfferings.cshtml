@@ -52,7 +52,7 @@
                 Days Offered
             </th>
             <th>
-               Course
+                Course
             </th>
             <th>
                 Course Type
@@ -60,11 +60,38 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>        
-            @foreach (var offering in Model.Offerings)
-            {
-                @Html.Partial("pv_OfferingRow", offering)
-            }
+    <tbody>
+        @foreach (var offering in Model.Offerings)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => offering.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => offering.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => offering.Location)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => offering.OfferingDays)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => offering.Course.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => offering.Course.CourseType.Name)
+                </td>
+                <td>
+                    <a href="@Url.Action("ViewEnrollments", new { offeringId = offering.Id })" class="btn btn-xs btn-default">
+                        <i class="glyphicon glyphicon-user"></i> Enrollments
+                    </a>
+                    <a href="@Url.Action("ViewSchedules", new { offeringId = offering.Id })" class="btn btn-xs btn-default">
+                        <i class="glyphicon glyphicon-calendar"></i> Schedules
+                    </a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 

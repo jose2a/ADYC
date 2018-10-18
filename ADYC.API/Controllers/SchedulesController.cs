@@ -39,7 +39,7 @@ namespace ADYC.API.Controllers
         [HttpPost]
         [ResponseType(typeof(ScheduleListDto))]
         // POST api/<controller>
-        public IHttpActionResult PostPeriodDates(int offeringId, [FromBody] ScheduleListDto form)
+        public IHttpActionResult PostSchedules(int offeringId, [FromBody] ScheduleListDto form)
         {
             //ModelState.Remove("Offering.Title");
             //ModelState.Remove("Offering.Location");
@@ -74,7 +74,7 @@ namespace ADYC.API.Controllers
         [HttpPut]
         [ResponseType(typeof(void))]
         // PUT api/<controller>/5
-        public IHttpActionResult PutPeriodDates(int offeringId, [FromBody] ScheduleListDto form)
+        public IHttpActionResult PutSchedules(int offeringId, [FromBody] ScheduleListDto form)
         {
             if (ModelState.IsValid)
             {

@@ -1,4 +1,5 @@
-﻿using ADYC.Model;
+﻿using ADYC.API.ViewModels;
+using ADYC.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -23,7 +24,7 @@ namespace ADYC.WebUI.ViewModels
 
         public int TermId { get; set; }
 
-        public Term Term { get; set; }
+        public TermDto Term { get; set; }
 
         public List<PeriodDateViewModel> PeriodDates { get; set; }
 
@@ -42,7 +43,7 @@ namespace ADYC.WebUI.ViewModels
 
         }
 
-        public PeriodDateListViewModel(int termId, Term term, List<PeriodDateViewModel> periodDates)
+        public PeriodDateListViewModel(int termId, TermDto term, List<PeriodDateViewModel> periodDates)
         {
             TermId = termId;
             Term = term;

@@ -216,10 +216,10 @@
     <Content Include="Areas\Professor\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Professor\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Professor\Views\Enrollments\Index.cshtml" />
-    <Content Include="Areas\Professor\Views\Enrollments\View.cshtml" />
-    <Content Include="Areas\Professor\Views\Enrollments\Enrollments.cshtml" />
-    <Content Include="Areas\Professor\Views\Enrollments\Evaluations.cshtml" />
-    <Content Include="Areas\Professor\Views\Enrollments\pv_OfferingRow.cshtml" />
+    <Content Include="Areas\Professor\Views\Enrollments\ViewOfferings.cshtml" />
+    <Content Include="Areas\Professor\Views\Enrollments\ViewEnrollments.cshtml" />
+    <Content Include="Areas\Professor\Views\Enrollments\ViewEvaluations.cshtml" />
+    <Content Include="Areas\Professor\Views\Enrollments\ViewSchedules.cshtml" />
     <None Include="Scripts\jquery-1.10.2-vsdoc.js" />
     <Content Include="Scripts\jPages.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -303,6 +303,10 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ADYC.API\ADYC.API.csproj">
+      <Project>{D6D4D37D-C259-4416-BFD6-E57B00410218}</Project>
+      <Name>ADYC.API</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ADYC.Model\ADYC.Model.csproj">
       <Project>{E6BCE3C0-8408-4206-BFA6-9C225B536FB7}</Project>
       <Name>ADYC.Model</Name>

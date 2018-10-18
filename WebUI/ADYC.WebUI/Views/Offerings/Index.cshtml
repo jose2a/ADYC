@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ADYC.Model.Term>
+﻿@model IEnumerable<ADYC.API.ViewModels.TermDto>
 
 @{
     ViewBag.Title = "Offerings";
@@ -19,17 +19,14 @@
     {
         <li>
             <a href="@Url.Action("view", new { termId = term.Id})">
-                @if (term.IsCurrentTerm)
-                {
-                    <span class="glyphicon glyphicon-ok"></span>
-                }
-                else
-                {
-                    <span class="glyphicon glyphicon-minus"></span>
-                }
-
                 <span class="glyphicon glyphicon-calendar"></span>
-                <h5>@term.Name</h5>
+                <h5>
+                    @term.Name
+                    @if (term.IsCurrentTerm)
+                    {
+                        <span class="label label-default">Current</span>
+                    }
+                </h5>
                 <span class="w3-medium w3-opacity">@term.StartDate.ToString("MMMM dd, yyyy") - @term.EndDate.ToString("MMMM dd, yyyy")</span>
             </a>
         </li>

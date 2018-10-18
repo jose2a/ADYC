@@ -2,8 +2,6 @@
 
 @{
     ViewBag.Title = "Evaluations";
-
-    //var isCurrentTerm = Model.Enrollment.Offering.Term.IsCurrentTerm;
 }
 
 <style>
@@ -33,6 +31,7 @@
 {
     @Html.HiddenFor(m => Model.Enrollment.Id)
 
+    <!-- Begin: Information about enrollment -->
     <div class="row">
         <div class="col-sm-8">
             <ul class="term-info">
@@ -50,11 +49,14 @@
                     </h5>
                 </li>
                 <li>
-                    <h5><strong>CURRENT TERM: </strong> @((Model.Enrollment.Offering.Term.IsCurrentTerm) ? "Yes" : "No")</h5>
+                    <h5><strong>CURRENT TERM: </strong> @((Model.IsCurrentTerm) ? "Yes" : "No")</h5>
                 </li>
             </ul>
         </div>
     </div>
+    <!-- End: Information about enrollment -->
+
+
     <div class="form-horizontal">
 
         @Html.ValidationSummary(true, "Please fix the following errors:", new { @class = "text-danger" })
@@ -142,10 +144,12 @@
         {
             <div class="form-group">
                 <div class="col-md-10">
-                    <input type="submit" value="Save" class="btn btn-primary" /> or @Html.ActionLink("Back to List", "Enrollments", new { offeringId = Model.Enrollment.OfferingId })
+                    <input type="submit" value="Save" class="btn btn-primary" />
                 </div>
             </div>
         }
+
+        @Html.ActionLink("Back to List", "ViewEnrollments", new { offeringId = Model.Enrollment.OfferingId })
     </div>
 }
 

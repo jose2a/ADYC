@@ -137,8 +137,10 @@ ul.term-info {
 }
 
 .w3-ul li:hover, ul li > a:hover {
-    background: #e7e7e7;
-    color: #555 !important;
+    /*background: #e7e7e7;
+    color: #555 !important;*/
+    background-color: #000;
+    color: #fff !important;
     text-decoration: none;
 }
 
@@ -146,7 +148,7 @@ ul.term-info {
     color: #000;
 }
 
-.w3-ul li:active, ul li > a:active {
+/*.w3-ul li:active, ul li > a:active {
     background-color: #000;
     color: #fff !important;
-}
+}*/

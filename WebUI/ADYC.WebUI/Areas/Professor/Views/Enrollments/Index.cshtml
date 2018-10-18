@@ -1,40 +1,30 @@
-﻿@model IEnumerable<ADYC.Model.Term>
+﻿@model IEnumerable<ADYC.API.ViewModels.TermDto>
 
 @{
-    ViewBag.Title = "Offerings";
+    ViewBag.Title = "Offerings (Terms)";
 }
 
 <link href="~/Content/jPages.css" rel="stylesheet" />
 
-<h2>Terms</h2>
+<h2>Offerings (Terms)</h2>
 
 <p>
-    Please select a term to see its offerings.
+    Please select a term to see your offerings.
 </p>
 
 <div class="holder"></div>
 
-<ul id="itemContainer" class="w3-ul w3-card-4">
+<ul id="itemContainer" class="w3-ul">
     @foreach (var term in Model)
     {
         <li>
-            <a href="@Url.Action("view", new { termId = term.Id})">
-                @*@if (term.IsCurrentTerm)
-                    {
-                        <span class="glyphicon glyphicon-ok"></span>
-                    }
-                    else
-                    {
-                        <span class="glyphicon glyphicon-minus"></span>
-                    }*@
-
+            <a href="@Url.Action("ViewOfferings", new { termId = term.Id.Value})">
                 <span class="glyphicon glyphicon-calendar"></span>
                 <h5>
                     @term.Name
                     @if (term.IsCurrentTerm)
                     {
                         <span class="label label-default">Current</span>
-                        @*<span class="glyphicon glyphicon-ok"></span>*@
                     }
                 </h5>
                 <span class="w3-medium w3-opacity">@term.StartDate.ToString("MMMM dd, yyyy") - @term.EndDate.ToString("MMMM dd, yyyy")</span>
@@ -48,18 +38,18 @@
 @section scripts {
     <script>
         $(document).ready(function () {
-            var currentPage = sessionStorage.getItem("currentPage") || 1;
+            var professorTermCurrentPage = sessionStorage.getItem("professorTermCurrentPage") || 1;
 
             $("div.holder").jPages({
                 containerID: "itemContainer",
                 perPage: 5,
-                startPage: currentPage,
+                startPage: professorTermCurrentPage,
                 callback: function (pages, items) {
-                    sessionStorage.setItem("currentPage", pages.current);
+                    sessionStorage.setItem("professorTermCurrentPage", pages.current);
                 }
             });
 
-            $("div.holder").jPages(currentPage);
+            $("div.holder").jPages(professorTermCurrentPage);
         });
     </script>
 

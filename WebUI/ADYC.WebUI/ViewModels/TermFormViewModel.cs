@@ -1,4 +1,5 @@
-﻿using ADYC.Model;
+﻿using ADYC.API.ViewModels;
+using ADYC.Model;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -38,9 +39,9 @@ namespace ADYC.WebUI.ViewModels
 
         }
 
-        public TermFormViewModel(Term term)
+        public TermFormViewModel(TermDto term)
         {
-            Id = term.Id;
+            Id = term.Id.Value;
             Name = term.Name;
             StartDate = term.StartDate;
             EndDate = term.EndDate;

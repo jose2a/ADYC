@@ -23,10 +23,11 @@
             </li>
             <li>
                 <h5>
-                    <strong>Term: </strong>@Model.Offering.Term.Name (@Model.Offering.Term.StartDate.ToString("MMMM dd, yyyy") - @Model.Offering.Term.EndDate.ToString("MMMM dd, yyyy"))</h5>
+                    <strong>Term: </strong>@Model.Offering.Term.Name (@Model.Offering.Term.StartDate.ToString("MMMM dd, yyyy") - @Model.Offering.Term.EndDate.ToString("MMMM dd, yyyy"))
+                </h5>
             </li>
             <li>
-                <h5><strong>CURRENT TERM: </strong> @((Model.Offering.Term.IsCurrentTerm) ? "Yes" : "No")</h5>
+                <h5><strong>CURRENT TERM: </strong> @((Model.IsCurrentTerm) ? "Yes" : "No")</h5>
             </li>
         </ul>
     </div>
@@ -34,11 +35,11 @@
 
 <div class="btn-toolbar">
     <div class="btn-group">
-        <a href="@Url.Action("View", new { termId = Model.Offering.TermId })" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-circle-arrow-left"></i> Back to list of terms</a>
+        <a href="@Url.Action("ViewOfferings", new { termId = Model.Offering.TermId })" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-circle-arrow-left"></i> Back to list of offerings</a>
     </div>
 </div>
 
-<table id="enrollmets" class="table table-bordered table-striped display">
+<table id="enrollments" class="table table-bordered table-striped display">
     <thead>
         <tr>
             <th>Id</th>
@@ -77,10 +78,13 @@
                     @Html.DisplayFor(modelItem => enrollment.Student.FirstName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => enrollment.EnrollmentDate)
+                    @enrollment.EnrollmentDate.ToString("MMMM dd, yyyy")
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => enrollment.WithdropDate)
+                    @if (enrollment.WithdropDate.HasValue)
+                    {
+                        @enrollment.WithdropDate.Value.ToString("MMMM dd, yyyy")
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => enrollment.Notes)
@@ -89,7 +93,7 @@
                     @Html.DisplayFor(modelItem => enrollment.FinalGrade)
                 </td>
                 <td>
-                    @Html.ActionLink("Evaluations", "Evaluations", new { enrollmentId = enrollment.Id })
+                    @Html.ActionLink("Evaluations", "ViewEvaluations", new { enrollmentId = enrollment.Id })
                 </td>
             </tr>
         }
@@ -102,7 +106,7 @@
     <script>
         $(document).ready(function () {
 
-            $('#enrollmets').DataTable();
+            $('#enrollments').DataTable();
 
         });
     </script>

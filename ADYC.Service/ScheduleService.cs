@@ -25,6 +25,8 @@ namespace ADYC.Service
 
             ValidateSchedules(schedules);
 
+            UpdateOfferingDaysOffered(schedules);
+
             _scheduleRepository.AddRange(schedules);
 
         }
@@ -53,6 +55,8 @@ namespace ADYC.Service
 
             ValidateSchedules(schedules);
 
+            UpdateOfferingDaysOffered(schedules);
+
             _scheduleRepository.AddRange(schedules);
         }
 
@@ -64,9 +68,18 @@ namespace ADYC.Service
             }
         }
 
-        private void SetSchedulesOffering(IEnumerable<Schedule> schedules)
+        private void UpdateOfferingDaysOffered(IEnumerable<Schedule> schedules)
         {
-            
+            var offeringId = schedules.Select(s => s.OfferingId).Distinct().SingleOrDefault();
+
+            var offering = _offeringService.Get(offeringId);
+            offering.OfferingDays = schedules.Count();
+
+            _offeringService.Update(offering);
+        }
+
+        private void SetSchedulesOffering(IEnumerable<Schedule> schedules)
+        {            
             var offeringId = schedules.Select(s => s.OfferingId).Distinct().SingleOrDefault();
 
             foreach (var s in schedules)

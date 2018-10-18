@@ -36,6 +36,8 @@ namespace ADYC.WebUI.ViewModels
 
         public IEnumerable<DayEnumViewModel> Days { get; set; }
 
+        public bool IsCurrentTerm { get; set; }
+
         public string Title
         {
             get

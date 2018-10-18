@@ -5,6 +5,8 @@ namespace ADYC.WebUI.ViewModels
 {
     public class EnrollmentListViewModel
     {
+        public bool IsCurrentTerm { get; set; }
+
         public Offering Offering { get; set; }
 
         public IEnumerable<Enrollment> Enrollments { get; set; }

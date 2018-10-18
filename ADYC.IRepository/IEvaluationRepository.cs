@@ -13,6 +13,6 @@ namespace ADYC.IRepository
 
         //void UpdateRange(IEnumerable<Evaluation> evaluations);
 
-        void RemoveRange(IEnumerable<Evaluation> evaluations);
+        //void RemoveRange(IEnumerable<Evaluation> evaluations);
     }
 }
