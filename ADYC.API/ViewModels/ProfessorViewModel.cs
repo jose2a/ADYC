@@ -26,5 +26,10 @@ namespace ADYC.API.ViewModels
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
+
+        public override string ToString()
+        {
+            return $"{LastName}, {FirstName}";
+        }
     }
 }

@@ -1,24 +1,24 @@
-﻿using ADYC.WebUI.ViewModels;
+﻿using ADYC.API.ViewModels;
 using System.Net;
 using System.Threading.Tasks;
 
 namespace ADYC.WebUI.Repositories
 {
-    public class PeriodDateRepository : BaseRepository<PeriodDateListViewModel>
+    public class PeriodDateRepository : BaseRepository<PeriodDateListDto>
     {
         private string addressPreffix = "api/Terms/";
 
-        public async Task<PeriodDateListViewModel> GetPeriodDatesByTermId(int id)
+        public async Task<PeriodDateListDto> GetPeriodDatesByTermId(int id)
         {
             return await restClient.GetAsync(addressPreffix + id + "/PeriodDates");
         }
 
-        public async Task<PeriodDateListViewModel> PostPeriodDateList(PeriodDateListViewModel periodDateList)
+        public async Task<PeriodDateListDto> PostPeriodDateList(PeriodDateListDto periodDateList)
         {
-            return await restClient.PostAsync(addressPreffix + periodDateList.TermId + "/PeriodDates", periodDateList);
+            return await restClient.PostAsync(addressPreffix + periodDateList.Term.Id + "/PeriodDates", periodDateList);
         }
 
-        public async Task<HttpStatusCode> PutPeriodDateList(int id, PeriodDateListViewModel periodDateList)
+        public async Task<HttpStatusCode> PutPeriodDateList(int id, PeriodDateListDto periodDateList)
         {
             return await restClient.PutAsync(addressPreffix + id + "/PeriodDates", periodDateList);
         }

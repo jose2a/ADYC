@@ -12,17 +12,15 @@
 <div class="row">
     <div class="col-sm-8">
         <ul class="term-info">
-            <li><h5><strong>TERM NAME: </strong>@Model.Term.Name</h5></li>
             <li>
-                <h5><strong>FROM: </strong>@Model.Term.StartDate.ToString("MMMM dd, yyyy")</h5>
-                <h5><strong>TO: </strong>@Model.Term.EndDate.ToString("MMMM dd, yyyy")</h5>
+                <h5><strong>Term Name: </strong>@Model.Term.Name (@Model.Term)</h5>
             </li>
             <li>
-                <h5><strong>ENROLLMENT DEADLINE: </strong>@Model.Term.EnrollmentDeadLine.ToString("MMMM dd, yyyy")</h5>
-                <h5><strong>ENROLLMENT WITHDRAW: </strong>@Model.Term.EnrollmentDropDeadLine.ToString("MMMM dd, yyyy")</h5>
+                <h5><strong>Enrollment Deadline: </strong>@Model.Term.EnrollmentDeadLine.ToString("MMMM dd, yyyy")</h5>
+                <h5><strong>Enrollment Withdraw: </strong>@Model.Term.EnrollmentDropDeadLine.ToString("MMMM dd, yyyy")</h5>
             </li>
             <li>
-                <h5><strong>CURRENT TERM: </strong> @((Model.Term.IsCurrentTerm) ? "Yes" : "No")</h5>
+                <h5><strong>Current Term: </strong> @(Model.IsCurrentTerm ? "Yes" : "No")</h5>
             </li>
         </ul>
     </div>

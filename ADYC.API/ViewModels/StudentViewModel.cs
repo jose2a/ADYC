@@ -35,5 +35,10 @@ namespace ADYC.API.ViewModels
         [Required]
         public int MajorId { get; set; }
         public MajorDto Major { get; set; }
+
+        public override string ToString()
+        {
+            return $"{LastName}, {FirstName}";
+        }
     }
 }

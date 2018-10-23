@@ -8,9 +8,9 @@
 
 <h2>Offerings (Terms)</h2>
 
-<p>
-    Please select a term to see your offerings.
-</p>
+<div class="alert alert-info" role="alert">
+    Please select a term to see its offerings.
+</div>
 
 <div class="holder"></div>
 
@@ -27,7 +27,7 @@
                         <span class="label label-default">Current</span>
                     }
                 </h5>
-                <span class="w3-medium w3-opacity">@term.StartDate.ToString("MMMM dd, yyyy") - @term.EndDate.ToString("MMMM dd, yyyy")</span>
+                <span class="w3-medium w3-opacity">@term</span>
             </a>
         </li>
     }

@@ -1,4 +1,5 @@
-﻿using ADYC.Model;
+﻿using ADYC.API.ViewModels;
+using ADYC.Model;
 using ADYC.WebUI.Infrastructure;
 using ADYC.WebUI.ViewModels;
 using System;
@@ -30,9 +31,9 @@ namespace ADYC.WebUI.Controllers
             return errorString;
         }
 
-        protected List<ScheduleViewModel> GetScheduleList(int offeringId, List<ScheduleViewModel> scheduleViewModelList, List<DayEnumViewModel> days)
+        protected List<ScheduleDto> GetScheduleList(int offeringId, List<ScheduleDto> scheduleViewModelList, List<DayEnumViewModel> days)
         {
-            var scheduleList = new List<ScheduleViewModel>();
+            var scheduleList = new List<ScheduleDto>();
             foreach (var d in days)
             {
                 var sch = scheduleViewModelList.SingleOrDefault(s => s.Day == d.Id);
@@ -43,7 +44,7 @@ namespace ADYC.WebUI.Controllers
                 }
                 else
                 {
-                    scheduleList.Add(new ScheduleViewModel
+                    scheduleList.Add(new ScheduleDto
                     {
                         OfferingId = offeringId,
                         Day = d.Id,

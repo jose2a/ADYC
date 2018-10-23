@@ -1,35 +1,35 @@
-﻿using ADYC.Model;
+﻿using ADYC.API.ViewModels;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
 namespace ADYC.WebUI.Repositories
 {
-    public class CourseRepository : BaseRepository<Course>
+    public class CourseRepository : BaseRepository<CourseDto>
     {
         private string addressPreffix = "api/Courses/";
 
-        public async Task<IEnumerable<Course>> GetCourses()
+        public async Task<IEnumerable<CourseDto>> GetCourses()
         {
             return await restClient.GetManyAsync(addressPreffix);
         }
 
-        public async Task<IEnumerable<Course>> GetNotTrashedCourses()
+        public async Task<IEnumerable<CourseDto>> GetNotTrashedCourses()
         {
             return await restClient.GetManyAsync(addressPreffix + "GetNotTrashed");
         }
 
-        public async Task<Course> GetCourseById(int id)
+        public async Task<CourseDto> GetCourseById(int id)
         {
             return await restClient.GetAsync(addressPreffix + id);
         }
 
-        public async Task<Course> PostCourse(Course course)
+        public async Task<CourseDto> PostCourse(CourseDto course)
         {
             return await restClient.PostAsync(addressPreffix, course);
         }
 
-        public async Task<HttpStatusCode> PutCourse(int id, Course course)
+        public async Task<HttpStatusCode> PutCourse(int id, CourseDto course)
         {
             return await restClient.PutAsync(addressPreffix + id, course);
         }

@@ -1,26 +1,21 @@
-﻿using ADYC.Model;
+﻿using ADYC.API.ViewModels;
+using ADYC.Model;
 using ADYC.WebUI.ViewModels;
 using System.Net;
 using System.Threading.Tasks;
 
 namespace ADYC.WebUI.Repositories
 {
-    public class EvaluationRepository : BaseRepository<EnrollmentWithEvaluationsViewModel>
+    public class EvaluationRepository : BaseRepository<EnrollmentWithEvaluationsDto>
     {
         private string addressPreffix = "api/Enrollments/";
 
-        //public async Task<Enrollment> GetById(int id)
-        //{
-        //    var enrollmentWithEvaluations = await restClient.GetAsync(addressPreffix + "GetWithEvaluations/" + id);
-        //    return enrollmentWithEvaluations.Enrollment;
-        //}
-
-        public async Task<EnrollmentWithEvaluationsViewModel> GetWithEvaluations(int id)
+        public async Task<EnrollmentWithEvaluationsDto> GetWithEvaluations(int id)
         {
             return await restClient.GetAsync(addressPreffix + "GetWithEvaluations/" + id);
         }
 
-        public async Task<HttpStatusCode> PutEnrollmentWithEvaluations(int id, EnrollmentWithEvaluationsViewModel enrollmentWithEvaluations)
+        public async Task<HttpStatusCode> PutEnrollmentWithEvaluations(int id, EnrollmentWithEvaluationsDto enrollmentWithEvaluations)
         {
             return await restClient.PutAsync(addressPreffix + id, enrollmentWithEvaluations);
         }

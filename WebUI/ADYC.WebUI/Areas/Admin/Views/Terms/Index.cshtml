@@ -1,0 +1,143 @@
+﻿@model IEnumerable<ADYC.API.ViewModels.TermDto>
+
+@{
+    ViewBag.Title = "Terms";
+}
+
+<h2>Terms</h2>
+
+<div id="msg-div">
+</div>
+
+<div class="btn-toolbar">
+    <div class="btn-group">
+        <a href="@Url.Action("new")" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Create term">
+            <i class="glyphicon glyphicon-plus"></i> Create Term
+        </a>
+        <a href="@Url.Action("edit")" id="editBtn" class="btn btn-sm btn-default" data-toggle="tooltip" data-placement="top" title="Edite term">
+            <i class="glyphicon glyphicon-edit"></i> Edit Term
+        </a>
+        <a href="@Url.Action("periodDates")" id="periodDatesBtn" class="btn btn-sm btn-default" data-toggle="tooltip" data-placement="top" title="Edit periods' dates for the term">
+            <i class="glyphicon glyphicon-calendar"></i> Periods' dates
+        </a>
+        <a href="@Url.Action("delete")" id="deleteBtn" class="btn btn-sm btn-danger js-delete" data-toggle="tooltip" data-placement="top" title="Delete term">
+            <i class="glyphicon glyphicon-remove"></i> Delete Term
+        </a>
+    </div>
+</div>
+
+<table id="terms" class="table table-bordered table-striped display">
+    <thead>
+        <tr>
+            <th>
+                SEL.
+            </th>
+            <th>
+                Term Name
+            </th>
+            <th>
+                Start Date
+            </th>
+            <th>
+                End Date
+            </th>
+            <th>
+                Enrollment Deadline
+            </th>
+            <th>
+                Enrollment Withdraw
+            </th>
+            <th>
+                Current
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var term in Model)
+            {
+            @Html.Partial("pv_TermRow", term)
+
+        }
+    </tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            var tableHelper = TH$({
+                table: "terms",
+                messageDiv: "#msg-div",
+                addDeleteEvent: true
+            });
+
+            $('[data-toggle="tooltip"]').tooltip();
+
+            var periodDatesBtn = $("#periodDatesBtn");
+            var editBtn = $("#editBtn");
+            var deleteBtn = $("#deleteBtn");
+            var deleteBtnHref = deleteBtn.attr("href");
+
+            $('#terms').DataTable({
+                "aaSorting": [[1, "asc"]],
+                "aoColumns": [
+                    { "bSortable": false },
+                    { "bSortable": true },
+                    { "bSortable": true },
+                    { "bSortable": true },
+                    { "bSortable": true },
+                    { "bSortable": true },
+                    { "bSortable": false }
+                ]
+            });
+
+            periodDatesBtn.attr("disabled", true);
+            editBtn.attr("disabled", true);
+            deleteBtn.attr("disabled", true);
+
+            periodDatesBtn.on("click", function (e) {
+                e.preventDefault();
+
+                var tId = $('input[name=tId]:checked').val();
+
+                if (tId) {
+                    window.location = $(this).attr("href") + "?termId=" + tId;
+                }
+            });
+
+            editBtn.on("click", function (e) {
+                e.preventDefault();
+
+                var tId = $('input[name=tId]:checked').val();
+
+                if (tId) {
+                    window.location = $(this).attr("href") + "/" + tId;
+                }
+            });
+
+            deleteBtn.on("click", function (e) {
+                e.preventDefault();
+
+                var tId = $('input[name=tId]:checked').val();
+
+                if (tId) {
+                    var link = $('input[name=tId]:checked').next("a.js-delete");
+                    link.click();
+                }
+            });
+
+            $('input[name=tId]').on("click", function () {
+                periodDatesBtn.attr("disabled", false);
+                editBtn.attr("disabled", false);
+                deleteBtn.attr("disabled", false);
+            });
+
+        });
+    </script>
+
+    <script type="text/javascript" src="~/Scripts/adyc.table.utils.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+}

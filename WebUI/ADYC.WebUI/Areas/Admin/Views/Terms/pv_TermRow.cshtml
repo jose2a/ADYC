@@ -1,0 +1,33 @@
+﻿@model ADYC.API.ViewModels.TermDto
+
+<tr>
+    <td>
+        <input type="radio" name="tId" data-name="@Model.Name" value="@Model.Id" />
+        <a href="@Url.Action("delete", new { Model.Id })" data-id="@Model.Id" class="js-delete hidden" data-name="Are you sure you want to delete @Model.Name FOREVER?"></a>
+    </td>
+    <td>
+        @Html.DisplayFor(m => m.Name)
+    </td>
+    <td>
+        @Model.StartDate.ToString("MMMM dd, yyyy")
+    </td>
+    <td>
+        @Model.EndDate.ToString("MMMM dd, yyyy")
+    </td>
+    <td>
+        @Model.EnrollmentDeadLine.ToString("MMMM dd, yyyy")
+    </td>
+    <td>
+        @Model.EnrollmentDropDeadLine.ToString("MMMM dd, yyyy")
+    </td>
+    <td>
+        @if (Model.IsCurrentTerm)
+        {
+            <i class="glyphicon glyphicon-ok"></i>
+        }
+        else
+        {
+            <i class="glyphicon glyphicon-remove"></i>
+        }
+    </td>
+</tr>

@@ -90,7 +90,7 @@ namespace ADYC.Service
         {
             return _enrollmentRepository
                 .Find(e => e.Id == id,
-                      includeProperties: "Evaluations,Evaluations.Period,Student,Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Term")
+                      includeProperties: "Evaluations,Evaluations.Period,Student,Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Course.CourseType,Offering.Term")
                 .SingleOrDefault();
         }
 

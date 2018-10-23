@@ -1,24 +1,25 @@
-﻿using ADYC.WebUI.ViewModels;
+﻿using ADYC.API.ViewModels;
+using ADYC.WebUI.ViewModels;
 using System.Net;
 using System.Threading.Tasks;
 
 namespace ADYC.WebUI.Repositories
 {
-    public class ScheduleRepository : BaseRepository<ScheduleListViewModel>
+    public class ScheduleRepository : BaseRepository<ScheduleListDto>
     {
         private string addressPreffix = "api/Offerings/";
 
-        public async Task<ScheduleListViewModel> GetSchedulesByOfferingId(int id)
+        public async Task<ScheduleListDto> GetSchedulesByOfferingId(int id)
         {
             return await restClient.GetAsync(addressPreffix + id + "/Schedules");
         }
 
-        public async Task<ScheduleListViewModel> PostScheduleList(ScheduleListViewModel scheduleList)
+        public async Task<ScheduleListDto> PostScheduleList(ScheduleListDto scheduleList)
         {
-            return await restClient.PostAsync(addressPreffix + scheduleList.OfferingId + "/Schedules", scheduleList);
+            return await restClient.PostAsync(addressPreffix + scheduleList.Offering.Id + "/Schedules", scheduleList);
         }
 
-        public async Task<HttpStatusCode> PutScheduleList(int id, ScheduleListViewModel schedulesList)
+        public async Task<HttpStatusCode> PutScheduleList(int id, ScheduleListDto schedulesList)
         {
             return await restClient.PutAsync(addressPreffix + id + "/Schedules", schedulesList);
         }

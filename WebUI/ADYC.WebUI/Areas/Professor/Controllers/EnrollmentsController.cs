@@ -37,7 +37,7 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
             return View(terms);
         }
 
-        // GET: Professor/Enrollments/View
+        // GET: Professor/Enrollments/ViewOfferings
         public async Task<ActionResult> ViewOfferings(int? termId)
         {
             if (!termId.HasValue)
@@ -52,9 +52,9 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
                 return HttpNotFound();
             }
 
-            var studentId = new Guid("63016919-365a-e811-9b75-b8763fed7266");
+            var professorId = new Guid("63016919-365a-e811-9b75-b8763fed7266");
 
-            var offerings = _offeringRepository.GetOfferingsByProfessorIdAndTermId(studentId, termId.Value);
+            var offerings = _offeringRepository.GetOfferingsByProfessorIdAndTermId(professorId, termId.Value);
 
             return View(new OfferingListViewModel
             {
@@ -63,7 +63,7 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
             });
         }
 
-        // GET: Professor/Enrollments/Enrollments
+        // GET: Professor/Enrollments/ViewEnrollments
         public async Task<ActionResult> ViewEnrollments(int? offeringId)
         {
             if (!offeringId.HasValue)
@@ -84,12 +84,11 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
                 new EnrollmentListViewModel
                 {
                     Offering = offering,
-                    Enrollments = enrollments,
-                    IsCurrentTerm = offering.Term.IsCurrentTerm
+                    Enrollments = enrollments
                 });
         }
 
-        // GET: Professor/Enrollments/Evaluations
+        // GET: Professor/Enrollments/ViewEvaluations
         public async Task<ActionResult> ViewEvaluations(int? enrollmentId)
         {
             if (!enrollmentId.HasValue)
@@ -104,9 +103,9 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
                 return HttpNotFound();
             }
 
-            enrollmentWithEvaluations.IsCurrentTerm = enrollmentWithEvaluations.Enrollment.Offering.Term.IsCurrentTerm;
+            var viewModel = new EnrollmentWithEvaluationsViewModel(enrollmentWithEvaluations);
 
-            return View(enrollmentWithEvaluations);
+            return View(viewModel);
         }
 
         // POST: Professor/Enrollments/SaveEvaluations
@@ -124,7 +123,7 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
                     // Update enrollment
                     await _evaluationRepository.PutEnrollmentWithEvaluations(form.Enrollment.Id, enrollmentWithEvaluations);
 
-                    TempData["msg"] = "Your changes were saved sucessfully";
+                    TempData["msg"] = "Your changes were saved sucessfully.";
 
                     return RedirectToAction("ViewEvaluations", new { enrollmentId = enrollmentWithEvaluations.Enrollment.Id });
                 }
@@ -144,6 +143,7 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
             return View("ViewEvaluations", form);
         }
 
+        // GET: Professor/Enrollments/ViewSchedules
         public async Task<ActionResult> ViewSchedules(int? offeringId)
         {
             if (!offeringId.HasValue)
@@ -155,16 +155,13 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
 
             try
             {
-                var scheduleList = await _scheduleRepository.GetSchedulesByOfferingId(offeringId.Value);
-                var offering = scheduleList.Offering;
                 var days = GetDayEnumViewModelList();
 
-                var schedules = GetScheduleList(offeringId.Value, scheduleList.Schedules, days);
+                var scheduleList = await _scheduleRepository.GetSchedulesByOfferingId(offeringId.Value);
+                scheduleList.Schedules = GetScheduleList(offeringId.Value, scheduleList.Schedules.ToList(), days);
 
-                viewModel = new ScheduleListViewModel(offering, schedules);
-                viewModel.IsNew = (scheduleList.Schedules == null || scheduleList.Schedules.Count() == 0);
+                viewModel = new ScheduleListViewModel(scheduleList);
                 viewModel.Days = days;
-                viewModel.IsCurrentTerm = offering.Term.IsCurrentTerm;
             }
             catch (AdycHttpRequestException ahre)
             {
@@ -178,36 +175,5 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
 
             return View(viewModel);
         }
-
-        //private List<ScheduleViewModel> GetScheduleList(int offeringId, List<ScheduleViewModel> scheduleViewModelList, List<DayEnumViewModel> days)
-        //{
-        //    var scheduleList = new List<ScheduleViewModel>();
-        //    foreach (var d in days)
-        //    {
-        //        var sch = scheduleViewModelList.SingleOrDefault(s => s.Day == d.Id);
-
-        //        if (sch != null)
-        //        {
-        //            scheduleList.Add(sch);
-        //        }
-        //        else
-        //        {
-        //            scheduleList.Add(new ScheduleViewModel
-        //            {
-        //                OfferingId = offeringId,
-        //                Day = d.Id,
-        //                StartTime = null,
-        //                EndTime = null
-        //            });
-        //        }
-        //    }
-
-        //    return scheduleList;
-        //}
-
-        //private static List<DayEnumViewModel> GetDayEnumViewModelList()
-        //{
-        //    return ((IEnumerable<Day>)Enum.GetValues(typeof(Day))).Select(c => new DayEnumViewModel() { Id = (byte)c, Name = c.ToString() }).ToList();
-        //}
     }
 }

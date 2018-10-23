@@ -23,11 +23,11 @@
             </li>
             <li>
                 <h5>
-                    <strong>Term: </strong>@Model.Offering.Term.Name (@Model.Offering.Term.StartDate.ToString("MMMM dd, yyyy") - @Model.Offering.Term.EndDate.ToString("MMMM dd, yyyy"))
+                    <strong>Term: </strong>@Model.Offering.Term.Name (@Model.Offering.Term)
                 </h5>
             </li>
             <li>
-                <h5><strong>CURRENT TERM: </strong> @((Model.IsCurrentTerm) ? "Yes" : "No")</h5>
+                <h5><strong>Current Term: </strong> @((Model.IsCurrentTerm) ? "Yes" : "No")</h5>
             </li>
         </ul>
     </div>

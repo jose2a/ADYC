@@ -1,30 +1,30 @@
-﻿using ADYC.Model;
+﻿using ADYC.API.ViewModels;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
 namespace ADYC.WebUI.Repositories
 {
-    public class GroupRepository : BaseRepository<Group>
+    public class GroupRepository : BaseRepository<GroupDto>
     {
         private string addressPreffix = "api/Groups/";
 
-        public async Task<IEnumerable<Group>> GetGroups()
+        public async Task<IEnumerable<GroupDto>> GetGroups()
         {
             return await restClient.GetManyAsync(addressPreffix);
         }
 
-        public async Task<Group> GetGroupById(int id)
+        public async Task<GroupDto> GetGroupById(int id)
         {
             return await restClient.GetAsync(addressPreffix + id);
         }
 
-        public async Task<Group> PostGroup(Group group)
+        public async Task<GroupDto> PostGroup(GroupDto group)
         {
             return await restClient.PostAsync(addressPreffix, group);
         }
 
-        public async Task<HttpStatusCode> PutGroup(int id, Group group)
+        public async Task<HttpStatusCode> PutGroup(int id, GroupDto group)
         {
             return await restClient.PutAsync(addressPreffix + id, group);
         }

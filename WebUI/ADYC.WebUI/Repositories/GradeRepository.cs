@@ -1,30 +1,30 @@
-﻿using ADYC.Model;
+﻿using ADYC.API.ViewModels;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
 namespace ADYC.WebUI.Repositories
 {
-    public class GradeRepository : BaseRepository<Grade>
+    public class GradeRepository : BaseRepository<GradeDto>
     {
         private string addressPreffix = "api/Grades/";
 
-        public async Task<IEnumerable<Grade>> GetGrades()
+        public async Task<IEnumerable<GradeDto>> GetGrades()
         {
             return await restClient.GetManyAsync(addressPreffix);
         }
 
-        public async Task<Grade> GetGradeById(int id)
+        public async Task<GradeDto> GetGradeById(int id)
         {
             return await restClient.GetAsync(addressPreffix + id);
         }
 
-        public async Task<Grade> PostGrade(Grade grade)
+        public async Task<GradeDto> PostGrade(GradeDto grade)
         {
             return await restClient.PostAsync(addressPreffix, grade);
         }
 
-        public async Task<HttpStatusCode> PutGrade(int id, Grade grade)
+        public async Task<HttpStatusCode> PutGrade(int id, GradeDto grade)
         {
             return await restClient.PutAsync(addressPreffix + id, grade);
         }

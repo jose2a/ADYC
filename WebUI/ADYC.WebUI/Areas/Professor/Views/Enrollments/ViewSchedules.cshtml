@@ -2,8 +2,6 @@
 
 @{
     ViewBag.Title = Model.Title;
-
-    var isCurrentTerm = Model.Offering.Term.IsCurrentTerm;
 }
 
 <h1>@Model.Title</h1>
@@ -13,16 +11,16 @@
         <ul class="term-info">
             <li><h5><strong>Offering: </strong>@Model.Offering.Title</h5></li>
             <li><h5><strong>Location: </strong>@Model.Offering.Location</h5></li>
-            <li><h5><strong>Course: </strong>@Model.Offering.Course.Name</h5></li>
+            <li><h5><strong>Course: </strong>@Model.Offering.Course</h5></li>
             <li><h5><strong>Professor: </strong>@Model.Offering.Professor</h5></li>
             <li>
                 <h5>
-                    <strong>Term: </strong>@Model.Offering.Term.Name @if (isCurrentTerm)
+                    <strong>Term: </strong>@Model.Offering.Term.Name&nbsp;
+                    @if (Model.IsCurrentTerm)
                     {
                         <span class="badge">Current</span>
                     }
-                    (@Model.Offering.Term.StartDate.ToString("MMMM dd, yyyy") - @Model.Offering.Term.EndDate.ToString("MMMM dd, yyyy"))
-
+                    &nbsp;@Model.Offering.Term
                 </h5>
             </li>
             <li>

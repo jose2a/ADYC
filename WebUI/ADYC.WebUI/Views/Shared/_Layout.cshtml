@@ -24,22 +24,30 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Couses", "Index", new { Controller = "Courses", Area = "" })</li>
-                    <li>@Html.ActionLink("Couse Types", "Index", new { Controller = "CourseTypes", Area = "" })</li>
-                    <li>@Html.ActionLink("Grades", "Index", new { Controller = "Grades", Area = "" })</li>
-                    <li>@Html.ActionLink("Groups", "Index", new { Controller = "Groups", Area = "" })</li>
-                    <li>@Html.ActionLink("Majors", "Index", new { Controller = "Majors", Area = "" })</li>
-                    <li>@Html.ActionLink("Periods", "Index", new { Controller = "Periods", Area = "" })</li>
-                    <li>@Html.ActionLink("Professors", "Index", new { Controller = "Professors", Area = "" } )</li>
-                    <li>@Html.ActionLink("Students", "Index", new { Controller = "Students", Area = "" })</li>
-                    <li>@Html.ActionLink("Terms", "Index", new { Controller = "Terms", Area = "" })</li>
-                    <li>@Html.ActionLink("Offerings", "Index", new { Controller = "Offerings", Area = "" })</li>
+                    <li>@Html.ActionLink("Couses", "Index", new { Controller = "Courses", Area = "Admin" })</li>
+                    <li>@Html.ActionLink("Couse Types", "Index", new { Controller = "CourseTypes", Area = "Admin" })</li>
+                    <li>@Html.ActionLink("Grades", "Index", new { Controller = "Grades", Area = "Admin" })</li>
+                    <li>@Html.ActionLink("Groups", "Index", new { Controller = "Groups", Area = "Admin" })</li>
+                    <li>@Html.ActionLink("Majors", "Index", new { Controller = "Majors", Area = "Admin" })</li>
+                    <li>@Html.ActionLink("Periods", "Index", new { Controller = "Periods", Area = "Admin" })</li>
+                    <li>@Html.ActionLink("Professors", "Index", new { Controller = "Professors", Area = "Admin" } )</li>
+                    <li>@Html.ActionLink("Students", "Index", new { Controller = "Students", Area = "Admin" })</li>
+                    <li>@Html.ActionLink("Terms", "Index", new { Controller = "Terms", Area = "Admin" })</li>
+                    <li>@Html.ActionLink("Offerings", "Index", new { Controller = "Offerings", Area = "Admin" })</li>
                     <li>@Html.ActionLink("Enrollments", "Index", new { Controller = "Enrollments", Area = "Professor" })</li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="container body-content">
+        @if (TempData["msg"] != null)
+        {
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Great!</strong> @TempData["msg"].ToString()
+            </div>
+        }
+
         @RenderBody()
         <hr />
         <footer>

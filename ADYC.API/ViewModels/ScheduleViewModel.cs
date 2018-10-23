@@ -1,28 +1,30 @@
-﻿using ADYC.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace ADYC.API.ViewModels
 {
     public class ScheduleDto
     {
         public int? Id { get; set; }
-        
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:h: mmtt}")]
+        public DateTime? StartTime { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:h: mmtt}")]
+        public DateTime? EndTime { get; set; }
 
         [Required]
         public int OfferingId { get; set; }
-
-        //public OfferingDto Offering { get; set; }
 
         [Required]
         public byte Day { get; set; }
 
         public string DayName { get; set; }
+
+        public override string ToString()
+        {
+            return $"{StartTime.Value.ToString("hh:mm tt")} - {StartTime.Value.ToString("hh:mm tt")}";
+        }
     }
 
     public class ScheduleListDto

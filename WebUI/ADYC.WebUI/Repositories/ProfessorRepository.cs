@@ -1,4 +1,4 @@
-﻿using ADYC.Model;
+﻿using ADYC.API.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -6,31 +6,31 @@ using System.Threading.Tasks;
 
 namespace ADYC.WebUI.Repositories
 {
-    public class ProfessorRepository : BaseRepository<Professor>
+    public class ProfessorRepository : BaseRepository<ProfessorDto>
     {
         private string addressPreffix = "api/Professors/";
 
-        public async Task<IEnumerable<Professor>> GetProfessors()
+        public async Task<IEnumerable<ProfessorDto>> GetProfessors()
         {
             return await restClient.GetManyAsync(addressPreffix);
         }
 
-        public async Task<IEnumerable<Professor>> GetNotTrashedProfessors()
+        public async Task<IEnumerable<ProfessorDto>> GetNotTrashedProfessors()
         {
             return await restClient.GetManyAsync(addressPreffix + "GetNotTrashed");
         }
 
-        public async Task<Professor> GetProfessorById(Guid id)
+        public async Task<ProfessorDto> GetProfessorById(Guid id)
         {
             return await restClient.GetAsync(addressPreffix + id);
         }
 
-        public async Task<Professor> PostProfessor(Professor professor)
+        public async Task<ProfessorDto> PostProfessor(ProfessorDto professor)
         {
             return await restClient.PostAsync(addressPreffix, professor);
         }
 
-        public async Task<HttpStatusCode> PutProfessor(Guid id, Professor professor)
+        public async Task<HttpStatusCode> PutProfessor(Guid id, ProfessorDto professor)
         {
             return await restClient.PutAsync(addressPreffix + id, professor);
         }

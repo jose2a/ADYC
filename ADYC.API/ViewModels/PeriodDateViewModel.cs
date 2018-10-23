@@ -8,26 +8,29 @@ namespace ADYC.API.ViewModels
 {
     public class PeriodDateDto
     {
-        //public string Url { get; set; }
-
         [Required]
         public int PeriodId { get; set; }
         [Required]
         public int TermId { get; set; }
 
         [Required]
-        public DateTime StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
         [Required]
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
         
 
         public PeriodDto Period { get; set; }
-        //public string Term { get; set; }
+
+        public override string ToString()
+        {
+            return $"{StartDate.Value.ToString("MMMM dd, yyyy")} - {EndDate.Value.ToString("MMMM dd, yyyy")}";
+        }
     }
 
     public class PeriodDateListDto
     {
         public string Url { get; set; }
+
         public TermDto Term { get; set; }
         public IEnumerable<PeriodDateDto> PeriodDates { get; set; }
     }

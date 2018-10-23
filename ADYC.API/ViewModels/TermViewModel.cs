@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace ADYC.API.ViewModels
 {
@@ -23,6 +20,9 @@ namespace ADYC.API.ViewModels
         [Required]
         public DateTime EnrollmentDropDeadLine { get; set; }
 
-        //public ICollection<PeriodDate> PeriodDates { get; set; }
+        public override string ToString()
+        {
+            return $"{StartDate.ToString("MMMM dd, yyyy")} - {EndDate.ToString("MMMM dd, yyyy")}";
+        }
     }
 }

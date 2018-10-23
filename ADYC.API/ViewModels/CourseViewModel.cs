@@ -18,5 +18,10 @@ namespace ADYC.API.ViewModels
 
         public int CourseTypeId { get; set; }
         public CourseTypeDto CourseType { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Name} ({CourseType.Name})";
+        }
     }
 }

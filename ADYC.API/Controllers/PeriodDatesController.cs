@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Linq;
 
 namespace ADYC.API.Controllers
 {
@@ -30,7 +31,7 @@ namespace ADYC.API.Controllers
             var periodDates = _periodDateService.GetPeriodDatesForTerm(termId);
             var term = _termService.Get(termId);
 
-            return Ok(GetPeriodDateListDto(termId, term, periodDates));
+            return Ok(GetPeriodDateListDto(termId, term, periodDates.ToList()));
         }        
 
         [Route("{termId}/PeriodDates")]

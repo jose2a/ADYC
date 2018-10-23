@@ -37,7 +37,7 @@
             <ul class="term-info">
                 <li>
                     <h5>
-                        <strong>Student: </strong>@Model.Enrollment.Student.LastName, @Model.Enrollment.Student.FirstName
+                        <strong>Student: </strong>@Model.Enrollment.Student
                     </h5>
                 </li>
                 <li><h5><strong>Offering: </strong>@Model.Enrollment.Offering.Title</h5></li>
@@ -45,11 +45,11 @@
                 <li><h5><strong>Course: </strong>@Model.Enrollment.Offering.Course</h5></li>
                 <li>
                     <h5>
-                        <strong>Term: </strong>@Model.Enrollment.Offering.Term.Name (@Model.Enrollment.Offering.Term.StartDate.ToString("MMMM dd, yyyy") - @Model.Enrollment.Offering.Term.EndDate.ToString("MMMM dd, yyyy"))
+                        <strong>Term: </strong>@Model.Enrollment.Offering.Term.Name (@Model.Enrollment.Offering.Term)
                     </h5>
                 </li>
                 <li>
-                    <h5><strong>CURRENT TERM: </strong> @((Model.IsCurrentTerm) ? "Yes" : "No")</h5>
+                    <h5><strong>Current Term: </strong> @(Model.IsCurrentTerm ? "Yes" : "No")</h5>
                 </li>
             </ul>
         </div>
