@@ -1,5 +1,7 @@
 ﻿using ADYC.API.ViewModels;
+using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace ADYC.WebUI.Repositories
@@ -18,10 +20,20 @@ namespace ADYC.WebUI.Repositories
             return await restClient.GetAsync(addressPreffix + id);
         }
 
-        // GetWithEvaluations/{id}
-        public async Task<EnrollmentDto> GetWithEvaluations(int id)
+        //GetEnrollmentsByStudentId/{studentId:guid}/TermId/{termId}
+        public async Task<IEnumerable<EnrollmentDto>> GetEnrollmentsByStudentIdAndTermId(Guid studentId, int termId)
         {
-            return await restClient.GetAsync(addressPreffix + "GetWithEvaluations/" + id);
+            return await restClient.GetManyAsync($"{addressPreffix}GetEnrollmentsByStudentId/{studentId}/TermId/{termId}");
+        }
+
+        public async Task<HttpStatusCode> Withdraw(int id)
+        {
+            return await restClient.GetAsyncWithStatusCode($"{addressPreffix}Withdrop/{id}");
+        }
+
+        public async Task<EnrollmentDto> PostEnrollment(EnrollmentDto enrollment)
+        {
+            return await restClient.PostAsync(addressPreffix, enrollment);
         }
     }
 }

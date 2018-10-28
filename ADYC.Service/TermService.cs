@@ -72,8 +72,9 @@ namespace ADYC.Service
         {
             DateTime today = DateTime.Today;
 
-            return _termRepository
-                .SingleOrDefault(t => today >= t.StartDate && today <= t.EndDate || t.IsCurrentTerm);
+            return _termRepository.SingleOrDefault(t => t.IsCurrentTerm);
+            //return _termRepository
+              //  .SingleOrDefault(t => today >= t.StartDate && today <= t.EndDate || t.IsCurrentTerm);
         }
 
         public void Remove(Term term)

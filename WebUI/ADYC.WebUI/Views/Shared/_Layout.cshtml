@@ -25,9 +25,9 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Couses", "Index", new { Controller = "Courses", Area = "Admin" })</li>
-                    <li>@Html.ActionLink("Couse Types", "Index", new { Controller = "CourseTypes", Area = "Admin" })</li>
+                    @*<li>@Html.ActionLink("Couse Types", "Index", new { Controller = "CourseTypes", Area = "Admin" })</li>
                     <li>@Html.ActionLink("Grades", "Index", new { Controller = "Grades", Area = "Admin" })</li>
-                    <li>@Html.ActionLink("Groups", "Index", new { Controller = "Groups", Area = "Admin" })</li>
+                    <li>@Html.ActionLink("Groups", "Index", new { Controller = "Groups", Area = "Admin" })</li>*@
                     <li>@Html.ActionLink("Majors", "Index", new { Controller = "Majors", Area = "Admin" })</li>
                     <li>@Html.ActionLink("Periods", "Index", new { Controller = "Periods", Area = "Admin" })</li>
                     <li>@Html.ActionLink("Professors", "Index", new { Controller = "Professors", Area = "Admin" } )</li>
@@ -35,6 +35,8 @@
                     <li>@Html.ActionLink("Terms", "Index", new { Controller = "Terms", Area = "Admin" })</li>
                     <li>@Html.ActionLink("Offerings", "Index", new { Controller = "Offerings", Area = "Admin" })</li>
                     <li>@Html.ActionLink("Enrollments", "Index", new { Controller = "Enrollments", Area = "Professor" })</li>
+                    <li>@Html.ActionLink("Enrollments (Students)", "Index", new { Controller = "Enrollments", Area = "Student" })</li>
+                    <li>@Html.ActionLink("Enroll offering (Students)", "Index", new { Controller = "OfferingEnrollments", Area = "Student" })</li>
                 </ul>
             </div>
         </div>

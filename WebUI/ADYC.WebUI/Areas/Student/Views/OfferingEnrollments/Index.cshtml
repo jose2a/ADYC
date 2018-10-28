@@ -1,0 +1,176 @@
+﻿@model ADYC.WebUI.ViewModels.OfferingEnrollmentListViewModel
+
+@{
+    ViewBag.Title = "Offerings";
+}
+
+<div class="modal fade" id="schedulesModal" tabindex="-1" role="dialog" aria-labelledby="schedulesModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel">Schedules</h3>
+            </div>
+            <div class="modal-body" id="schedulesTable">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2>Offerings</h2>
+
+<div id="msg-div">
+</div>
+
+<div class="row">
+    <div class="col-sm-8">
+        <ul class="term-info">
+            <li>
+                <h5><strong>Term Name: </strong>@Model.Term.Name (@Model.Term)</h5>
+            </li>
+            <li>
+                <h5><strong>Enrollment Deadline: </strong>@Model.Term.EnrollmentDeadLine.ToString("MMMM dd, yyyy")</h5>
+                <h5><strong>Enrollment Withdraw: </strong>@Model.Term.EnrollmentDropDeadLine.ToString("MMMM dd, yyyy")</h5>
+            </li>
+            <li>
+                <h5><strong>Current Term: </strong> @(Model.IsCurrentTerm ? "Yes" : "No")</h5>
+            </li>
+        </ul>
+    </div>
+</div>
+
+@if (Model.IsStudentCurrentlyEnrolled)
+{
+    <hr />
+
+    <h3>Sorry! You are currently enrolled in another offering for this term.</h3>
+}
+else
+{
+
+    <table id="offerings" class="table table-bordered table-striped display">
+        <thead>
+            <tr>
+                <th>
+                    Id
+                </th>
+                <th>
+                    Title
+                </th>
+                <th>
+                    Location
+                </th>
+                <th>
+                    Days Offered
+                </th>
+                <th>
+                    Course
+                </th>
+                <th>
+                    Course Type
+                </th>
+                <th>
+                    Professor
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var offering in Model.Offerings)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(m => offering.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => offering.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => offering.Location)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => offering.OfferingDays)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => offering.Course.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => offering.Course.CourseType.Name)
+                    </td>
+                    <td>
+                        @offering.Professor
+                    </td>
+                    <td>
+                        <a href="@Url.Action("ViewSchedules", new { offeringId = offering.Id })" class="btn btn-xs btn-default js-viewSchedules">
+                            <i class="glyphicon glyphicon-calendar"></i>View Schedules
+                        </a>
+                        <a href="@Url.Action("Enrollment", new { offeringId = offering.Id })" data-title="@offering.Title" class="btn btn-xs btn-default js-enrollment">
+                            <i class="glyphicon glyphicon-user"></i> Enroll in offering
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            $('#offerings').DataTable();
+
+            $(".js-viewSchedules").on("click", function (e) {
+                e.preventDefault();
+
+                var link = $(this);
+
+                $.ajax({
+                    url: link.attr("href"),
+                    method: "GET",
+                    success: function (data) {
+                        $("#schedulesTable").html(data);
+                        $('#schedulesModal').modal("show");
+                    },
+                    error: function (data) {
+                        self.showErrorMsg(data.statusText, "warning");
+                    }
+                });
+            });
+
+            $(".js-enrollment").on("click", function (e) {
+                e.preventDefault();
+
+                var link = $(this);
+                var title = link.attr("data-title");
+
+                bootbox.confirm({
+                    title: "Enrollment",
+                    message: "Do you want to enroll in the following offering, " + title + "?",
+                    buttons: {
+                        cancel: {
+                            label: '<i class="fa fa-times"></i> Cancel'
+                        },
+                        confirm: {
+                            label: '<i class="fa fa-check"></i> Confirm'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            window.location = link.attr("href");
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script type="text/javascript" src="~/Scripts/adyc.table.utils.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+}

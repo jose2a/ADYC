@@ -38,9 +38,9 @@ namespace ADYC.Service
 
             _enrollmentRepository.Add(enrollment);
 
-            AddEvaluationsToEnrollment(enrollment);
+            var evaluations = GetEvaluationForNewEnrollment(enrollment);
 
-            _evaluationRepository.AddRange(enrollment.Evaluations);
+            _evaluationRepository.AddRange(evaluations);
         }
 
         public Enrollment Get(int id)
@@ -77,6 +77,17 @@ namespace ADYC.Service
 
             return _enrollmentRepository.Find(e => e.StudentId == studentId,
                 includeProperties: "Student,Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Term");
+        }
+
+        public IEnumerable<Enrollment> GetEnrollmentsByStudentIdAndTermId(Guid studentId, int termId)
+        {
+            if (studentId == null)
+            {
+                throw new ArgumentNullException("studentId");
+            }
+
+            return _enrollmentRepository.Find(e => e.StudentId == studentId && e.Offering.TermId == termId,
+                includeProperties: "Student.Grade,Student.Group,Student.Major,Offering,Offering.Professor,Offering.Course,Offering.Course.CourseType,Offering.Term");
         }
 
         public Enrollment GetStudentCurrentTermEnrollmentByStudentId(Guid studentId)
@@ -222,12 +233,16 @@ namespace ADYC.Service
             }
         }
 
-        private void AddEvaluationsToEnrollment(Enrollment enrollment)
+        private List<Evaluation> GetEvaluationForNewEnrollment(Enrollment enrollment)
         {
+            var evaluations = new List<Evaluation>();
+
             foreach (var period in PeriodService.GetAll())
             {
-                var evaluation = new Evaluation { EnrollmentId = enrollment.Id, PeriodId = period.Id };
+                evaluations.Add(new Evaluation { EnrollmentId = enrollment.Id, PeriodId = period.Id });
             }
+
+            return evaluations;
         }
 
         private List<Evaluation> GetEvaluationsWithGradesFromEnrollment(Enrollment enrollment)
@@ -257,21 +272,9 @@ namespace ADYC.Service
                     finalGrade += evaluation.PeriodGrade.Value;
                     evaluation.PeriodGradeLetter = GetGradeLetter(evaluation.PeriodGrade.Value);
                 }
-                //evaluations.Add(evaluation);
             }
 
-            //var res = enrollment.Evaluations
-            //    .Where(ev => ev.PeriodGrade.HasValue)
-            //    .Select(e => e.PeriodGrade.Value);
-
-            //foreach (var evaluation in res)
-            //{
-            //    finalGrade += evaluation;//evaluation.PeriodGrade.Value;
-            //        //evaluation.PeriodGradeLetter = GetGradeLetter(evaluation.PeriodGrade.Value);
-            // //   }
-            //}
-
-            finalGrade = finalGrade / enrollment.Evaluations.Count; //enrollment.Evaluations.Count;
+            finalGrade = finalGrade / enrollment.Evaluations.Count;
             enrollment.FinalGrade = finalGrade;
             enrollment.FinalGradeLetter = GetGradeLetter(enrollment.FinalGrade.Value);
         }
@@ -309,7 +312,7 @@ namespace ADYC.Service
                 throw new ArgumentNullException("enrollment");
             }
 
-            if (!enrollment.IsCurrentEnrollment)
+            if (!enrollment.Offering.Term.IsCurrentTerm)
             {
                 throw new ArgumentException("This enrollment is not for the current term.");
             }

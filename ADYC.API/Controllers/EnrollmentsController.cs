@@ -107,6 +107,26 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        [Route("GetEnrollmentsByStudentId/{studentId:guid}/TermId/{termId}")]
+        [ResponseType(typeof(IEnumerable<EnrollmentDto>))]
+        [HttpGet]
+        public IHttpActionResult GetEnrollmentByStudentIdAndTermId(Guid studentId, int termId)
+        {
+            try
+            {
+                var enrollments = _enrollmentService.GetEnrollmentsByStudentIdAndTermId(studentId, termId);
+
+                return Ok(enrollments
+                    .Select(e => GetEnrollmentDto(e)));
+            }
+            catch (ArgumentNullException ane)
+            {
+                ModelState.AddModelError("", ane.Message);
+            }
+
+            return BadRequest(ModelState);
+        }
+
         [Route("GetStudentCurrentTermEnrollmentByStudentId/{studentId:guid}")]
         [ResponseType(typeof(EnrollmentDto))]
         [HttpGet]

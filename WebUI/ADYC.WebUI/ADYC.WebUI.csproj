@@ -141,6 +141,8 @@
     <Compile Include="Areas\Admin\Controllers\CoursesController.cs" />
     <Compile Include="Areas\Professor\Controllers\EnrollmentsController.cs" />
     <Compile Include="Areas\Professor\ProfessorAreaRegistration.cs" />
+    <Compile Include="Areas\Student\Controllers\EnrollmentsController.cs" />
+    <Compile Include="Areas\Student\Controllers\OfferingEnrollmentsController.cs" />
     <Compile Include="Areas\Student\StudentAreaRegistration.cs" />
     <Compile Include="Controllers\ADYCBasedController.cs" />
     <Compile Include="Areas\Admin\Controllers\CourseTypesController.cs" />
@@ -224,6 +226,14 @@
     <Content Include="Areas\Admin\Views\web.config" />
     <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Student\Views\web.config" />
+    <Content Include="Areas\Student\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Student\Views\Enrollments\Index.cshtml" />
+    <Content Include="Areas\Student\Views\Enrollments\ViewEnrollment.cshtml" />
+    <Content Include="Areas\Student\Views\Enrollments\Withdraw.cshtml" />
+    <Content Include="Areas\Student\Views\Enrollments\ViewEvaluations.cshtml" />
+    <Content Include="Areas\Student\Views\OfferingEnrollments\Index.cshtml" />
+    <Content Include="Areas\Student\Views\OfferingEnrollments\pv_ViewSchedules.cshtml" />
+    <Content Include="Areas\Student\Views\OfferingEnrollments\Enrollment.cshtml" />
     <None Include="Scripts\jquery-1.10.2-vsdoc.js" />
     <Content Include="Scripts\jPages.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -297,7 +307,6 @@
     <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Areas\Professor\Models\" />
     <Folder Include="Areas\Professor\Views\Shared\" />
-    <Folder Include="Areas\Student\Controllers\" />
     <Folder Include="Areas\Student\Models\" />
     <Folder Include="Areas\Student\Views\Shared\" />
   </ItemGroup>

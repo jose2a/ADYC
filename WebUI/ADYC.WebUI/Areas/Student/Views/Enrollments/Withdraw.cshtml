@@ -1,0 +1,19 @@
+﻿@model ADYC.API.ViewModels.OfferingDto
+
+@{
+    ViewBag.Title = "Withdraw confirmed";
+}
+
+<h2>Congratulations!!!</h2>
+
+<hr />
+
+<h3>You have succcesfully withdrawn from @Model.Title</h3>
+
+<hr />
+
+<div>
+    <div class="form-actions no-color">
+        @Html.ActionLink("Back to List", "Index", new { controller = "Enrollments" })
+    </div>
+</div>

@@ -34,6 +34,18 @@ namespace ADYC.WebUI.Repositories
             return response.Data;
         }
 
+        //GetByCurrentTerm
+        public async Task<IEnumerable<OfferingDto>> GetByCurrentTerm()
+        {
+            return await restClient.GetManyAsync(addressPreffix + "GetByCurrentTerm");
+        }
+
+        //GetByTermId/{termId}
+        public async Task<IEnumerable<OfferingDto>> GetByCurrentTerm(int termId)
+        {
+            return await restClient.GetManyAsync($"{addressPreffix}GetByTermId/{termId}");
+        }
+
         public async Task<OfferingDto> GetOfferingById(int id)
         {
             return await restClient.GetAsync(addressPreffix + id);

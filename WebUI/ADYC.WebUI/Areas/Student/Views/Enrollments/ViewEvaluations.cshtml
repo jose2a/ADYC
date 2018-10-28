@@ -1,0 +1,118 @@
+﻿@model ADYC.WebUI.ViewModels.EnrollmentWithEvaluationsViewModel
+
+@{
+    ViewBag.Title = "Evaluations";
+}
+
+<h2>Evaluations</h2>
+
+<!-- Begin: Information about enrollment -->
+<div class="row">
+    <div class="col-sm-8">
+        <ul class="term-info">
+            <li>
+                <h5>
+                    <strong>Student: </strong>@Model.Enrollment.Student
+                </h5>
+            </li>
+            <li><h5><strong>Offering: </strong>@Model.Enrollment.Offering.Title</h5></li>
+
+            <li><h5><strong>Course: </strong>@Model.Enrollment.Offering.Course</h5></li>
+            <li>
+                <h5>
+                    <strong>Term: </strong>@Model.Enrollment.Offering.Term.Name (@Model.Enrollment.Offering.Term)
+                </h5>
+            </li>
+            <li>
+                <h5><strong>Current Term: </strong> @(Model.IsCurrentTerm ? "Yes" : "No")</h5>
+            </li>
+        </ul>
+    </div>
+</div>
+<!-- End: Information about enrollment -->
+
+<div class="row">
+    <div class="col-sm-8">
+        <ul class="term-info">
+            <li>
+                <h5>
+                    <strong>Final Grade: </strong>
+                    @if (Model.Enrollment.FinalGrade.HasValue)
+                    {
+                        <span>@Model.Enrollment.FinalGrade (@Model.Enrollment.FinalGradeLetter)</span>
+                    }
+                    else
+                    {
+                        <span>Not avalaible yet.</span>
+                    }
+                </h5>
+            </li>
+            <li>
+                <h5>
+                    <strong>Final Grade Letter: </strong>
+                    <span>@Model.Enrollment.FinalGradeLetter.ToString()</span>
+                </h5>
+            </li>
+            <li><h5><strong>Notes: </strong>@Model.Enrollment.Notes</h5></li>
+        </ul>
+    </div>
+</div>
+
+<div class="form-horizontal">
+    <table class="table table-bordered table-striped display">
+        <thead>
+            <tr>
+                <th>Period</th>
+                <th>Grade</th>
+                <th>Grade (Letter)</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @for (int i = 0; i < Model.Evaluations.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @Model.Evaluations[i].Period.Name
+                    </td>
+                    <td>
+                        @if (Model.Evaluations[i].PeriodGrade.HasValue)
+                        {
+                            @Model.Evaluations[i].PeriodGrade
+                        }
+                        else
+                        {
+                            <span>Not graded yet.</span>
+                        }
+                    </td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(Model.Evaluations[i].PeriodGradeLetter))
+                        {
+                            @Model.Evaluations[i].PeriodGradeLetter
+                        }
+                        else
+                        {
+                            <span>Not graded yet.</span>
+                        }
+                    </td>
+                    <td>
+                        @Model.Evaluations[i].Notes
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @Html.ActionLink("Back to Enrollment", "ViewEnrollment", new { termId = Model.Enrollment.Offering.TermId })
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+        });
+    </script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+}

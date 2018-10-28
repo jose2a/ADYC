@@ -1,5 +1,4 @@
 ﻿using ADYC.API.ViewModels;
-using ADYC.Model;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -54,5 +53,88 @@ namespace ADYC.WebUI.ViewModels
             Enrollment = enrollmentWithEvaluations.Enrollment;
             Evaluations = enrollmentWithEvaluations.Evaluations.ToList();
         }
+    }
+
+    public class EnrollmentDetailsViewModel
+    {
+        public int TermId { get; set; }
+
+        public bool IsCurrentTerm
+        {
+            get
+            {
+                if (Enrollment == null)
+                {
+                    return false;
+                }
+
+                return Enrollment.Offering.Term.IsCurrentTerm;
+            }
+        }
+
+        public EnrollmentDto Enrollment { get; set; }
+
+        public EnrollmentDetailsViewModel()
+        {
+
+        }
+
+        public EnrollmentDetailsViewModel(EnrollmentDto enrollment)
+        {
+            Enrollment = enrollment;
+        }
+    }
+
+    public class EnrollmentDetailListViewModel
+    {
+        public int TermId { get; set; }
+
+        public TermDto Term { get; set; }
+
+        public bool IsCurrentTerm { get; set; }
+
+        public IEnumerable<EnrollmentDto> Enrollments { get; set; }
+
+        //public EnrollmentDetailListViewModel()
+        //{
+
+        //}
+
+        //public EnrollmentDetailListViewModel(EnrollmentDto enrollment)
+        //{
+        //    Enrollment = enrollment;
+        //}
+    }
+    public class EnrollmentWithdrawViewModel
+    {
+        public int TermId { get; set; }
+        public int EnrollmentId { get; set; }
+
+        public string OfferingTitle { get; set; }
+    }
+
+    public class OfferingEnrollmentListViewModel
+    {
+        public TermDto Term { get; set; }
+
+        public bool IsCurrentTerm
+        {
+            get
+            {
+                if (Term == null)
+                {
+                    return false;
+                }
+
+                return Term.IsCurrentTerm;
+            }
+        }
+
+        public bool IsStudentCurrentlyEnrolled
+        {
+            get; set;
+        }
+
+        public IEnumerable<OfferingDto> Offerings { get; set; }
     }
 }

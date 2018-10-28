@@ -1,0 +1,156 @@
+﻿@model ADYC.WebUI.ViewModels.EnrollmentDetailListViewModel
+
+@{
+    ViewBag.Title = "Enrollment";
+}
+
+<h2>Enrollment</h2>
+
+<div class="row">
+    <div class="col-sm-8">
+        <ul class="term-info">
+            <li>
+                <h5>
+                    <strong>Term: </strong>@Model.Term.Name&nbsp;
+                    @if (Model.IsCurrentTerm)
+                    {
+                        <span class="badge">Current</span>
+                    }
+                    &nbsp;(@Model.Term)
+                </h5>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="btn-toolbar">
+    <div class="btn-group">
+        <a href="@Url.Action("Index")" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-circle-arrow-left"></i> Back to list of terms</a>
+
+        @*@if (Model.Enrollment != null)
+            {
+                <a href="@Url.Action("ViewEvaluations", new { enrollmentId = Model.Enrollment.Id })" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-list"></i> Evaluations</a>
+                if (Model.IsCurrentTerm && !Model.Enrollment.WithdropDate.HasValue)
+                {
+                    <a id="btnWithdraw" href="@Url.Action("Withdraw", new { enrollmentId = Model.Enrollment.Id, termId = Model.TermId })" data-title="@Model.Enrollment.Offering.Title" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-alert"></i> Withdraw offering</a>
+                }
+            }*@
+    </div>
+</div>
+
+<hr />
+@if (Model.Enrollments.Count() == 0)
+{
+    <div class="alert alert-info" role="alert">
+        You were not enrolled during this term.
+    </div>
+}
+else
+{
+    foreach (var enrollment in Model.Enrollments)
+    {
+        if (enrollment.WithdropDate.HasValue)
+        {
+            <div class="alert alert-info" role="alert">
+                You have withdrawn from this offering. You might select a new offering before the enrollment deadline @Model.Term.EnrollmentDeadLine
+            </div>
+        }
+
+        <div class="row">
+            <div class="col-sm-8">
+                <ul class="term-info">
+                    <li><h5><strong>Offering: </strong>@enrollment.Offering.Title</h5></li>
+                    <li><h5><strong>Location: </strong>@enrollment.Offering.Location</h5></li>
+                    <li><h5><strong>Course: </strong>@enrollment.Offering.Course</h5></li>
+                    <li><h5><strong>Professor: </strong>@enrollment.Offering.Professor</h5></li>
+                    <li>
+                        <h5>
+                            <strong>Offering Notes: </strong>@enrollment.Offering.Notes
+                        </h5>
+                    </li>
+                    <li>
+                        <h5>
+                            <strong>Enrolled date: </strong>@enrollment.EnrollmentDate.ToString("MMMM dd, yyyy")
+                        </h5>
+                    </li>
+                    @if (enrollment.WithdropDate.HasValue)
+                    {
+                        <li>
+                            <h5>
+                                <strong>Withdrawn date: </strong>@enrollment.WithdropDate.Value.ToString("MMMM dd, yyyy")
+                            </h5>
+                        </li>
+                    }
+                    @if (enrollment.FinalGrade.HasValue)
+                    {
+                        <li>
+                            <h5>
+                                <strong>Final grade: </strong> @enrollment.FinalGrade (@enrollment.FinalGradeLetter)
+                            </h5>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <h5>
+                                <strong>Final grade: </strong> Enrollment has not been graded yet.
+                            </h5>
+                        </li>
+                    }
+                    <li>
+                        <h5>
+                            <strong>Enrollment notes: </strong>@enrollment.Notes
+                        </h5>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="btn-toolbar">
+            <div class="btn-group">
+                <a href="@Url.Action("ViewEvaluations", new { enrollmentId = enrollment.Id })" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-list"></i> Evaluations</a>
+                @if (Model.IsCurrentTerm && !enrollment.WithdropDate.HasValue)
+                {
+                    <a id="btnWithdraw" href="@Url.Action("Withdraw", new { enrollmentId = enrollment.Id, termId = Model.TermId })" data-title="@enrollment.Offering.Title" class="btn btn-primary btn-sm js-withdraw"><i class="glyphicon glyphicon-alert"></i> Withdraw offering</a>
+                }
+            </div>
+        </div>
+
+        <hr />
+    }
+}
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            $(".js-withdraw").on("click", withdrawFn);
+
+            function withdrawFn(e) {
+                e.preventDefault();
+
+                var link = $(this);
+                var title = link.attr("data-title");
+
+                bootbox.confirm({
+                    title: "Withdrawn",
+                    message: "Do you want to withdraw from, " + title + "?",
+                    buttons: {
+                        cancel: {
+                            label: '<i class="fa fa-times"></i> Cancel'
+                        },
+                        confirm: {
+                            label: '<i class="fa fa-check"></i> Confirm'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            window.location = link.attr("href");
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+}

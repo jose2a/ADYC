@@ -9,11 +9,12 @@ namespace ADYC.IService
         Enrollment Get(int id);
         Enrollment GetWithEvaluations(int id);
         Enrollment GetStudentCurrentTermEnrollmentByStudentId(Guid studentId);
+        IEnumerable<Enrollment> GetEnrollmentsByStudentIdAndTermId(Guid studentId, int termId);
 
         IEnumerable<Enrollment> GetAllEnrollments();
         IEnumerable<Enrollment> GetCurrentTermEnrollments();
 
-        IEnumerable<Enrollment> GetEnrollmentsByStudentId(Guid studentId);
+        IEnumerable<Enrollment> GetEnrollmentsByStudentId(Guid studentId);        
         IEnumerable<Enrollment> GetEnrollmentsByOfferingId(int offeringId);
 
         void Add(Enrollment enrollment);
