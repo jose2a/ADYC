@@ -1,16 +1,41 @@
-﻿using System;
+﻿using ADYC.WebUI.Infrastructure;
+using ADYC.WebUI.Repositories;
+using ADYC.WebUI.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
 namespace ADYC.WebUI.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : ADYCBasedController
     {
+        private LoginRepository _loginRepository;
+
+        public HomeController()
+        {
+            _loginRepository = new LoginRepository();
+        }
+
         public ActionResult Index()
         {
             return View();
+        }
+
+        public async Task<ActionResult> Login(LoginFormViewModel model)
+        {
+            try
+            {
+                var token = await _loginRepository.Login(model);
+            }
+            catch (AdycHttpRequestException ahre)
+            {
+                TempData["Msg"] = ahre.Message;
+            }
+
+            return RedirectToAction("Index");
         }
 
         public ActionResult About()

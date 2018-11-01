@@ -1,4 +1,5 @@
-﻿using ADYC.API.ViewModels;
+﻿using ADYC.API.Auth.Models;
+using ADYC.API.ViewModels;
 using ADYC.WebUI.Controllers;
 using ADYC.WebUI.Infrastructure;
 using ADYC.WebUI.Repositories;
@@ -13,10 +14,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
     public class ProfessorsController : ADYCBasedController
     {
         private ProfessorRepository _professorRepository;
+        private AccountRepository _accountRepository;
 
         public ProfessorsController()
         {
             _professorRepository = new ProfessorRepository();
+            _accountRepository = new AccountRepository();
         }
 
         // GET: Admin/Professors
@@ -76,6 +79,8 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                ProfessorDto newProfessor = null;
+
                 try
                 {
                     ProfessorDto professor = (form.IsNew)
@@ -89,8 +94,18 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
                     if (form.IsNew)
                     {
-                        professor.Id = new Guid(); // Get this from Auth service
-                        await _professorRepository.PostProfessor(professor);
+                        //professor.Id = new Guid(); // Get this from Auth service
+                        newProfessor = await _professorRepository.PostProfessor(professor);
+
+                        var registerBindingModel = new RegisterBindingModel
+                        {
+                            Email = professor.Email,
+                            Password = "ChangeItAsap123!",
+                            UserId = newProfessor.Id,
+                            UserRole = "AppProfessor"
+                        };
+
+                        await _accountRepository.RegisterAccount(registerBindingModel);
                     }
                     else
                     {
@@ -102,6 +117,11 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                 catch (AdycHttpRequestException ahre)
                 {
                     AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
+
+                    if (newProfessor != null)
+                    {
+                        await _accountRepository.DeleteAccount(newProfessor.Email);
+                    }                    
                 }
             }
 
@@ -114,12 +134,21 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
         {
             try
             {
-                var statusCode = await _professorRepository.DeleteProfessor(id);
+                var professor = await _professorRepository.GetProfessorById(id);
+
+                var statusCode = await _accountRepository.DeleteAccount(professor.Email);
 
                 if (statusCode == HttpStatusCode.NotFound)
                 {
                     return HttpNotFound();
                 }
+
+                statusCode = await _professorRepository.DeleteProfessor(id);
+
+                if (statusCode == HttpStatusCode.NotFound)
+                {
+                    return HttpNotFound();
+                }                
 
                 return new HttpStatusCodeResult(HttpStatusCode.OK);
             }

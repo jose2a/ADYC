@@ -45,13 +45,6 @@ namespace ADYC.API.Auth.Providers
             ClaimsIdentity cookiesIdentity = await user.GenerateUserIdentityAsync(userManager,
                 CookieAuthenticationDefaults.AuthenticationType);
 
-            //var roles = new List<string>();
-
-            //foreach (var r in user.Roles)
-            //{
-            //    roles.Add(roleManager.FindById(r.RoleId).Name);
-            //}
-
             IDictionary<string, string> data = new Dictionary<string, string>
             {
                 { "userName", user.UserName },
@@ -102,13 +95,6 @@ namespace ADYC.API.Auth.Providers
 
         public static AuthenticationProperties CreateProperties(IDictionary<string, string> properties)
         {
-            //foreach (KeyValuePair<string, string> property in context.Properties.Dictionary)
-            //{
-            //    IDictionary<string, string> data = new Dictionary<string, string>
-            //{
-            //    { "userName", userName }
-            //};
-            //}
             return new AuthenticationProperties(properties);
         }
     }

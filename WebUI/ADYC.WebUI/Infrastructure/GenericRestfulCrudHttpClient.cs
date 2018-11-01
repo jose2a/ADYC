@@ -43,6 +43,7 @@ namespace ADYC.WebUI.Infrastructure
         public async Task<T> GetAsync(string addressSuffix)
         {
             var responseMessage = await httpClient.GetAsync(addressSuffix);
+
             await VerifyResponseStatus(responseMessage);
 
             return await responseMessage.Content.ReadAsAsync<T>();
@@ -51,6 +52,12 @@ namespace ADYC.WebUI.Infrastructure
         public async Task<HttpStatusCode> GetAsyncWithStatusCode(string addressSuffix)
         {
             var responseMessage = await httpClient.GetAsync(addressSuffix);
+
+            if (VerifyNotFound(responseMessage))
+            {
+                return HttpStatusCode.NotFound;
+            }
+
             await VerifyResponseStatus(responseMessage);
 
             return responseMessage.StatusCode;
@@ -59,6 +66,7 @@ namespace ADYC.WebUI.Infrastructure
         public async Task<T> PostAsync(string addressSuffix, T model)
         {
             var responseMessage = await httpClient.PostAsJsonAsync(addressSuffix, model);
+
             await VerifyResponseStatus(responseMessage);
 
             return await responseMessage.Content.ReadAsAsync<T>();
@@ -67,6 +75,12 @@ namespace ADYC.WebUI.Infrastructure
         public async Task<HttpStatusCode> PutAsync(string addressSuffix, T model)
         {
             var responseMessage = await httpClient.PutAsJsonAsync(addressSuffix, model);
+
+            if (VerifyNotFound(responseMessage))
+            {
+                return HttpStatusCode.NotFound;
+            }
+
             await VerifyResponseStatus(responseMessage);
 
             return responseMessage.StatusCode;
@@ -75,6 +89,12 @@ namespace ADYC.WebUI.Infrastructure
         public async Task<HttpStatusCode> DeleteAsync(string addressSuffix)
         {
             var responseMessage = await httpClient.DeleteAsync(addressSuffix);
+
+            if (VerifyNotFound(responseMessage))
+            {
+                return HttpStatusCode.NotFound;
+            }
+
             await VerifyResponseStatus(responseMessage);
 
             return responseMessage.StatusCode;
@@ -104,6 +124,8 @@ namespace ADYC.WebUI.Infrastructure
         {
             if (!responseMessage.IsSuccessStatusCode)
             {
+                //VerifyNotFound(responseMessage);
+
                 var content = await responseMessage.Content.ReadAsStringAsync();
 
                 if (!string.IsNullOrEmpty(content))
@@ -113,8 +135,16 @@ namespace ADYC.WebUI.Infrastructure
                     throw new AdycHttpRequestException(responseMessage.StatusCode,
                         responseMessage.ReasonPhrase,
                         errors);
-                }                
+                }
+
+                throw new AdycHttpRequestException(responseMessage.StatusCode,
+                        responseMessage.ReasonPhrase);
             }
+        }
+
+        private bool VerifyNotFound(HttpResponseMessage responseMessage)
+        {
+            return responseMessage.StatusCode == HttpStatusCode.NotFound;
         }
 
         #region IDisposable Members

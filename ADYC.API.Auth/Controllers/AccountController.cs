@@ -374,13 +374,14 @@ namespace ADYC.API.Auth.Controllers
             return Ok();
         }
 
-        [Authorize(Roles = "Admin")]
-        [Route("{id:guid}")]
-        public async Task<IHttpActionResult> Delete(string id)
+        //[Authorize(Roles = "AppAdmin")]
+        [AllowAnonymous]
+        [Route("{userName}")]
+        public async Task<IHttpActionResult> Delete(string userName)
         {
             //Only SuperAdmin or Admin can delete users (Later when implement roles)
 
-            var user = await UserManager.FindByIdAsync(id);
+            var user = await UserManager.FindByEmailAsync(userName);
 
             if (user != null)
             {

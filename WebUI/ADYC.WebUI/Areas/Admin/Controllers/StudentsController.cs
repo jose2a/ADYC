@@ -1,4 +1,5 @@
-﻿using ADYC.API.ViewModels;
+﻿using ADYC.API.Auth.Models;
+using ADYC.API.ViewModels;
 using ADYC.WebUI.Controllers;
 using ADYC.WebUI.Infrastructure;
 using ADYC.WebUI.Repositories;
@@ -16,6 +17,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
         private GradeRepository _gradeRepository;
         private GroupRepository _groupRepository;
         private MajorRepository _majorRepository;
+        private AccountRepository _accountRepository;
 
         public StudentsController()
         {
@@ -23,6 +25,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
             _gradeRepository = new GradeRepository();
             _groupRepository = new GroupRepository();
             _majorRepository = new MajorRepository();
+            _accountRepository = new AccountRepository();
         }
 
         // GET: Admin/Students
@@ -86,6 +89,8 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                StudentDto newStudent = null;
+
                 try
                 {
                     StudentDto student = (form.IsNew)
@@ -102,8 +107,18 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
                     if (form.IsNew)
                     {
-                        student.Id = Guid.NewGuid(); // Get this from Auth service
-                        await _studentRepository.PostStudent(student);
+                        //student.Id = Guid.NewGuid(); // Get this from Auth service
+                        newStudent = await _studentRepository.PostStudent(student);
+
+                        var registerBindingModel = new RegisterBindingModel
+                        {
+                            Email = student.Email,
+                            Password = "ChangeItAsap123!",
+                            UserId = newStudent.Id,
+                            UserRole = "AppStudent"
+                        };
+
+                        await _accountRepository.RegisterAccount(registerBindingModel);
                     }
                     else
                     {
@@ -115,6 +130,11 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                 catch (AdycHttpRequestException ahre)
                 {
                     AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
+
+                    if (newStudent != null)
+                    {
+                        await _accountRepository.DeleteAccount(newStudent.Email);
+                    }
                 }
             }
 
@@ -129,7 +149,16 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
         {
             try
             {
-                var statusCode = await _studentRepository.DeleteStudent(id);
+                var student = await _studentRepository.GetStudentById(id);
+
+                var statusCode = await _accountRepository.DeleteAccount(student.Email);
+
+                if (statusCode == HttpStatusCode.NotFound)
+                {
+                    return HttpNotFound();
+                }
+
+                statusCode = await _studentRepository.DeleteStudent(id);
 
                 if (statusCode == HttpStatusCode.NotFound)
                 {
