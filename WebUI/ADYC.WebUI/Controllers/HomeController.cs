@@ -26,16 +26,21 @@ namespace ADYC.WebUI.Controllers
 
         public async Task<ActionResult> Login(LoginFormViewModel model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                var token = await _loginRepository.Login(model);
-            }
-            catch (AdycHttpRequestException ahre)
-            {
-                TempData["Msg"] = ahre.Message;
+                try
+                {
+                    var token = await _loginRepository.Login(model);
+
+                    
+                }
+                catch (AdycHttpRequestException ahre)
+                {
+                    TempData["Msg"] = ahre.Message;
+                }
             }
 
-            return RedirectToAction("Index");
+            return View(model);
         }
 
         public ActionResult About()
