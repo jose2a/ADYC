@@ -10,6 +10,7 @@ using System.Web.Mvc;
 
 namespace ADYC.WebUI.Areas.Student.Controllers
 {
+    [Authorize(Roles = "AppStudent")]
     public class EnrollmentsController : ADYCBasedController
     {
         private TermRepository _termRepository;

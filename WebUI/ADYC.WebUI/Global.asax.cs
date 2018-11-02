@@ -19,6 +19,9 @@ namespace ADYC.WebUI
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            // Set global authorization
+            GlobalFilters.Filters.Add(new AuthorizeAttribute());
         }
 
         protected void Application_PostAuthenticateRequest(Object sender, EventArgs e)

@@ -10,6 +10,7 @@ using System.Web.Mvc;
 
 namespace ADYC.WebUI.Areas.Professor.Controllers
 {
+    [Authorize(Roles = "AppProfessor")]
     public class EnrollmentsController : ADYCBasedController
     {
         private TermRepository _termRepository;
@@ -32,6 +33,8 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
         // GET: Professor/Enrollments/
         public async Task<ActionResult> Index()
         {
+            var pID = ((CustomPrincipal)User).UserId;
+
             var terms = await _termRepository.GetTerms();
 
             return View(terms);

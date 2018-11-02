@@ -10,6 +10,7 @@ using System.Web.Security;
 
 namespace ADYC.WebUI.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : ADYCBasedController
     {
         private LoginRepository _loginRepository;
