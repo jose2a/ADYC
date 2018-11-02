@@ -14,6 +14,8 @@ namespace ADYC.WebUI.ViewModels
         public string TokenType { get; set; }
         [JsonProperty("expires_in")]
         public int ExpiresIn { get; set; }
+        [JsonProperty("userId")]
+        public Guid UserId { get; set; }
         [JsonProperty("userName")]
         public string UserName { get; set; }
         [JsonProperty("role")]

@@ -47,6 +47,7 @@ namespace ADYC.API.Auth.Providers
 
             IDictionary<string, string> data = new Dictionary<string, string>
             {
+                {"userId", user.UserGuid.ToString() },
                 { "userName", user.UserName },
                 { "role", roleManager.FindById(user.Roles.SingleOrDefault().RoleId).Name }
             };
