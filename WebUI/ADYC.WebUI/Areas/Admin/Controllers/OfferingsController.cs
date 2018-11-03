@@ -10,6 +10,7 @@ using System.Web.Mvc;
 
 namespace ADYC.WebUI.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "AppAdmin")]
     public class OfferingsController : ADYCBasedController
     {
         private TermRepository _termRepository;

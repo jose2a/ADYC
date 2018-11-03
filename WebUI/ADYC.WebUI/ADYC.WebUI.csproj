@@ -319,9 +319,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
-    <Folder Include="Areas\Professor\Models\" />
     <Folder Include="Areas\Professor\Views\Shared\" />
-    <Folder Include="Areas\Student\Models\" />
     <Folder Include="Areas\Student\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>

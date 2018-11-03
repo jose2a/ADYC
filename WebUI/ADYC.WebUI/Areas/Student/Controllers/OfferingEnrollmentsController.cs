@@ -11,6 +11,7 @@ using System.Web.Mvc;
 
 namespace ADYC.WebUI.Areas.Student.Controllers
 {
+    [Authorize(Roles = "AppStudent")]
     public class OfferingEnrollmentsController : ADYCBasedController
     {
         private OfferingRepository _offeringRepository;

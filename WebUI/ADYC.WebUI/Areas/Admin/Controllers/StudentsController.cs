@@ -11,6 +11,7 @@ using System.Web.Mvc;
 
 namespace ADYC.WebUI.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "AppAdmin")]
     public class StudentsController : ADYCBasedController
     {
         private StudentRepository _studentRepository;

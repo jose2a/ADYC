@@ -5,6 +5,7 @@ using System.Web.Mvc;
 
 namespace ADYC.WebUI.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "AppAdmin")]
     public class PeriodsController : ADYCBasedController
     {
         private PeriodRepository _periodRepository;

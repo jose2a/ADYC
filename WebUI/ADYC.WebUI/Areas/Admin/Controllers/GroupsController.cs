@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace ADYC.WebUI.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "AppAdmin")]
     public class GroupsController : ADYCBasedController
     {
         private GroupRepository _groupRepository;
