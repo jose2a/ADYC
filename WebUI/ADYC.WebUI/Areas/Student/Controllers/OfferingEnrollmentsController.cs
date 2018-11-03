@@ -39,6 +39,9 @@ namespace ADYC.WebUI.Areas.Student.Controllers
                 return RedirectToAction("NotCurrentTerm");
             }
 
+            // change this for studentId
+            var pID = ((CustomPrincipal)User).UserId;
+
             var studentId = new Guid("65016919-365A-E811-9B75-B8763FED7266");
 
             var offeringsForCurrentTerm = _offeringRepository

@@ -33,8 +33,6 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
         // GET: Professor/Enrollments/
         public async Task<ActionResult> Index()
         {
-            var pID = ((CustomPrincipal)User).UserId;
-
             var terms = await _termRepository.GetTerms();
 
             return View(terms);
@@ -54,6 +52,9 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
             {
                 return HttpNotFound();
             }
+
+            // change proffesorId for this
+            var pID = ((CustomPrincipal)User).UserId;
 
             var professorId = new Guid("63016919-365a-e811-9b75-b8763fed7266");
 

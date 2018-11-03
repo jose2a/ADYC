@@ -3,7 +3,6 @@ using ADYC.WebUI.Infrastructure;
 using ADYC.WebUI.Repositories;
 using ADYC.WebUI.ViewModels;
 using System;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -44,6 +43,9 @@ namespace ADYC.WebUI.Areas.Student.Controllers
 
             try
             {
+                // change this for studentId
+                var pID = ((CustomPrincipal)User).UserId;
+
                 var studentId = new Guid("65016919-365A-E811-9B75-B8763FED7266");
 
                 var enrollments = await _enrollmentRepository.GetEnrollmentsByStudentIdAndTermId(studentId, termId.Value);
@@ -121,24 +123,5 @@ namespace ADYC.WebUI.Areas.Student.Controllers
 
             return RedirectToAction("ViewEnrollment", new { termId = termId });
         }
-
-        // POST: Student/Enrollments/Withdraw
-        //[HttpPost]
-        //public async Task<ActionResult> ConfirmWithdraw(EnrollmentWithdrawViewModel form)
-        //{
-        //    try
-        //    {
-        //        var enrollment = await _enrollmentRepository.Withdraw(form.EnrollmentId);
-        //    }
-        //    catch (AdycHttpRequestException ahre)
-        //    {
-        //        if (ahre.StatusCode == HttpStatusCode.NotFound)
-        //        {
-        //            return HttpNotFound();
-        //        }
-        //    }
-
-        //    return RedirectToAction("ViewEnrollment", new { termId = form.TermId });
-        //}
     }
 }
