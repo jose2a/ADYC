@@ -238,6 +238,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\AuthorizeVerifiedUsersAttribute.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\CourseTypeViewModel.cs" />
     <Compile Include="ViewModels\CourseViewModel.cs" />

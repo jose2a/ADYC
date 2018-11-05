@@ -11,7 +11,7 @@ using System.Web.Http.Description;
 
 namespace ADYC.API.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "AppAdmin")]
     [RoutePrefix("api/Courses")]
     public class CoursesController : ADYCBasedApiController
     {

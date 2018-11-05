@@ -22,6 +22,8 @@ namespace ADYC.WebUI.Areas.Student.Controllers
 
         public OfferingEnrollmentsController()
         {
+            var user = ((CustomPrincipal)User);
+
             _offeringRepository = new OfferingRepository();
             _termRepository = new TermRepository();
             _scheduleRepository = new ScheduleRepository();

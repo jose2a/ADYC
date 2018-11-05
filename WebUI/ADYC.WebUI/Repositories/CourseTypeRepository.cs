@@ -1,5 +1,6 @@
 ﻿using ADYC.API.ViewModels;
 using ADYC.Model;
+using ADYC.WebUI.Infrastructure;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -9,6 +10,12 @@ namespace ADYC.WebUI.Repositories
     public class CourseTypeRepository : BaseRepository<CourseTypeDto>
     {
         private string addressPreffix = "api/CourseTypes/";
+
+        public CourseTypeRepository()
+            : base(SessionHelper.GetUser().AccessToken, SessionHelper.GetUser().TokenType)
+        {
+
+        }
 
         public async Task<IEnumerable<CourseTypeDto>> GetCourseTypes()
         {

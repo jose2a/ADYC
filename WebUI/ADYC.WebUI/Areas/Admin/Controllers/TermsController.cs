@@ -20,6 +20,8 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
         public TermsController()
         {
+            var user = ((CustomPrincipal)User);
+
             _termRepository = new TermRepository();
             _periodRepository = new PeriodRepository();
             _periodDateRepository = new PeriodDateRepository();

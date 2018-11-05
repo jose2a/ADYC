@@ -33,9 +33,16 @@ namespace ADYC.WebUI
                 FormsAuthenticationTicket authTicket = FormsAuthentication.Decrypt(authCookie.Value);
 
                 CustomPrincipalSerializeModel serializeModel = JsonConvert.DeserializeObject<CustomPrincipalSerializeModel>(authTicket.UserData);
+
                 CustomPrincipal newUser = new CustomPrincipal(authTicket.Name);
                 newUser.UserId = serializeModel.UserId;
                 newUser.Role = serializeModel.Role;
+
+                newUser.AccessToken = serializeModel.AccessToken;
+                newUser.TokenType = serializeModel.TokenType;
+                newUser.ExpiresIn = serializeModel.ExpiresIn;
+
+                
                 //newUser.FirstName = serializeModel.FirstName;
                 //newUser.LastName = serializeModel.LastName;
                 //newUser.roles = serializeModel.roles;

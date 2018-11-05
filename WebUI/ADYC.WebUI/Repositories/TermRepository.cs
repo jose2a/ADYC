@@ -1,4 +1,5 @@
 ﻿using ADYC.API.ViewModels;
+using ADYC.WebUI.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -9,6 +10,12 @@ namespace ADYC.WebUI.Repositories
     public class TermRepository : BaseRepository<TermDto>
     {
         private string addressPreffix = "api/Terms/";
+
+        public TermRepository()
+            : base(SessionHelper.GetUser().AccessToken, SessionHelper.GetUser().TokenType)
+        {
+
+        }
         
         public async Task<IEnumerable<TermDto>> GetTerms()
         {

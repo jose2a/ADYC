@@ -22,6 +22,8 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
 
         public EnrollmentsController()
         {
+            var user = SessionHelper.GetUser();
+
             _termRepository = new TermRepository();
             _offeringRepository = new OfferingRepository();
             _enrollmentRepository = new EnrollmentRepository();

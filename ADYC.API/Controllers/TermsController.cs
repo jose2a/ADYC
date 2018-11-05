@@ -1,4 +1,5 @@
-﻿using ADYC.API.ViewModels;
+﻿using ADYC.API.Security;
+using ADYC.API.ViewModels;
 using ADYC.IService;
 using ADYC.Model;
 using ADYC.Util.Exceptions;
@@ -11,6 +12,7 @@ using System.Web.Http.Description;
 
 namespace ADYC.API.Controllers
 {
+    //[Authorize(Roles = "AppAdmin")]
     [RoutePrefix("api/Terms")]
     public class TermsController : ADYCBasedApiController
     {
@@ -22,6 +24,8 @@ namespace ADYC.API.Controllers
         }
 
         // GET api/<controller>/5
+        [OverrideAuthorization]
+        [AuthorizeVerifiedUsers(Roles = "AppAdmin, AppProfessor, AppStudent")]
         [Route("{id}")]
         [ResponseType(typeof(TermDto))]
         public IHttpActionResult Get(int id)
@@ -51,6 +55,8 @@ namespace ADYC.API.Controllers
         }
 
         // GET api/<controller>
+        [OverrideAuthorization]
+        [AuthorizeVerifiedUsers(Roles = "AppAdmin, AppProfessor, AppStudent")]
         [Route("")]
         [ResponseType(typeof(IEnumerable<TermDto>))]
         public IHttpActionResult Get()

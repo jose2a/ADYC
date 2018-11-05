@@ -23,6 +23,15 @@ namespace ADYC.WebUI.Infrastructure
             httpClient = MakeHttpClient(serviceBaseAddress);
         }
 
+        public GenericRestfulCrudHttpClient(string serviceBaseAddress, string accessToken, string authType)
+        {
+            this.serviceBaseAddress = serviceBaseAddress;
+            httpClient = MakeHttpClient(serviceBaseAddress);
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(authType, accessToken);
+        }
+
+        //httpClient1.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token.AccessToken); 
+
         protected virtual HttpClient MakeHttpClient(string serviceBaseAddress)
         {
             httpClient = new HttpClient();

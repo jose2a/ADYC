@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ADYC.API.Security;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
@@ -20,7 +21,7 @@ namespace ADYC.API
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            config.Filters.Add(new AuthorizeAttribute());
+            config.Filters.Add(new AuthorizeVerifiedUsersAttribute() { Roles = "AppAdmin" });
         }
     }
 }

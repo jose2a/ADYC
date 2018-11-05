@@ -6,9 +6,19 @@ namespace ADYC.WebUI.Repositories
     public class BaseRepository<T> : IDisposable where T : class
     {
         private bool disposed = false;
+        private string baseUrl = "http://localhost:19016/";
 
-        protected GenericRestfulCrudHttpClient<T> restClient =
-            new GenericRestfulCrudHttpClient<T>("http://localhost:19016/");
+        protected GenericRestfulCrudHttpClient<T> restClient;
+
+        public BaseRepository()
+        {
+            restClient = new GenericRestfulCrudHttpClient<T>(baseUrl);
+        }
+
+        public BaseRepository(string accessToken, string authType)
+        {
+            restClient = new GenericRestfulCrudHttpClient<T>(baseUrl, accessToken, authType);
+        }
 
         public void Dispose()
         {

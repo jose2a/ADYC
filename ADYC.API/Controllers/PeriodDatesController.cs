@@ -11,6 +11,7 @@ using System.Linq;
 
 namespace ADYC.API.Controllers
 {
+    [Authorize(Roles = "AppAdmin")]
     [RoutePrefix("api/Terms")]
     public class PeriodDatesController : ADYCBasedApiController
     {

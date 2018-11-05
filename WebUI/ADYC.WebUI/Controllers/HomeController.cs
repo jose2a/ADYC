@@ -33,24 +33,29 @@ namespace ADYC.WebUI.Controllers
                 {
                     var token = await _loginRepository.Login(model);
 
-                    CustomPrincipalSerializeModel serializeModel = new CustomPrincipalSerializeModel();
-                    serializeModel.UserId = token.UserId;
-                    serializeModel.UserName = token.UserName;
-                    serializeModel.Role = token.Role;
+                    SessionHelper.AddUserToSession(token);
 
-                    string userData = JsonConvert.SerializeObject(serializeModel);
+                    //CustomPrincipalSerializeModel serializeModel = new CustomPrincipalSerializeModel();
+                    //serializeModel.UserId = token.UserId;
+                    //serializeModel.UserName = token.UserName;
+                    //serializeModel.Role = token.Role;
+                    //serializeModel.AccessToken = token.AccessToken;
+                    //serializeModel.TokenType = token.TokenType;
+                    //serializeModel.ExpiresIn = token.ExpiresIn;
 
-                    FormsAuthenticationTicket authTicket = new FormsAuthenticationTicket(
-                    1,
-                    token.UserName,
-                    DateTime.Now,
-                    DateTime.Now.AddMinutes(15),
-                    false, //pass here true, if you want to implement remember me functionality
-                    userData);
+                    //string userData = JsonConvert.SerializeObject(serializeModel);
 
-                    string encTicket = FormsAuthentication.Encrypt(authTicket);
-                    HttpCookie faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
-                    Response.Cookies.Add(faCookie);
+                    //FormsAuthenticationTicket authTicket = new FormsAuthenticationTicket(
+                    //1,
+                    //token.UserName,
+                    //DateTime.Now,
+                    //DateTime.Now.AddMinutes(30),
+                    //false, //pass here true, if you want to implement remember me functionality
+                    //userData);
+
+                    //string encTicket = FormsAuthentication.Encrypt(authTicket);
+                    //HttpCookie faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
+                    //Response.Cookies.Add(faCookie);
 
                     if (token.Role.Equals("AppAdmin"))
                     {
