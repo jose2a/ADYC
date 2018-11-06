@@ -11,7 +11,6 @@ using System.Web.Http.Description;
 
 namespace ADYC.API.Controllers
 {
-    [Authorize(Roles = "AppAdmin")]
     [RoutePrefix("api/Courses")]
     public class CoursesController : ADYCBasedApiController
     {
@@ -25,7 +24,7 @@ namespace ADYC.API.Controllers
             _courseTypeService = courseTypeService;
         }
 
-        // GET api/<controller>/5
+        // GET api/Courses/5
         [Route("{id}")]
         [ResponseType(typeof(CourseDto))]
         public IHttpActionResult Get(int id)
@@ -40,7 +39,7 @@ namespace ADYC.API.Controllers
             return NotFound();
         }
 
-        // GET api/<controller>
+        // GET api/Courses
         [Route("")]
         [ResponseType(typeof(IEnumerable<CourseDto>))]
         public IHttpActionResult Get()
@@ -54,6 +53,7 @@ namespace ADYC.API.Controllers
                 }));
         }
 
+        // GET api/Courses/CoursesGetByName/Computer
         [Route("GetByName/{name}")]
         [ResponseType(typeof(IEnumerable<CourseDto>))]
         public IHttpActionResult GetByName(string name)
@@ -76,6 +76,7 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // GET api/Courses/GetByCourseType/Internal
         [Route("GetByCourseType/{courseTypeName}")]
         [ResponseType(typeof(IEnumerable<CourseDto>))]
         public IHttpActionResult GetByCourseType(string courseTypeName)
@@ -99,12 +100,13 @@ namespace ADYC.API.Controllers
             }
             catch (ArgumentNullException ane)
             {
-                ModelState.AddModelError("", ane);
+                ModelState.AddModelError("", ane.Message);
             }
 
             return BadRequest(ModelState);
         }
 
+        // GET api/Courses/GetNotTrashed
         [Route("GetNotTrashed")]
         [ResponseType(typeof(IEnumerable<CourseDto>))]
         public IHttpActionResult GetNotTrashed()
@@ -117,6 +119,7 @@ namespace ADYC.API.Controllers
                 }));
         }
 
+        // GET api/Courses/GetTrashed
         [Route("GetTrashed")]
         [ResponseType(typeof(IEnumerable<CourseDto>))]
         public IHttpActionResult GetTrashed()
@@ -129,10 +132,10 @@ namespace ADYC.API.Controllers
                 }));
         }
 
+        // POST api/Courses
         [Route("")]
         [HttpPost]
         [ResponseType(typeof(CourseDto))]
-        // POST api/<controller>
         public IHttpActionResult Post([FromBody] CourseDto form)
         {
             if (ModelState.IsValid)
@@ -160,10 +163,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // PUT api/Courses/5
         [Route("{id}")]
         [HttpPut]
-        [ResponseType(typeof(void))]
-        // PUT api/<controller>/5
+        [ResponseType(typeof(void))]        
         public IHttpActionResult Put(int id, [FromBody] CourseDto form)
         {
             if (ModelState.IsValid)
@@ -192,10 +195,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // DELETE api/Courses/5
         [Route("{id}")]
         [HttpDelete]
         [ResponseType(typeof(void))]
-        // DELETE api/<controller>/5
         public IHttpActionResult Delete(int id)
         {
             var courseInDb = _courseService.Get(id);
@@ -222,10 +225,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // GET api/Courses/Trash/5
         [Route("Trash/{id}")]
-        [ResponseType(typeof(void))]
         [HttpGet]
-        // GET api/<controller>/5
+        [ResponseType(typeof(void))]            
         public IHttpActionResult Trash(int id)
         {
             var courseInDb = _courseService.Get(id);
@@ -248,10 +251,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // GET api/Courses/Restore/5
         [Route("Restore/{id}")]
-        [ResponseType(typeof(void))]
         [HttpGet]
-        // GET api/<controller>/5
+        [ResponseType(typeof(void))]
         public IHttpActionResult Restore(int id)
         {
             var courseInDb = _courseService.Get(id);

@@ -21,7 +21,9 @@ namespace ADYC.API.Controllers
             _enrollmentService = enrollmentService;
         }
 
-        // GET api/<controller>/5
+        // GET api/Enrollments/5
+        [OverrideAuthorization]
+        [Authorize(Roles = "AppAdmin, AppStudent")]
         [Route("{id}")]
         [ResponseType(typeof(EnrollmentDto))]
         public IHttpActionResult Get(int id)
@@ -36,7 +38,9 @@ namespace ADYC.API.Controllers
             return NotFound();
         }
 
-        // GET api/<controller>/GetWithEvaluations/5
+        // GET api/Enrollments/GetWithEvaluations/5
+        [OverrideAuthorization]
+        [Authorize(Roles = "AppAdmin, AppProfessor, AppStudent")]
         [Route("GetWithEvaluations/{id}")]
         [ResponseType(typeof(EnrollmentDto))]
         public IHttpActionResult GetWithEvaluations(int id)
@@ -51,7 +55,7 @@ namespace ADYC.API.Controllers
             return NotFound();
         }
 
-        // GET api/<controller>
+        // GET api/Enrollments
         [Route("")]
         [ResponseType(typeof(IEnumerable<EnrollmentDto>))]
         public IHttpActionResult Get()
@@ -65,9 +69,10 @@ namespace ADYC.API.Controllers
                 }));
         }
 
+        // GET api/Enrollments/GetCurrentTermEnrollments
         [Route("GetCurrentTermEnrollments")]
-        [ResponseType(typeof(IEnumerable<EnrollmentDto>))]
         [HttpGet]
+        [ResponseType(typeof(IEnumerable<EnrollmentDto>))]
         public IHttpActionResult GetCurrentTermEnrollments()
         {
             var enrollments = _enrollmentService.GetCurrentTermEnrollments();
@@ -76,9 +81,12 @@ namespace ADYC.API.Controllers
                 .Select(e => GetEnrollmentDto(e)));
         }
 
+        // GET api/Enrollments/GetEnrollmentsByOfferingId/5
+        [OverrideAuthorization]
+        [Authorize(Roles = "AppAdmin, AppProfessor")]
         [Route("GetEnrollmentsByOfferingId/{offeringId}")]
-        [ResponseType(typeof(IEnumerable<EnrollmentDto>))]
         [HttpGet]
+        [ResponseType(typeof(IEnumerable<EnrollmentDto>))]        
         public IHttpActionResult GetEnrollmentsByOfferingId(int offeringId)
         {
             var enrollments = _enrollmentService.GetEnrollmentsByOfferingId(offeringId);
@@ -87,9 +95,10 @@ namespace ADYC.API.Controllers
                 .Select(e => GetEnrollmentDto(e)));
         }
 
+        // GET api/Enrollments/GetEnrollmentsByStudentId/adf43-1334-...
         [Route("GetEnrollmentsByStudentId/{studentId:guid}")]
-        [ResponseType(typeof(IEnumerable<EnrollmentDto>))]
         [HttpGet]
+        [ResponseType(typeof(IEnumerable<EnrollmentDto>))]
         public IHttpActionResult GetEnrollmentsByStudentId(Guid studentId)
         {
             try
@@ -107,9 +116,12 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // GET api/Enrollments/GetEnrollmentsByStudentId/a12sd-3drfr-.../TermId/5
+        [OverrideAuthorization]
+        [Authorize(Roles = "AppAdmin, AppStudent")]
         [Route("GetEnrollmentsByStudentId/{studentId:guid}/TermId/{termId}")]
-        [ResponseType(typeof(IEnumerable<EnrollmentDto>))]
         [HttpGet]
+        [ResponseType(typeof(IEnumerable<EnrollmentDto>))]
         public IHttpActionResult GetEnrollmentByStudentIdAndTermId(Guid studentId, int termId)
         {
             try
@@ -127,9 +139,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // GET api/Enrollments/GetStudentCurrentTermEnrollmentByStudentId/a123d-f3435-....
         [Route("GetStudentCurrentTermEnrollmentByStudentId/{studentId:guid}")]
-        [ResponseType(typeof(EnrollmentDto))]
         [HttpGet]
+        [ResponseType(typeof(EnrollmentDto))]
         public IHttpActionResult GetStudentCurrentTermEnrollmentByStudentId(Guid studentId)
         {
             var enrollment = _enrollmentService.GetStudentCurrentTermEnrollmentByStudentId(studentId);
@@ -142,10 +155,12 @@ namespace ADYC.API.Controllers
             return Ok(GetEnrollmentDto(enrollment));
         }
 
+        // POST api/Enrollments
+        [OverrideAuthorization]
+        [Authorize(Roles = "AppAdmin, AppStudent")]
         [Route("")]
         [HttpPost]
         [ResponseType(typeof(EnrollmentDto))]
-        // POST api/<controller>
         public IHttpActionResult Post([FromBody] EnrollmentDto form)
         {
             if (ModelState.IsValid)
@@ -173,10 +188,12 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // PUT api/Enrollments/5
+        [OverrideAuthorization]
+        [Authorize(Roles = "AppAdmin, AppProfessor")]
         [Route("{id}")]
         [HttpPut]
         [ResponseType(typeof(void))]
-        // PUT api/<controller>/5
         public IHttpActionResult Put(int id, [FromBody] EnrollmentWithEvaluationsDto form)
         {
             if (ModelState.IsValid)
@@ -213,10 +230,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // DELETE api/Enrollments/5
         [Route("{id}")]
         [HttpDelete]
         [ResponseType(typeof(void))]
-        // DELETE api/<controller>/5
         public IHttpActionResult Delete(int id)
         {
             var enrollmentInDb = _enrollmentService.Get(id);
@@ -239,10 +256,12 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // GET api/Enrollments/Withdrop/5
+        [OverrideAuthorization]
+        [Authorize(Roles = "AppAdmin, AppStudent")]
         [Route("Withdrop/{id}")]
-        [ResponseType(typeof(void))]
         [HttpGet]
-        // GET api/<controller>/5
+        [ResponseType(typeof(void))]
         public IHttpActionResult Withdrop(int id)
         {
             var enrollmentInDb = _enrollmentService.GetWithEvaluations(id);

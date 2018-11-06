@@ -11,7 +11,6 @@ using System.Web.Http.Description;
 
 namespace ADYC.API.Controllers
 {
-    [Authorize(Roles = "AppAdmin")]
     [RoutePrefix("api/Grades")]
     public class GradesController : ADYCBasedApiController
     {
@@ -22,7 +21,7 @@ namespace ADYC.API.Controllers
             _gradeService = gradeService;
         }
 
-        // GET api/<controller>
+        // GET api/Grades
         [Route("")]
         [ResponseType(typeof(IEnumerable<GradeDto>))]
         public IHttpActionResult Get()
@@ -34,9 +33,9 @@ namespace ADYC.API.Controllers
                 {
                     return GetGradeDto(g);
                 }));
-        }        
+        }
 
-        // GET api/<controller>/5
+        // GET api/Grades/5
         [Route("{id}")]
         [ResponseType(typeof(GradeDto))]
         public IHttpActionResult Get(int id)
@@ -51,6 +50,7 @@ namespace ADYC.API.Controllers
             return NotFound();
         }
 
+        // GET api/Grades/GetByName/First
         [Route("GetByName/{name}")]
         [ResponseType(typeof(IEnumerable<GradeDto>))]
         public IHttpActionResult GetByName(string name)
@@ -73,10 +73,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // POST api/Grades
         [Route("")]
         [HttpPost]
         [ResponseType(typeof(GradeDto))]
-        // POST api/<controller>
         public IHttpActionResult Post([FromBody] GradeDto form)
         {
             if (ModelState.IsValid)
@@ -104,10 +104,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // PUT api/Grades/5
         [Route("{id}")]
         [HttpPut]
         [ResponseType(typeof(void))]
-        // PUT api/<controller>/5
         public IHttpActionResult Put(int id, [FromBody] GradeDto form)
         {
             if (ModelState.IsValid)
@@ -140,10 +140,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // DELETE api/Grades
         [Route("{id}")]
         [HttpDelete]
         [ResponseType(typeof(void))]
-        // DELETE api/<controller>/5
         public IHttpActionResult Delete(int id)
         {
             var gradeInDb = _gradeService.Get(id);

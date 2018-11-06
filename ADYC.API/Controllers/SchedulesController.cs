@@ -11,7 +11,6 @@ using System.Web.Http.Description;
 
 namespace ADYC.API.Controllers
 {
-    [Authorize(Roles = "AppAdmin")]
     [RoutePrefix("api/Offerings")]
     public class SchedulesController : ADYCBasedApiController
     {
@@ -25,7 +24,9 @@ namespace ADYC.API.Controllers
             _offeringService = offeringService;
         }
 
-        // GET api/<controller>
+        // GET api/Offerings/5/Schedules
+        [OverrideAuthorization]
+        [Authorize(Roles = "AppAdmin, AppProfessor, AppStudent")]
         [Route("{offeringId}/Schedules")]
         [ResponseType(typeof(IEnumerable<ScheduleDto>))]
         public IHttpActionResult GetByOfferingId(int offeringId)
@@ -36,15 +37,12 @@ namespace ADYC.API.Controllers
             return Ok(GetScheduleListDto(offeringId, offering, schedules));
         }
 
+        // POST api/Offerings/5/Schedules
         [Route("{offeringId}/Schedules")]
         [HttpPost]
         [ResponseType(typeof(ScheduleListDto))]
-        // POST api/<controller>
         public IHttpActionResult PostSchedules(int offeringId, [FromBody] ScheduleListDto form)
         {
-            //ModelState.Remove("Offering.Title");
-            //ModelState.Remove("Offering.Location");
-
             if (ModelState.IsValid)
             {
                 try
@@ -71,6 +69,7 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // PUT api/Offerings/5/Schedules
         [Route("{offeringId}/Schedules")]
         [HttpPut]
         [ResponseType(typeof(void))]

@@ -55,10 +55,7 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
                 return HttpNotFound();
             }
 
-            // change proffesorId for this
-            var pID = ((CustomPrincipal)User).UserId;
-
-            var professorId = new Guid("63016919-365a-e811-9b75-b8763fed7266");
+            var professorId = SessionHelper.GetUser().UserId; //new Guid("63016919-365a-e811-9b75-b8763fed7266");
 
             var offerings = _offeringRepository.GetOfferingsByProfessorIdAndTermId(professorId, termId.Value);
 

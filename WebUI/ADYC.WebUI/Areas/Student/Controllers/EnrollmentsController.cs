@@ -19,8 +19,6 @@ namespace ADYC.WebUI.Areas.Student.Controllers
 
         public EnrollmentsController()
         {
-            var user = ((CustomPrincipal)User);
-
             _termRepository = new TermRepository();
             _enrollmentRepository = new EnrollmentRepository();
             _evaluationRepository = new EvaluationRepository();
@@ -45,10 +43,7 @@ namespace ADYC.WebUI.Areas.Student.Controllers
 
             try
             {
-                // change this for studentId
-                var pID = ((CustomPrincipal)User).UserId;
-
-                var studentId = new Guid("65016919-365A-E811-9B75-B8763FED7266");
+                var studentId = SessionHelper.GetUser().UserId; //new Guid("65016919-365A-E811-9B75-B8763FED7266");
 
                 var enrollments = await _enrollmentRepository.GetEnrollmentsByStudentIdAndTermId(studentId, termId.Value);
 

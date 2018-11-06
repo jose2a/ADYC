@@ -7,7 +7,6 @@ using System.Web.Http.Description;
 
 namespace ADYC.API.Controllers
 {
-    [Authorize(Roles = "AppAdmin")]
     [RoutePrefix("api/Periods")]
     public class PeriodsController : ADYCBasedApiController
     {
@@ -18,7 +17,7 @@ namespace ADYC.API.Controllers
             _periodService = periodService;
         }
 
-        // GET api/<controller>
+        // GET api/Periods
         [Route("")]
         [ResponseType(typeof(IEnumerable<PeriodDto>))]
         public IHttpActionResult Get()
@@ -32,7 +31,7 @@ namespace ADYC.API.Controllers
                 }));
         }
 
-        // GET api/<controller>/5
+        // GET api/Periods/5
         [Route("{id}")]
         [ResponseType(typeof(PeriodDto))]
         public IHttpActionResult Get(int id)
@@ -47,6 +46,7 @@ namespace ADYC.API.Controllers
             return NotFound();
         }
 
+        // GET api/Periods/period 1
         [Route("GetByName/{name}")]
         [ResponseType(typeof(IEnumerable<PeriodDto>))]
         public IHttpActionResult GetByName(string name)

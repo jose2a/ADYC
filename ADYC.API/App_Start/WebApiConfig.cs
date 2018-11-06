@@ -21,7 +21,7 @@ namespace ADYC.API
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            config.Filters.Add(new AuthorizeVerifiedUsersAttribute() { Roles = "AppAdmin" });
+            config.Filters.Add(new AuthorizeAttribute { Roles = "AppAdmin" });
         }
     }
 }

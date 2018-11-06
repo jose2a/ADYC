@@ -24,22 +24,6 @@ namespace ADYC.WebUI.Infrastructure
             if (HttpContext.Current.User != null && HttpContext.Current.User.Identity is IIdentity)
             {
                 return (CustomPrincipal)HttpContext.Current.User;
-                //HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
-
-                //FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
-
-                //if (ticket != null)
-                //{
-                //    CustomPrincipalSerializeModel serializeModel = JsonConvert.DeserializeObject<CustomPrincipalSerializeModel>(ticket.UserData);
-
-                //    newUser = new CustomPrincipal(ticket.Name);
-                //    newUser.UserId = serializeModel.UserId;
-                //    newUser.Role = serializeModel.Role;
-
-                //    newUser.AccessToken = serializeModel.AccessToken;
-                //    newUser.TokenType = serializeModel.TokenType;
-                //    newUser.ExpiresIn = serializeModel.ExpiresIn;
-                //}
             }
 
             return newUser;

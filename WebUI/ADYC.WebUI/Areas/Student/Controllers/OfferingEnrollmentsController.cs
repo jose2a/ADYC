@@ -22,8 +22,6 @@ namespace ADYC.WebUI.Areas.Student.Controllers
 
         public OfferingEnrollmentsController()
         {
-            var user = ((CustomPrincipal)User);
-
             _offeringRepository = new OfferingRepository();
             _termRepository = new TermRepository();
             _scheduleRepository = new ScheduleRepository();
@@ -41,10 +39,7 @@ namespace ADYC.WebUI.Areas.Student.Controllers
                 return RedirectToAction("NotCurrentTerm");
             }
 
-            // change this for studentId
-            var pID = ((CustomPrincipal)User).UserId;
-
-            var studentId = new Guid("65016919-365A-E811-9B75-B8763FED7266");
+            var studentId = SessionHelper.GetUser().UserId; //new Guid("65016919-365A-E811-9B75-B8763FED7266");
 
             var offeringsForCurrentTerm = _offeringRepository
                 .GetOfferingsByTermId(currentTerm.Id.Value);
@@ -105,8 +100,8 @@ namespace ADYC.WebUI.Areas.Student.Controllers
 
             try
             {
-                var studentId = new Guid("65016919-365A-E811-9B75-B8763FED7266");
-                var student = await _studentRepository.GetStudentById(studentId);
+                var studentId = SessionHelper.GetUser().UserId; //new Guid("65016919-365A-E811-9B75-B8763FED7266");
+                //var student = await _studentRepository.GetStudentById(studentId);
 
                 var enrollment = new EnrollmentDto
                 {

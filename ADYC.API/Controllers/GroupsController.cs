@@ -11,7 +11,6 @@ using System.Web.Http.Description;
 
 namespace ADYC.API.Controllers
 {
-    [Authorize(Roles = "AppAdmin")]
     [RoutePrefix("api/Groups")]
     public class GroupsController : ADYCBasedApiController
     {
@@ -22,7 +21,7 @@ namespace ADYC.API.Controllers
             _groupService = groupService;
         }
 
-        // GET api/<controller>
+        // GET api/Groups
         [Route("")]
         [ResponseType(typeof(IEnumerable<GroupDto>))]
         public IHttpActionResult Get()
@@ -34,9 +33,9 @@ namespace ADYC.API.Controllers
                 {
                     return GetGroupDto(g);
                 }));
-        }        
+        }
 
-        // GET api/<controller>/5
+        // GET api/Groups/5
         [Route("{id}")]
         [ResponseType(typeof(GroupDto))]
         public IHttpActionResult Get(int id)
@@ -51,6 +50,7 @@ namespace ADYC.API.Controllers
             return NotFound();
         }
 
+        // GET api/Groups/GetByName/A
         [Route("GetByName/{name}")]
         [ResponseType(typeof(IEnumerable<GroupDto>))]
         public IHttpActionResult GetByName(string name)
@@ -73,10 +73,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // POST api/Groups
         [Route("")]
         [HttpPost]
         [ResponseType(typeof(GroupDto))]
-        // POST api/<controller>
         public IHttpActionResult Post([FromBody] GroupDto form)
         {
             if (ModelState.IsValid)
@@ -104,10 +104,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // PUT api/Groups/5
         [Route("{id}")]
         [HttpPut]
         [ResponseType(typeof(void))]
-        // PUT api/<controller>/5
         public IHttpActionResult Put(int id, [FromBody] GroupDto form)
         {
             if (ModelState.IsValid)
@@ -136,10 +136,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // DELETE api/Groups/5
         [Route("{id}")]
         [HttpDelete]
         [ResponseType(typeof(void))]
-        // DELETE api/<controller>/5
         public IHttpActionResult Delete(int id)
         {
             var groupInDb = _groupService.Get(id);

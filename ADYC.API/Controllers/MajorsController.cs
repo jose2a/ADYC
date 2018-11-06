@@ -11,7 +11,6 @@ using System.Web.Http.Description;
 
 namespace ADYC.API.Controllers
 {
-    [Authorize(Roles = "AppAdmin")]
     [RoutePrefix("api/Majors")]
     public class MajorsController : ADYCBasedApiController
     {
@@ -22,7 +21,7 @@ namespace ADYC.API.Controllers
             _majorService = majorService;
         }
 
-        // GET api/<controller>
+        // GET api/Majors
         [Route("")]
         [ResponseType(typeof(IEnumerable<MajorDto>))]
         public IHttpActionResult Get()
@@ -36,7 +35,7 @@ namespace ADYC.API.Controllers
                 }));
         }
 
-        // GET api/<controller>/5
+        // GET api/Majors/5
         [Route("{id}")]
         [ResponseType(typeof(MajorDto))]
         public IHttpActionResult Get(int id)
@@ -51,6 +50,7 @@ namespace ADYC.API.Controllers
             return NotFound();
         }
 
+        // GET api/Majors/GetByName/Computer Science
         [Route("GetByName/{name}")]
         [ResponseType(typeof(IEnumerable<MajorDto>))]
         public IHttpActionResult GetByName(string name)
@@ -73,10 +73,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // POST api/Majors
         [Route("")]
         [HttpPost]
         [ResponseType(typeof(MajorDto))]
-        // POST api/<controller>
         public IHttpActionResult Post([FromBody] MajorDto form)
         {
             if (ModelState.IsValid)
@@ -104,10 +104,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // PUT api/Majors/5
         [Route("{id}")]
         [HttpPut]
         [ResponseType(typeof(void))]
-        // PUT api/<controller>/5
         public IHttpActionResult Put(int id, [FromBody] MajorDto form)
         {
             if (ModelState.IsValid)
@@ -136,10 +136,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // DELETE api/Majors/5
         [Route("{id}")]
         [HttpDelete]
         [ResponseType(typeof(void))]
-        // DELETE api/<controller>/5
         public IHttpActionResult Delete(int id)
         {
             var majorInDb = _majorService.Get(id);

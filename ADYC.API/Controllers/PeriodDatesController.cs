@@ -11,7 +11,6 @@ using System.Linq;
 
 namespace ADYC.API.Controllers
 {
-    [Authorize(Roles = "AppAdmin")]
     [RoutePrefix("api/Terms")]
     public class PeriodDatesController : ADYCBasedApiController
     {
@@ -25,6 +24,7 @@ namespace ADYC.API.Controllers
             _termService = termService;
         }
 
+        // GET api/Terms/5/PeriodDates
         [Route("{termId}/PeriodDates")]
         [ResponseType(typeof(PeriodDateListDto))]
         public IHttpActionResult GetPeriodDatesForTerm(int termId)
@@ -35,10 +35,10 @@ namespace ADYC.API.Controllers
             return Ok(GetPeriodDateListDto(termId, term, periodDates.ToList()));
         }        
 
+        // POST api/Terms/5/PeriodDates
         [Route("{termId}/PeriodDates")]
         [HttpPost]
         [ResponseType(typeof(PeriodDateListDto))]
-        // POST api/<controller>
         public IHttpActionResult PostPeriodDates(int termId, [FromBody] PeriodDateListDto form)
         {
             if (ModelState.IsValid)
@@ -68,10 +68,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // PUT api/Terms/5/PeriodDates
         [Route("{termId}/PeriodDates")]
         [HttpPut]
         [ResponseType(typeof(void))]
-        // PUT api/<controller>/5
         public IHttpActionResult PutPeriodDates(int termId, [FromBody] PeriodDateListDto form)
         {
             if (ModelState.IsValid)

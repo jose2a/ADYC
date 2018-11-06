@@ -11,7 +11,6 @@ using System.Web.Http.Description;
 
 namespace ADYC.API.Controllers
 {
-    [Authorize(Roles = "AppAdmin")]
     [RoutePrefix("api/Offerings")]
     public class OfferingsController : ADYCBasedApiController
     {
@@ -22,7 +21,9 @@ namespace ADYC.API.Controllers
             _offeringService = offeringService;
         }
 
-        // GET api/<controller>/5
+        // GET api/Offerings/5
+        [OverrideAuthorization]
+        [Authorize(Roles = "AppAdmin, AppProfessor, AppStudent")]
         [Route("{id}")]
         [ResponseType(typeof(OfferingDto))]
         public IHttpActionResult Get(int id)
@@ -37,7 +38,7 @@ namespace ADYC.API.Controllers
             return Ok(GetOfferingDto(offering));
         }
 
-        // GET api/<controller>/GetByProfessorId/3435-fr545-/CourseId/4/TermId/5
+        // GET api/Offerings/GetByProfessorId/3435-fr545-.../CourseId/4/TermId/5
         [Route("GetByProfessorId/{professorId}/CourseId/{courseId}/TermId/{termId}")]
         [ResponseType(typeof(OfferingDto))]
         public IHttpActionResult GetByProfessorIdCourseIdAndTermId(Guid professorId, int courseId, int termId)
@@ -59,9 +60,9 @@ namespace ADYC.API.Controllers
             }
 
             return BadRequest(ModelState);
-        }        
+        }
 
-        // GET api/<controller>/GetByTermName/spring 2018
+        // GET api/Offerings/GetByTermName/spring 2018
         [Route("GetByTermName/{termName}")]
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult GetByTermName(string termName)
@@ -86,7 +87,9 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
-        // GET api/<controller>/GetByTermId/5
+        // GET api/Offerings/GetByTermId/5
+        [OverrideAuthorization]
+        [Authorize(Roles = "AppAdmin, AppStudent")]
         [Route("GetByTermId/{termId}")]
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult GetByTermId(int termId)
@@ -102,7 +105,7 @@ namespace ADYC.API.Controllers
             return Ok(offeringsDto);
         }
 
-        // GET api/<controller>/GetByCurrentTerm
+        // GET api/Offerings/GetByCurrentTerm
         [Route("GetByCurrentTerm")]
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult GetByCurrentTerm()
@@ -118,7 +121,7 @@ namespace ADYC.API.Controllers
             return Ok(offeringsDto);
         }
 
-        // GET api/<controller>/GetByCourseName/computer lab
+        // GET api/Offerings/GetByCourseName/computer lab
         [Route("GetByCourseName/{courseName}")]
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult GetByCourseName(string courseName)
@@ -143,7 +146,7 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
-        // GET api/<controller>/GetByCourseId/4
+        // GET api/Offerings/GetByCourseId/4
         [Route("GetByCourseId/{courseId}")]
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult GetByCourseId(int courseId)
@@ -159,7 +162,7 @@ namespace ADYC.API.Controllers
             return Ok(offeringsDto);
         }
 
-        // GET api/<controller>/GetByProfessorName/john
+        // GET api/Offerings/GetByProfessorName/john
         [Route("GetByProfessorName/{professorName}")]
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult GetByProfessorName(string professorName)
@@ -184,7 +187,7 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
-        // GET api/<controller>/GetByProfessorLastName/smith
+        // GET api/Offerings/GetByProfessorLastName/smith
         [Route("GetByProfessorLastName/{professorLastName}")]
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult GetByProfessorLastName(string professorLastName)
@@ -207,7 +210,7 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
-        // GET api/<controller>/GetByProfessorId/def00-2394
+        // GET api/Offerings/GetByProfessorId/def00-2394
         [Route("GetByProfessorId/{professorId}")]
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult GetByProfessorId(Guid professorId)
@@ -232,7 +235,7 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
-        // GET api/<controller>/GetByProfessorName/def00-2394-/TermName/spring 2018
+        // GET api/Offerings/GetByProfessorName/def00-2394-.../TermName/spring 2018
         [Route("GetByProfessorName/{professorName}/TermName/{termName}")]
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult GetByProfessorNameAndTermName(string professorName, string termName)
@@ -257,7 +260,9 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
-        // GET api/<controller>/GetByProfessorId/def00-2394-/TermId/5
+        // GET api/Offerings/GetByProfessorId/def00-2394-.../TermId/5
+        [OverrideAuthorization]
+        [Authorize(Roles = "AppAdmin, AppProfessor")]
         [Route("GetByProfessorId/{professorId}/TermId/{termId}")]
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult GetByProfessorIdAndTermId(Guid professorId, int termId)
@@ -282,7 +287,7 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
-        // GET api/<controller>/GetByProfessorIdAndCurrentTerm/def00-2394-
+        // GET api/Offerings/GetByProfessorIdAndCurrentTerm/def00-2394-...
         [Route("GetByProfessorIdAndCurrentTerm/{professorId}")]
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult GetByProfessorIdAndCurrentTerm(Guid professorId)
@@ -307,7 +312,7 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
-        // GET api/<controller>/GetByTitle/computer science spring 2018 john doe
+        // GET api/Offerings/GetByTitle/computer science spring 2018 john doe
         [Route("GetByTitle/{title}")]
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult GetByTitle(string title)
@@ -332,7 +337,7 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
-        // GET api/<controller>/GetByLocation/computer lab
+        // GET api/Offerings/GetByLocation/computer lab
         [Route("GetByLocation/{location}")]
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult GetByLocation(string location)
@@ -357,7 +362,7 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
-        // GET api/<controller>
+        // GET api/Offerings
         [Route("")]
         [ResponseType(typeof(IEnumerable<OfferingDto>))]
         public IHttpActionResult Get()
@@ -373,10 +378,10 @@ namespace ADYC.API.Controllers
             return Ok(offeringsDto);
         }
 
+        // POST api/Offerings
         [Route("")]
         [HttpPost]
         [ResponseType(typeof(OfferingDto))]
-        // POST api/<controller>
         public IHttpActionResult Post(OfferingDto form)
         {
             if (ModelState.IsValid)
@@ -404,10 +409,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // PUT api/Offerings/5
         [Route("{id}")]
         [HttpPut]
         [ResponseType(typeof(void))]
-        // PUT api/<controller>/5
         public IHttpActionResult Put(int id, [FromBody] OfferingDto form)
         {
             if (ModelState.IsValid)
@@ -428,10 +433,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // DELETE api/Offerings/5/Force/true
         [Route("{id}/Force/{forceToRemove}")]
         [HttpDelete]
         [ResponseType(typeof(void))]
-        // DELETE api/<controller>/5/Force/{forceToRemove}
         public IHttpActionResult Delete(int id, bool forceToRemove)
         {
             var offeringInDb = _offeringService.Get(id);

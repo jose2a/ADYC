@@ -12,7 +12,6 @@ using System.Web.Http.Description;
 
 namespace ADYC.API.Controllers
 {
-    //[Authorize(Roles = "AppAdmin")]
     [RoutePrefix("api/Terms")]
     public class TermsController : ADYCBasedApiController
     {
@@ -23,9 +22,9 @@ namespace ADYC.API.Controllers
             _termService = termService;
         }
 
-        // GET api/<controller>/5
+        // GET api/Terms/5
         [OverrideAuthorization]
-        [AuthorizeVerifiedUsers(Roles = "AppAdmin, AppProfessor, AppStudent")]
+        [Authorize(Roles = "AppAdmin, AppProfessor, AppStudent")]
         [Route("{id}")]
         [ResponseType(typeof(TermDto))]
         public IHttpActionResult Get(int id)
@@ -40,6 +39,9 @@ namespace ADYC.API.Controllers
             return NotFound();
         }
 
+        // GET api/Terms/GetCurrentTerm
+        [OverrideAuthorization]
+        [Authorize(Roles = "AppAdmin, AppStudent")]
         [Route("GetCurrentTerm")]
         [ResponseType(typeof(TermDto))]
         public IHttpActionResult GetCurrentTerm()
@@ -54,7 +56,7 @@ namespace ADYC.API.Controllers
             return NotFound();
         }
 
-        // GET api/<controller>
+        // GET api/Terms
         [OverrideAuthorization]
         [AuthorizeVerifiedUsers(Roles = "AppAdmin, AppProfessor, AppStudent")]
         [Route("")]
@@ -67,6 +69,7 @@ namespace ADYC.API.Controllers
                 .Select(t => GetTermDto(t)));
         }
 
+        // GET api/Terms/GetByName/spring
         [Route("GetByName/{name}")]
         [ResponseType(typeof(IEnumerable<TermDto>))]
         public IHttpActionResult GetByName(string name)
@@ -86,6 +89,7 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // GET api/Terms/GetByBetweenDates/StartDate/2017-01-01/EndDate/2017-12-31
         [Route("GetByBetweenDates/StartDate/{startDate}/EndDate/{endDate}")]
         [ResponseType(typeof(IEnumerable<TermDto>))]
         public IHttpActionResult GetByBetweenDates(DateTime startDate, DateTime endDate)
@@ -115,10 +119,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // POST api/Terms
         [Route("")]
         [HttpPost]
         [ResponseType(typeof(TermDto))]
-        // POST api/<controller>
         public IHttpActionResult Post(TermDto form)
         {
             if (ModelState.IsValid)
@@ -146,10 +150,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // PUT api/Terms/5
         [Route("{id}")]
         [HttpPut]
         [ResponseType(typeof(void))]
-        // PUT api/<controller>/5
         public IHttpActionResult Put(int id, [FromBody] TermDto form)
         {
             if (ModelState.IsValid)
@@ -170,10 +174,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // DELETE api/Terms/5
         [Route("{id}")]
         [HttpDelete]
         [ResponseType(typeof(void))]
-        // DELETE api/<controller>/5
         public IHttpActionResult Delete(int id)
         {
             var termtInDb = _termService.Get(id);

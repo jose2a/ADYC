@@ -11,7 +11,6 @@ using System.Web.Http.Description;
 
 namespace ADYC.API.Controllers
 {
-    [Authorize(Roles = "AppAdmin")]
     [RoutePrefix("api/CourseTypes")]
     public class CourseTypesController : ADYCBasedApiController
     {
@@ -22,7 +21,7 @@ namespace ADYC.API.Controllers
             _courseTypeService = courseTypeService;
         }
 
-        // GET api/<controller>/5
+        // GET api/CourseTypes/5
         [Route("{id}")]
         [ResponseType(typeof(CourseTypeDto))]
         public IHttpActionResult Get(int id)
@@ -37,7 +36,7 @@ namespace ADYC.API.Controllers
             return NotFound();
         }
 
-        // GET api/<controller>
+        // GET api/CourseTypes
         [Route("")]
         [ResponseType(typeof(IEnumerable<CourseTypeDto>))]
         public IHttpActionResult Get()
@@ -50,7 +49,8 @@ namespace ADYC.API.Controllers
                     return GetCourseTypeDto(ct);
                 }));
         }
-        
+
+        // GET api/CourseTypes/GetByName/Internal
         [Route("GetByName/{name}")]
         [ResponseType(typeof(IEnumerable<CourseTypeDto>))]
         public IHttpActionResult GetByName(string name)
@@ -67,16 +67,16 @@ namespace ADYC.API.Controllers
             }
             catch (ArgumentNullException ane)
             {
-                ModelState.AddModelError("", ane);
+                ModelState.AddModelError("", ane.Message);
             }
 
             return BadRequest(ModelState);
         }
 
+        // POST api/CourseTypes
         [Route("")]
         [HttpPost]
         [ResponseType(typeof(CourseTypeDto))]
-        // POST api/<controller>
         public IHttpActionResult Post([FromBody] CourseTypeDto form)
         {
             if (ModelState.IsValid)
@@ -94,19 +94,19 @@ namespace ADYC.API.Controllers
                 {
                     ModelState.AddModelError("", ane.Message);
                 }
-                catch (PreexistingEntityException)
+                catch (PreexistingEntityException pe)
                 {
-                    return NotFound();
+                    ModelState.AddModelError("", pe.Message);
                 }
             }
 
             return BadRequest(ModelState);
-        }        
+        }
 
+        // PUT api/CourseTypes/5
         [Route("{id}")]
         [HttpPut]
         [ResponseType(typeof(void))]
-        // PUT api/<controller>/5
         public IHttpActionResult Put(int id, [FromBody] CourseTypeDto form)
         {
             if (ModelState.IsValid)
@@ -137,10 +137,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // DELETE api/CourseTypes/5
         [Route("{id}")]
         [HttpDelete]
         [ResponseType(typeof(void))]
-        // DELETE api/<controller>/5
         public IHttpActionResult Delete(int id)
         {
             var courseTypeInDb = _courseTypeService.Get(id);

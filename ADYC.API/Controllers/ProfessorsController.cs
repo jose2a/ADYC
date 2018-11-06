@@ -11,7 +11,6 @@ using System.Web.Http.Description;
 
 namespace ADYC.API.Controllers
 {
-    [Authorize(Roles = "AppAdmin")]
     [RoutePrefix("api/Professors")]
     public class ProfessorsController : ADYCBasedApiController
     {
@@ -22,7 +21,7 @@ namespace ADYC.API.Controllers
             _professorService = professorService;
         }
 
-        // GET api/<controller>/5
+        // GET api/Professors/adf12-teew1-...
         [Route("{id:guid}")]
         [ResponseType(typeof(ProfessorDto))]
         public IHttpActionResult Get(Guid id)
@@ -37,7 +36,7 @@ namespace ADYC.API.Controllers
             return NotFound();
         }
 
-        // GET api/<controller>
+        // GET api/Professors
         [Route("")]
         [ResponseType(typeof(IEnumerable<ProfessorDto>))]
         public IHttpActionResult Get()
@@ -51,6 +50,7 @@ namespace ADYC.API.Controllers
                 }));
         }
 
+        // GET api/Professors/GetByFirstName/Jane
         [Route("GetByFirstName/{firstName}")]
         [ResponseType(typeof(IEnumerable<ProfessorDto>))]
         public IHttpActionResult GetByFirstName(string firstName)
@@ -73,6 +73,7 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // GET api/Professors/GetByLastName/Wilson
         [Route("GetByLastName/{lastName}")]
         [ResponseType(typeof(IEnumerable<ProfessorDto>))]
         public IHttpActionResult GetByLastName(string lastName)
@@ -95,6 +96,7 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // GET api/Professors/GetByEmail/willson@adyc.com/
         [Route("GetByEmail/{email}")]
         [ResponseType(typeof(IEnumerable<ProfessorDto>))]
         public IHttpActionResult GetByEmail(string email)
@@ -117,6 +119,7 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // GET api/Professors/GetByCellphoneNumber/15785122
         [Route("GetByCellphoneNumber/{cellphoneNumber}")]
         [ResponseType(typeof(IEnumerable<ProfessorDto>))]
         public IHttpActionResult GetByCellphoneNumber(string cellphoneNumber)
@@ -139,6 +142,7 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // GET api/Professors/GetNotTrashed
         [Route("GetNotTrashed")]
         [ResponseType(typeof(IEnumerable<ProfessorDto>))]
         public IHttpActionResult GetNotTrashed()
@@ -151,6 +155,7 @@ namespace ADYC.API.Controllers
                 }));
         }
 
+        // GET api/Professors/GetTrashed
         [Route("GetTrashed")]
         [ResponseType(typeof(IEnumerable<ProfessorDto>))]
         public IHttpActionResult GetTrashed()
@@ -163,24 +168,7 @@ namespace ADYC.API.Controllers
                 }));
         }
 
-        //[Route("GetOfferings/{id:guid}")]
-        //[HttpGet]
-        ////[ResponseType(typeof(IEnumerable<ProfessorDto>))]
-        //public IHttpActionResult GetOfferings(Guid professorId)
-        //{
-        //    var offerings = _professorService.GetProfessorOfferings(professorId);
-
-        //    return Ok(offerings
-        //        .Select(o => {
-        //            return o;
-        //            // Fixing this
-        //            //var professorDto = Mapper.Map<Professor, ProfessorDto>(o);
-        //            //professorDto.Url = UrlResoucesUtil.GetBaseUrl(Request, "Professors") + o.Id;
-
-        //            //return professorDto;
-        //        }));
-        //}
-
+        // POST api/Professors
         [Route("")]
         [HttpPost]
         [ResponseType(typeof(ProfessorDto))]
@@ -212,10 +200,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // PUT api/Professors/adf12-teew1-...
         [Route("{id:guid}")]
         [HttpPut]
         [ResponseType(typeof(void))]
-        // PUT api/<controller>/5
         public IHttpActionResult Put(Guid id, [FromBody] ProfessorDto form)
         {
             if (ModelState.IsValid)
@@ -244,10 +232,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // DELETE api/Professors/adf12-teew1-...
         [Route("{id:guid}")]
         [HttpDelete]
         [ResponseType(typeof(void))]
-        // DELETE api/<controller>/5
         public IHttpActionResult Delete(Guid id)
         {
             var professorInDb = _professorService.Get(id);
@@ -270,10 +258,10 @@ namespace ADYC.API.Controllers
             return BadRequest(ModelState);
         }
 
+        // GET api/Professors/Trash/adf12-teew1-...
         [Route("Trash/{id:guid}")]
         [HttpGet]
         [ResponseType(typeof(void))]
-        // GET api/<controller>/5
         public IHttpActionResult Trash(Guid id)
         {
             var professorInDb = _professorService.Get(id);
@@ -288,10 +276,10 @@ namespace ADYC.API.Controllers
             return Ok();
         }
 
+        // GET api/Professors/Restore/adf12-teew1-...
         [Route("Restore/{id:guid}")]
         [HttpGet]
         [ResponseType(typeof(void))]
-        // GET api/<controller>/5
         public IHttpActionResult Restore(Guid id)
         {
             var professorInDb = _professorService.Get(id);
