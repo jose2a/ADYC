@@ -1,5 +1,6 @@
 ﻿using ADYC.WebUI.Infrastructure;
 using ADYC.WebUI.ViewModels;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,8 @@ namespace ADYC.WebUI.Repositories
         private string addressPreffix = "/Token";
         private static string jsonMediaType = "application/json";
 
-        private HttpClient httpClient = MakeHttpClient();
+        private RestClient client = new RestClient("http://localhost:13303");
+        //private HttpClient httpClient = MakeHttpClient();
 
         private static HttpClient MakeHttpClient()
         {
@@ -39,18 +41,31 @@ namespace ADYC.WebUI.Repositories
                    {"password", model.Password},
                };
 
-            var tokenResponse = await httpClient.PostAsync(addressPreffix, new FormUrlEncodedContent(form));
-            
-            var token = tokenResponse.Content.ReadAsAsync<Token>(new[] { new JsonMediaTypeFormatter() }).Result;
+            var request = new RestRequest(addressPreffix, Method.POST)
+            {
+                RequestFormat = RestSharp.DataFormat.Json
+            };
+            request.AddParameter("grant_type", "password")
+                .AddParameter("username", model.UserName)
+                .AddParameter("password", model.Password);
 
-            if (string.IsNullOrEmpty(token.Error))
-            {
-                return token;
-            }
-            else
-            {
-                throw new AdycHttpRequestException(System.Net.HttpStatusCode.BadRequest, token.Error);
-            }
+            //request.AddUrlSegment("termId", termId);
+            IRestResponse<Token> response = client.Execute<Token>(request);
+
+            return response.Data;
+
+            //var tokenResponse = await httpClient.PostAsync(addressPreffix, new FormUrlEncodedContent(form));
+
+            //var token = tokenResponse.Content.ReadAsAsync<Token>(new[] { new JsonMediaTypeFormatter() }).Result;
+
+            //if (string.IsNullOrEmpty(token.Error))
+            //{
+            //    return token;
+            //}
+            //else
+            //{
+            //    throw new AdycHttpRequestException(System.Net.HttpStatusCode.BadRequest, token.Error);
+            //}
         }
 
         public void Dispose()
@@ -63,12 +78,12 @@ namespace ADYC.WebUI.Repositories
         {
             if (!disposed && disposing)
             {
-                if (httpClient != null)
-                {
-                    var mc = httpClient;
-                    httpClient = null;
-                    mc.Dispose();
-                }
+                //if (httpClient != null)
+                //{
+                //    var mc = httpClient;
+                //    httpClient = null;
+                //    mc.Dispose();
+                //}
                 disposed = true;
             }
         }

@@ -18,7 +18,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
         public CoursesController()
         {
             //var user = ((CustomPrincipal)User);
-            var user = SessionHelper.User();
+            //var user = SessionHelper.User();
 
             _courseRepository = new CourseRepository();
             _courseTypeRepository = new CourseTypeRepository();

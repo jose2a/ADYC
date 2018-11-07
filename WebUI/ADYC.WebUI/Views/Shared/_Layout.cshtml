@@ -50,6 +50,13 @@
             </div>
         }
 
+        <div class="row">
+            @if (User.Identity.IsAuthenticated)
+            {
+                @User.Identity.Name  @Html.ActionLink("Logout", "Logout", new { Controller = "Home", Area = "" })
+            }
+        </div>
+
         @RenderBody()
         <hr />
         <footer>

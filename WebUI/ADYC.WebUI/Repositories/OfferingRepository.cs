@@ -2,6 +2,7 @@
 using ADYC.Model;
 using ADYC.WebUI.Infrastructure;
 using RestSharp;
+using RestSharp.Authenticators;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -18,6 +19,7 @@ namespace ADYC.WebUI.Repositories
         public OfferingRepository()
             : base(SessionHelper.User.AccessToken)
         {
+            client.Authenticator = new JwtAuthenticator(SessionHelper.User.AccessToken);
             client.AddDefaultHeader("Authorization", string.Format("Bearer {0}", SessionHelper.User.AccessToken));
         }
 

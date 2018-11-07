@@ -43,7 +43,7 @@ namespace ADYC.WebUI.Areas.Student.Controllers
 
             try
             {
-                var studentId = SessionHelper.User().UserId; //new Guid("65016919-365A-E811-9B75-B8763FED7266");
+                var studentId = SessionHelper.User.UserId; //new Guid("65016919-365A-E811-9B75-B8763FED7266");
 
                 var enrollments = await _enrollmentRepository.GetEnrollmentsByStudentIdAndTermId(studentId, termId.Value);
 
