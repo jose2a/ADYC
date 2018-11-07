@@ -1,4 +1,5 @@
 ﻿using ADYC.API.ViewModels;
+using ADYC.WebUI.Infrastructure;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -8,6 +9,12 @@ namespace ADYC.WebUI.Repositories
     public class GradeRepository : BaseRepository<GradeDto>
     {
         private string addressPreffix = "api/Grades/";
+
+        public GradeRepository()
+            : base(SessionHelper.User.AccessToken)
+        {
+
+        }
 
         public async Task<IEnumerable<GradeDto>> GetGrades()
         {

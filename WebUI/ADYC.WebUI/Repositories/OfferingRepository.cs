@@ -1,5 +1,6 @@
 ﻿using ADYC.API.ViewModels;
 using ADYC.Model;
+using ADYC.WebUI.Infrastructure;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -14,9 +15,15 @@ namespace ADYC.WebUI.Repositories
 
         private RestClient client = new RestClient("http://localhost:19016");
 
-        public IEnumerable<OfferingDto> GetOfferingsByTermId(int termId)
+        public OfferingRepository()
+            : base(SessionHelper.User.AccessToken)
         {
-            var request = new RestRequest(addressPreffix + "GetByTermId/{termId}", Method.GET);
+            client.AddDefaultHeader("Authorization", string.Format("Bearer {0}", SessionHelper.User.AccessToken));
+        }
+
+        public IEnumerable<OfferingDto> GetOfferingsByTermId(int termId)
+        {            
+            var request = new RestRequest(addressPreffix + "GetByTermId/{termId}", Method.GET);            
             request.AddUrlSegment("termId", termId);
             IRestResponse<List<OfferingDto>> response = client.Execute<List<OfferingDto>>(request);
 

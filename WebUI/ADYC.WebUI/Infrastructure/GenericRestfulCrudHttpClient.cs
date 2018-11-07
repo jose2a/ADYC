@@ -14,30 +14,28 @@ namespace ADYC.WebUI.Infrastructure
 
         private HttpClient httpClient;
 
-        protected readonly string serviceBaseAddress;
-        private readonly string jsonMediaType = "application/json";
+        protected readonly string ServiceBaseAddress;
+        private readonly string JsonMediaType = "application/json";
 
         public GenericRestfulCrudHttpClient(string serviceBaseAddress)
         {
-            this.serviceBaseAddress = serviceBaseAddress;
+            ServiceBaseAddress = serviceBaseAddress;
             httpClient = MakeHttpClient(serviceBaseAddress);
         }
 
-        public GenericRestfulCrudHttpClient(string serviceBaseAddress, string accessToken, string authType)
+        public GenericRestfulCrudHttpClient(string serviceBaseAddress, string accessToken)
         {
-            this.serviceBaseAddress = serviceBaseAddress;
+            ServiceBaseAddress = serviceBaseAddress;
             httpClient = MakeHttpClient(serviceBaseAddress);
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(authType, accessToken);
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", accessToken);
         }
-
-        //httpClient1.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token.AccessToken); 
 
         protected virtual HttpClient MakeHttpClient(string serviceBaseAddress)
         {
             httpClient = new HttpClient();
             httpClient.BaseAddress = new Uri(serviceBaseAddress);
             httpClient.DefaultRequestHeaders.Accept.Clear();
-            httpClient.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(jsonMediaType));
+            httpClient.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(JsonMediaType));
             httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(new ProductHeaderValue("ADYC_HttpClient", "1.0")));
             return httpClient;
         }

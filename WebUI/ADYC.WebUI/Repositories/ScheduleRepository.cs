@@ -1,4 +1,5 @@
 ﻿using ADYC.API.ViewModels;
+using ADYC.WebUI.Infrastructure;
 using ADYC.WebUI.ViewModels;
 using System.Net;
 using System.Threading.Tasks;
@@ -8,6 +9,12 @@ namespace ADYC.WebUI.Repositories
     public class ScheduleRepository : BaseRepository<ScheduleListDto>
     {
         private string addressPreffix = "api/Offerings/";
+
+        public ScheduleRepository()
+            : base(SessionHelper.User.AccessToken)
+        {
+
+        }
 
         public async Task<ScheduleListDto> GetSchedulesByOfferingId(int id)
         {

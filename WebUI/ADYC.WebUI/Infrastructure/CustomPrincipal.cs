@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Principal;
-using System.Web;
 
 namespace ADYC.WebUI.Infrastructure
 {
@@ -13,14 +10,6 @@ namespace ADYC.WebUI.Infrastructure
         public bool IsInRole(string role)
         {
             return Role.Equals(role);
-            //if (roles.Any(r => role.Contains(r)))
-            //{
-            //    return true;
-            //}
-            //else
-            //{
-            //    return false;
-            //}
         }
 
         public CustomPrincipal(string Username)

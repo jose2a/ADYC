@@ -1,4 +1,5 @@
 ﻿using ADYC.API.ViewModels;
+using ADYC.WebUI.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -9,6 +10,12 @@ namespace ADYC.WebUI.Repositories
     public class StudentRepository : BaseRepository<StudentDto>
     {
         private string addressPreffix = "api/Students/";
+
+        public StudentRepository()
+            : base(SessionHelper.User.AccessToken)
+        {
+
+        }
 
         public async Task<IEnumerable<StudentDto>> GetStudents()
         {

@@ -1,4 +1,5 @@
 ﻿using ADYC.API.ViewModels;
+using ADYC.WebUI.Infrastructure;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -8,6 +9,12 @@ namespace ADYC.WebUI.Repositories
     public class GroupRepository : BaseRepository<GroupDto>
     {
         private string addressPreffix = "api/Groups/";
+
+        public GroupRepository()
+            : base(SessionHelper.User.AccessToken)
+        {
+
+        }
 
         public async Task<IEnumerable<GroupDto>> GetGroups()
         {

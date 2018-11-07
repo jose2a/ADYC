@@ -1,4 +1,5 @@
 ﻿using ADYC.API.ViewModels;
+using ADYC.WebUI.Infrastructure;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -8,6 +9,12 @@ namespace ADYC.WebUI.Repositories
     public class MajorRepository : BaseRepository<MajorDto>
     {
         private string addressPreffix = "api/Majors/";
+
+        public MajorRepository()
+            : base(SessionHelper.User.AccessToken)
+        {
+
+        }
 
         public async Task<IEnumerable<MajorDto>> GetMajors()
         {

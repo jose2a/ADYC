@@ -13,21 +13,27 @@ namespace ADYC.WebUI.Infrastructure
         {
             return HttpContext.Current.User.Identity.IsAuthenticated;
         }
+
         public static void DestroyUserSession()
         {
             FormsAuthentication.SignOut();
         }
-        public static CustomPrincipal GetUser()
+
+        public static CustomPrincipal User
         {
-            CustomPrincipal newUser = null;
-
-            if (HttpContext.Current.User != null && HttpContext.Current.User.Identity is IIdentity)
+            get
             {
-                return (CustomPrincipal)HttpContext.Current.User;
-            }
+                CustomPrincipal newUser = null;
 
-            return newUser;
+                if (HttpContext.Current.User != null && HttpContext.Current.User.Identity is IIdentity)
+                {
+                    return (CustomPrincipal)HttpContext.Current.User;
+                }
+
+                return newUser;
+            }
         }
+
         public static void AddUserToSession(Token token)
         {
             var serializeModel = new CustomPrincipalSerializeModel();

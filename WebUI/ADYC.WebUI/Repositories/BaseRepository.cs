@@ -15,9 +15,9 @@ namespace ADYC.WebUI.Repositories
             restClient = new GenericRestfulCrudHttpClient<T>(baseUrl);
         }
 
-        public BaseRepository(string accessToken, string authType)
+        public BaseRepository(string accessToken)
         {
-            restClient = new GenericRestfulCrudHttpClient<T>(baseUrl, accessToken, authType);
+            restClient = new GenericRestfulCrudHttpClient<T>(baseUrl, accessToken);
         }
 
         public void Dispose()

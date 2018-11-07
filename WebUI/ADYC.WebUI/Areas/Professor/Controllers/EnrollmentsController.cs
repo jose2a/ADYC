@@ -22,7 +22,7 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
 
         public EnrollmentsController()
         {
-            var user = SessionHelper.GetUser();
+            var user = SessionHelper.User();
 
             _termRepository = new TermRepository();
             _offeringRepository = new OfferingRepository();
@@ -55,7 +55,7 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
                 return HttpNotFound();
             }
 
-            var professorId = SessionHelper.GetUser().UserId; //new Guid("63016919-365a-e811-9b75-b8763fed7266");
+            var professorId = SessionHelper.User().UserId; //new Guid("63016919-365a-e811-9b75-b8763fed7266");
 
             var offerings = _offeringRepository.GetOfferingsByProfessorIdAndTermId(professorId, termId.Value);
 

@@ -11,7 +11,7 @@ namespace ADYC.WebUI.Repositories
         private string addressPreffix = "api/Courses/";
 
         public CourseRepository()
-            : base(SessionHelper.GetUser().AccessToken, SessionHelper.GetUser().TokenType)
+            : base(SessionHelper.User.AccessToken)
         {
 
         }

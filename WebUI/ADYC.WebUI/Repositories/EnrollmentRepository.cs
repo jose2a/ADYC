@@ -1,4 +1,5 @@
 ﻿using ADYC.API.ViewModels;
+using ADYC.WebUI.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -10,6 +11,12 @@ namespace ADYC.WebUI.Repositories
     {
         private string addressPreffix = "api/Enrollments/";
 
+        public EnrollmentRepository()
+            : base(SessionHelper.User.AccessToken)
+        {
+
+        }
+
         public async Task<IEnumerable<EnrollmentDto>> GetEnrollmentsByOfferingId(int offeringId)
         {
             return await restClient.GetManyAsync(addressPreffix + "GetEnrollmentsByOfferingId/" + offeringId);
@@ -20,7 +27,6 @@ namespace ADYC.WebUI.Repositories
             return await restClient.GetAsync(addressPreffix + id);
         }
 
-        //GetEnrollmentsByStudentId/{studentId:guid}/TermId/{termId}
         public async Task<IEnumerable<EnrollmentDto>> GetEnrollmentsByStudentIdAndTermId(Guid studentId, int termId)
         {
             return await restClient.GetManyAsync($"{addressPreffix}GetEnrollmentsByStudentId/{studentId}/TermId/{termId}");

@@ -12,7 +12,7 @@ namespace ADYC.WebUI.Repositories
         private string addressPreffix = "api/Terms/";
 
         public TermRepository()
-            : base(SessionHelper.GetUser().AccessToken, SessionHelper.GetUser().TokenType)
+            : base(SessionHelper.User.AccessToken)
         {
 
         }

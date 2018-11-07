@@ -1,4 +1,5 @@
 ﻿using ADYC.API.ViewModels;
+using ADYC.WebUI.Infrastructure;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -7,6 +8,12 @@ namespace ADYC.WebUI.Repositories
     public class PeriodDateRepository : BaseRepository<PeriodDateListDto>
     {
         private string addressPreffix = "api/Terms/";
+
+        public PeriodDateRepository()
+            : base(SessionHelper.User.AccessToken)
+        {
+
+        }
 
         public async Task<PeriodDateListDto> GetPeriodDatesByTermId(int id)
         {

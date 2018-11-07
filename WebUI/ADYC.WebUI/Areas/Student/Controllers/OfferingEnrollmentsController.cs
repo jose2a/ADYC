@@ -39,7 +39,7 @@ namespace ADYC.WebUI.Areas.Student.Controllers
                 return RedirectToAction("NotCurrentTerm");
             }
 
-            var studentId = SessionHelper.GetUser().UserId; //new Guid("65016919-365A-E811-9B75-B8763FED7266");
+            var studentId = SessionHelper.User().UserId; //new Guid("65016919-365A-E811-9B75-B8763FED7266");
 
             var offeringsForCurrentTerm = _offeringRepository
                 .GetOfferingsByTermId(currentTerm.Id.Value);
@@ -100,7 +100,7 @@ namespace ADYC.WebUI.Areas.Student.Controllers
 
             try
             {
-                var studentId = SessionHelper.GetUser().UserId; //new Guid("65016919-365A-E811-9B75-B8763FED7266");
+                var studentId = SessionHelper.User().UserId; //new Guid("65016919-365A-E811-9B75-B8763FED7266");
                 //var student = await _studentRepository.GetStudentById(studentId);
 
                 var enrollment = new EnrollmentDto
