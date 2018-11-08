@@ -12,7 +12,7 @@ namespace ADYC.WebUI.Repositories
 
         private string _addressPreffix = "api/Account/";
 
-        protected GenericRestfulCrudHttpClient<RegisterBindingModel> _restClient =
+        private GenericRestfulCrudHttpClient<RegisterBindingModel> _restClient =
             new GenericRestfulCrudHttpClient<RegisterBindingModel>("http://localhost:13303/", true);
 
         public async Task RegisterAccount(RegisterBindingModel model)
