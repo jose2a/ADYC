@@ -10,46 +10,56 @@ namespace ADYC.WebUI.Infrastructure
 {
     public class GenericRestfulCrudHttpClient<T> : IDisposable where T : class
     {
-        private bool disposed = false;
+        private HttpClient _httpClient;
+        private bool _disposed = false;
 
-        private HttpClient httpClient;
+        private string _serviceBaseAddress;
+        private bool _isAccessTokenRequired;
 
-        protected readonly string ServiceBaseAddress;
-        private readonly string JsonMediaType = "application/json";
+        private const string JsonMediaType = "application/json";
 
-        public GenericRestfulCrudHttpClient(string serviceBaseAddress)
+        public GenericRestfulCrudHttpClient(string serviceBaseAddress, bool isAccessTokenRequired)
         {
-            ServiceBaseAddress = serviceBaseAddress;
-            httpClient = MakeHttpClient(serviceBaseAddress);
+            _serviceBaseAddress = serviceBaseAddress;
+            _isAccessTokenRequired = isAccessTokenRequired;
         }
 
-        public GenericRestfulCrudHttpClient(string serviceBaseAddress, string accessToken)
+        protected virtual HttpClient MakeHttpClient()
         {
-            ServiceBaseAddress = serviceBaseAddress;
-            httpClient = MakeHttpClient(serviceBaseAddress);
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", accessToken);
-        }
+            if (_httpClient == null)
+            {
+                _httpClient = new HttpClient();
+                _httpClient.BaseAddress = new Uri(_serviceBaseAddress);
+                _httpClient.DefaultRequestHeaders.Accept.Clear();
+                _httpClient.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(JsonMediaType));
+                _httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(new ProductHeaderValue("ADYC_HttpClient", "1.0")));
 
-        protected virtual HttpClient MakeHttpClient(string serviceBaseAddress)
-        {
-            httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri(serviceBaseAddress);
-            httpClient.DefaultRequestHeaders.Accept.Clear();
-            httpClient.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(JsonMediaType));
-            httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(new ProductHeaderValue("ADYC_HttpClient", "1.0")));
-            return httpClient;
+                if (_isAccessTokenRequired)
+                {
+                    _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", SessionHelper.User.AccessToken);
+                }
+            }
+
+            return _httpClient;
         }
 
         public async Task<IEnumerable<T>> GetManyAsync(string addressSuffix)
         {
-            var responseMessage = await httpClient.GetAsync(addressSuffix);
-            responseMessage.EnsureSuccessStatusCode();
+            _httpClient = MakeHttpClient();
+
+            var responseMessage = await _httpClient.GetAsync(addressSuffix);
+
+            await VerifyResponseStatus(responseMessage);
+
+            //responseMessage.EnsureSuccessStatusCode();
             return await responseMessage.Content.ReadAsAsync<IEnumerable<T>>();
         }
 
         public async Task<T> GetAsync(string addressSuffix)
         {
-            var responseMessage = await httpClient.GetAsync(addressSuffix);
+            _httpClient = MakeHttpClient();
+
+            var responseMessage = await _httpClient.GetAsync(addressSuffix);
 
             await VerifyResponseStatus(responseMessage);
 
@@ -58,21 +68,25 @@ namespace ADYC.WebUI.Infrastructure
 
         public async Task<HttpStatusCode> GetAsyncWithStatusCode(string addressSuffix)
         {
-            var responseMessage = await httpClient.GetAsync(addressSuffix);
+            _httpClient = MakeHttpClient();
 
-            if (VerifyNotFound(responseMessage))
-            {
-                return HttpStatusCode.NotFound;
-            }
+            var responseMessage = await _httpClient.GetAsync(addressSuffix);
 
-            await VerifyResponseStatus(responseMessage);
+            //if (VerifyNotFound(responseMessage))
+            //{
+            //    return HttpStatusCode.NotFound;
+            //}
+
+            //await VerifyResponseStatus(responseMessage);
 
             return responseMessage.StatusCode;
         }
 
         public async Task<T> PostAsync(string addressSuffix, T model)
         {
-            var responseMessage = await httpClient.PostAsJsonAsync(addressSuffix, model);
+            _httpClient = MakeHttpClient();
+
+            var responseMessage = await _httpClient.PostAsJsonAsync(addressSuffix, model);
 
             await VerifyResponseStatus(responseMessage);
 
@@ -81,12 +95,14 @@ namespace ADYC.WebUI.Infrastructure
 
         public async Task<HttpStatusCode> PutAsync(string addressSuffix, T model)
         {
-            var responseMessage = await httpClient.PutAsJsonAsync(addressSuffix, model);
+            _httpClient = MakeHttpClient();
 
-            if (VerifyNotFound(responseMessage))
-            {
-                return HttpStatusCode.NotFound;
-            }
+            var responseMessage = await _httpClient.PutAsJsonAsync(addressSuffix, model);
+
+            //if (VerifyNotFound(responseMessage))
+            //{
+            //    return HttpStatusCode.NotFound;
+            //}
 
             await VerifyResponseStatus(responseMessage);
 
@@ -95,12 +111,14 @@ namespace ADYC.WebUI.Infrastructure
 
         public async Task<HttpStatusCode> DeleteAsync(string addressSuffix)
         {
-            var responseMessage = await httpClient.DeleteAsync(addressSuffix);
+            _httpClient = MakeHttpClient();
 
-            if (VerifyNotFound(responseMessage))
-            {
-                return HttpStatusCode.NotFound;
-            }
+            var responseMessage = await _httpClient.DeleteAsync(addressSuffix);
+
+            //if (VerifyNotFound(responseMessage))
+            //{
+            //    return HttpStatusCode.NotFound;
+            //}
 
             await VerifyResponseStatus(responseMessage);
 
@@ -114,14 +132,17 @@ namespace ADYC.WebUI.Infrastructure
             var contentObject = JObject.Parse(content);
             var modelState = contentObject.GetValue("ModelState").ToObject<JObject>();
 
-            foreach (var property in modelState)
+            if (modelState != null)
             {
-                var arr = JArray.Parse(property.Value.ToString());
-
-                foreach (var item in arr)
+                foreach (var property in modelState)
                 {
-                    errors.Add(item.Value<string>());
-                }
+                    var arr = JArray.Parse(property.Value.ToString());
+
+                    foreach (var item in arr)
+                    {
+                        errors.Add(item.Value<string>());
+                    }
+                } 
             }
 
             return errors;
@@ -131,7 +152,17 @@ namespace ADYC.WebUI.Infrastructure
         {
             if (!responseMessage.IsSuccessStatusCode)
             {
-                //VerifyNotFound(responseMessage);
+                //if (responseMessage.StatusCode == HttpStatusCode.NotFound)
+                //{
+                //    throw new AdycHttpRequestException(responseMessage.StatusCode,
+                //        responseMessage.ReasonPhrase);
+                //}
+
+                //if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
+                //{
+                //    throw new AdycHttpRequestException(responseMessage.StatusCode,
+                //        responseMessage.ReasonPhrase);
+                //}
 
                 var content = await responseMessage.Content.ReadAsStringAsync();
 
@@ -145,7 +176,7 @@ namespace ADYC.WebUI.Infrastructure
                 }
 
                 throw new AdycHttpRequestException(responseMessage.StatusCode,
-                        responseMessage.ReasonPhrase);
+                    responseMessage.ReasonPhrase);
             }
         }
 
@@ -164,15 +195,15 @@ namespace ADYC.WebUI.Infrastructure
 
         private void Dispose(bool disposing)
         {
-            if (!disposed && disposing)
+            if (!_disposed && disposing)
             {
-                if (httpClient != null)
+                if (_httpClient != null)
                 {
-                    var hc = httpClient;
-                    httpClient = null;
+                    var hc = _httpClient;
+                    _httpClient = null;
                     hc.Dispose();
                 }
-                disposed = true;
+                _disposed = true;
             }
         }
 

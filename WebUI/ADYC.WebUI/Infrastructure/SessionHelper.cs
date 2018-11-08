@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using System;
 using System.Security.Principal;
 using System.Web;
-using System.Web.Routing;
 using System.Web.Security;
 
 namespace ADYC.WebUI.Infrastructure
@@ -24,11 +23,6 @@ namespace ADYC.WebUI.Infrastructure
         {
             get
             {
-                if (!ExistUserInSession())
-                {
-                    HttpContext.Current.Response.Redirect("/Home");
-                }
-
                 CustomPrincipal newUser = null;
 
                 if (HttpContext.Current.User != null 

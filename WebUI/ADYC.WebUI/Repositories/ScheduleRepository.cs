@@ -1,6 +1,4 @@
 ﻿using ADYC.API.ViewModels;
-using ADYC.WebUI.Infrastructure;
-using ADYC.WebUI.ViewModels;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -8,27 +6,27 @@ namespace ADYC.WebUI.Repositories
 {
     public class ScheduleRepository : BaseRepository<ScheduleListDto>
     {
-        private string addressPreffix = "api/Offerings/";
+        private string _addressPreffix = "api/Offerings/";
 
         public ScheduleRepository()
-            : base(SessionHelper.User.AccessToken)
+            : base(true)
         {
 
         }
 
         public async Task<ScheduleListDto> GetSchedulesByOfferingId(int id)
         {
-            return await restClient.GetAsync(addressPreffix + id + "/Schedules");
+            return await _restClient.GetAsync(_addressPreffix + id + "/Schedules");
         }
 
         public async Task<ScheduleListDto> PostScheduleList(ScheduleListDto scheduleList)
         {
-            return await restClient.PostAsync(addressPreffix + scheduleList.Offering.Id + "/Schedules", scheduleList);
+            return await _restClient.PostAsync(_addressPreffix + scheduleList.Offering.Id + "/Schedules", scheduleList);
         }
 
         public async Task<HttpStatusCode> PutScheduleList(int id, ScheduleListDto schedulesList)
         {
-            return await restClient.PutAsync(addressPreffix + id + "/Schedules", schedulesList);
+            return await _restClient.PutAsync(_addressPreffix + id + "/Schedules", schedulesList);
         }
     }
 }

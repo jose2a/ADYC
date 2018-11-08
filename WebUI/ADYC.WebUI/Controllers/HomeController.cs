@@ -31,7 +31,7 @@ namespace ADYC.WebUI.Controllers
             {
                 try
                 {
-                    var token = await _loginRepository.Login(model);
+                    var token = _loginRepository.Login(model);
 
                     SessionHelper.AddUserToSession(token);
 

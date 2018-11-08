@@ -5,19 +5,14 @@ namespace ADYC.WebUI.Repositories
 {
     public class BaseRepository<T> : IDisposable where T : class
     {
-        private bool disposed = false;
-        private string baseUrl = "http://localhost:19016/";
+        private bool _disposed = false;
+        private string _baseUrl = "http://localhost:19016/";
 
-        protected GenericRestfulCrudHttpClient<T> restClient;
+        protected GenericRestfulCrudHttpClient<T> _restClient;
 
-        public BaseRepository()
+        public BaseRepository(bool isAccessTokenRequired)
         {
-            restClient = new GenericRestfulCrudHttpClient<T>(baseUrl);
-        }
-
-        public BaseRepository(string accessToken)
-        {
-            restClient = new GenericRestfulCrudHttpClient<T>(baseUrl, accessToken);
+            _restClient = new GenericRestfulCrudHttpClient<T>(_baseUrl, isAccessTokenRequired);
         }
 
         public void Dispose()
@@ -28,15 +23,15 @@ namespace ADYC.WebUI.Repositories
 
         private void Dispose(bool disposing)
         {
-            if (!disposed && disposing)
+            if (!_disposed && disposing)
             {
-                if (restClient != null)
+                if (_restClient != null)
                 {
-                    var mc = restClient;
-                    restClient = null;
+                    var mc = _restClient;
+                    _restClient = null;
                     mc.Dispose();
                 }
-                disposed = true;
+                _disposed = true;
             }
         }
     }

@@ -1,5 +1,4 @@
 ﻿using ADYC.API.ViewModels;
-using ADYC.WebUI.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -9,47 +8,47 @@ namespace ADYC.WebUI.Repositories
 {
     public class StudentRepository : BaseRepository<StudentDto>
     {
-        private string addressPreffix = "api/Students/";
+        private string _addressPreffix = "api/Students/";
 
         public StudentRepository()
-            : base(SessionHelper.User.AccessToken)
+            : base(true)
         {
 
         }
 
         public async Task<IEnumerable<StudentDto>> GetStudents()
         {
-            return await restClient.GetManyAsync(addressPreffix);
+            return await _restClient.GetManyAsync(_addressPreffix);
         }
 
         public async Task<StudentDto> GetStudentById(Guid id)
         {
-            return await restClient.GetAsync(addressPreffix + id);
+            return await _restClient.GetAsync(_addressPreffix + id);
         }
 
         public async Task<StudentDto> PostStudent(StudentDto student)
         {
-            return await restClient.PostAsync(addressPreffix, student);
+            return await _restClient.PostAsync(_addressPreffix, student);
         }
 
         public async Task<HttpStatusCode> PutStudent(Guid id, StudentDto student)
         {
-            return await restClient.PutAsync(addressPreffix + id, student);
+            return await _restClient.PutAsync(_addressPreffix + id, student);
         }
 
         public async Task<HttpStatusCode> DeleteStudent(Guid id)
         {
-            return await restClient.DeleteAsync(addressPreffix + id);
+            return await _restClient.DeleteAsync(_addressPreffix + id);
         }
 
         public async Task<HttpStatusCode> TrashStudent(Guid id)
         {
-            return await restClient.GetAsyncWithStatusCode(addressPreffix + "Trash/" + id);
+            return await _restClient.GetAsyncWithStatusCode(_addressPreffix + "Trash/" + id);
         }
 
         public async Task<HttpStatusCode> RestoreStudent(Guid id)
         {
-            return await restClient.GetAsyncWithStatusCode(addressPreffix + "Restore/" + id);
+            return await _restClient.GetAsyncWithStatusCode(_addressPreffix + "Restore/" + id);
         }
     }
 }

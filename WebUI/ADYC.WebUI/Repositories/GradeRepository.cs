@@ -1,5 +1,4 @@
 ﻿using ADYC.API.ViewModels;
-using ADYC.WebUI.Infrastructure;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -8,37 +7,37 @@ namespace ADYC.WebUI.Repositories
 {
     public class GradeRepository : BaseRepository<GradeDto>
     {
-        private string addressPreffix = "api/Grades/";
+        private string _addressPreffix = "api/Grades/";
 
         public GradeRepository()
-            : base(SessionHelper.User.AccessToken)
+            : base(true)
         {
 
         }
 
         public async Task<IEnumerable<GradeDto>> GetGrades()
         {
-            return await restClient.GetManyAsync(addressPreffix);
+            return await _restClient.GetManyAsync(_addressPreffix);
         }
 
         public async Task<GradeDto> GetGradeById(int id)
         {
-            return await restClient.GetAsync(addressPreffix + id);
+            return await _restClient.GetAsync(_addressPreffix + id);
         }
 
         public async Task<GradeDto> PostGrade(GradeDto grade)
         {
-            return await restClient.PostAsync(addressPreffix, grade);
+            return await _restClient.PostAsync(_addressPreffix, grade);
         }
 
         public async Task<HttpStatusCode> PutGrade(int id, GradeDto grade)
         {
-            return await restClient.PutAsync(addressPreffix + id, grade);
+            return await _restClient.PutAsync(_addressPreffix + id, grade);
         }
 
         public async Task<HttpStatusCode> DeleteGrade(int id)
         {
-            return await restClient.DeleteAsync(addressPreffix + id);
+            return await _restClient.DeleteAsync(_addressPreffix + id);
         }
     }
 }

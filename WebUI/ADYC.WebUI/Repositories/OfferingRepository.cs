@@ -1,5 +1,4 @@
 ﻿using ADYC.API.ViewModels;
-using ADYC.Model;
 using ADYC.WebUI.Infrastructure;
 using RestSharp;
 using RestSharp.Authenticators;
@@ -12,67 +11,76 @@ namespace ADYC.WebUI.Repositories
 {
     public class OfferingRepository : BaseRepository<OfferingDto>
     {
-        private string addressPreffix = "api/Offerings/";
+        private string _addressPreffix = "api/Offerings/";
 
-        private RestClient client = new RestClient("http://localhost:19016");
+        private RestClient _client;
 
         public OfferingRepository()
-            : base(SessionHelper.User.AccessToken)
+            : base(true)
         {
-            client.Authenticator = new JwtAuthenticator(SessionHelper.User.AccessToken);
-            client.AddDefaultHeader("Authorization", string.Format("Bearer {0}", SessionHelper.User.AccessToken));
+
+        }
+
+        public RestClient MakeRestClient()
+        {
+            _client = new RestClient("http://localhost:19016");
+            _client.Authenticator = new JwtAuthenticator(SessionHelper.User.AccessToken);
+            _client.AddDefaultHeader("Authorization", string.Format("Bearer {0}", SessionHelper.User.AccessToken));
+
+            return _client;
         }
 
         public IEnumerable<OfferingDto> GetOfferingsByTermId(int termId)
-        {            
-            var request = new RestRequest(addressPreffix + "GetByTermId/{termId}", Method.GET);            
+        {
+            _client = MakeRestClient();
+
+            var request = new RestRequest(_addressPreffix + "GetByTermId/{termId}", Method.GET);
             request.AddUrlSegment("termId", termId);
-            IRestResponse<List<OfferingDto>> response = client.Execute<List<OfferingDto>>(request);
+            IRestResponse<List<OfferingDto>> response = _client.Execute<List<OfferingDto>>(request);
 
             return response.Data;
         }
 
-        //GetByProfessorId/{professorId}/TermId/{termId}
         public IEnumerable<OfferingDto> GetOfferingsByProfessorIdAndTermId(Guid professorId, int termId)
         {
-            var request = new RestRequest(addressPreffix + "GetByProfessorId/{professorId}/TermId/{termId}", Method.GET);
+            _client = MakeRestClient();
+
+            var request = new RestRequest(_addressPreffix + "GetByProfessorId/{professorId}/TermId/{termId}", Method.GET);
             request.AddUrlSegment("professorId", professorId);
             request.AddUrlSegment("termId", termId);
-            IRestResponse<List<OfferingDto>> response = client.Execute<List<OfferingDto>>(request);
+            IRestResponse<List<OfferingDto>> response = _client.Execute<List<OfferingDto>>(request);
 
             return response.Data;
         }
 
-        //GetByCurrentTerm
         public async Task<IEnumerable<OfferingDto>> GetByCurrentTerm()
         {
-            return await restClient.GetManyAsync(addressPreffix + "GetByCurrentTerm");
+            return await _restClient.GetManyAsync(_addressPreffix + "GetByCurrentTerm");
         }
 
-        //GetByTermId/{termId}
         public async Task<IEnumerable<OfferingDto>> GetByCurrentTerm(int termId)
         {
-            return await restClient.GetManyAsync($"{addressPreffix}GetByTermId/{termId}");
+            return await _restClient.GetManyAsync($"{_addressPreffix}GetByTermId/{termId}");
         }
 
         public async Task<OfferingDto> GetOfferingById(int id)
         {
-            return await restClient.GetAsync(addressPreffix + id);
+            return await _restClient.GetAsync(_addressPreffix + id);
         }
 
         public async Task<OfferingDto> PostOffering(OfferingDto offering)
         {
-            return await restClient.PostAsync(addressPreffix, offering);
+            return await _restClient.PostAsync(_addressPreffix, offering);
         }
 
         public async Task<HttpStatusCode> PutOffering(int id, OfferingDto offering)
         {
-            return await restClient.PutAsync(addressPreffix + id, offering);
+            return await _restClient.PutAsync(_addressPreffix + id, offering);
         }
 
         public async Task<HttpStatusCode> DeleteOffering(int id, bool force)
         {
-            return await restClient.DeleteAsync(addressPreffix + id + "/Force/" + force);
+            return await _restClient.DeleteAsync(_addressPreffix + id + "/Force/" + force);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using ADYC.API.ViewModels;
-using ADYC.WebUI.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -9,37 +8,37 @@ namespace ADYC.WebUI.Repositories
 {
     public class EnrollmentRepository : BaseRepository<EnrollmentDto>
     {
-        private string addressPreffix = "api/Enrollments/";
+        private string _addressPreffix = "api/Enrollments/";
 
         public EnrollmentRepository()
-            : base(SessionHelper.User.AccessToken)
+            : base(true)
         {
 
         }
 
         public async Task<IEnumerable<EnrollmentDto>> GetEnrollmentsByOfferingId(int offeringId)
         {
-            return await restClient.GetManyAsync(addressPreffix + "GetEnrollmentsByOfferingId/" + offeringId);
+            return await _restClient.GetManyAsync(_addressPreffix + "GetEnrollmentsByOfferingId/" + offeringId);
         }
 
         public async Task<EnrollmentDto> GetById(int id)
         {
-            return await restClient.GetAsync(addressPreffix + id);
+            return await _restClient.GetAsync(_addressPreffix + id);
         }
 
         public async Task<IEnumerable<EnrollmentDto>> GetEnrollmentsByStudentIdAndTermId(Guid studentId, int termId)
         {
-            return await restClient.GetManyAsync($"{addressPreffix}GetEnrollmentsByStudentId/{studentId}/TermId/{termId}");
+            return await _restClient.GetManyAsync($"{_addressPreffix}GetEnrollmentsByStudentId/{studentId}/TermId/{termId}");
         }
 
         public async Task<HttpStatusCode> Withdraw(int id)
         {
-            return await restClient.GetAsyncWithStatusCode($"{addressPreffix}Withdrop/{id}");
+            return await _restClient.GetAsyncWithStatusCode($"{_addressPreffix}Withdrop/{id}");
         }
 
         public async Task<EnrollmentDto> PostEnrollment(EnrollmentDto enrollment)
         {
-            return await restClient.PostAsync(addressPreffix, enrollment);
+            return await _restClient.PostAsync(_addressPreffix, enrollment);
         }
     }
 }
