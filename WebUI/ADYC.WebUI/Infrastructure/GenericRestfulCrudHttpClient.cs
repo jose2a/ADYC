@@ -130,17 +130,21 @@ namespace ADYC.WebUI.Infrastructure
             List<string> errors = new List<string>();
 
             var contentObject = JObject.Parse(content);
-            var modelState = contentObject.GetValue("ModelState").ToObject<JObject>();
 
-            if (modelState != null)
+            if (contentObject.ContainsKey("ModelState"))
             {
-                foreach (var property in modelState)
-                {
-                    var arr = JArray.Parse(property.Value.ToString());
+                var modelState = contentObject.GetValue("ModelState").ToObject<JObject>();
 
-                    foreach (var item in arr)
+                if (modelState != null)
+                {
+                    foreach (var property in modelState)
                     {
-                        errors.Add(item.Value<string>());
+                        var arr = JArray.Parse(property.Value.ToString());
+
+                        foreach (var item in arr)
+                        {
+                            errors.Add(item.Value<string>());
+                        }
                     }
                 } 
             }

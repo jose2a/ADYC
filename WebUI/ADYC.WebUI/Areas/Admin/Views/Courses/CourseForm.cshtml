@@ -2,45 +2,52 @@
 
 @{
     ViewBag.Title = Model.Title;
+    ViewBag.PageHeader = Model.Title;
+
+    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
+    {
+        ["List of courses"] = "./",
+        ["New course"] = "new",
+    };
+
+    ViewBag.ActiveBreadcrumb = "New course";
 }
 
-<h1>@Model.Title</h1>
+<div class="box box-primary">
+    <div class="box-body">
 
+        @using (Html.BeginForm("Save", "Courses", FormMethod.Post))
+        {
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.IsNew)
 
-@using (Html.BeginForm("Save", "Courses", FormMethod.Post))
-{
-    @Html.HiddenFor(m => m.Id)
-    @Html.HiddenFor(m => m.IsNew)
+            @Html.AntiForgeryToken()
 
-    @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "Please fix the following errors:", new { @class = "text-danger" })
 
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "Please fix the following errors:", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(m => m.Name)
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
                 @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.CourseTypeId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(m => m.CourseTypeId, new SelectList(Model.CourseTypes, "Id", "Name"), "Select Course Type", new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.CourseTypeId, "", new { @class = "text-danger" })
             </div>
-        </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.CourseTypeId)
+
+                    @Html.DropDownListFor(m => m.CourseTypeId, new SelectList(Model.CourseTypes, "Id", "Name"), "Select Course Type", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.CourseTypeId, "", new { @class = "text-danger" })
+
+                </div>
+
+                <div class="box-footer">
+                    <button class="btn btn-primary" type="submit">Save</button>
+                </div>
+        }
+
     </div>
-}
+</div>
 
 <div>
     @Html.ActionLink("Back to list of courses", "Index")

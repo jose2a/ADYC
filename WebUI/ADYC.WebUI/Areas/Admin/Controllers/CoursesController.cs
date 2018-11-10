@@ -3,9 +3,13 @@ using ADYC.WebUI.Controllers;
 using ADYC.WebUI.Infrastructure;
 using ADYC.WebUI.Repositories;
 using ADYC.WebUI.ViewModels;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace ADYC.WebUI.Areas.Admin.Controllers
 {
@@ -27,7 +31,26 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
         // GET: Admin/Courses
         public async Task<ActionResult> Index()
         {
-            var courses = await _courseRepository.GetCourses();
+            //List<CourseDto> courses = new List<CourseDto>();
+            //try
+            //{
+            var listCourses = await _courseRepository.GetCourses();
+
+            var courses = listCourses.ToList();
+            //}
+            //catch (AdycHttpRequestException ahre)
+            //{
+            //    if (ahre.StatusCode == HttpStatusCode.Unauthorized)
+            //    {
+            //        Response.StatusCode = (int) HttpStatusCode.Unauthorized;
+            //        Response.RedirectToRoute(new RouteValueDictionary(new
+            //        {
+            //            action = "Index",
+            //            controller = "Home",
+            //            area = ""
+            //        }));
+            //    }
+            //}
 
             return View(courses);
         }

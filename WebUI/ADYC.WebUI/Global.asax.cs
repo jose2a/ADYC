@@ -1,4 +1,5 @@
-﻿using ADYC.WebUI.Infrastructure;
+﻿using ADYC.WebUI.CustomAttributes;
+using ADYC.WebUI.Infrastructure;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace ADYC.WebUI
 
             // Set global authorization
             GlobalFilters.Filters.Add(new AuthorizeAttribute());
+            GlobalFilters.Filters.Add(new AdycExceptionFilter());
         }
 
         protected void Application_PostAuthenticateRequest(Object sender, EventArgs e)

@@ -1,4 +1,5 @@
-﻿using ADYC.WebUI.Infrastructure;
+﻿using ADYC.WebUI.CustomAttributes;
+using ADYC.WebUI.Infrastructure;
 using ADYC.WebUI.Repositories;
 using ADYC.WebUI.ViewModels;
 using Newtonsoft.Json;
@@ -20,12 +21,15 @@ namespace ADYC.WebUI.Controllers
             _loginRepository = new LoginRepository();
         }
 
+        [IfLoggedAction]
         public ActionResult Index()
         {
             return View();
         }
 
-        public async Task<ActionResult> Login(LoginFormViewModel model)
+        [IfLoggedAction]
+        [HttpPost]
+        public ActionResult Login(LoginFormViewModel model, string url)
         {
             if (ModelState.IsValid)
             {
@@ -35,40 +39,19 @@ namespace ADYC.WebUI.Controllers
 
                     SessionHelper.AddUserToSession(token);
 
-                    //CustomPrincipalSerializeModel serializeModel = new CustomPrincipalSerializeModel();
-                    //serializeModel.UserId = token.UserId;
-                    //serializeModel.UserName = token.UserName;
-                    //serializeModel.Role = token.Role;
-                    //serializeModel.AccessToken = token.AccessToken;
-                    //serializeModel.TokenType = token.TokenType;
-                    //serializeModel.ExpiresIn = token.ExpiresIn;
-
-                    //string userData = JsonConvert.SerializeObject(serializeModel);
-
-                    //FormsAuthenticationTicket authTicket = new FormsAuthenticationTicket(
-                    //1,
-                    //token.UserName,
-                    //DateTime.Now,
-                    //DateTime.Now.AddMinutes(30),
-                    //false, //pass here true, if you want to implement remember me functionality
-                    //userData);
-
-                    //string encTicket = FormsAuthentication.Encrypt(authTicket);
-                    //HttpCookie faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
-                    //Response.Cookies.Add(faCookie);
-
-                    if (token.Role.Equals("AppAdmin"))
-                    {
-                        return RedirectToAction("Index", "Courses", new { area = "Admin" });
-                    }
-                    else if (token.Role.Equals("AppProfessor"))
-                    {
-                        return RedirectToAction("Index", "Enrollments", new { area = "Professor" });
-                    }
-                    else if (token.Role.Equals("AppStudent"))
-                    {
-                        return RedirectToAction("Index", "Enrollments", new { area = "Student" });
-                    }
+                    return RedirectToAction("Index", "Dashboard");
+                    //if (token.Role.Equals("AppAdmin"))
+                    //{
+                    //    return RedirectToAction("Index", "Dashboard");
+                    //}
+                    //else if (token.Role.Equals("AppProfessor"))
+                    //{
+                    //    return RedirectToAction("Index", "Enrollments", new { area = "Professor" });
+                    //}
+                    //else if (token.Role.Equals("AppStudent"))
+                    //{
+                    //    return RedirectToAction("Index", "Enrollments", new { area = "Student" });
+                    //}
                 }
                 catch (AdycHttpRequestException ahre)
                 {
@@ -77,12 +60,14 @@ namespace ADYC.WebUI.Controllers
                 }
             }
 
-            return View(model);
+            return RedirectToAction("Index");
         }
 
+        [Authorize]
         public ActionResult Logout()
         {
-            FormsAuthentication.SignOut();
+            SessionHelper.DestroyUserSession();
+
             return RedirectToAction("Index", "Home", new { area = "" });
         }
 
