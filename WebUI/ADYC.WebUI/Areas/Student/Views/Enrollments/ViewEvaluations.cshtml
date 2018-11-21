@@ -1,118 +1,117 @@
 ﻿@model ADYC.WebUI.ViewModels.EnrollmentWithEvaluationsViewModel
 
 @{
-    ViewBag.Title = "Evaluations";
+    var title = "Evaluations";
+
+    ViewBag.Title = title;
+    ViewBag.PageHeader = title;
+
+    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
+    {
+        ["Enrollments (Terms)"] = Url.Action("Index"),
+        ["Enrollment"] = Url.Action("ViewEnrollment", new { termId = Model.Enrollment.Offering.TermId }),
+        [title] = ""
+    };
+
+    ViewBag.ActiveBreadcrumb = title;
 }
 
-<h2>Evaluations</h2>
-
 <!-- Begin: Information about enrollment -->
-<div class="row">
-    <div class="col-sm-8">
-        <ul class="term-info">
-            <li>
-                <h5>
-                    <strong>Student: </strong>@Model.Enrollment.Student
-                </h5>
-            </li>
-            <li><h5><strong>Offering: </strong>@Model.Enrollment.Offering.Title</h5></li>
-
-            <li><h5><strong>Course: </strong>@Model.Enrollment.Offering.Course</h5></li>
-            <li>
-                <h5>
-                    <strong>Term: </strong>@Model.Enrollment.Offering.Term.Name (@Model.Enrollment.Offering.Term)
-                </h5>
-            </li>
-            <li>
-                <h5><strong>Current Term: </strong> @(Model.IsCurrentTerm ? "Yes" : "No")</h5>
-            </li>
-        </ul>
+<div class="box box-info">
+    <div class="box-header with-border">
+        <h3 class="box-title">Enrollment</h3>
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        </div>
+    </div>
+    <div class="box-body">
+        <dl class="dl-horizontal">
+            <dt>Student</dt>
+            <dd>@Model.Enrollment.Student</dd>
+            <dt>Offering</dt>
+            <dd>@Model.Enrollment.Offering.Title</dd>
+            <dt>Course</dt>
+            <dd>@Model.Enrollment.Offering.Course</dd>
+            <dt>Term</dt>
+            <dd>
+                @Model.Enrollment.Offering.Term.Name (@Model.Enrollment.Offering.Term)
+            </dd>
+            <dt>Current Term</dt>
+            <dd>@((Model.IsCurrentTerm) ? "Yes" : "No")</dd>
+            <dt>Final Grade</dt>
+            @if (Model.Enrollment.FinalGrade.HasValue)
+            {
+                <dd>
+                    @Model.Enrollment.FinalGrade (@Model.Enrollment.FinalGradeLetter)
+                </dd>
+            }
+            else
+            {
+                <dd>Not avalaible yet.</dd>
+            }
+            <dt>Final Grade Letter</dt>
+            <dd>@Model.Enrollment.FinalGradeLetter.ToString()</dd>
+            <dt>Notes</dt>
+            <dd>@Model.Enrollment.Notes</dd>
+        </dl>
     </div>
 </div>
 <!-- End: Information about enrollment -->
 
-<div class="row">
-    <div class="col-sm-8">
-        <ul class="term-info">
-            <li>
-                <h5>
-                    <strong>Final Grade: </strong>
-                    @if (Model.Enrollment.FinalGrade.HasValue)
-                    {
-                        <span>@Model.Enrollment.FinalGrade (@Model.Enrollment.FinalGradeLetter)</span>
-                    }
-                    else
-                    {
-                        <span>Not avalaible yet.</span>
-                    }
-                </h5>
-            </li>
-            <li>
-                <h5>
-                    <strong>Final Grade Letter: </strong>
-                    <span>@Model.Enrollment.FinalGradeLetter.ToString()</span>
-                </h5>
-            </li>
-            <li><h5><strong>Notes: </strong>@Model.Enrollment.Notes</h5></li>
-        </ul>
+<div class="box box-primary">
+
+    <div class="box-header with-border">
+        <div class="btn-toolbar">
+            <div class="btn-group">
+                <a href="@Url.Action("ViewEnrollment", new { termId = Model.Enrollment.Offering.TermId })" class="btn btn-default btn-sm"><i class="fa fa-arrow-circle-left"></i> Back to enrollment</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="box-body">
+        <table class="table table-bordered table-hover table-striped dataTable" role="grid">
+            <thead>
+                <tr>
+                    <th>Period</th>
+                    <th>Grade</th>
+                    <th>Grade (Letter)</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Evaluations.Count; i++)
+            {
+                    <tr>
+                        <td>
+                            @Model.Evaluations[i].Period.Name
+                        </td>
+                        <td>
+                            @if (Model.Evaluations[i].PeriodGrade.HasValue)
+                            {
+                                @Model.Evaluations[i].PeriodGrade
+                            }
+                            else
+                            {
+                                <span>Not graded yet.</span>
+                            }
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(Model.Evaluations[i].PeriodGradeLetter))
+                            {
+                                @Model.Evaluations[i].PeriodGradeLetter
+                            }
+                            else
+                            {
+                                <span>Not graded yet.</span>
+                            }
+                        </td>
+                        <td>
+                            @Model.Evaluations[i].Notes
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
     </div>
 </div>
-
-<div class="form-horizontal">
-    <table class="table table-bordered table-striped display">
-        <thead>
-            <tr>
-                <th>Period</th>
-                <th>Grade</th>
-                <th>Grade (Letter)</th>
-                <th>Notes</th>
-            </tr>
-        </thead>
-        <tbody>
-
-            @for (int i = 0; i < Model.Evaluations.Count; i++)
-            {
-                <tr>
-                    <td>
-                        @Model.Evaluations[i].Period.Name
-                    </td>
-                    <td>
-                        @if (Model.Evaluations[i].PeriodGrade.HasValue)
-                        {
-                            @Model.Evaluations[i].PeriodGrade
-                        }
-                        else
-                        {
-                            <span>Not graded yet.</span>
-                        }
-                    </td>
-                    <td>
-                        @if (!string.IsNullOrEmpty(Model.Evaluations[i].PeriodGradeLetter))
-                        {
-                            @Model.Evaluations[i].PeriodGradeLetter
-                        }
-                        else
-                        {
-                            <span>Not graded yet.</span>
-                        }
-                    </td>
-                    <td>
-                        @Model.Evaluations[i].Notes
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    @Html.ActionLink("Back to Enrollment", "ViewEnrollment", new { termId = Model.Enrollment.Offering.TermId })
-</div>
-
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-
-        });
-    </script>
-
-    @Scripts.Render("~/bundles/jqueryval")
-}

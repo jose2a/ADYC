@@ -2,42 +2,45 @@
 
 @{
     ViewBag.Title = Model.Title;
+    ViewBag.PageHeader = Model.Title;
+
+    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
+    {
+        ["Majors"] = Url.Action("Index"),
+        [Model.Title] = "",
+    };
+
+    ViewBag.ActiveBreadcrumb = Model.Title;
 }
-
-<h1>@Model.Title</h1>
-
 
 @using (Html.BeginForm("Save", "Majors", FormMethod.Post))
 {
+    <div class="box box-primary">
 
-    @Html.HiddenFor(m => m.Id)
-    @Html.HiddenFor(m => m.IsNew)
+        <div class="box-body">
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.IsNew)
 
-    @Html.AntiForgeryToken()
+            @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "Please fix the following errors:", new { @class = "text-danger" })
+            @Html.ValidationSummary(true, "Please fix the following errors:", new { @class = "text-red" })
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="form-group">
+                @Html.LabelFor(m => m.Name)
+
                 @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-red" })
+
             </div>
         </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
+        <div class="box-footer">
+            <a href="@Url.Action("Index")" class="btn btn-default">Cancel</a>
+            <button class="btn btn-primary" type="submit">Save</button>
         </div>
+
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to list of majors", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

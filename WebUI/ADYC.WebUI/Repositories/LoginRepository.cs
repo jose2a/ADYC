@@ -1,4 +1,4 @@
-﻿using ADYC.WebUI.Infrastructure;
+﻿using ADYC.WebUI.Exceptions;
 using ADYC.WebUI.ViewModels;
 using RestSharp;
 using System;
@@ -50,7 +50,7 @@ namespace ADYC.WebUI.Repositories
 
             if (!string.IsNullOrEmpty(token.Error))
             {                
-                throw new AdycHttpRequestException(System.Net.HttpStatusCode.BadRequest, token.Error);
+                throw new BadRequestException(System.Net.HttpStatusCode.BadRequest, token.Error);
             }
 
             return token;

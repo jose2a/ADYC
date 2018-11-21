@@ -1,19 +1,17 @@
 ﻿using ADYC.API.ViewModels;
 using ADYC.WebUI.Controllers;
-using ADYC.WebUI.Infrastructure;
+using ADYC.WebUI.CustomAttributes;
+using ADYC.WebUI.Exceptions;
 using ADYC.WebUI.Repositories;
 using ADYC.WebUI.ViewModels;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using System.Web.Routing;
 
 namespace ADYC.WebUI.Areas.Admin.Controllers
 {
     [Authorize(Roles = "AppAdmin")]
+    [SelectedTab("courses")]
     public class CoursesController : ADYCBasedController
     {
         private CourseRepository _courseRepository;
@@ -21,9 +19,6 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
         public CoursesController()
         {
-            //var user = ((CustomPrincipal)User);
-            //var user = SessionHelper.User();
-
             _courseRepository = new CourseRepository();
             _courseTypeRepository = new CourseTypeRepository();
         }
@@ -31,26 +26,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
         // GET: Admin/Courses
         public async Task<ActionResult> Index()
         {
-            //List<CourseDto> courses = new List<CourseDto>();
-            //try
-            //{
-            var listCourses = await _courseRepository.GetCourses();
-
-            var courses = listCourses.ToList();
-            //}
-            //catch (AdycHttpRequestException ahre)
-            //{
-            //    if (ahre.StatusCode == HttpStatusCode.Unauthorized)
-            //    {
-            //        Response.StatusCode = (int) HttpStatusCode.Unauthorized;
-            //        Response.RedirectToRoute(new RouteValueDictionary(new
-            //        {
-            //            action = "Index",
-            //            controller = "Home",
-            //            area = ""
-            //        }));
-            //    }
-            //}
+            var courses = await _courseRepository.GetCourses();
 
             return View(courses);
         }
@@ -87,14 +63,9 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                     CourseTypes = await _courseTypeRepository.GetCourseTypes()
                 };
             }
-            catch (AdycHttpRequestException ahre)
+            catch (BadRequestException bre)
             {
-                if (ahre.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return HttpNotFound();
-                }
-
-                AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
+                AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
             }
 
             return View("CourseForm", viewModel);
@@ -124,11 +95,13 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                         await _courseRepository.PutCourse(course.Id.Value, course);
                     }
 
+                    TempData["successMsg"] = "Your changes have been saved succesfully.";
+
                     return RedirectToAction("Index");
                 }
-                catch (AdycHttpRequestException ahre)
+                catch (BadRequestException bre)
                 {
-                    AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
+                    AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
                 }
             }
 
@@ -139,11 +112,16 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
         // GET: Admin/Courses/Delete
         [HttpGet]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(int? id)
         {
+            if (!id.HasValue)
+            {
+                return HttpNotFound();
+            }
+
             try
             {
-                var statusCode = await _courseRepository.DeleteCourse(id);
+                var statusCode = await _courseRepository.DeleteCourse(id.Value);
 
                 if (statusCode == HttpStatusCode.NotFound)
                 {
@@ -152,58 +130,68 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
                 return new HttpStatusCodeResult(HttpStatusCode.OK);
             }
-            catch (AdycHttpRequestException ahre)
+            catch (BadRequestException bre)
             {
-                var errorString = GetErrorsFromAdycHttpExceptionToString(ahre);
+                var errorString = GetErrorsFromAdycHttpExceptionToString(bre);
 
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
+                return new HttpStatusCodeResult(bre.StatusCode, errorString);
             }
         }
 
         // GET: Admin/Courses/Trash
         [HttpGet]
-        public async Task<ActionResult> Trash(int id)
+        public async Task<ActionResult> Trash(int? id)
         {
+            if (!id.HasValue)
+            {
+                return HttpNotFound();
+            }
+
             try
             {
-                var statusCode = await _courseRepository.TrashCourse(id);
+                var statusCode = await _courseRepository.TrashCourse(id.Value);
 
                 if (statusCode == HttpStatusCode.NotFound)
                 {
                     return HttpNotFound();
                 }
             }
-            catch (AdycHttpRequestException ahre)
+            catch (BadRequestException bre)
             {
-                var errorString = GetErrorsFromAdycHttpExceptionToString(ahre);
+                var errorString = GetErrorsFromAdycHttpExceptionToString(bre);
 
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
             }
 
-            return PartialView("pv_CourseRow", await _courseRepository.GetCourseById(id));
+            return PartialView("pv_CourseRow", await _courseRepository.GetCourseById(id.Value));
         }
 
         // GET: Admin/Courses/Restore
         [HttpGet]
-        public async Task<ActionResult> Restore(int id)
+        public async Task<ActionResult> Restore(int? id)
         {
+            if (!id.HasValue)
+            {
+                return HttpNotFound();
+            }
+
             try
             {
-                var statusCode = await _courseRepository.RestoreCourse(id);
+                var statusCode = await _courseRepository.RestoreCourse(id.Value);
 
                 if (statusCode == HttpStatusCode.NotFound)
                 {
                     return HttpNotFound();
                 }
             }
-            catch (AdycHttpRequestException ahre)
+            catch (BadRequestException bre)
             {
-                var errorString = GetErrorsFromAdycHttpExceptionToString(ahre);
+                var errorString = GetErrorsFromAdycHttpExceptionToString(bre);
 
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
             }
 
-            return PartialView("pv_CourseRow", await _courseRepository.GetCourseById(id));
+            return PartialView("pv_CourseRow", await _courseRepository.GetCourseById(id.Value));
         }
     }
 }

@@ -4,11 +4,10 @@ using System.Web.Routing;
 
 namespace ADYC.WebUI.CustomAttributes
 {
-    public class IfLoggedActionAttribute : System.Web.Mvc.ActionFilterAttribute
+    public class IfLoggedActionAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-
             base.OnActionExecuting(filterContext);
 
             if (SessionHelper.ExistUserInSession())

@@ -1,6 +1,8 @@
 ﻿using ADYC.API.Auth.Models;
 using ADYC.API.ViewModels;
 using ADYC.WebUI.Controllers;
+using ADYC.WebUI.CustomAttributes;
+using ADYC.WebUI.Exceptions;
 using ADYC.WebUI.Infrastructure;
 using ADYC.WebUI.Repositories;
 using ADYC.WebUI.ViewModels;
@@ -12,6 +14,7 @@ using System.Web.Mvc;
 namespace ADYC.WebUI.Areas.Admin.Controllers
 {
     [Authorize(Roles = "AppAdmin")]
+    [SelectedTab("students")]
     public class StudentsController : ADYCBasedController
     {
         private StudentRepository _studentRepository;
@@ -71,14 +74,9 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
                 await SetStudentViewModelListsProperties(viewModel);
             }
-            catch (AdycHttpRequestException ahre)
+            catch (BadRequestException bre)
             {
-                if (ahre.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return HttpNotFound();
-                }
-
-                AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
+                AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
             }
 
             return View("StudentForm", viewModel);
@@ -108,7 +106,6 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
                     if (form.IsNew)
                     {
-                        //student.Id = Guid.NewGuid(); // Get this from Auth service
                         newStudent = await _studentRepository.PostStudent(student);
 
                         var registerBindingModel = new RegisterBindingModel
@@ -126,11 +123,13 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                         await _studentRepository.PutStudent(student.Id, student);
                     }
 
+                    TempData["successMsg"] = "Your changes have been saved succesfully.";
+
                     return RedirectToAction("Index");
                 }
-                catch (AdycHttpRequestException ahre)
+                catch (BadRequestException bre)
                 {
-                    AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
+                    AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
 
                     if (newStudent != null)
                     {
@@ -168,9 +167,9 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
                 return new HttpStatusCodeResult(HttpStatusCode.OK);
             }
-            catch (AdycHttpRequestException ahre)
+            catch (BadRequestException bre)
             {
-                var errorString = GetErrorsFromAdycHttpExceptionToString(ahre);
+                var errorString = GetErrorsFromAdycHttpExceptionToString(bre);
 
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
             }
@@ -189,9 +188,9 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                     return HttpNotFound();
                 }
             }
-            catch (AdycHttpRequestException ahre)
+            catch (BadRequestException bre)
             {
-                var errorString = GetErrorsFromAdycHttpExceptionToString(ahre);
+                var errorString = GetErrorsFromAdycHttpExceptionToString(bre);
 
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
             }
@@ -212,9 +211,9 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                     return HttpNotFound();
                 }
             }
-            catch (AdycHttpRequestException ahre)
+            catch (BadRequestException bre)
             {
-                var errorString = GetErrorsFromAdycHttpExceptionToString(ahre);
+                var errorString = GetErrorsFromAdycHttpExceptionToString(bre);
 
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
             }

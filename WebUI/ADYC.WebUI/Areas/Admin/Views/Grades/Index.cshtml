@@ -1,41 +1,54 @@
 ﻿@model IEnumerable<ADYC.API.ViewModels.GradeDto>
 
 @{
-    ViewBag.Title = "Grades";
+    var title = "Grades";
+    ViewBag.Title = title;
+    ViewBag.PageHeader = title;
+
+    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
+    {
+        [title] = ""
+    };
+
+    ViewBag.ActiveBreadcrumb = title;
 }
 
-<h2>Grades</h2>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <a href="@Url.Action("new")" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Create Grade</a>
+                    </div>
+                </div>
+            </div>
+            <div class="box-body">
+                <table id="grades" class="table table-bordered table-hover table-striped dataTable" role="grid">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(m => m.Id)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(m => m.Name)
+                            </th>
+                            <th class="actions">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-<div id="msg-div">
-</div>
+                        @foreach (var grade in Model)
+                        {
+                            @Html.Partial("pv_GradeRow", grade)
 
-<div class="btn-toolbar">
-    <div class="btn-group">
-        <a href="@Url.Action("new")" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-plus"></i> Create Grade</a>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
-
-<table id="grades" class="table table-bordered table-striped display">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(m => m.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(m => m.Name)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-
-        @foreach (var grade in Model)
-        {
-            @Html.Partial("pv_GradeRow", grade)
-
-        }
-    </tbody>
-</table>
 
 @section scripts
 {

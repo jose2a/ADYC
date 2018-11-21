@@ -7,13 +7,7 @@ namespace ADYC.WebUI.ViewModels
 {
     public class ScheduleListViewModel
     {
-        public bool IsNew
-        {
-            get
-            {
-                return (Schedules == null || Schedules.Count() == 0);
-            }
-        }
+        public bool IsNew { get; set; }
 
         [Required]
         public int OfferingId { get; set; }
@@ -24,18 +18,7 @@ namespace ADYC.WebUI.ViewModels
 
         public IEnumerable<DayEnumViewModel> Days { get; set; }
 
-        public bool IsCurrentTerm
-        {
-            get
-            {
-                if (Offering == null)
-                {
-                    return false;
-                }
-
-                return Offering.Term.IsCurrentTerm;
-            }
-        }
+        public bool IsCurrentTerm { get; set; }
 
         public string Title
         {
@@ -55,6 +38,10 @@ namespace ADYC.WebUI.ViewModels
             OfferingId = schedulesListDto.Offering.Id;
             Offering = schedulesListDto.Offering;
             Schedules = schedulesListDto.Schedules.ToList();
+
+            IsNew = !(Schedules
+                    .Count(s => s.StartTime.HasValue && s.EndTime.HasValue) > 0);
+            IsCurrentTerm = schedulesListDto.Offering.Term.IsCurrentTerm;
         }
     }
 

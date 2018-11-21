@@ -1,155 +1,150 @@
 ﻿@model ADYC.WebUI.ViewModels.EnrollmentWithEvaluationsViewModel
 
 @{
-    ViewBag.Title = "Evaluations";
+    var title = "Evaluations";
+
+    ViewBag.Title = title;
+    ViewBag.PageHeader = title;
+
+    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
+    {
+        ["Offerings (Terms)"] = Url.Action("Index"),
+        ["Offerings (List)"] = Url.Action("ViewOfferings", new { termId = Model.Enrollment.Offering.TermId }),
+        ["Enrollments"] = Url.Action("ViewEnrollments", new { offeringId = Model.Enrollment.OfferingId }),
+        [title] = ""
+    };
+
+    ViewBag.ActiveBreadcrumb = title;
 }
-
-<style>
-    .form-horizontal .control-label {
-        text-align: left;
-    }
-</style>
-
-<h2>Evaluations</h2>
 
 @if (!Model.IsCurrentTerm)
 {
-    <div class="alert alert-info" role="alert">
-        This term is not the current term, you are not allowed to make changes at this time.
+    <div class="callout callout-info">
+        <h4><i class="fa fa-info-circle"></i> Term</h4>
+
+        <p>This term is not the current term, you are not allowed to make changes at this time.</p>
     </div>
 }
 
-@if (TempData["msg"] != null)
-{
-    <div class="alert alert-success alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <strong>Great!</strong> @TempData["msg"].ToString()
+<div class="box box-info">
+    <div class="box-header with-border">
+        <h3 class="box-title">Offering</h3>
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        </div>
     </div>
-}
+    <div class="box-body">
+        <dl class="dl-horizontal">
+            <dt>Student</dt>
+            <dd>@Model.Enrollment.Student</dd>
+            <dt>Offering</dt>
+            <dd>@Model.Enrollment.Offering.Title</dd>
+            <dt>Course</dt>
+            <dd>@Model.Enrollment.Offering.Course</dd>
+            <dt>Term</dt>
+            <dd>
+                @Model.Enrollment.Offering.Term.Name (@Model.Enrollment.Offering.Term)
+            </dd>
+            <dt>Current Term</dt>
+            <dd>@((Model.IsCurrentTerm) ? "Yes" : "No")</dd>
+        </dl>
+    </div>
+</div>
 
 @using (Html.BeginForm("SaveEvaluations", "Enrollments", FormMethod.Post))
 {
-    @Html.HiddenFor(m => Model.Enrollment.Id)
+    <div class="box box-primary">
 
-    <!-- Begin: Information about enrollment -->
-    <div class="row">
-        <div class="col-sm-8">
-            <ul class="term-info">
-                <li>
-                    <h5>
-                        <strong>Student: </strong>@Model.Enrollment.Student
-                    </h5>
-                </li>
-                <li><h5><strong>Offering: </strong>@Model.Enrollment.Offering.Title</h5></li>
-
-                <li><h5><strong>Course: </strong>@Model.Enrollment.Offering.Course</h5></li>
-                <li>
-                    <h5>
-                        <strong>Term: </strong>@Model.Enrollment.Offering.Term.Name (@Model.Enrollment.Offering.Term)
-                    </h5>
-                </li>
-                <li>
-                    <h5><strong>Current Term: </strong> @(Model.IsCurrentTerm ? "Yes" : "No")</h5>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <!-- End: Information about enrollment -->
-
-
-    <div class="form-horizontal">
-
-        @Html.ValidationSummary(true, "Please fix the following errors:", new { @class = "text-danger" })
-
-        <div class="form-group">
-            <label class="control-label col-md-2" for="Enrollment.FinalGrade">Final Grade:</label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Enrollment.FinalGrade, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
+        <div class="box-header with-border">
+            <div class="btn-toolbar">
+                <div class="btn-group">
+                    <a href="@Url.Action("ViewEnrollments", new { offeringId = Model.Enrollment.OfferingId })" class="btn btn-default btn-sm"><i class="fa fa-arrow-circle-left"></i> Back to list of terms</a>
+                </div>
             </div>
         </div>
 
-        <div class="form-group">
-            <label class="control-label col-md-2" for="Enrollment.FinalGradeLetter">Final Grade (Letter):</label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Enrollment.FinalGradeLetter, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
-            </div>
-        </div>
+        <div class="box-body">
+            @Html.HiddenFor(m => Model.Enrollment.Id)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Enrollment.Notes, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            @Html.ValidationSummary(true, "Please fix the following errors:", new { @class = "text-red" })
+
+            <dl>
+                <dt>Final Grade</dt>
+                <dd>@Model.Enrollment.FinalGrade</dd>
+                <dt>Final Grade (Letter)</dt>
+                <dd>@Model.Enrollment.FinalGradeLetter</dd>
+            </dl>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Enrollment.Notes)
+
                 @if (Model.IsCurrentTerm)
                 {
                     @Html.EditorFor(model => model.Enrollment.Notes, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => Model.Enrollment.Notes, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => Model.Enrollment.Notes, "", new { @class = "text-red" })
                 }
                 else
                 {
                     @Html.EditorFor(model => model.Enrollment.Notes, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
                 }
             </div>
-        </div>
 
-        <table class="table table-bordered table-striped display">
-            <thead>
-                <tr>
-                    <th>Period</th>
-                    <th>Grade</th>
-                    <th>Grade (Letter)</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tbody>
-
-                @for (int i = 0; i < Model.Evaluations.Count; i++)
-                {
+            <table class="table table-bordered table-hover table-striped dataTable" role="grid">
+                <thead>
                     <tr>
-                        <td>
-                            @Html.HiddenFor(m => Model.Evaluations[i].PeriodId)
-                            @Html.HiddenFor(m => Model.Evaluations[i].EnrollmentId)
-
-                            @Model.Evaluations[i].Period.Name
-                        </td>
-                        <td>
-                            @if (Model.IsCurrentTerm)
-                            {
-                                @Html.EditorFor(model => Model.Evaluations[i].PeriodGrade, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.ValidationMessageFor(model => Model.Evaluations[i].PeriodGrade, "", new { @class = "text-danger" })
-                            }
-                            else
-                            {
-                                @Html.EditorFor(model => Model.Evaluations[i].PeriodGrade, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
-                            }
-                        </td>
-                        <td>
-                            @Html.EditorFor(model => Model.Evaluations[i].PeriodGradeLetter, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
-                        </td>
-                        <td>
-                            @if (Model.IsCurrentTerm)
-                            {
-                                @Html.EditorFor(model => Model.Evaluations[i].Notes, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.ValidationMessageFor(model => Model.Evaluations[i].Notes, "", new { @class = "text-danger" })
-                            }
-                            else
-                            {
-                                @Html.EditorFor(model => Model.Evaluations[i].Notes, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
-                            }
-                        </td>
+                        <th>Period</th>
+                        <th>Grade</th>
+                        <th>Grade (Letter)</th>
+                        <th>Notes</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
 
-        @if (Model.IsCurrentTerm)
+                    @for (int i = 0; i < Model.Evaluations.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.HiddenFor(m => Model.Evaluations[i].PeriodId)
+                                @Html.HiddenFor(m => Model.Evaluations[i].EnrollmentId)
+
+                                @Model.Evaluations[i].Period.Name
+                            </td>
+                            <td>
+                                @if (Model.IsCurrentTerm)
+                                {
+                                    @Html.EditorFor(model => Model.Evaluations[i].PeriodGrade, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => Model.Evaluations[i].PeriodGrade, "", new { @class = "text-red" })
+                                }
+                                else
+                                {
+                                    @Html.EditorFor(model => Model.Evaluations[i].PeriodGrade, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
+                                }
+                            </td>
+                            <td>
+                                @Html.EditorFor(model => Model.Evaluations[i].PeriodGradeLetter, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
+                            </td>
+                            <td>
+                                @if (Model.IsCurrentTerm)
+                                {
+                                    @Html.EditorFor(model => Model.Evaluations[i].Notes, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => Model.Evaluations[i].Notes, "", new { @class = "text-red" })
+                                }
+                                else
+                                {
+                                    @Html.EditorFor(model => Model.Evaluations[i].Notes, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        if (Model.IsCurrentTerm)
         {
-            <div class="form-group">
-                <div class="col-md-10">
-                    <input type="submit" value="Save" class="btn btn-primary" />
-                </div>
-            </div>
+        <div class="box-footer">
+            <button class="btn btn-primary" type="submit">Save</button>
+        </div>
         }
-
-        @Html.ActionLink("Back to List", "ViewEnrollments", new { offeringId = Model.Enrollment.OfferingId })
     </div>
 }
 
@@ -160,5 +155,5 @@
         });
     </script>
 
-@Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryval")
 }

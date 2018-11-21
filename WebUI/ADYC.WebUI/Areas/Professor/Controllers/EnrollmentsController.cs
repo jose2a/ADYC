@@ -1,8 +1,9 @@
 ﻿using ADYC.WebUI.Controllers;
+using ADYC.WebUI.CustomAttributes;
+using ADYC.WebUI.Exceptions;
 using ADYC.WebUI.Infrastructure;
 using ADYC.WebUI.Repositories;
 using ADYC.WebUI.ViewModels;
-using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using System.Web.Mvc;
 namespace ADYC.WebUI.Areas.Professor.Controllers
 {
     [Authorize(Roles = "AppProfessor")]
+    [SelectedTab("enrollments")]
     public class EnrollmentsController : ADYCBasedController
     {
         private TermRepository _termRepository;
@@ -55,7 +57,7 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
                 return HttpNotFound();
             }
 
-            var professorId = SessionHelper.User.UserId; //new Guid("63016919-365a-e811-9b75-b8763fed7266");
+            var professorId = SessionHelper.User.UserId;
 
             var offerings = _offeringRepository.GetOfferingsByProfessorIdAndTermId(professorId, termId.Value);
 
@@ -126,13 +128,13 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
                     // Update enrollment
                     await _evaluationRepository.PutEnrollmentWithEvaluations(form.Enrollment.Id, enrollmentWithEvaluations);
 
-                    TempData["msg"] = "Your changes were saved sucessfully.";
+                    TempData["msg"] = "Your changes have been saved sucessfully.";
 
                     return RedirectToAction("ViewEvaluations", new { enrollmentId = enrollmentWithEvaluations.Enrollment.Id });
                 }
-                catch (AdycHttpRequestException ahre)
+                catch (BadRequestException bre)
                 {
-                    AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
+                    AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
                 }
             }
 
@@ -166,14 +168,9 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
                 viewModel = new ScheduleListViewModel(scheduleList);
                 viewModel.Days = days;
             }
-            catch (AdycHttpRequestException ahre)
+            catch (BadRequestException bre)
             {
-                if (ahre.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return HttpNotFound();
-                }
-
-                AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
+                AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
             }
 
             return View(viewModel);

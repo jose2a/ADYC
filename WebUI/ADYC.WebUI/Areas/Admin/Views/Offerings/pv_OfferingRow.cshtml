@@ -24,15 +24,15 @@
     </td>
     <td>
         <a href="@Url.Action("edit")" data-offeringId="@Model.Id" class="btn btn-xs btn-primary js-edit">
-            <i class="glyphicon glyphicon-edit"></i> Edit
+            <i class="fa fa-edit"></i> Edit
         </a>
 
         <a href="@Url.Action("schedules", new { offeringId = Model.Id })" data-id="@Model.Id" class="btn btn-xs btn-default">
-            <i class="glyphicon glyphicon-calendar"></i> Schedule
+            <i class="fa fa-calendar"></i> Schedule
         </a>
 
         <a href="@Url.Action("delete", new { id = Model.Id, force = false })" data-id="@Model.Id" class="btn btn-xs btn-danger js-delete" data-name="Are you sure you want to delete @Model.Title FOREVER?">
-            <i class="glyphicon glyphicon-remove"></i> Delete
+            <i class="fa fa-remove"></i> Delete
         </a>
     </td>
 </tr>

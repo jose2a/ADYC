@@ -1,4 +1,5 @@
 ﻿using ADYC.WebUI.Controllers;
+using ADYC.WebUI.CustomAttributes;
 using ADYC.WebUI.Repositories;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -6,6 +7,7 @@ using System.Web.Mvc;
 namespace ADYC.WebUI.Areas.Admin.Controllers
 {
     [Authorize(Roles = "AppAdmin")]
+    [SelectedTab("periods")]
     public class PeriodsController : ADYCBasedController
     {
         private PeriodRepository _periodRepository;

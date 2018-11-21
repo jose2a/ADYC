@@ -38,16 +38,14 @@ namespace ADYC.WebUI
 
                 CustomPrincipal newUser = new CustomPrincipal(authTicket.Name);
                 newUser.UserId = serializeModel.UserId;
+                newUser.FirstName = serializeModel.FirstName;
+                newUser.LastName = serializeModel.LastName;
+
                 newUser.Role = serializeModel.Role;
 
                 newUser.AccessToken = serializeModel.AccessToken;
                 newUser.TokenType = serializeModel.TokenType;
                 newUser.ExpiresIn = serializeModel.ExpiresIn;
-
-                
-                //newUser.FirstName = serializeModel.FirstName;
-                //newUser.LastName = serializeModel.LastName;
-                //newUser.roles = serializeModel.roles;
 
                 HttpContext.Current.User = newUser;
             }

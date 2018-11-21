@@ -39,8 +39,10 @@ namespace ADYC.WebUI.Infrastructure
         public static void AddUserToSession(Token token)
         {
             var serializeModel = new CustomPrincipalSerializeModel();
-            serializeModel.UserId = token.UserId;
+            serializeModel.UserId = token.UserId;            
             serializeModel.UserName = token.UserName;
+            serializeModel.FirstName = token.FirstName;
+            serializeModel.LastName = token.LastName;
             serializeModel.Role = token.Role;
             serializeModel.AccessToken = token.AccessToken;
             serializeModel.TokenType = token.TokenType;

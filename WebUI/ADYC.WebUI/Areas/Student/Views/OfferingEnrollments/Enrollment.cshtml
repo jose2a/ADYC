@@ -1,19 +1,32 @@
 ﻿@model ADYC.API.ViewModels.OfferingDto
 
 @{
-    ViewBag.Title = "Enrollment confirmed";
+    var title = "Enrollment confirmed";
+
+    ViewBag.Title = title;
+    ViewBag.PageHeader = title;
+
+    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
+    {
+        ["Enroll (Offerings)"] = Url.Action("Index"),
+        [title] = ""
+    };
+
+    ViewBag.ActiveBreadcrumb = title;
 }
 
-<h2>Congratulations!!!</h2>
+<div class="callout callout-success">
+    <h4><i class="icon fa fa-check"></i>Congratulations!</h4>
 
-<hr />
+    <p>You have succcesfully enrolled in @Model.Title</p>
+</div>
 
-<h3>You have succcesfully enrolled in @Model.Title</h3>
-
-<hr />
-
-<div>
-    <div class="form-actions no-color">
-        @Html.ActionLink("Back to List", "Index", new { controller = "Enrollments" })
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <div class="btn-toolbar">
+            <div class="btn-group">
+                <a href="@Url.Action("Index", new { controller = "Enrollments" })" class="btn btn-default btn-sm"><i class="fa fa-arrow-circle-left"></i> Return to list of enrollments</a>
+            </div>
+        </div>
     </div>
 </div>

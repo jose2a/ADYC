@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using ADYC.WebUI.Exceptions;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -51,7 +52,6 @@ namespace ADYC.WebUI.Infrastructure
 
             await VerifyResponseStatus(responseMessage);
 
-            //responseMessage.EnsureSuccessStatusCode();
             return await responseMessage.Content.ReadAsAsync<IEnumerable<T>>();
         }
 
@@ -71,13 +71,6 @@ namespace ADYC.WebUI.Infrastructure
             _httpClient = MakeHttpClient();
 
             var responseMessage = await _httpClient.GetAsync(addressSuffix);
-
-            //if (VerifyNotFound(responseMessage))
-            //{
-            //    return HttpStatusCode.NotFound;
-            //}
-
-            //await VerifyResponseStatus(responseMessage);
 
             return responseMessage.StatusCode;
         }
@@ -99,11 +92,6 @@ namespace ADYC.WebUI.Infrastructure
 
             var responseMessage = await _httpClient.PutAsJsonAsync(addressSuffix, model);
 
-            //if (VerifyNotFound(responseMessage))
-            //{
-            //    return HttpStatusCode.NotFound;
-            //}
-
             await VerifyResponseStatus(responseMessage);
 
             return responseMessage.StatusCode;
@@ -114,11 +102,6 @@ namespace ADYC.WebUI.Infrastructure
             _httpClient = MakeHttpClient();
 
             var responseMessage = await _httpClient.DeleteAsync(addressSuffix);
-
-            //if (VerifyNotFound(responseMessage))
-            //{
-            //    return HttpStatusCode.NotFound;
-            //}
 
             await VerifyResponseStatus(responseMessage);
 
@@ -156,30 +139,34 @@ namespace ADYC.WebUI.Infrastructure
         {
             if (!responseMessage.IsSuccessStatusCode)
             {
-                //if (responseMessage.StatusCode == HttpStatusCode.NotFound)
-                //{
-                //    throw new AdycHttpRequestException(responseMessage.StatusCode,
-                //        responseMessage.ReasonPhrase);
-                //}
-
-                //if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
-                //{
-                //    throw new AdycHttpRequestException(responseMessage.StatusCode,
-                //        responseMessage.ReasonPhrase);
-                //}
-
-                var content = await responseMessage.Content.ReadAsStringAsync();
-
-                if (!string.IsNullOrEmpty(content))
+                if (responseMessage.StatusCode == HttpStatusCode.BadRequest)
                 {
-                    var errors = GetModelStateErrors(content);
+                    var content = await responseMessage.Content.ReadAsStringAsync();
 
-                    throw new AdycHttpRequestException(responseMessage.StatusCode,
+                    if (!string.IsNullOrEmpty(content))
+                    {
+                        var errors = GetModelStateErrors(content);
+
+                        throw new BadRequestException(responseMessage.StatusCode,
                         responseMessage.ReasonPhrase,
                         errors);
+                    }
+
+                    throw new BadRequestException(responseMessage.StatusCode,
+                        responseMessage.ReasonPhrase);
                 }
 
-                throw new AdycHttpRequestException(responseMessage.StatusCode,
+                if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    throw new UnauthorizedException(responseMessage.StatusCode, responseMessage.ReasonPhrase);
+                }
+
+                if (responseMessage.StatusCode == HttpStatusCode.NotFound)
+                {
+                    throw new NotFoundException(responseMessage.StatusCode, responseMessage.ReasonPhrase);
+                }                
+
+                throw new ServerErrorException(responseMessage.StatusCode,
                     responseMessage.ReasonPhrase);
             }
         }

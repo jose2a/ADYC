@@ -1,51 +1,39 @@
 ﻿@model ADYC.WebUI.ViewModels.ScheduleListViewModel
 
-<div class="row">
-    <div class="col-sm-8">
-        <ul class="term-info">
-            <li><h5><strong>Offering: </strong>@Model.Offering.Title</h5></li>
-        </ul>
-    </div>
-</div>
-
-<div class="form-horizontal">
-
-    <table id="terms" class="table table-bordered table-striped display">
-        <thead>
-            <tr>
-                <th>
-                    Day
-                </th>
-                <th>
-                    Start Time
-                </th>
-                <th>
-                    End Time
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (int i = 0; i < Model.Days.Count(); i++)
+<table id="terms" class="table table-bordered table-striped display">
+    <thead>
+        <tr>
+            <th>
+                Day
+            </th>
+            <th>
+                Start Time
+            </th>
+            <th>
+                End Time
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Days.Count(); i++)
             {
-                <tr>
-                    <td>
-                        @Model.Days.ElementAt(i).Name
-                    </td>
-                    <td>
-                        @if (Model.Schedules[i].StartTime.HasValue)
-                        {
-                            @Model.Schedules[i].StartTime.Value.ToString("hh:mm tt")
-                        }
-                    </td>
-                    <td>
-                        @if (Model.Schedules[i].EndTime.HasValue)
-                        {
-                            @Model.Schedules[i].EndTime.Value.ToString("hh:mm tt")
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-</div>
+            <tr>
+                <td>
+                    @Model.Days.ElementAt(i).Name
+                </td>
+                <td>
+                    @if (Model.Schedules[i].StartTime.HasValue)
+                    {
+                        @Model.Schedules[i].StartTime.Value.ToString("hh:mm tt")
+                    }
+                </td>
+                <td>
+                    @if (Model.Schedules[i].EndTime.HasValue)
+                    {
+                        @Model.Schedules[i].EndTime.Value.ToString("hh:mm tt")
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

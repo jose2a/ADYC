@@ -1,63 +1,97 @@
 ﻿@model IEnumerable<ADYC.API.ViewModels.TermDto>
 
 @{
-    ViewBag.Title = "Enrollments (Terms)";
+    var title = "Enrollments (Terms)";
+
+    ViewBag.Title = title;
+    ViewBag.PageHeader = title;
+
+    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
+    {
+        [title] = ""
+    };
+
+    ViewBag.ActiveBreadcrumb = title;
 }
 
-<h2>Enrollments (Terms)</h2>
-
-<div class="alert alert-info" role="alert">
-    Please select a term to see your enrollments.
-</div>
-
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Id)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.StartDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EndDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EnrollmentDropDeadLine)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsCurrentTerm)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var term in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => term.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => term.Name)
-            </td>
-            <td>
-                @term.StartDate.ToString("MMMM dd, yyyy")
-            </td>
-            <td>
-                @term.EndDate.ToString("MMMM dd, yyyy")
-            </td>
-            <td>
-                @term.EnrollmentDropDeadLine.ToString("MMMM dd, yyyy")
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => term.IsCurrentTerm)
-            </td>
-            <td>
-                @Html.ActionLink("Enrollments", "ViewEnrollment", new { termId = term.Id })
-            </td>
-        </tr>
+<style>
+    /*ul.term-list li a:hover {
+        color: #fff;
+        background-color: #3c8dbc;
     }
 
-</table>
+    ul.term-list li h5 {
+        display: inline-block;
+    }*/
+</style>
+
+<link href="~/Content/jPages.css" rel="stylesheet" />
+
+<div class="row">
+    <div class="col-md-3 col-xs-12">
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-info-circle"></i> Note</h3>
+            </div>
+            <div class="box-body">
+                Please select a term from the list to see your enrollments during that term.
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9 col-xs-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Terms</h3>
+            </div>
+            <div class="box-header with-border">
+                <div class="holder no-margin pull-right"></div>
+                <ul class="pagination pagination-sm no-margin pull-right"></ul>
+            </div>
+            <div class="box-body no-padding">
+                <ul id="termsContainer" class="term-list nav nav-pills nav-stacked">
+                    @foreach (var term in Model)
+            {
+                        <li>
+                            <a href="@Url.Action("ViewEnrollment", new { termId = term.Id })">
+                                <i class="fa fa-calendar"></i><h5>@term.Name</h5>
+                                <span class="w3-medium w3-opacity">(@term)</span>
+                                <span class="w3-medium w3-opacity"> - Withdraw deadline: @term.EnrollmentDropDeadLine.ToString("MMMM dd, yyyy")</span>
+                                @if (term.IsCurrentTerm)
+                                {
+                                    <span class="label label-primary pull-right">Current</span>
+                                }
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer clearfix">
+                <div class="holder no-margin pull-right"></div>
+                <ul class="pagination pagination-sm no-margin pull-right"></ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            var studentTermCurrentPage = sessionStorage.getItem("studentTermCurrentPage") || 1;
+
+            $("div.holder").jPages({
+                containerID: "termsContainer",
+                perPage: 5,
+                startPage: studentTermCurrentPage,
+                callback: function (pages, items) {
+                    sessionStorage.setItem("studentTermCurrentPage", pages.current);
+                }
+            });
+
+            $("div.holder").jPages(studentTermCurrentPage);
+        });
+    </script>
+
+    <script src="~/Scripts/jPages.min.js"></script>
+}

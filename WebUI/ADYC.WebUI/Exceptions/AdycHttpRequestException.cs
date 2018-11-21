@@ -7,7 +7,17 @@ namespace ADYC.WebUI.Infrastructure
     public class AdycHttpRequestException : HttpRequestException
     {
         public HttpStatusCode StatusCode { get; private set; }
-        public IList<string> Errors { get; private set; }
+
+        private IList<string> _errors = new List<string>();
+
+        public IList<string> Errors
+        {
+            get { return _errors; }
+            set
+            {
+                _errors = value;
+            }
+        }
 
         public AdycHttpRequestException(HttpStatusCode statusCode, string message)
             : base(message)

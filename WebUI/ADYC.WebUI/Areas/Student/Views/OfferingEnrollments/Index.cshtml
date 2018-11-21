@@ -1,147 +1,203 @@
 ﻿@model ADYC.WebUI.ViewModels.OfferingEnrollmentListViewModel
 
 @{
-    ViewBag.Title = "Offerings";
+    var title = "Enroll (Offerings)";
+
+    ViewBag.Title = title;
+    ViewBag.PageHeader = title;
+
+    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
+    {
+        [title] = ""
+    };
+
+    ViewBag.ActiveBreadcrumb = title;
 }
 
-<div class="modal fade" id="schedulesModal" tabindex="-1" role="dialog" aria-labelledby="schedulesModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLabel">Schedules</h3>
-            </div>
-            <div class="modal-body" id="schedulesTable">
+<link href="~/Content/jPages.css" rel="stylesheet" />
 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
+<style>
+    .bg-slide {
+        background-image: url('../../../../Images/waves.gif');
+    }
+
+    .offering-slide li {
+        list-style: none;
+        padding-left: 40px;
+        padding-top: 40px;
+    }
+
+        .offering-slide li h2 {
+            text-align: center;
+        }
+
+    .margin-40px {
+        margin-top: 20px;
+    }
+</style>
+
+<div class="box box-info">
+    <div class="box-header with-border">
+        <h3 class="box-title">Term</h3>
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
         </div>
     </div>
-</div>
-
-<h2>Offerings</h2>
-
-<div id="msg-div">
-</div>
-
-<div class="row">
-    <div class="col-sm-8">
-        <ul class="term-info">
-            <li>
-                <h5><strong>Term Name: </strong>@Model.Term.Name (@Model.Term)</h5>
-            </li>
-            <li>
-                <h5><strong>Enrollment Deadline: </strong>@Model.Term.EnrollmentDeadLine.ToString("MMMM dd, yyyy")</h5>
-                <h5><strong>Enrollment Withdraw: </strong>@Model.Term.EnrollmentDropDeadLine.ToString("MMMM dd, yyyy")</h5>
-            </li>
-            <li>
-                <h5><strong>Current Term: </strong> @(Model.IsCurrentTerm ? "Yes" : "No")</h5>
-            </li>
-        </ul>
+    <div class="box-body">
+        <dl class="dl-horizontal">
+            <dt>Name</dt>
+            <dd>@Model.Term.Name</dd>
+            <dt>Start Date</dt>
+            <dd>@Model.Term.StartDate.ToString("MMMM dd, yyyy")</dd>
+            <dt>End Date</dt>
+            <dd>@Model.Term.EndDate.ToString("MMMM dd, yyyy")</dd>
+            <dt>Enrollment Deadline</dt>
+            <dd>@Model.Term.EnrollmentDeadLine.ToString("MMMM dd, yyyy")</dd>
+            <dt>Withdraw Deadline</dt>
+            <dd>@Model.Term.EnrollmentDropDeadLine.ToString("MMMM dd, yyyy")</dd>
+            <dt>Current Term</dt>
+            <dd>@((Model.IsCurrentTerm) ? "Yes" : "No")</dd>
+        </dl>
     </div>
 </div>
 
 @if (Model.IsStudentCurrentlyEnrolled)
 {
-    <hr />
+    <div class="callout callout-info">
+        <h4><i class="fa fa-info-circle"></i> Info</h4>
 
-    <h3>Sorry! You are currently enrolled in another offering during this term.</h3>
+        <p>Sorry! You are currently enrolled in another offering during this term.</p>
+    </div>
 }
 else
 {
+    <div class="row">
 
-    <table id="offerings" class="table table-bordered table-striped display">
-        <thead>
-            <tr>
-                <th>
-                    Id
-                </th>
-                <th>
-                    Title
-                </th>
-                <th>
-                    Location
-                </th>
-                <th>
-                    Days Offered
-                </th>
-                <th>
-                    Course
-                </th>
-                <th>
-                    Course Type
-                </th>
-                <th>
-                    Professor
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var offering in Model.Offerings)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(m => offering.Id)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(m => offering.Title)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(m => offering.Location)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(m => offering.OfferingDays)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(m => offering.Course.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(m => offering.Course.CourseType.Name)
-                    </td>
-                    <td>
-                        @offering.Professor
-                    </td>
-                    <td>
-                        <a href="@Url.Action("ViewSchedules", new { offeringId = offering.Id })" class="btn btn-xs btn-default js-viewSchedules">
-                            <i class="glyphicon glyphicon-calendar"></i>View Schedules
-                        </a>
-                        <a href="@Url.Action("Enrollment", new { offeringId = offering.Id })" data-title="@offering.Title" class="btn btn-xs btn-default js-enrollment">
-                            <i class="glyphicon glyphicon-user"></i> Enroll in offering
-                        </a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        <div class="col-md-8 col-xs-12">
+            <div class="box box-info">
+                <div class="box-body">
+                    Please select the offering in which you want to enroll in.
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="row">
+        <div class="col-md-8">
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Offerings</h3>
+                </div>
+                <div class="box-header with-border">
+                    <div class="holder no-margin pull-right"></div>
+                    <ul class="pagination pagination-sm no-margin pull-right"></ul>
+                </div>
+                <div class="box-body bg-slide">
+                    <ul id="offeringsContainer" class="offering-slide" data-url="@Url.Action("ViewSchedules")">
+                        @foreach (var offering in Model.Offerings)
+                        {
+                            <li class="slide-item" data-id="@offering.Id">
+                                <div>
+                                    <h2>@offering.Title</h2>
+
+                                    <dl class="">
+                                        <dt>Offering Title</dt>
+                                        <dd>@offering.Title</dd>
+                                        <dt>Location</dt>
+                                        <dd>@offering.Location</dd>
+                                        <dt>Days offered</dt>
+                                        <dd>@offering.OfferingDays</dd>
+                                        <dt>Course</dt>
+                                        <dd>@offering.Course</dd>
+                                        <dt>Professor</dt>
+                                        <dd>@offering.Professor</dd>
+                                        <dt>Notes</dt>
+                                        <dd>@offering.Notes</dd>
+                                    </dl>
+                                </div>
+
+                                <div class="pull-left margin-40px">
+                                    <a href="@Url.Action("Enrollment", new { offeringId = offering.Id })" data-title="@offering.Title" class="btn btn-success js-enrollment">
+                                        <i class="fa fa-user"></i> Enroll in offering
+                                    </a>
+                                </div>
+                                <div class="pull-right">
+                                    <img class="" src="~/Images/bg_actividad.png">
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer clearfix">
+                    <div class="holder no-margin pull-right"></div>
+                    <ul class="pagination pagination-sm no-margin pull-right"></ul>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-4">
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Schedules</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div id="schedule"></div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
 }
 
 @section scripts
 {
+    <script src="~/Scripts/jPages.min.js"></script>
+
     <script>
         $(document).ready(function () {
+            var studentEnrollmentCurrentPage = sessionStorage.getItem("studentEnrollmentCurrentPage") || 1;
+            var totalOfferings = sessionStorage.getItem("totalOfferings") || 0;
 
-            $('#offerings').DataTable();
+            var getSchedules = function (termId) {
+                var link = $("#offeringsContainer").attr("data-url");
 
-            $(".js-viewSchedules").on("click", function (e) {
-                e.preventDefault();
-
-                var link = $(this);
+                link = link + "/?offeringId=" + termId;
 
                 $.ajax({
-                    url: link.attr("href"),
+                    url: link,
                     method: "GET",
                     success: function (data) {
-                        $("#schedulesTable").html(data);
-                        $('#schedulesModal').modal("show");
+                        $("#schedule").html(data);
                     },
                     error: function (data) {
-                        self.showErrorMsg(data.statusText, "warning");
+                        bootbox.alert(data.statusText);
                     }
                 });
+            }
+
+            $("div.holder").jPages({
+                containerID: "offeringsContainer",
+                perPage: 1,
+                startPage: studentEnrollmentCurrentPage,
+                callback: function (pages, items) {
+                    sessionStorage.setItem("totalOfferings", pages.count);
+                    totalOfferings = sessionStorage.getItem("totalOfferings");
+
+                    sessionStorage.setItem("studentEnrollmentCurrentPage", pages.current);
+
+                    var termId = items.showing.attr("data-id");
+
+                    getSchedules(termId);
+                }
             });
+
+            $("div.holder").jPages(studentEnrollmentCurrentPage);
 
             $(".js-enrollment").on("click", function (e) {
                 e.preventDefault();
@@ -170,7 +226,5 @@ else
         });
     </script>
 
-    <script type="text/javascript" src="~/Scripts/adyc.table.utils.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/Scripts/bootbox.js"></script>
 }

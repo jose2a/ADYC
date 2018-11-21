@@ -2,14 +2,23 @@
 
 @{
     ViewBag.Title = Model.FormTitle;
-}
+    ViewBag.PageHeader = Model.FormTitle;
 
-<h1>@Model.FormTitle</h1>
+    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
+    {
+        ["Offerings"] = Url.Action("View", new { TermId = Model.TermId }),
+        [Model.FormTitle] = "",
+    };
+
+    ViewBag.ActiveBreadcrumb = Model.FormTitle;
+}
 
 @if (!Model.IsCurrentTerm)
 {
-    <div class="alert alert-info" role="alert">
-        This term is not the current term, you are not allowed to make changes at this time.
+    <div class="callout callout-info">
+        <h4><i class="fa fa-info-circle"></i> Term</h4>
+
+        <p>This term is not the current term, you are not allowed to make changes at this time.</p>
     </div>
 }
 
@@ -22,102 +31,102 @@
 
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        <hr />
+    <div class="box box-primary">
 
-        @Html.ValidationSummary(true, "Please fix the following errors:", new { @class = "text-danger" })
+        @if (!Model.IsCurrentTerm)
+        {
+            <div class="box-header with-border">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <a href="@Url.Action("View", new { TermId = Model.TermId })" class="btn btn-default btn-sm"><i class="fa fa-arrow-circle-left"></i> Back to list of offerings</a>
+                    </div>
+                </div>
+            </div>
+        }
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+        <div class="box-body">
+            @Html.ValidationSummary(true, "Please fix the following errors:", new { @class = "text-red" })
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Title)
+
                 @if (Model.IsCurrentTerm)
                 {
                     @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-red" })
                 }
                 else
                 {
                     @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
                 }
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.CourseId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="form-group">
+                @Html.LabelFor(model => model.CourseId)
+
                 @if (Model.IsCurrentTerm)
                 {
                     @Html.DropDownListFor(model => model.CourseId, new SelectList(Model.Courses, "Id", ""), "Select Course", new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.CourseId, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => model.CourseId, "", new { @class = "text-red" })
                 }
                 else
                 {
                     @Html.DropDownListFor(model => model.CourseId, new SelectList(Model.Courses, "Id", ""), "Select Course", new { @class = "form-control", disabled = "disabled" })
                 }
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ProfessorId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="form-group">
+                @Html.LabelFor(model => model.ProfessorId)
+
                 @if (Model.IsCurrentTerm)
                 {
                     @Html.DropDownListFor(m => m.ProfessorId, new SelectList(Model.Professors, "Id", ""), "Select Professor", new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.ProfessorId, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => model.ProfessorId, "", new { @class = "text-red" })
                 }
                 else
                 {
                     @Html.DropDownListFor(m => m.ProfessorId, new SelectList(Model.Professors, "Id", ""), "Select Professor", new { @class = "form-control", disabled = "disabled" })
                 }
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.TermId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="form-group">
+                @Html.LabelFor(model => model.TermId)
+
                 @Html.DropDownListFor(m => m.TermId, new SelectList(Model.Terms, "Id", "Name"), new { @class = "form-control", @disabled = "disable" })
-                @Html.ValidationMessageFor(model => model.TermId, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.TermId, "", new { @class = "text-red" })
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Location, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Location)
+
                 @if (Model.IsCurrentTerm)
                 {
                     @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-red" })
                 }
                 else
                 {
                     @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
                 }
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.OfferingDays, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="form-group">
+                @Html.LabelFor(model => model.OfferingDays)
+
                 @Html.EditorFor(model => model.OfferingDays, new { htmlAttributes = new { @class = "form-control", @disabled = "disable" } })
-                @Html.ValidationMessageFor(model => model.OfferingDays, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.OfferingDays, "", new { @class = "text-red" })
             </div>
         </div>
 
         @if (Model.IsCurrentTerm)
         {
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-
-                    <input type="submit" value="Save" class="btn btn-primary" />
-                </div>
+            <div class="box-footer">
+                <a href="@Url.Action("View", new { TermId = Model.TermId })" class="btn btn-default">Cancel</a>
+                <button class="btn btn-primary" type="submit">Save</button>
             </div>
         }
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to list of terms", "View", new { TermId = Model.TermId })
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

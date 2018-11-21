@@ -11,6 +11,10 @@ namespace ADYC.API.Auth.Models
     public class ApplicationUser : IdentityUser
     {
         public Guid UserGuid { get; set; }
+
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+
         public string RoleName { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager, string authenticationType)

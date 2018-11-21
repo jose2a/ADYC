@@ -1,5 +1,7 @@
 ﻿using ADYC.API.ViewModels;
 using ADYC.WebUI.Controllers;
+using ADYC.WebUI.CustomAttributes;
+using ADYC.WebUI.Exceptions;
 using ADYC.WebUI.Infrastructure;
 using ADYC.WebUI.Repositories;
 using ADYC.WebUI.ViewModels;
@@ -11,6 +13,7 @@ using System.Web.Mvc;
 namespace ADYC.WebUI.Areas.Admin.Controllers
 {
     [Authorize(Roles = "AppAdmin")]
+    [SelectedTab("offerings")]
     public class OfferingsController : ADYCBasedController
     {
         private TermRepository _termRepository;
@@ -102,14 +105,9 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                     IsNew = false
                 };
             }
-            catch (AdycHttpRequestException ahre)
+            catch (BadRequestException bre)
             {
-                if (ahre.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return HttpNotFound();
-                }
-
-                AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
+                AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
             }
 
             await SetOfferingListProperties(viewModel);
@@ -146,11 +144,13 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                         await _offeringRepository.PutOffering(offering.Id, offering);
                     }
 
+                    TempData["successMsg"] = "Your changes have been saved succesfully.";
+
                     return RedirectToAction("View", new { termId = form.TermId });
                 }
-                catch (AdycHttpRequestException ahre)
+                catch (BadRequestException bre)
                 {
-                    AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
+                    AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
                 }
             }
 
@@ -179,9 +179,9 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
                 return new HttpStatusCodeResult(HttpStatusCode.OK);
             }
-            catch (AdycHttpRequestException ahre)
+            catch (BadRequestException bre)
             {
-                var errorString = GetErrorsFromAdycHttpExceptionToString(ahre);
+                var errorString = GetErrorsFromAdycHttpExceptionToString(bre);
 
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
             }
@@ -207,14 +207,9 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                 viewModel = new ScheduleListViewModel(scheduleList);
                 viewModel.Days = days;
             }
-            catch (AdycHttpRequestException ahre)
+            catch (BadRequestException bre)
             {
-                if (ahre.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return HttpNotFound();
-                }
-
-                AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
+                AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
             }
 
             return View(viewModel);
@@ -224,6 +219,10 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<ActionResult> SaveSchedules(ScheduleListViewModel form)
         {
+            ModelState.Remove("Offering.Title");
+            ModelState.Remove("Offering.Location");
+            ModelState.Remove("Offering.Term");            
+
             if (ModelState.IsValid)
             {
                 try
@@ -237,6 +236,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
                     if (form.IsNew)
                     {
+                        scheduleList.Offering = await _offeringRepository.GetOfferingById(form.OfferingId);
                         await _scheduleRepository.PostScheduleList(scheduleList);
                     }
                     else
@@ -244,13 +244,13 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                         await _scheduleRepository.PutScheduleList(form.OfferingId, scheduleList);
                     }
 
-                    TempData["msg"] = "Your changes have been saved succesfully.";
+                    TempData["successMsg"] = "Your changes have been saved succesfully.";
 
                     return RedirectToAction("Schedules", new { offeringId = form.OfferingId });
                 }
-                catch (AdycHttpRequestException ahre)
+                catch (BadRequestException bre)
                 {
-                    AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
+                    AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
                 }
             }
 

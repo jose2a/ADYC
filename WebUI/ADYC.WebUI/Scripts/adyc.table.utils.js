@@ -120,7 +120,7 @@
                             self.isTableModified = true;
                         },
                         error: function (data) {
-                            self.showErrorMsg(data.statusText, "warning");
+                            self.showErrorMsg(data.statusText, "danger");
                         }
                     });
                 }
@@ -128,8 +128,9 @@
         },
 
         showErrorMsg: function (text, type) {
-            var msgHtml = '<div id="Msg" class="alert alert-dismissible alert-' + type + '">';
-            msgHtml += '<button type="button" class="close" data-dismiss="alert">&times;</button>';
+            var msgHtml = '<div id="Msg" class="alert alert-' + type + ' alert-dismissible">';
+            msgHtml += '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>';
+            msgHtml += '<h4><i class="icon fa fa-ban"></i> Error!</h4>';
             msgHtml += '<span id="MsgTxt">' + text + '</span>';
             msgHtml += '</div>';
 

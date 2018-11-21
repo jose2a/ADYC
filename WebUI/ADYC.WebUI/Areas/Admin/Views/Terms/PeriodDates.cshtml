@@ -2,18 +2,48 @@
 
 @{
     ViewBag.Title = Model.Title;
+    ViewBag.PageHeader = Model.Title;
+
+    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
+    {
+        ["Terms"] = Url.Action("Index"),
+        [Model.Title] = "",
+    };
+
+    ViewBag.ActiveBreadcrumb = Model.Title;
 }
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
-<h1>@Model.Title</h1>
-
 @if (!Model.IsCurrentTerm)
 {
-    <div class="alert alert-info" role="alert">
-        This term is not the current term, you are not allowed to make changes at this time.
+    <div class="callout callout-info">
+        <h4><i class="fa fa-info-circle"></i> Term</h4>
+
+        <p>This term is not the current term, you are not allowed to make changes at this time.</p>
     </div>
 }
+
+<div class="box box-info">
+    <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-info-circle"></i> Term</h3>
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        </div>
+    </div>
+    <div class="box-body">
+        <dl class="dl-horizontal">
+            <dt>Term Name</dt>
+            <dd>@Model.Term.Name (@Model.Term)</dd>
+            <dt>Enrollment Deadline</dt>
+            <dd>@Model.Term.EnrollmentDeadLine.ToString("MMMM dd, yyyy")</dd>
+            <dt>Enrollment Withdraw</dt>
+            <dd>@Model.Term.EnrollmentDropDeadLine.ToString("MMMM dd, yyyy")</dd>
+            <dt>Current Term</dt>
+            <dd>@(Model.IsCurrentTerm ? "Yes" : "No")</dd>
+        </dl>
+    </div>
+</div>
 
 @using (Html.BeginForm("SavePeriodDates", "Terms", FormMethod.Post))
 {
@@ -22,89 +52,74 @@
 
     @Html.AntiForgeryToken()
 
-    <div class="row">
-        <div class="col-sm-8">
-            <ul class="term-info">
-                <li><h5><strong>Term Name: </strong>@Model.Term.Name (@Model.Term)</h5></li>
-                <li>
-                    <h5><strong>Enrollment Deadline: </strong>@Model.Term.EnrollmentDeadLine.ToString("MMMM dd, yyyy")</h5>
-                    <h5><strong>Enrollment Withdraw: </strong>@Model.Term.EnrollmentDropDeadLine.ToString("MMMM dd, yyyy")</h5>
-                </li>
-                <li>
-                    <h5><strong>Current Term: </strong> @(Model.IsCurrentTerm ? "Yes" : "No")</h5>
-                </li>
-            </ul>
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <div class="btn-toolbar">
+                <div class="btn-group">
+                    <a href="@Url.Action("Index")" class="btn btn-default btn-sm"><i class="fa fa-arrow-circle-left"></i> Back to list of terms</a>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <div class="form-horizontal">
-
-        @Html.ValidationSummary(true, "Please fix the following errors:", new { @class = "text-danger" })
-
-        <table id="terms" class="table table-bordered table-striped display">
-            <thead>
-                <tr>
-                    <th>
-                        Period
-                    </th>
-                    <th>
-                        Start Date
-                    </th>
-                    <th>
-                        End Date
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (int i = 0; i < Model.Periods.Count(); i++)
-                {
+        <div class="box-body">
+            <table class="table table-bordered table-hover table-striped dataTable" role="grid">
+                <thead>
                     <tr>
-                        <td>
-                            @Html.HiddenFor(m => Model.PeriodDates[i].PeriodId)
-                            @Html.HiddenFor(m => Model.PeriodDates[i].TermId)
-                            @Model.Periods.ElementAt(i).Name
-                        </td>
-                        <td>
-                            @if (Model.IsCurrentTerm)
-                            {
-                                @Html.EditorFor(model => Model.PeriodDates[i].StartDate, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.ValidationMessageFor(model => Model.PeriodDates[i].StartDate, "", new { @class = "text-danger" })
-                            }
-                            else
-                            {
-                                @Html.EditorFor(model => Model.PeriodDates[i].StartDate, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
-                            }
-                        </td>
-                        <td>
-                            @if (Model.IsCurrentTerm)
-                            {
-                                @Html.EditorFor(model => Model.PeriodDates[i].EndDate, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.ValidationMessageFor(model => Model.PeriodDates[i].EndDate, "", new { @class = "text-danger" })
-                            }
-                            else
-                            {
-                                @Html.EditorFor(model => Model.PeriodDates[i].EndDate, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
-                            }
-                        </td>
+                        <th>
+                            Period
+                        </th>
+                        <th>
+                            Start Date
+                        </th>
+                        <th>
+                            End Date
+                        </th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Periods.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.HiddenFor(m => Model.PeriodDates[i].PeriodId)
+                                @Html.HiddenFor(m => Model.PeriodDates[i].TermId)
+                                @Model.Periods.ElementAt(i).Name
+                            </td>
+                            <td>
+                                @if (Model.IsCurrentTerm)
+                                {
+                                    @Html.EditorFor(model => Model.PeriodDates[i].StartDate, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => Model.PeriodDates[i].StartDate, "", new { @class = "text-red" })
+                                }
+                                else
+                                {
+                                    @Html.EditorFor(model => Model.PeriodDates[i].StartDate, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                }
+                            </td>
+                            <td>
+                                @if (Model.IsCurrentTerm)
+                                {
+                                    @Html.EditorFor(model => Model.PeriodDates[i].EndDate, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => Model.PeriodDates[i].EndDate, "", new { @class = "text-red" })
+                                }
+                                else
+                                {
+                                    @Html.EditorFor(model => Model.PeriodDates[i].EndDate, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
         @if (Model.IsCurrentTerm)
         {
-            <div class="form-group">
-                <div class="col-md-10">
-                    <input type="submit" value="Save" class="btn btn-primary" />
-                </div>
+            <div class="box-footer">
+                <button class="btn btn-primary" type="submit">Save</button>
             </div>
         }
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to list of terms", "Index")
-</div>
 
 @section Scripts {
     <script>

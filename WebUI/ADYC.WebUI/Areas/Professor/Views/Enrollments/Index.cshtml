@@ -1,39 +1,78 @@
 ﻿@model IEnumerable<ADYC.API.ViewModels.TermDto>
 
 @{
-    ViewBag.Title = "Offerings (Terms)";
+    var title = "Offerings (Terms)";
+
+    ViewBag.Title = title;
+    ViewBag.PageHeader = title;
+
+    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
+    {
+        [title] = ""
+    };
+
+    ViewBag.ActiveBreadcrumb = title;
 }
+
+<style>
+    /*ul.term-list li a:hover {
+        color: #fff;
+        background-color: #3c8dbc;
+    }
+
+    ul.term-list li h5 {
+        display: inline-block;
+    }*/
+</style>
 
 <link href="~/Content/jPages.css" rel="stylesheet" />
 
-<h2>Offerings (Terms)</h2>
-
-<div class="alert alert-info" role="alert">
-    Please select a term to see its offerings.
-</div>
-
-<div class="holder"></div>
-
-<ul id="itemContainer" class="w3-ul">
-    @foreach (var term in Model)
-    {
-        <li>
-            <a href="@Url.Action("ViewOfferings", new { termId = term.Id.Value})">
-                <span class="glyphicon glyphicon-calendar"></span>
-                <h5>
-                    @term.Name
-                    @if (term.IsCurrentTerm)
-                    {
-                        <span class="label label-default">Current</span>
+<div class="row">
+    <div class="col-md-3 col-xs-12">
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-info-circle"></i> Note</h3>
+            </div>
+            <div class="box-body">
+                Please select a term from the list to see your offerings during that term.
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9 col-xs-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Terms</h3>
+            </div>
+            <div class="box-header with-border">
+                <div class="holder no-margin pull-right"></div>
+                <ul class="pagination pagination-sm no-margin pull-right"></ul>
+            </div>
+            <div class="box-body no-padding">
+                <ul id="itemContainer" class="term-list nav nav-pills nav-stacked">
+                    @foreach (var term in Model)
+            {
+                        <li>
+                            <a href="@Url.Action("ViewOfferings", new { termId = term.Id.Value})">
+                                <i class="fa fa-calendar"></i><h5>@term.Name</h5>
+                                <span class="w3-medium w3-opacity">(@term)</span>
+                                @if (term.IsCurrentTerm)
+                                {
+                                    <span class="label label-primary pull-right">Current</span>
+                                }
+                            </a>
+                        </li>
                     }
-                </h5>
-                <span class="w3-medium w3-opacity">@term</span>
-            </a>
-        </li>
-    }
-</ul>
+                </ul>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer clearfix">
+                <div class="holder no-margin pull-right"></div>
+                <ul class="pagination pagination-sm no-margin pull-right"></ul>
+            </div>
 
-<div class="holder"></div>
+        </div>
+    </div>
+</div>
 
 @section scripts {
     <script>

@@ -2,78 +2,98 @@
 
 @{
     ViewBag.Title = Model.Title;
+    ViewBag.PageHeader = Model.Title;
+
+    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
+    {
+        ["Offerings (Terms)"] = Url.Action("Index"),
+        ["Offerings (List)"] = Url.Action("ViewOfferings", new { termId = Model.Offering.TermId }),
+        [Model.Title] = ""
+    };
+
+    ViewBag.ActiveBreadcrumb = Model.Title;
 }
 
-<h1>@Model.Title</h1>
-
 <div class="row">
-    <div class="col-sm-8">
-        <ul class="term-info">
-            <li><h5><strong>Offering: </strong>@Model.Offering.Title</h5></li>
-            <li><h5><strong>Location: </strong>@Model.Offering.Location</h5></li>
-            <li><h5><strong>Course: </strong>@Model.Offering.Course</h5></li>
-            <li><h5><strong>Professor: </strong>@Model.Offering.Professor</h5></li>
-            <li>
-                <h5>
-                    <strong>Term: </strong>@Model.Offering.Term.Name&nbsp;
-                    @if (Model.IsCurrentTerm)
-                    {
-                        <span class="badge">Current</span>
-                    }
-                    &nbsp;@Model.Offering.Term
-                </h5>
-            </li>
-            <li>
-                <h5>
-                    <strong>Notes: </strong>@Model.Offering.Notes
-                </h5>
-            </li>
-        </ul>
-    </div>
-</div>
-
-<div class="form-horizontal">
-
-    <table id="terms" class="table table-bordered table-striped display">
-        <thead>
-            <tr>
-                <th>
-                    Day
-                </th>
-                <th>
-                    Start Time
-                </th>
-                <th>
-                    End Time
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (int i = 0; i < Model.Days.Count(); i++)
-            {
-                <tr>
-                    <td>
-                        @Model.Days.ElementAt(i).Name
-                    </td>
-                    <td>
-                        @if (Model.Schedules[i].StartTime.HasValue)
+    <div class="col-md-6">
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-info-circle"></i> Offering</h3>
+                <div class="btn-toolbar pull-right">
+                    <div class="btn-group">
+                        <a href="@Url.Action("ViewOfferings", new { termId = Model.Offering.TermId })" class="btn btn-default btn-sm"><i class="fa fa-arrow-circle-left"></i> Back to list of offerings</a>
+                    </div>
+                </div>
+            </div>
+            <div class="box-body">
+                <dl>
+                    <dt>Offering Title</dt>
+                    <dd>@Model.Offering.Title</dd>
+                    <dt>Location</dt>
+                    <dd>@Model.Offering.Location</dd>
+                    <dt>Course</dt>
+                    <dd>@Model.Offering.Course</dd>
+                    <dt>Professor</dt>
+                    <dd>@Model.Offering.Professor</dd>
+                    <dt>Term</dt>
+                    <dd>
+                        @Model.Offering.Term.Name&nbsp;
+                        @if (Model.IsCurrentTerm)
                         {
-                            @Model.Schedules[i].StartTime.Value.ToString("hh:mm tt")
+                            <span class="badge">Current</span>
                         }
-                    </td>
-                    <td>
-                        @if (Model.Schedules[i].EndTime.HasValue)
-                        {
-                            @Model.Schedules[i].EndTime.Value.ToString("hh:mm tt")
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <div>
-        @Html.ActionLink("Back to offerings", "ViewOfferings", new { termId = Model.Offering.TermId })
+                        &nbsp;@Model.Offering.Term
+                    </dd>
+                    <dt>Notes</dt>
+                    <dd>@Model.Offering.Notes</dd>
+                </dl>
+            </div>
+        </div>
     </div>
-
+    <div class="col-md-6">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Schedule</h3>
+            </div>
+            <div class="box-body">
+                <table class="table table-bordered table-hover table-striped dataTable" role="grid">
+                    <thead>
+                        <tr>
+                            <th>
+                                Day
+                            </th>
+                            <th>
+                                Start Time
+                            </th>
+                            <th>
+                                End Time
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Days.Count(); i++)
+                        {
+                            <tr>
+                                <td>
+                                    @Model.Days.ElementAt(i).Name
+                                </td>
+                                <td>
+                                    @if (Model.Schedules[i].StartTime.HasValue)
+                                    {
+                                        @Model.Schedules[i].StartTime.Value.ToString("hh:mm tt")
+                                    }
+                                </td>
+                                <td>
+                                    @if (Model.Schedules[i].EndTime.HasValue)
+                                    {
+                                        @Model.Schedules[i].EndTime.Value.ToString("hh:mm tt")
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>

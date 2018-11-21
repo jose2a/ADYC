@@ -1,5 +1,7 @@
 ﻿using ADYC.API.ViewModels;
 using ADYC.WebUI.Controllers;
+using ADYC.WebUI.CustomAttributes;
+using ADYC.WebUI.Exceptions;
 using ADYC.WebUI.Infrastructure;
 using ADYC.WebUI.Repositories;
 using ADYC.WebUI.ViewModels;
@@ -10,6 +12,7 @@ using System.Web.Mvc;
 namespace ADYC.WebUI.Areas.Admin.Controllers
 {
     [Authorize(Roles = "AppAdmin")]
+    [SelectedTab("groups")]
     public class GroupsController : ADYCBasedController
     {
         private GroupRepository _groupRepository;
@@ -57,14 +60,9 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                     IsNew = false
                 };
             }
-            catch (AdycHttpRequestException ahre)
+            catch (BadRequestException bre)
             {
-                if (ahre.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return HttpNotFound();
-                }
-
-                AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
+                AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
             }
 
             return View("GroupForm", viewModel);
@@ -93,11 +91,13 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                         await _groupRepository.PutGroup(group.Id.Value, group);
                     }
 
+                    TempData["successMsg"] = "Your changes have been saved succesfully.";
+
                     return RedirectToAction("Index");
                 }
-                catch (AdycHttpRequestException ahre)
+                catch (BadRequestException bre)
                 {
-                    AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
+                    AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
                 }
             }
 
@@ -106,11 +106,16 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
         // GET: Admin/Groups/Delete
         [HttpGet]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(int? id)
         {
+            if (!id.HasValue)
+            {
+                return HttpNotFound();
+            }
+
             try
             {
-                var statusCode = await _groupRepository.DeleteGroup(id);
+                var statusCode = await _groupRepository.DeleteGroup(id.Value);
 
                 if (statusCode == HttpStatusCode.NotFound)
                 {
@@ -119,9 +124,9 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
                 return new HttpStatusCodeResult(HttpStatusCode.OK);
             }
-            catch (AdycHttpRequestException ahre)
+            catch (BadRequestException bre)
             {
-                var errorString = GetErrorsFromAdycHttpExceptionToString(ahre);
+                var errorString = GetErrorsFromAdycHttpExceptionToString(bre);
 
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
             }

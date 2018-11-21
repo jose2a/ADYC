@@ -1,31 +1,7 @@
-﻿/*body {
-    padding-top: 50px;
-    padding-bottom: 20px;
-}*/
-
-/* Set padding to keep content from hitting the edges */
-/*.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
-}*/
-
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
-*/
-/*.dl-horizontal dt {
-    white-space: normal;
-}*/
-
-/* Set width on the form input elements since they're 100% wide by default */
-/*input,
-select,
-textarea {
-    max-width: 280px;
+﻿.actions {
+    width: 16%;
+    overflow: auto;
 }
-
-.btn-toolbar {
-    margin-bottom: 20px;
-}*/
 
 table.dataTable thead .sorting,
 table.dataTable thead .sorting_asc,
@@ -62,7 +38,16 @@ table.dataTable thead .sorting_desc_disabled {
     margin-left: 40px;
 }
 
-ul.term-info {
+ul.term-list li a:hover {
+    color: #fff;
+    background-color: #3c8dbc;
+}
+
+ul.term-list li h5 {
+    display: inline-block;
+}
+
+/*ul.term-info {
     list-style-type: none;
     width: 100%;
     padding: 0;
@@ -82,7 +67,7 @@ ul.term-info {
 
          ul.term-info li > h5 > strong {
              text-transform: uppercase;
-        }
+        }*/
 
 .w3-ul {
     list-style-type: none;
@@ -91,19 +76,20 @@ ul.term-info {
     border-top: 1px solid #e7e7e7;
 }
 
-.w3-ul li {
-    border-width: 0px 1px 1px 1px;
-    border-color: #e7e7e7;
-    border-style: solid;
-    color: black;
-}
+    .w3-ul li {
+        border-width: 0px 1px 1px 1px;
+        border-color: #e7e7e7;
+        border-style: solid;
+        color: black;
+    }
 
 .w3-medium {
     font-size: 15px !important;
 }
 
 .w3-opacity {
-    opacity: 0.60;
+    opacity: 0.90;
+    font-style: italic;
 }
 
 .w3-ul li > a > h5 {
@@ -118,10 +104,6 @@ ul.term-info {
     width: 2%;
     margin-right: 0.5%;
 }
-
-/*.glyphicon-ok {
-        color: #00FF00;
-    }*/
 
 .w3-ul li > a {
     background-color: white;
@@ -147,8 +129,3 @@ ul.term-info {
 .w3-ul li a:visited {
     color: #000;
 }
-
-/*.w3-ul li:active, ul li > a:active {
-    background-color: #000;
-    color: #fff !important;
-}*/

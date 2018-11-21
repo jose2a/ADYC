@@ -2,90 +2,86 @@
 
 @{
     ViewBag.Title = Model.Title;
+    ViewBag.PageHeader = Model.Title;
+
+    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
+    {
+        ["Students"] = Url.Action("Index"),
+        [Model.Title] = "",
+    };
+
+    ViewBag.ActiveBreadcrumb = Model.Title;
 }
-
-<h1>@Model.Title</h1>
-
 
 @using (Html.BeginForm("Save", "Students", FormMethod.Post))
 {
-    
-    @Html.HiddenFor(m => m.Id)
-    @Html.HiddenFor(m => m.IsNew)
+    <div class="box box-primary">
 
-    @Html.AntiForgeryToken()
+        <div class="box-body">
 
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "Please fix the following errors:", new { @class = "text-danger" })
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.IsNew)
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true, "Please fix the following errors:", new { @class = "text-red" })
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.FirstName)
+
                 @Html.EditorFor(m => m.FirstName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-red" })
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="form-group">
+                @Html.LabelFor(m => m.LastName)
+
                 @Html.EditorFor(m => m.LastName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-red" })
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.Email, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="form-group">
+                @Html.LabelFor(m => m.Email)
+
                 @Html.EditorFor(m => m.Email, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-red" })
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.CellphoneNumber, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(m => m.CellphoneNumber, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(m => m.CellphoneNumber, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(m => m.CellphoneNumber)
+
+                @Html.EditorFor(m => m.CellphoneNumber, new { htmlAttributes = new { @class = "form-control", data_inputmask = "&quot;mask&quot;: &quot;(999) 999-9999&quot;", data_mask = "" } })
+                @Html.ValidationMessageFor(m => m.CellphoneNumber, "", new { @class = "text-red" })
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.GradeId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="form-group">
+                @Html.LabelFor(m => m.GradeId)
+
                 @Html.DropDownListFor(m => m.GradeId, new SelectList(Model.Grades, "Id", "Name"), "Select Grade", new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.GradeId, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(m => m.GradeId, "", new { @class = "text-red" })
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.GroupId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="form-group">
+                @Html.LabelFor(m => m.GroupId)
+
                 @Html.DropDownListFor(m => m.GroupId, new SelectList(Model.Groups, "Id", "Name"), "Select Group", new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.GroupId, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(m => m.GroupId, "", new { @class = "text-red" })
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.MajorId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="form-group">
+                @Html.LabelFor(m => m.MajorId)
+
                 @Html.DropDownListFor(m => m.MajorId, new SelectList(Model.Majors, "Id", "Name"), "Select Major", new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.MajorId, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(m => m.MajorId, "", new { @class = "text-red" })
             </div>
         </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
+        <div class="box-footer">
+            <a href="@Url.Action("Index")" class="btn btn-default">Cancel</a>
+            <button class="btn btn-primary" type="submit">Save</button>
         </div>
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to list of students", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

@@ -1,13 +1,9 @@
 ﻿using ADYC.WebUI.CustomAttributes;
+using ADYC.WebUI.Exceptions;
 using ADYC.WebUI.Infrastructure;
 using ADYC.WebUI.Repositories;
 using ADYC.WebUI.ViewModels;
-using Newtonsoft.Json;
-using System;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
 
 namespace ADYC.WebUI.Controllers
 {
@@ -28,39 +24,38 @@ namespace ADYC.WebUI.Controllers
         }
 
         [IfLoggedAction]
+        public ActionResult Login()
+        {
+            return View();
+        }
+
+        [IfLoggedAction]
         [HttpPost]
-        public ActionResult Login(LoginFormViewModel model, string url)
+        public ActionResult Login(LoginFormViewModel form, string url)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var token = _loginRepository.Login(model);
+                    var token = _loginRepository.Login(form);
 
                     SessionHelper.AddUserToSession(token);
 
+                    if (!string.IsNullOrEmpty(url))
+                    {
+                        return Redirect(url);
+                    }
+
                     return RedirectToAction("Index", "Dashboard");
-                    //if (token.Role.Equals("AppAdmin"))
-                    //{
-                    //    return RedirectToAction("Index", "Dashboard");
-                    //}
-                    //else if (token.Role.Equals("AppProfessor"))
-                    //{
-                    //    return RedirectToAction("Index", "Enrollments", new { area = "Professor" });
-                    //}
-                    //else if (token.Role.Equals("AppStudent"))
-                    //{
-                    //    return RedirectToAction("Index", "Enrollments", new { area = "Student" });
-                    //}
+
                 }
-                catch (AdycHttpRequestException ahre)
+                catch (BadRequestException bre)
                 {
                     ModelState.AddModelError("", "Incorrect username and/or password");
-                    TempData["Msg"] = ahre.Message;
                 }
             }
 
-            return RedirectToAction("Index");
+            return View("Index", form);
         }
 
         [Authorize]

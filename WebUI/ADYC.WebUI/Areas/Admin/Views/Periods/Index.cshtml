@@ -1,34 +1,46 @@
 ﻿@model IEnumerable<ADYC.API.ViewModels.PeriodDto>
 
 @{
-    ViewBag.Title = "Periods";
+    var title = "Periods";
+    ViewBag.Title = title;
+    ViewBag.PageHeader = title;
+
+    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
+    {
+        [title] = ""
+    };
+
+    ViewBag.ActiveBreadcrumb = title;
 }
 
-<h2>Periods</h2>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-body">
+                <table id="periods" class="table table-bordered table-hover table-striped dataTable" role="grid">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(m => m.Id)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(m => m.Name)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-<div id="msg-div">
+                        @foreach (var period in Model)
+                        {
+                            @Html.Partial("pv_PeriodRow", period)
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
-
-<table id="periods" class="table table-bordered table-striped display">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(m => m.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(m => m.Name)
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-
-        @foreach (var period in Model)
-        {
-            @Html.Partial("pv_PeriodRow", period)
-
-        }
-    </tbody>
-</table>
 
 @section scripts
 {

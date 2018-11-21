@@ -1,19 +1,33 @@
 ﻿@model ADYC.API.ViewModels.OfferingDto
 
 @{
-    ViewBag.Title = "Withdraw confirmed";
+    var title = "Withdraw confirmed";
+
+    ViewBag.Title = title;
+    ViewBag.PageHeader = title;
+
+    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
+    {
+        ["Enrollments (Terms)"] = Url.Action("Index"),
+        ["Enrollment"] = Url.Action("ViewEnrollment", new { termId = Model.TermId }),
+        [title] = ""
+    };
+
+    ViewBag.ActiveBreadcrumb = title;
 }
 
-<h2>Congratulations!!!</h2>
+<div class="callout callout-success">
+    <h4><i class="icon fa fa-check"></i>Congratulations!</h4>
 
-<hr />
+    <p>You have succcesfully withdrawn from @Model.Title</p>
+</div>
 
-<h3>You have succcesfully withdrawn from @Model.Title</h3>
-
-<hr />
-
-<div>
-    <div class="form-actions no-color">
-        @Html.ActionLink("Back to List", "Index", new { controller = "Enrollments" })
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <div class="btn-toolbar">
+            <div class="btn-group">
+                <a href="@Url.Action("ViewEnrollment", new { termId = Model.TermId })" class="btn btn-default btn-sm"><i class="fa fa-arrow-circle-left"></i> Return to enrollment</a>
+            </div>
+        </div>
     </div>
 </div>

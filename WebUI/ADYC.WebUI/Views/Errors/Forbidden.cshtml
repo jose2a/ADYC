@@ -1,0 +1,29 @@
+﻿@{
+    var title = "403 Forbidden";
+
+    ViewBag.Title = title;
+    ViewBag.PageHeader = title;
+
+    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
+    {
+        [title] = "",
+    };
+
+    ViewBag.ActiveBreadcrumb = title;
+}
+
+<div class="error-page">
+    <h2 class="headline text-blue"> 403</h2>
+
+    <div class="error-content">
+        <h3><i class="fa fa-info text-blue"></i> Forbidden!!!.</h3>
+
+        <p>
+            You do not have the required privilegies to access this page.
+            Meanwhile, you may <a href="@Url.Action("Index", new { controller = "Dashboard", area = "" })">return to dashboard.</a>
+        </p>
+
+    </div>
+    <!-- /.error-content -->
+</div>
+<!-- /.error-page -->

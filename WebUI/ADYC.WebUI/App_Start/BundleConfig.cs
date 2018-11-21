@@ -8,16 +8,10 @@ namespace ADYC.WebUI
         // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
+            // script bundles
             bundles.Add(new ScriptBundle("~/admin-lte/js").Include(
              "~/admin-lte/js/adminlte.min.js",
              "~/admin-lte/plugins/fastclick/fastclick.js"));
-
-            bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/site.css",
-                      "~/admin-lte/css/AdminLTE.css",
-                      "~/admin-lte/css/skins/skin-blue.css"
-                      ));
 
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js"));
@@ -32,14 +26,19 @@ namespace ADYC.WebUI
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
-                      "~/Scripts/respond.js",
+                      "~/Scripts/respond.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/datatables").Include(
+                      "~/Scripts/adyc.table.utils.js",
                       "~/Scripts/bootbox.js"));
 
-
-
-            //bundles.Add(new StyleBundle("~/Content/css").Include(
-            //          "~/Content/bootstrap.css",
-            //          "~/Content/site.css"));
+            // style bundles
+            bundles.Add(new StyleBundle("~/Content/css").Include(
+                      "~/Content/bootstrap.css",
+                      "~/Content/site.css",
+                      "~/admin-lte/css/AdminLTE.css",
+                      "~/admin-lte/css/skins/skin-blue.css"
+                      ));
         }
     }
 }

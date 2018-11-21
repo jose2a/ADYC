@@ -1,105 +1,130 @@
 ﻿@model ADYC.WebUI.ViewModels.EnrollmentListViewModel
 
 @{
-    ViewBag.Title = "Enrollments";
+    var title = "Enrollments";
+
+    ViewBag.Title = title;
+    ViewBag.PageHeader = title;
+
+    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
+    {
+        ["Offerings (Terms)"] = Url.Action("Index"),
+        ["Offerings (List)"] = Url.Action("ViewOfferings", new { termId = Model.Offering.TermId }),
+        [title] = ""
+    };
+
+    ViewBag.ActiveBreadcrumb = title;
 }
 
-<h2>Enrollments</h2>
-
-<div id="msg-div">
-</div>
-
-<div class="row">
-    <div class="col-sm-8">
-        <ul class="term-info">
-            <li><h5><strong>Offering: </strong>@Model.Offering.Title</h5></li>
-            <li><h5><strong>Location: </strong>@Model.Offering.Location</h5></li>
-            <li><h5><strong>Days offered: </strong>@Model.Offering.OfferingDays</h5></li>
-            <li><h5><strong>Course: </strong>@Model.Offering.Course</h5></li>
-            <li>
-                <h5>
-                    <strong>Professor:</strong> @Model.Offering.Professor
-                </h5>
-            </li>
-            <li>
-                <h5>
-                    <strong>Term: </strong>@Model.Offering.Term.Name (@Model.Offering.Term)
-                </h5>
-            </li>
-            <li>
-                <h5><strong>Current Term: </strong> @((Model.IsCurrentTerm) ? "Yes" : "No")</h5>
-            </li>
-        </ul>
+<div class="box box-info">
+    <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-info-circle"></i> Offering</h3>
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        </div>
+    </div>
+    <div class="box-body">
+        <dl class="dl-horizontal">
+            <dt>Offering Title</dt>
+            <dd>@Model.Offering.Title</dd>
+            <dt>Location</dt>
+            <dd>@Model.Offering.Location</dd>
+            <dt>Days offered</dt>
+            <dd>@Model.Offering.OfferingDays</dd>
+            <dt>Course</dt>
+            <dd>@Model.Offering.Course</dd>
+            <dt>Professor</dt>
+            <dd>@Model.Offering.Professor</dd>
+            <dt>Term</dt>
+            <dd>
+                @Model.Offering.Term.Name (@Model.Offering.Term)
+            </dd>
+            <dt>Current Term</dt>
+            <dd>@((Model.IsCurrentTerm) ? "Yes" : "No")</dd>
+            <dt>Notes</dt>
+            <dd>@Model.Offering.Notes</dd>
+        </dl>
     </div>
 </div>
 
-<div class="btn-toolbar">
-    <div class="btn-group">
-        <a href="@Url.Action("ViewOfferings", new { termId = Model.Offering.TermId })" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-circle-arrow-left"></i> Back to list of offerings</a>
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <div class="btn-toolbar">
+            <div class="btn-group">
+                <a href="@Url.Action("Index")" class="btn btn-default btn-sm"><i class="fa fa-arrow-circle-left"></i> Back to list of terms</a>
+            </div>
+        </div>
+    </div>
+    <div class="box-body">
+        <table id="enrollments" class="table table-bordered table-hover table-striped dataTable" role="grid">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>
+                        Student Last Name
+                    </th>
+                    <th>
+                        Student First Name
+                    </th>
+                    <th>
+                        EnrollmentDate
+                    </th>
+                    <th>
+                        Withdraw Date
+                    </th>
+                    <th>
+                        Notes
+                    </th>
+                    <th>
+                        FinalGrade
+                    </th>
+                    <th>
+                        Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var enrollment in Model.Enrollments)
+            {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => enrollment.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => enrollment.Student.LastName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => enrollment.Student.FirstName)
+                        </td>
+                        <td>
+                            @enrollment.EnrollmentDate.ToString("MMMM dd, yyyy")
+                        </td>
+                        <td>
+                            @if (enrollment.WithdropDate.HasValue)
+                            {
+                                @enrollment.WithdropDate.Value.ToString("MMMM dd, yyyy")
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => enrollment.Notes)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => enrollment.FinalGrade)
+                        </td>
+                        <td>
+                            <a href="@Url.Action("ViewEvaluations", new { enrollmentId = enrollment.Id })" class="btn btn-xs btn-primary">
+                                <i class="fa fa-users"></i> Enrollments
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
     </div>
 </div>
 
-<table id="enrollments" class="table table-bordered table-striped display">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>
-                Student Last Name
-            </th>
-            <th>
-                Student First Name
-            </th>
-            <th>
-                EnrollmentDate
-            </th>
-            <th>
-                Withdraw Date
-            </th>
-            <th>
-                Notes
-            </th>
-            <th>
-                FinalGrade
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var enrollment in Model.Enrollments)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => enrollment.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => enrollment.Student.LastName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => enrollment.Student.FirstName)
-                </td>
-                <td>
-                    @enrollment.EnrollmentDate.ToString("MMMM dd, yyyy")
-                </td>
-                <td>
-                    @if (enrollment.WithdropDate.HasValue)
-                    {
-                        @enrollment.WithdropDate.Value.ToString("MMMM dd, yyyy")
-                    }
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => enrollment.Notes)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => enrollment.FinalGrade)
-                </td>
-                <td>
-                    @Html.ActionLink("Evaluations", "ViewEvaluations", new { enrollmentId = enrollment.Id })
-                </td>
-            </tr>
-        }
-    </tbody>
 
-</table>
 
 @section scripts
 {

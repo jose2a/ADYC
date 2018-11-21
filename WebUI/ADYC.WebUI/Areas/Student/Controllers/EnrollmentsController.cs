@@ -1,4 +1,6 @@
 ﻿using ADYC.WebUI.Controllers;
+using ADYC.WebUI.CustomAttributes;
+using ADYC.WebUI.Exceptions;
 using ADYC.WebUI.Infrastructure;
 using ADYC.WebUI.Repositories;
 using ADYC.WebUI.ViewModels;
@@ -10,6 +12,7 @@ using System.Web.Mvc;
 namespace ADYC.WebUI.Areas.Student.Controllers
 {
     [Authorize(Roles = "AppStudent")]
+    [SelectedTab("enrollments")]
     public class EnrollmentsController : ADYCBasedController
     {
         private TermRepository _termRepository;
@@ -43,7 +46,7 @@ namespace ADYC.WebUI.Areas.Student.Controllers
 
             try
             {
-                var studentId = SessionHelper.User.UserId; //new Guid("65016919-365A-E811-9B75-B8763FED7266");
+                var studentId = SessionHelper.User.UserId;
 
                 var enrollments = await _enrollmentRepository.GetEnrollmentsByStudentIdAndTermId(studentId, termId.Value);
 
@@ -57,9 +60,9 @@ namespace ADYC.WebUI.Areas.Student.Controllers
                     Enrollments = enrollments
                 });
             }
-            catch (AdycHttpRequestException ahre)
+            catch (BadRequestException bre)
             {
-                TempData["msg"] = GetErrorsFromAdycHttpExceptionToString(ahre);
+                TempData["errorMsg"] = GetErrorsFromAdycHttpExceptionToString(bre);
             }
 
             return RedirectToAction("Index");
@@ -100,22 +103,23 @@ namespace ADYC.WebUI.Areas.Student.Controllers
 
             try
             {
+                var term = await _termRepository.GetTermById(termId.Value);
+
+                if (DateTime.Now < term.EnrollmentDropDeadLine.AddDays(1))
+                {
+                    TempData["warningMsg"] = "The period to withdraw has already ended. You cannot withdraw at this moment.";
+
+                    return RedirectToAction("ViewEnrollment", new { termId = termId.Value });
+                }
                 await _enrollmentRepository.Withdraw(enrollmentId.Value);
 
                 var enrollment = await _enrollmentRepository.GetById(enrollmentId.Value);
 
                 return View(enrollment.Offering);                
             }
-            catch (AdycHttpRequestException ahre)
+            catch (BadRequestException bre)
             {
-                if (ahre.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return HttpNotFound();
-                }
-
-                var errorMsg = GetErrorsFromAdycHttpExceptionToString(ahre);
-
-                TempData["msg"] = errorMsg;
+                TempData["errorMsg"] = GetErrorsFromAdycHttpExceptionToString(bre);
             }
 
             return RedirectToAction("ViewEnrollment", new { termId = termId });

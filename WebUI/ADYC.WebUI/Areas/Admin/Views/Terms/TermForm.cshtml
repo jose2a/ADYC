@@ -2,83 +2,81 @@
 
 @{
     ViewBag.Title = Model.Title;
+    ViewBag.PageHeader = Model.Title;
+
+    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
+    {
+        ["Terms"] = Url.Action("Index"),
+        [Model.Title] = "",
+    };
+
+    ViewBag.ActiveBreadcrumb = Model.Title;
 }
+
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
-<h1>@Model.Title</h1>
-
 
 @using (Html.BeginForm("Save", "Terms", FormMethod.Post))
 {
+    <div class="box box-primary">
 
-    @Html.HiddenFor(m => m.Id)
-    @Html.HiddenFor(m => m.IsNew)
+        <div class="box-body">
 
-    @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.IsNew)
 
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "Please fix the following errors:", new { @class = "text-danger" })
+            @Html.AntiForgeryToken()
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            @Html.ValidationSummary(true, "Please fix the following errors:", new { @class = "text-red" })
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Name)
+
                 @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-red" })
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.StartDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.StartDate)
+
                 @Html.EditorFor(m => m.StartDate, new { htmlAttributes = new { @class = "form-control date" } })
-                @Html.ValidationMessageFor(m => m.StartDate, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(m => m.StartDate, "", new { @class = "text-red" })
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.EndDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="form-group">
+                @Html.LabelFor(m => m.EndDate)
+
                 @Html.EditorFor(m => m.EndDate, new { htmlAttributes = new { @class = "form-control date" } })
-                @Html.ValidationMessageFor(m => m.EndDate, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(m => m.EndDate, "", new { @class = "text-red" })
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.EnrollmentDeadLine, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="form-group">
+                @Html.LabelFor(m => m.EnrollmentDeadLine)
+
                 @Html.EditorFor(m => m.EnrollmentDeadLine, new { htmlAttributes = new { @class = "form-control date" } })
-                @Html.ValidationMessageFor(m => m.EnrollmentDeadLine, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(m => m.EnrollmentDeadLine, "", new { @class = "text-red" })
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.EnrollmentDropDeadLine, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="form-group">
+                @Html.LabelFor(m => m.EnrollmentDropDeadLine)
+
                 @Html.EditorFor(m => m.EnrollmentDropDeadLine, new { htmlAttributes = new { @class = "form-control date" } })
-                @Html.ValidationMessageFor(m => m.EnrollmentDropDeadLine, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(m => m.EnrollmentDropDeadLine, "", new { @class = "text-red" })
             </div>
-        </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
+            <div class="form-group">
                 <label>
                     @Html.CheckBoxFor(m => m.IsCurrentTerm) Current Term?
                 </label>
             </div>
         </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
+        <div class="box-footer">
+            <a href="@Url.Action("Index")" class="btn btn-default">Cancel</a>
+            <button class="btn btn-primary" type="submit">Save</button>
         </div>
+
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to list of terms", "Index")
-</div>
 
 @section Scripts {
     <script>

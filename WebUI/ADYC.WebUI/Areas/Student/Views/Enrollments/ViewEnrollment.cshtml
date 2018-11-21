@@ -1,122 +1,120 @@
 ﻿@model ADYC.WebUI.ViewModels.EnrollmentDetailListViewModel
 
 @{
-    ViewBag.Title = "Enrollment";
+    var title = "Enrollment";
+
+    ViewBag.Title = title;
+    ViewBag.PageHeader = title;
+
+    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
+    {
+        ["Enrollments (Terms)"] = Url.Action("Index"),
+        [title] = ""
+    };
+
+    ViewBag.ActiveBreadcrumb = title;
 }
 
-<h2>Enrollment</h2>
-
-<div class="row">
-    <div class="col-sm-8">
-        <ul class="term-info">
-            <li>
-                <h5>
-                    <strong>Term: </strong>@Model.Term.Name&nbsp;
-                    @if (Model.IsCurrentTerm)
-                    {
-                        <span class="badge">Current</span>
-                    }
-                    &nbsp;(@Model.Term)
-                </h5>
-            </li>
-        </ul>
+<div class="box box-info collapsed-box">
+    <div class="box-header with-border">
+        <h3 class="box-title">Term</h3>
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        </div>
+    </div>
+    <div class="box-header with-border">
+        <div class="btn-toolbar">
+            <div class="btn-group">
+                <a href="@Url.Action("Index")" class="btn btn-default btn-sm"><i class="fa fa-arrow-circle-left"></i> Back to list of terms</a>
+            </div>
+        </div>
+    </div>
+    <div class="box-body">
+        <dl class="dl-horizontal">
+            <dt>Name</dt>
+            <dd>@Model.Term.Name</dd>
+            <dt>Start Date</dt>
+            <dd>@Model.Term.StartDate.ToString("MMMM dd, yyyy")</dd>
+            <dt>End Date</dt>
+            <dd>@Model.Term.EndDate.ToString("MMMM dd, yyyy")</dd>
+            <dt>Enrollment Deadline</dt>
+            <dd>@Model.Term.EnrollmentDeadLine.ToString("MMMM dd, yyyy")</dd>
+            <dt>Withdraw Deadline</dt>
+            <dd>@Model.Term.EnrollmentDropDeadLine.ToString("MMMM dd, yyyy")</dd>
+            <dt>Current Term</dt>
+            <dd>@((Model.IsCurrentTerm) ? "Yes" : "No")</dd>
+        </dl>
     </div>
 </div>
 
-<div class="btn-toolbar">
-    <div class="btn-group">
-        <a href="@Url.Action("Index")" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-circle-arrow-left"></i> Back to list of terms</a>
-
-        @*@if (Model.Enrollment != null)
-            {
-                <a href="@Url.Action("ViewEvaluations", new { enrollmentId = Model.Enrollment.Id })" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-list"></i> Evaluations</a>
-                if (Model.IsCurrentTerm && !Model.Enrollment.WithdropDate.HasValue)
-                {
-                    <a id="btnWithdraw" href="@Url.Action("Withdraw", new { enrollmentId = Model.Enrollment.Id, termId = Model.TermId })" data-title="@Model.Enrollment.Offering.Title" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-alert"></i> Withdraw offering</a>
-                }
-            }*@
-    </div>
-</div>
-
-<hr />
 @if (Model.Enrollments.Count() == 0)
 {
-    <div class="alert alert-info" role="alert">
-        You were not enrolled during this term.
+    <div class="callout callout-info">
+        <h4><i class="fa fa-info-circle"></i> Info</h4>
+
+        <p>You were not enrolled during this term.</p>
     </div>
 }
 else
 {
     foreach (var enrollment in Model.Enrollments)
     {
-        if (enrollment.WithdropDate.HasValue)
-        {
-            <div class="alert alert-info" role="alert">
-                You have withdrawn from this offering. You might select a new offering before the enrollment deadline @Model.Term.EnrollmentDeadLine
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Enrollment</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                </div>
             </div>
-        }
+            <div class="box-header with-border">
+                <a href="@Url.Action("ViewEvaluations", new { enrollmentId = enrollment.Id })" class="btn btn-primary btn-sm"><i class="fa fa-list"></i> Evaluations</a>
+                @if (Model.IsCurrentTerm && !enrollment.WithdropDate.HasValue && (DateTime.UtcNow < Model.Term.EnrollmentDropDeadLine.AddDays(1)))
+                {
+                    <a id="btnWithdraw" href="@Url.Action("Withdraw", new { enrollmentId = enrollment.Id, termId = Model.TermId })" data-title="@enrollment.Offering.Title" class="btn btn-danger btn-sm js-withdraw"><i class="fa fa-remove"></i> Withdraw offering</a>
+                }
+            </div>
+            <div class="box-body">
+                @if (enrollment.WithdropDate.HasValue)
+                {
+                    <div class="callout callout-info">
+                        <h4><i class="fa fa-info-circle"></i> Info</h4>
+                        <p>You have withdrawn from this offering. You might enroll in a new offering before the enrollment deadline @Model.Term.EnrollmentDeadLine.ToString("MMMM dd, yyyy")</p>
+                    </div>
+                }
 
-        <div class="row">
-            <div class="col-sm-8">
-                <ul class="term-info">
-                    <li><h5><strong>Offering: </strong>@enrollment.Offering.Title</h5></li>
-                    <li><h5><strong>Location: </strong>@enrollment.Offering.Location</h5></li>
-                    <li><h5><strong>Course: </strong>@enrollment.Offering.Course</h5></li>
-                    <li><h5><strong>Professor: </strong>@enrollment.Offering.Professor</h5></li>
-                    <li>
-                        <h5>
-                            <strong>Offering Notes: </strong>@enrollment.Offering.Notes
-                        </h5>
-                    </li>
-                    <li>
-                        <h5>
-                            <strong>Enrolled date: </strong>@enrollment.EnrollmentDate.ToString("MMMM dd, yyyy")
-                        </h5>
-                    </li>
+                <dl class="dl-horizontal">
+                    <dt>Offering</dt>
+                    <dd>@enrollment.Offering.Title</dd>
+                    <dt>Location</dt>
+                    <dd>@enrollment.Offering.Location</dd>
+                    <dt>Course</dt>
+                    <dd>@enrollment.Offering.Course</dd>
+                    <dt>Professor</dt>
+                    <dd>@enrollment.Offering.Professor</dd>
+                    <dt>Offering Notes</dt>
+                    <dd>@enrollment.Offering.Notes</dd>
+                    <dt>Enrolled Date</dt>
+                    <dd>@enrollment.EnrollmentDate.ToString("MMMM dd, yyyy")</dd>
                     @if (enrollment.WithdropDate.HasValue)
                     {
-                        <li>
-                            <h5>
-                                <strong>Withdrawn date: </strong>@enrollment.WithdropDate.Value.ToString("MMMM dd, yyyy")
-                            </h5>
-                        </li>
+                        <dt>Withdrawn Date</dt>
+                        <dd>@enrollment.WithdropDate.Value.ToString("MMMM dd, yyyy")</dd>
                     }
                     @if (enrollment.FinalGrade.HasValue)
                     {
-                        <li>
-                            <h5>
-                                <strong>Final grade: </strong> @enrollment.FinalGrade (@enrollment.FinalGradeLetter)
-                            </h5>
-                        </li>
+                        <dt>Final Grade</dt>
+                        <dd>@enrollment.FinalGrade (@enrollment.FinalGradeLetter)</dd>
                     }
                     else
                     {
-                        <li>
-                            <h5>
-                                <strong>Final grade: </strong> Enrollment has not been graded yet.
-                            </h5>
-                        </li>
+                        <dt>Final Grade</dt>
+                        <dd>Enrollment has not been graded yet.</dd>
                     }
-                    <li>
-                        <h5>
-                            <strong>Enrollment notes: </strong>@enrollment.Notes
-                        </h5>
-                    </li>
-                </ul>
+                    <dt>Enrollment Notes</dt>
+                    <dd>@enrollment.Notes</dd>
+                </dl>
             </div>
         </div>
-
-        <div class="btn-toolbar">
-            <div class="btn-group">
-                <a href="@Url.Action("ViewEvaluations", new { enrollmentId = enrollment.Id })" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-list"></i> Evaluations</a>
-                @if (Model.IsCurrentTerm && !enrollment.WithdropDate.HasValue)
-                {
-                    <a id="btnWithdraw" href="@Url.Action("Withdraw", new { enrollmentId = enrollment.Id, termId = Model.TermId })" data-title="@enrollment.Offering.Title" class="btn btn-primary btn-sm js-withdraw"><i class="glyphicon glyphicon-alert"></i> Withdraw offering</a>
-                }
-            </div>
-        </div>
-
-        <hr />
     }
 }
 
@@ -153,4 +151,6 @@ else
             }
         });
     </script>
+
+    <script src="~/Scripts/bootbox.js"></script>
 }

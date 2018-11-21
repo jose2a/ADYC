@@ -207,6 +207,10 @@
     <Compile Include="Migrations\201810292037172_InitialMigration.Designer.cs">
       <DependentUpon>201810292037172_InitialMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811210316128_AddedFirstNameAndLastNameToUserTable.cs" />
+    <Compile Include="Migrations\201811210316128_AddedFirstNameAndLastNameToUserTable.Designer.cs">
+      <DependentUpon>201811210316128_AddedFirstNameAndLastNameToUserTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -237,6 +241,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201810292037172_InitialMigration.resx">
       <DependentUpon>201810292037172_InitialMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811210316128_AddedFirstNameAndLastNameToUserTable.resx">
+      <DependentUpon>201811210316128_AddedFirstNameAndLastNameToUserTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

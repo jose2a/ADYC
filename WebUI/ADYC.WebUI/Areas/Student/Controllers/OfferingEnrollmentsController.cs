@@ -1,9 +1,10 @@
 ﻿using ADYC.API.ViewModels;
 using ADYC.WebUI.Controllers;
+using ADYC.WebUI.CustomAttributes;
+using ADYC.WebUI.Exceptions;
 using ADYC.WebUI.Infrastructure;
 using ADYC.WebUI.Repositories;
 using ADYC.WebUI.ViewModels;
-using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using System.Web.Mvc;
 namespace ADYC.WebUI.Areas.Student.Controllers
 {
     [Authorize(Roles = "AppStudent")]
+    [SelectedTab("enroll")]
     public class OfferingEnrollmentsController : ADYCBasedController
     {
         private OfferingRepository _offeringRepository;
@@ -36,10 +38,12 @@ namespace ADYC.WebUI.Areas.Student.Controllers
 
             if (currentTerm == null)
             {
-                return RedirectToAction("NotCurrentTerm");
+                TempData["errorMsg"] = "There are no current term or it has not been selected yet.";
+
+                return RedirectToAction("Index", new { Controller = "Dashboard", Area = "" });
             }
 
-            var studentId = SessionHelper.User.UserId; //new Guid("65016919-365A-E811-9B75-B8763FED7266");
+            var studentId = SessionHelper.User.UserId;
 
             var offeringsForCurrentTerm = _offeringRepository
                 .GetOfferingsByTermId(currentTerm.Id.Value);
@@ -77,13 +81,8 @@ namespace ADYC.WebUI.Areas.Student.Controllers
                 viewModel = new ScheduleListViewModel(scheduleList);
                 viewModel.Days = days;
             }
-            catch (AdycHttpRequestException ahre)
+            catch (BadRequestException ahre)
             {
-                if (ahre.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return HttpNotFound();
-                }
-
                 AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
             }
 
@@ -100,8 +99,7 @@ namespace ADYC.WebUI.Areas.Student.Controllers
 
             try
             {
-                var studentId = SessionHelper.User.UserId; //new Guid("65016919-365A-E811-9B75-B8763FED7266");
-                //var student = await _studentRepository.GetStudentById(studentId);
+                var studentId = SessionHelper.User.UserId; 
 
                 var enrollment = new EnrollmentDto
                 {
@@ -115,16 +113,9 @@ namespace ADYC.WebUI.Areas.Student.Controllers
 
                 return View(offering);
             }
-            catch (AdycHttpRequestException ahre)
+            catch (BadRequestException bre)
             {
-                if (ahre.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return HttpNotFound();
-                }
-
-                var errorMsg = GetErrorsFromAdycHttpExceptionToString(ahre);
-
-                TempData["msg"] = errorMsg;
+                TempData["erroMsg"] = GetErrorsFromAdycHttpExceptionToString(bre);
             }
 
             return RedirectToAction("Index");

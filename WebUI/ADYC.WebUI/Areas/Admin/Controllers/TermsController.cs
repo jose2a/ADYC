@@ -1,5 +1,7 @@
 ﻿using ADYC.API.ViewModels;
 using ADYC.WebUI.Controllers;
+using ADYC.WebUI.CustomAttributes;
+using ADYC.WebUI.Exceptions;
 using ADYC.WebUI.Infrastructure;
 using ADYC.WebUI.Repositories;
 using ADYC.WebUI.ViewModels;
@@ -12,6 +14,7 @@ using System.Web.Mvc;
 namespace ADYC.WebUI.Areas.Admin.Controllers
 {
     [Authorize(Roles = "AppAdmin")]
+    [SelectedTab("terms")]
     public class TermsController : ADYCBasedController
     {
         private TermRepository _termRepository;
@@ -69,14 +72,9 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                     IsNew = false
                 };
             }
-            catch (AdycHttpRequestException ahre)
+            catch (BadRequestException bre)
             {
-                if (ahre.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return HttpNotFound();
-                }
-
-                AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
+                AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
             }
 
             return View("TermForm", viewModel);
@@ -110,11 +108,13 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                         await _termRepository.PutTerm(term.Id.Value, term);
                     }
 
+                    TempData["successMsg"] = "Your changes have been saved succesfully.";
+
                     return RedirectToAction("Index");
                 }
-                catch (AdycHttpRequestException ahre)
+                catch (BadRequestException bre)
                 {
-                    AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
+                    AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
                 }
             }
 
@@ -123,11 +123,16 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
         // GET: Admin/Terms/Delete
         [HttpGet]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(int? id)
         {
+            if (!id.HasValue)
+            {
+                return HttpNotFound();
+            }
+
             try
             {
-                var statusCode = await _termRepository.DeleteTerm(id);
+                var statusCode = await _termRepository.DeleteTerm(id.Value);
 
                 if (statusCode == HttpStatusCode.NotFound)
                 {
@@ -136,9 +141,9 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
                 return new HttpStatusCodeResult(HttpStatusCode.OK);
             }
-            catch (AdycHttpRequestException ahre)
+            catch (BadRequestException bre)
             {
-                var errorString = GetErrorsFromAdycHttpExceptionToString(ahre);
+                var errorString = GetErrorsFromAdycHttpExceptionToString(bre);
 
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, errorString);
             }
@@ -190,14 +195,9 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                     IsNew = isNew
                 };
             }
-            catch (AdycHttpRequestException ahre)
+            catch (BadRequestException bre)
             {
-                if (ahre.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return HttpNotFound();
-                }
-
-                AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
+                AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
             }
 
             return View(viewModel);
@@ -225,13 +225,13 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                         await _periodDateRepository.PutPeriodDateList(form.TermId, periodDateList);
                     }
 
-                    TempData["msg"] = "Your changes have been saved succesfully.";
+                    TempData["successMsg"] = "Your changes have been saved succesfully.";
 
                     return RedirectToAction("PeriodDates", new { termId = form.TermId });
                 }
-                catch (AdycHttpRequestException ahre)
+                catch (BadRequestException bre)
                 {
-                    AddErrorsFromAdycHttpExceptionToModelState(ahre, ModelState);
+                    AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
                 }
             }
 

@@ -6,6 +6,9 @@
         <a href="@Url.Action("delete", new { Model.Id })" data-id="@Model.Id" class="js-delete hidden" data-name="Are you sure you want to delete @Model.Name FOREVER?"></a>
     </td>
     <td>
+        @Html.DisplayFor(m => m.Id)
+    </td>
+    <td>
         @Html.DisplayFor(m => m.Name)
     </td>
     <td>

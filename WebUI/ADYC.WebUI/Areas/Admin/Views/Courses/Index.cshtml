@@ -1,15 +1,22 @@
 ﻿@model IEnumerable<ADYC.API.ViewModels.CourseDto>
 
 @{
-    ViewBag.Title = "Courses";
-    ViewBag.PageHeader = "Courses";
-    ViewBag.Level = "Admin";
+    var title = "Courses";
+    ViewBag.Title = title;
+    ViewBag.PageHeader = title;
+
+    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
+    {
+        [title] = ""
+    };
+
+    ViewBag.ActiveBreadcrumb = title;
 }
 
 <div class="row">
     <div class="col-xs-12">
         <div class="box">
-            <div class="box-header">
+            <div class="box-header with-border">
                 <div class="btn-toolbar">
                     <div class="btn-group">
                         <a href="@Url.Action("new")" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-plus"></i> Create Course</a>
@@ -29,7 +36,7 @@
                             <th>
                                 Type
                             </th>
-                            <th>Actions</th>
+                            <th class="actions">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,12 +52,11 @@
     </div>
 </div>
 
-<div id="msg-div">
-</div>
-
-
-
-
+@section styles {
+    @Styles.Render("~/Content/datatables")
+    <link rel="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+    <link rel="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css" />
+}
 
 @section scripts
 {
@@ -70,6 +76,8 @@
             });
         });
     </script>
+
+    @Scripts.Render("~/bundles/datatables")
 
     <script type="text/javascript" src="~/Scripts/adyc.table.utils.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
