@@ -11,19 +11,22 @@ namespace ADYC.Service
     public class StudentService : IStudentService
     {
         private IStudentRepository _studentRepository;
+        private IGradeService _gradeRepository;
 
         public IGradeService GradeService { get; set; }
         public IGroupService GroupService { get; set; }
         public IMajorService MajorService { get; set; }
 
-        public StudentService(IStudentRepository studentRepository)
+        public StudentService(IStudentRepository studentRepository,
+            IGradeService gradeService)
         {
             _studentRepository = studentRepository;
+            _gradeRepository = gradeService;
         }
 
         public void Add(Student student)
         {
-            SetStudentSchoolProperties(student);
+            //SetStudentSchoolProperties(student);
 
             ValidateStudent(student);
             ValidateDuplicatedStudent(student);
@@ -38,7 +41,7 @@ namespace ADYC.Service
         {
             foreach (var student in students)
             {
-                SetStudentSchoolProperties(student);
+                //SetStudentSchoolProperties(student);
 
                 student.CreatedAt = DateTime.Today;
                 student.IsDeleted = false;
@@ -191,7 +194,7 @@ namespace ADYC.Service
 
         public void Update(Student student)
         {
-            SetStudentSchoolProperties(student);
+            //SetStudentSchoolProperties(student);
 
             ValidateStudent(student);
 
@@ -231,9 +234,9 @@ namespace ADYC.Service
 
         private void SetStudentSchoolProperties(Student student)
         {
-            student.Grade = GradeService.Get(student.GradeId);
-            student.Group = GroupService.Get(student.GroupId);
-            student.Major = MajorService.Get(student.MajorId);
+            student.Grade = _gradeRepository.Get(student.GradeId);
+            //student.Group = GroupService.Get(student.GroupId);
+            //student.Major = MajorService.Get(student.MajorId);
         }
 
         private void ValidateStudentRange(IEnumerable<Student> students)

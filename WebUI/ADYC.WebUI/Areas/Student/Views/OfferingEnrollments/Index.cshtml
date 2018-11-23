@@ -17,22 +17,32 @@
 <link href="~/Content/jPages.css" rel="stylesheet" />
 
 <style>
-    .bg-slide {
+    .offering-slide {
         background-image: url('../../../../Images/waves.gif');
-    }
-
-    .offering-slide li {
         list-style: none;
-        padding-left: 40px;
-        padding-top: 40px;
+        padding: 30px 0px 0px 0px;
+        margin-bottom: 0px;
     }
 
-        .offering-slide li h2 {
-            text-align: center;
-        }
+    .slide-item {
+        position: relative;
+        padding-left: 100px;
+        padding-bottom: 35px;
+    }
 
-    .margin-40px {
-        margin-top: 20px;
+    .offering-slide>li h2 {
+        text-align: center;
+    }
+
+    .offering-slide-info {
+        margin-top: 50px;
+        margin-bottom: 30px;
+    }
+
+    .offering-slide-img {
+        position: absolute;
+        bottom: 0px;
+        right: 15px;
     }
 </style>
 
@@ -92,7 +102,7 @@ else
                     <div class="holder no-margin pull-right"></div>
                     <ul class="pagination pagination-sm no-margin pull-right"></ul>
                 </div>
-                <div class="box-body bg-slide">
+                <div class="box-body no-padding bg-slide">
                     <ul id="offeringsContainer" class="offering-slide" data-url="@Url.Action("ViewSchedules")">
                         @foreach (var offering in Model.Offerings)
                         {
@@ -100,7 +110,7 @@ else
                                 <div>
                                     <h2>@offering.Title</h2>
 
-                                    <dl class="">
+                                    <dl class="offering-slide-info">
                                         <dt>Offering Title</dt>
                                         <dd>@offering.Title</dd>
                                         <dt>Location</dt>
@@ -116,12 +126,12 @@ else
                                     </dl>
                                 </div>
 
-                                <div class="pull-left margin-40px">
-                                    <a href="@Url.Action("Enrollment", new { offeringId = offering.Id })" data-title="@offering.Title" class="btn btn-success js-enrollment">
-                                        <i class="fa fa-user"></i> Enroll in offering
+                                <div class="offering-slide-btn">
+                                    <a href="@Url.Action("Enrollment", new { offeringId = offering.Id })" data-title="@offering.Title" class="btn btn-lg btn-success js-enrollment">
+                                        <i class="fa fa-user-plus"></i> Enroll
                                     </a>
                                 </div>
-                                <div class="pull-right">
+                                <div class="offering-slide-img">
                                     <img class="" src="~/Images/bg_actividad.png">
                                 </div>
                             </li>

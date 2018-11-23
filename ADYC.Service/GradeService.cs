@@ -79,8 +79,6 @@ namespace ADYC.Service
 
         public void Update(Grade grade)
         {
-            ValidateDuplicatedGrade(grade);
-
             _gradeRepository.Update(grade);
         }
 

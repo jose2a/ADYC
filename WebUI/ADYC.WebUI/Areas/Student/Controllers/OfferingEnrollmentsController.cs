@@ -115,7 +115,7 @@ namespace ADYC.WebUI.Areas.Student.Controllers
             }
             catch (BadRequestException bre)
             {
-                TempData["erroMsg"] = GetErrorsFromAdycHttpExceptionToString(bre);
+                TempData["errorMsg"] = GetErrorsFromAdycHttpExceptionToString(bre);
             }
 
             return RedirectToAction("Index");

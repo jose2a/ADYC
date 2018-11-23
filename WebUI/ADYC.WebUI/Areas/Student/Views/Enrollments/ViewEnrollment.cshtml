@@ -15,7 +15,7 @@
     ViewBag.ActiveBreadcrumb = title;
 }
 
-<div class="box box-info collapsed-box">
+<div class="box box-info">
     <div class="box-header with-border">
         <h3 class="box-title">Term</h3>
         <div class="box-tools pull-right">
@@ -25,7 +25,7 @@
     <div class="box-header with-border">
         <div class="btn-toolbar">
             <div class="btn-group">
-                <a href="@Url.Action("Index")" class="btn btn-default btn-sm"><i class="fa fa-arrow-circle-left"></i> Back to list of terms</a>
+                <a href="@Url.Action("Index")" class="btn btn-default btn-sm"><i class="fa fa-arrow-circle-left"></i> Back to list of enrollments (terms)</a>
             </div>
         </div>
     </div>
@@ -51,8 +51,14 @@
 {
     <div class="callout callout-info">
         <h4><i class="fa fa-info-circle"></i> Info</h4>
-
-        <p>You were not enrolled during this term.</p>
+        @if (Model.IsCurrentTerm)
+        {
+            <p>You are not enrolled during this term.</p>
+        }
+        else
+        {
+            <p>You were not enrolled during this term.</p>
+        }        
     </div>
 }
 else

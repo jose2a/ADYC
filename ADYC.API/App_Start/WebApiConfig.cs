@@ -1,8 +1,10 @@
-﻿using ADYC.API.Security;
+﻿using ADYC.API.Exceptions;
+using ADYC.API.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.ExceptionHandling;
 
 namespace ADYC.API
 {
@@ -22,6 +24,7 @@ namespace ADYC.API
             );
 
             config.Filters.Add(new AuthorizeAttribute { Roles = "AppAdmin" });
+            config.Services.Replace(typeof(IExceptionHandler), new GlobalExceptionHandler());
         }
     }
 }

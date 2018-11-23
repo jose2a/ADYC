@@ -54,7 +54,7 @@ namespace ADYC.WebUI.Infrastructure
             1,
             token.UserName,
             DateTime.Now,
-            DateTime.Now.AddMinutes(30),
+            DateTime.Now.AddMinutes(3 * 60),
             false, //pass here true, if you want to implement remember me functionality
             userData);
 

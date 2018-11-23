@@ -73,9 +73,9 @@ desired effect
         <header class="main-header">
 
             <!-- Logo -->
-            <a href="index2.html" class="logo">
+            <a href="@Url.Action("Index", new { controller = "Dashboard", area = "" })" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini"><b>A</b>LT</span>
+                <span class="logo-mini"><b>A</b>DYC</span>
                 <!-- logo for regular state and mobile devices -->
                 <span class="logo-lg"><b>ADYC</b>V1.0</span>
             </a>
@@ -263,7 +263,7 @@ desired effect
                     {
                         <li class="@SelectedTabClass("enrollments")">
                             <a href="@Url.Action("Index", new { Controller = "Enrollments", Area = "Professor" })">
-                                <i class="fa fa-link"></i> <span>Enrollments</span>
+                                <i class="fa fa-link"></i> <span>Offerings</span>
                             </a>
                         </li>
                     }
@@ -341,7 +341,7 @@ desired effect
                     {
                         <div class="alert alert-success alert-dismissible">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            <h4><i class="icon fa fa-check"></i> Sucess!</h4>
+                            <h4><i class="icon fa fa-check"></i> Great!</h4>
                             @TempData["successMsg"].ToString()
                         </div>
                     }

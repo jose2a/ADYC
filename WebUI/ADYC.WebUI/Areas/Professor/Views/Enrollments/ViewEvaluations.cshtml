@@ -17,6 +17,8 @@
     ViewBag.ActiveBreadcrumb = title;
 }
 
+<link href="~/admin-lte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.css" rel="stylesheet" />
+
 @if (!Model.IsCurrentTerm)
 {
     <div class="callout callout-info">
@@ -80,7 +82,8 @@
 
                 @if (Model.IsCurrentTerm)
                 {
-                    @Html.EditorFor(model => model.Enrollment.Notes, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.TextArea("Enrollment.Notes", new { @class = "textarea", rows = "3", style = "width:100%" })
+                    @*@Html.EditorFor(model => model.Enrollment.Notes, new { htmlAttributes = new { @class = "form-control" } })*@
                     @Html.ValidationMessageFor(model => Model.Enrollment.Notes, "", new { @class = "text-red" })
                 }
                 else
@@ -126,12 +129,12 @@
                             <td>
                                 @if (Model.IsCurrentTerm)
                                 {
-                                    @Html.EditorFor(model => Model.Evaluations[i].Notes, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.TextAreaFor(model => Model.Evaluations[i].Notes, new { htmlAttributes = new { @class = "textarea", rows = 3 } })
                                     @Html.ValidationMessageFor(model => Model.Evaluations[i].Notes, "", new { @class = "text-red" })
                                 }
                                 else
                                 {
-                                    @Html.EditorFor(model => Model.Evaluations[i].Notes, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
+                                    @Html.TextAreaFor(model => Model.Evaluations[i].Notes, new { htmlAttributes = new { @class = "textarea", disabled = "disabled" } })
                                 }
                             </td>
                         </tr>
@@ -139,7 +142,7 @@
                 </tbody>
             </table>
         </div>
-        if (Model.IsCurrentTerm)
+        @if (Model.IsCurrentTerm)
         {
         <div class="box-footer">
             <button class="btn btn-primary" type="submit">Save</button>
@@ -151,9 +154,12 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-
+            //bootstrap WYSIHTML5 - text editor
+            $(".textarea").wysihtml5();
         });
     </script>
+    
+    <script src="~/admin-lte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.js"></script>
 
     @Scripts.Render("~/bundles/jqueryval")
 }

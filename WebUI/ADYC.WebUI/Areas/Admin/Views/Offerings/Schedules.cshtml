@@ -26,60 +26,20 @@
     </div>
 }
 
+
 <div class="row">
     <div class="col-md-6 col-sm-12">
-
-        <div class="box box-info">
-            <div class="box-header with-border">
-                <h3 class="box-title"><i class="fa fa-info-circle"></i> Offering</h3>
-                <div class="box-tools pull-right">
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        @using (Html.BeginForm("SaveSchedules", "Offerings", FormMethod.Post))
+        {
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Schedule</h3>
                 </div>
-                @if (!Model.IsCurrentTerm)
-                {
-                    <div class="btn-toolbar pull-right">
-                        <div class="btn-group">
-                            <a href="@Url.Action("View", new { termId = Model.Offering.TermId })" class="btn btn-default btn-sm"><i class="fa fa-arrow-circle-left"></i> Back to list of offerings</a>
-                        </div>
-                    </div>
-                }
-            </div>
-            <div class="box-body">
-                <dl>
-                    <dt>Offering Title</dt>
-                    <dd>@Model.Offering.Title</dd>
-                    <dt>Location</dt>
-                    <dd>@Model.Offering.Location</dd>
-                    <dt>Course</dt>
-                    <dd>@Model.Offering.Course</dd>
-                    <dt>Professor</dt>
-                    <dd>@Model.Offering.Professor</dd>
-                    <dt>Term</dt>
-                    <dd>
-                        @Model.Offering.Term.Name&nbsp;
-                        @if (Model.IsCurrentTerm)
-                        {
-                            <span class="badge">Current</span>
-                        }
-                        &nbsp;@Model.Offering.Term
-                    </dd>
-                    <dt>Notes</dt>
-                    <dd>@Model.Offering.Notes</dd>
-                </dl>
-            </div>
-        </div>
+                <div class="box-header with-border">
+                    <a href="@Url.Action("View", new { termId = Model.Offering.TermId })" class="btn btn-sm btn-default"><i class="fa fa-arrow-circle-left"></i> Back to offering list</a>
+                </div>
+                <div class="box-body">
 
-        
-    </div>
-    <div class="col-md-6 col-sm-12">
-
-        <div class="box box-primary">
-            <div class="box-header with-border">
-                <h3 class="box-title">Schedule</h3>
-            </div>
-            <div class="box-body">
-                @using (Html.BeginForm("SaveSchedules", "Offerings", FormMethod.Post))
-                {
                     @Html.HiddenFor(m => Model.Offering.Id)
                     @Html.HiddenFor(m => Model.OfferingId)
                     @Html.HiddenFor(m => Model.IsNew)
@@ -140,17 +100,58 @@
                             }
                         </tbody>
                     </table>
-
-                    if (Model.IsCurrentTerm)
-                    {
-                        <div class="form-group">
-                            <div class="col-md-10">
-                                <a href="@Url.Action("View", new { termId = Model.Offering.TermId })" class="btn btn-default">Cancel</a>
-                                <input type="submit" value="Save" class="btn btn-primary" />
-                            </div>
-                        </div>
-                    }
+                </div>
+                @if (Model.IsCurrentTerm)
+                {
+                    <div class="box-footer">
+                        <a href="@Url.Action("View", new { termId = Model.Offering.TermId })" class="btn btn-default">Cancel</a>
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
                 }
+            </div>
+        }
+    </div>
+
+
+    <div class="col-md-6 col-sm-12">
+
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-info-circle"></i> Offering</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                </div>
+                @if (!Model.IsCurrentTerm)
+                {
+                    <div class="btn-toolbar pull-right">
+                        <div class="btn-group">
+                            <a href="@Url.Action("View", new { termId = Model.Offering.TermId })" class="btn btn-default btn-sm"><i class="fa fa-arrow-circle-left"></i> Back to list of offerings</a>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="box-body">
+                <dl>
+                    <dt>Offering Title</dt>
+                    <dd>@Model.Offering.Title</dd>
+                    <dt>Location</dt>
+                    <dd>@Model.Offering.Location</dd>
+                    <dt>Course</dt>
+                    <dd>@Model.Offering.Course</dd>
+                    <dt>Professor</dt>
+                    <dd>@Model.Offering.Professor</dd>
+                    <dt>Term</dt>
+                    <dd>
+                        @Model.Offering.Term.Name&nbsp;
+                        @if (Model.IsCurrentTerm)
+                        {
+                            <span class="badge">Current</span>
+                        }
+                        &nbsp;@Model.Offering.Term
+                    </dd>
+                    <dt>Notes</dt>
+                    <dd>@Model.Offering.Notes</dd>
+                </dl>
             </div>
         </div>
     </div>

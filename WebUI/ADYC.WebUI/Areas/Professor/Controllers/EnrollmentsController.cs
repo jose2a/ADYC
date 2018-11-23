@@ -114,7 +114,7 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
         }
 
         // POST: Professor/Enrollments/SaveEvaluations
-        [HttpPost]
+        [HttpPost, ValidateInput(false)]
         public async Task<ActionResult> SaveEvaluations(EnrollmentWithEvaluationsViewModel form)
         {
             if (ModelState.IsValid)

@@ -44,8 +44,10 @@ namespace ADYC.API.App_Start
             builder.RegisterType<EnrollmentService>().As<IEnrollmentService>().InstancePerLifetimeScope()
                 .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
             builder.RegisterType<GradeService>().As<IGradeService>().InstancePerRequest();
-            builder.RegisterType<GroupService>().As<IGroupService>().InstancePerRequest();
-            builder.RegisterType<MajorService>().As<IMajorService>().InstancePerRequest();
+            builder.RegisterType<GroupService>().As<IGroupService>().InstancePerLifetimeScope()
+                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
+            builder.RegisterType<MajorService>().As<IMajorService>().InstancePerLifetimeScope()
+                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
             builder.RegisterType<OfferingService>().As<IOfferingService>().InstancePerLifetimeScope()
                 .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
             builder.RegisterType<PeriodDateService>().As<IPeriodDateService>().InstancePerLifetimeScope()
