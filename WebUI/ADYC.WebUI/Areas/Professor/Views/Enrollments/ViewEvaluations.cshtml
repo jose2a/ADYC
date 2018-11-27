@@ -17,8 +17,6 @@
     ViewBag.ActiveBreadcrumb = title;
 }
 
-<link href="~/admin-lte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.css" rel="stylesheet" />
-
 @if (!Model.IsCurrentTerm)
 {
     <div class="callout callout-info">
@@ -134,7 +132,7 @@
                                 }
                                 else
                                 {
-                                    @Html.TextAreaFor(model => Model.Evaluations[i].Notes, new { htmlAttributes = new { @class = "textarea", disabled = "disabled" } })
+                                    @Html.TextBoxFor(model => Model.Evaluations[i].Notes, new { @disabled = "disabled" })
                                 }
                             </td>
                         </tr>
@@ -149,6 +147,10 @@
         </div>
         }
     </div>
+}
+
+@section styles {
+    <link href="~/admin-lte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.css" rel="stylesheet" />
 }
 
 @section Scripts {

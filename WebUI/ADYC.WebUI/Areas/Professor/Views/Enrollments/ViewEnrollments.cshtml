@@ -51,7 +51,7 @@
     <div class="box-header with-border">
         <div class="btn-toolbar">
             <div class="btn-group">
-                <a href="@Url.Action("Index")" class="btn btn-default btn-sm"><i class="fa fa-arrow-circle-left"></i> Back to list of terms</a>
+                <a href="@Url.Action("ViewOfferings", new { termId = Model.Offering.TermId })" class="btn btn-default btn-sm"><i class="fa fa-arrow-circle-left"></i> Back to list of terms</a>
             </div>
         </div>
     </div>
@@ -113,7 +113,7 @@
                         </td>
                         <td>
                             <a href="@Url.Action("ViewEvaluations", new { enrollmentId = enrollment.Id })" class="btn btn-xs btn-primary">
-                                <i class="fa fa-users"></i> Enrollments
+                                <i class="fa fa-calculator"></i> Evaluations
                             </a>
                         </td>
                     </tr>

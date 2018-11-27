@@ -10,14 +10,7 @@ namespace ADYC.WebUI.Infrastructure
 
         private IList<string> _errors = new List<string>();
 
-        public IList<string> Errors
-        {
-            get { return _errors; }
-            set
-            {
-                _errors = value;
-            }
-        }
+        public IList<string> Errors { get; set; }
 
         public AdycHttpRequestException(HttpStatusCode statusCode, string message)
             : base(message)

@@ -154,6 +154,7 @@
     <Compile Include="Areas\Student\Controllers\EnrollmentsController.cs" />
     <Compile Include="Areas\Student\Controllers\OfferingEnrollmentsController.cs" />
     <Compile Include="Areas\Student\StudentAreaRegistration.cs" />
+    <Compile Include="Attributes\OnlyAjaxRequestAttribute.cs" />
     <Compile Include="Controllers\ADYCBasedController.cs" />
     <Compile Include="Areas\Admin\Controllers\CourseTypesController.cs" />
     <Compile Include="Areas\Admin\Controllers\GradesController.cs" />

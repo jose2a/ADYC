@@ -7,6 +7,13 @@ namespace ADYC.WebUI.Controllers
         // GET: Dashboard
         public ActionResult Index()
         {
+            var title = "Dashboard";
+
+            ViewBag.Title = title;
+            ViewBag.PageHeader = title;
+
+            ViewBag.ActiveBreadcrumb = title;
+
             return View();
         }
     }

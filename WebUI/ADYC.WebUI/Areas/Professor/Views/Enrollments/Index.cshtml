@@ -14,19 +14,6 @@
     ViewBag.ActiveBreadcrumb = title;
 }
 
-<style>
-    /*ul.term-list li a:hover {
-        color: #fff;
-        background-color: #3c8dbc;
-    }
-
-    ul.term-list li h5 {
-        display: inline-block;
-    }*/
-</style>
-
-<link href="~/Content/jPages.css" rel="stylesheet" />
-
 <div class="row">
     <div class="col-md-3 col-xs-12">
         <div class="box box-info">
@@ -57,7 +44,7 @@
                                 <span class="w3-medium w3-opacity">(@term)</span>
                                 @if (term.IsCurrentTerm)
                                 {
-                                    <span class="label label-primary pull-right">Current</span>
+                                    <span class="label label-success pull-right">Current</span>
                                 }
                             </a>
                         </li>
@@ -73,6 +60,10 @@
         </div>
     </div>
 </div>
+
+@section styles {
+    <link href="~/Content/jPages.css" rel="stylesheet" />
+}
 
 @section scripts {
     <script>

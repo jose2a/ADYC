@@ -15,8 +15,6 @@
     ViewBag.ActiveBreadcrumb = title;
 }
 
-<link href="~/Content/jquery.timepicker.css" rel="stylesheet" />
-
 @if (!Model.IsCurrentTerm)
 {
     <div class="callout callout-info">
@@ -112,7 +110,6 @@
         }
     </div>
 
-
     <div class="col-md-6 col-sm-12">
 
         <div class="box box-info">
@@ -156,6 +153,10 @@
         </div>
     </div>
 </div>
+
+@section styles {
+    <link href="~/Content/jquery.timepicker.css" rel="stylesheet" />
+}
 
 @section Scripts {
     <script>

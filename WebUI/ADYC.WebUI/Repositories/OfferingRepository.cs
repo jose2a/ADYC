@@ -25,7 +25,7 @@ namespace ADYC.WebUI.Repositories
         {
             _client = new RestClient("http://localhost:19016");
             _client.Authenticator = new JwtAuthenticator(SessionHelper.User.AccessToken);
-            _client.AddDefaultHeader("Authorization", string.Format("Bearer {0}", SessionHelper.User.AccessToken));
+            //_client.AddDefaultHeader("Authorization", string.Format("Bearer {0}", SessionHelper.User.AccessToken));
 
             return _client;
         }

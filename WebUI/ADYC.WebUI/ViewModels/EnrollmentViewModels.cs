@@ -94,17 +94,8 @@ namespace ADYC.WebUI.ViewModels
         public bool IsCurrentTerm { get; set; }
 
         public IEnumerable<EnrollmentDto> Enrollments { get; set; }
-
-        //public EnrollmentDetailListViewModel()
-        //{
-
-        //}
-
-        //public EnrollmentDetailListViewModel(EnrollmentDto enrollment)
-        //{
-        //    Enrollment = enrollment;
-        //}
     }
+
     public class EnrollmentWithdrawViewModel
     {
         public int TermId { get; set; }

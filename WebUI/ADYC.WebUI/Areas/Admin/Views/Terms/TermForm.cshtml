@@ -13,8 +13,6 @@
     ViewBag.ActiveBreadcrumb = Model.Title;
 }
 
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
 @using (Html.BeginForm("Save", "Terms", FormMethod.Post))
 {
     <div class="box box-primary">
@@ -76,6 +74,10 @@
         </div>
 
     </div>
+}
+
+@section styles {
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 }
 
 @section Scripts {

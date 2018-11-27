@@ -14,7 +14,7 @@ namespace ADYC.WebUI.Infrastructure
 
         public CustomPrincipal(string Username)
         {
-            this.Identity = new GenericIdentity(Username);
+            Identity = new GenericIdentity(Username);
         }
 
         public Guid UserId { get; set; }

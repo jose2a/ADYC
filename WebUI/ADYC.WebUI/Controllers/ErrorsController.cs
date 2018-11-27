@@ -10,6 +10,7 @@ namespace ADYC.WebUI.Controllers
             return View();
         }
 
+        // GET: Errors/Forbidden
         public ActionResult Forbidden()
         {
             return View();

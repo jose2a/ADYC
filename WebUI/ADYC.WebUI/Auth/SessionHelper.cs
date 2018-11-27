@@ -58,7 +58,7 @@ namespace ADYC.WebUI.Infrastructure
             false, //pass here true, if you want to implement remember me functionality
             userData);
 
-            string encTicket = FormsAuthentication.Encrypt(authTicket);
+            var encTicket = FormsAuthentication.Encrypt(authTicket);
             HttpCookie faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
             HttpContext.Current.Response.Cookies.Add(faCookie);
         }

@@ -29,13 +29,6 @@ namespace ADYC.WebUI.Repositories
         {
             client = MakeRestClient();
 
-            var form = new Dictionary<string, string>
-               {
-                   {"grant_type", "password"},
-                   {"username", model.UserName},
-                   {"password", model.Password},
-               };
-
             var request = new RestRequest(_addressPreffix, Method.POST)
             {
                 RequestFormat = DataFormat.Json

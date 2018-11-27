@@ -47,73 +47,58 @@
         <div class="box-body">
             @Html.ValidationSummary(true, "Please fix the following errors:", new { @class = "text-red" })
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Title)
+            @{
+                object htmlAttributes = null;
 
-                @if (Model.IsCurrentTerm)
+                if (Model.IsCurrentTerm)
                 {
-                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-red" })
+                    htmlAttributes = new { @class = "form-control" };
                 }
                 else
                 {
-                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
+                    htmlAttributes = new { @class = "form-control", disabled = "disabled" };
                 }
+            }
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Title)
+
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = htmlAttributes })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-red" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(model => model.CourseId)
 
-                @if (Model.IsCurrentTerm)
-                {
-                    @Html.DropDownListFor(model => model.CourseId, new SelectList(Model.Courses, "Id", ""), "Select Course", new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.CourseId, "", new { @class = "text-red" })
-                }
-                else
-                {
-                    @Html.DropDownListFor(model => model.CourseId, new SelectList(Model.Courses, "Id", ""), "Select Course", new { @class = "form-control", disabled = "disabled" })
-                }
+                @Html.DropDownListFor(model => model.CourseId, new SelectList(Model.Courses, "Id", ""), "Select Course", htmlAttributes)
+                @Html.ValidationMessageFor(model => model.CourseId, "", new { @class = "text-red" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(model => model.ProfessorId)
 
-                @if (Model.IsCurrentTerm)
-                {
-                    @Html.DropDownListFor(m => m.ProfessorId, new SelectList(Model.Professors, "Id", ""), "Select Professor", new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.ProfessorId, "", new { @class = "text-red" })
-                }
-                else
-                {
-                    @Html.DropDownListFor(m => m.ProfessorId, new SelectList(Model.Professors, "Id", ""), "Select Professor", new { @class = "form-control", disabled = "disabled" })
-                }
+                @Html.DropDownListFor(m => m.ProfessorId, new SelectList(Model.Professors, "Id", ""), "Select Professor", htmlAttributes)
+                @Html.ValidationMessageFor(model => model.ProfessorId, "", new { @class = "text-red" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(model => model.TermId)
 
-                @Html.DropDownListFor(m => m.TermId, new SelectList(Model.Terms, "Id", "Name"), new { @class = "form-control", @disabled = "disable" })
+                @Html.DropDownListFor(m => m.TermId, new SelectList(Model.Terms, "Id", "Name"), new { @class = "form-control", disabled = "disabled" })
                 @Html.ValidationMessageFor(model => model.TermId, "", new { @class = "text-red" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(model => model.Location)
 
-                @if (Model.IsCurrentTerm)
-                {
-                    @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-red" })
-                }
-                else
-                {
-                    @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
-                }
+                @Html.EditorFor(model => model.Location, new { htmlAttributes = htmlAttributes })
+                @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-red" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(model => model.OfferingDays)
 
-                @Html.EditorFor(model => model.OfferingDays, new { htmlAttributes = new { @class = "form-control", @disabled = "disable" } })
+                @Html.EditorFor(model => model.OfferingDays, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
                 @Html.ValidationMessageFor(model => model.OfferingDays, "", new { @class = "text-red" })
             </div>
         </div>
@@ -126,7 +111,7 @@
             </div>
         }
     </div>
-}
+                }
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

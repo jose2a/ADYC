@@ -142,6 +142,12 @@ desired effect
 
                 <!-- Sidebar Menu -->
                 <ul class="sidebar-menu" data-widget="tree">
+                    <li class="header">DASHBOARD</li>
+                    <li class="@SelectedTabClass("dashboard")">
+                        <a href="@Url.Action("Index", new { Controller = "Dashboard", Area = "" })">
+                            <i class="fa fa-circle-o text-red"></i> <span>Go to dashboard</span>
+                        </a>
+                    </li>
                     <li class="header">MAIN NAVIGATION</li>
                     <!-- Optionally, you can add icons to the links -->
                     @if (User.IsInRole("AppAdmin"))
