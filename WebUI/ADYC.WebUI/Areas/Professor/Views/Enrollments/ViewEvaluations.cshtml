@@ -68,6 +68,19 @@
 
             @Html.ValidationSummary(true, "Please fix the following errors:", new { @class = "text-red" })
 
+            @{
+                object htmlAttrTextArea = null;
+
+                if (Model.IsCurrentTerm)
+                {
+                    htmlAttrTextArea = new { @class = "textarea", style = "width:100%" };
+                }
+                else
+                {
+                    htmlAttrTextArea = new { @class = "textarea", style = "width:100%", @disabled = "disabled" };
+                }
+            }
+
             <dl>
                 <dt>Final Grade</dt>
                 <dd>@Model.Enrollment.FinalGrade</dd>
@@ -78,16 +91,8 @@
             <div class="form-group">
                 @Html.LabelFor(m => m.Enrollment.Notes)
 
-                @if (Model.IsCurrentTerm)
-                {
-                    @Html.TextArea("Enrollment.Notes", new { @class = "textarea", rows = "3", style = "width:100%" })
-                    @*@Html.EditorFor(model => model.Enrollment.Notes, new { htmlAttributes = new { @class = "form-control" } })*@
-                    @Html.ValidationMessageFor(model => Model.Enrollment.Notes, "", new { @class = "text-red" })
-                }
-                else
-                {
-                    @Html.EditorFor(model => model.Enrollment.Notes, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
-                }
+                @Html.TextArea("Enrollment.Notes", htmlAttrTextArea)
+                @Html.ValidationMessageFor(model => Model.Enrollment.Notes, "", new { @class = "text-red" })
             </div>
 
             <table class="table table-bordered table-hover table-striped dataTable" role="grid">
@@ -100,6 +105,18 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @{
+                        object htmlAttr = null;
+
+                        if (Model.IsCurrentTerm)
+                        {
+                            htmlAttr = new { @class = "form-control" };
+                        }
+                        else
+                        {
+                            htmlAttr = new { @class = "form-control", @disabled = "disabled" };
+                        }
+                    }
 
                     @for (int i = 0; i < Model.Evaluations.Count; i++)
                     {
@@ -111,43 +128,30 @@
                                 @Model.Evaluations[i].Period.Name
                             </td>
                             <td>
-                                @if (Model.IsCurrentTerm)
-                                {
-                                    @Html.EditorFor(model => Model.Evaluations[i].PeriodGrade, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => Model.Evaluations[i].PeriodGrade, "", new { @class = "text-red" })
-                                }
-                                else
-                                {
-                                    @Html.EditorFor(model => Model.Evaluations[i].PeriodGrade, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
-                                }
+                                @Html.EditorFor(model => Model.Evaluations[i].PeriodGrade, new { htmlAttributes = htmlAttr })
+                                @Html.ValidationMessageFor(model => Model.Evaluations[i].PeriodGrade, "", new { @class = "text-red" })
                             </td>
                             <td>
                                 @Html.EditorFor(model => Model.Evaluations[i].PeriodGradeLetter, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
                             </td>
                             <td>
-                                @if (Model.IsCurrentTerm)
-                                {
-                                    @Html.TextAreaFor(model => Model.Evaluations[i].Notes, new { htmlAttributes = new { @class = "textarea", rows = 3 } })
-                                    @Html.ValidationMessageFor(model => Model.Evaluations[i].Notes, "", new { @class = "text-red" })
-                                }
-                                else
-                                {
-                                    @Html.TextBoxFor(model => Model.Evaluations[i].Notes, new { @disabled = "disabled" })
-                                }
+                                @Html.TextAreaFor(model => Model.Evaluations[i].Notes, new { htmlAttributes = htmlAttrTextArea })
+                                @Html.ValidationMessageFor(model => Model.Evaluations[i].Notes, "", new { @class = "text-red" })
                             </td>
                         </tr>
                     }
                 </tbody>
+
             </table>
         </div>
         @if (Model.IsCurrentTerm)
         {
-        <div class="box-footer">
-            <button class="btn btn-primary" type="submit">Save</button>
-        </div>
+            <div class="box-footer">
+                <button class="btn btn-primary" type="submit">Save</button>
+            </div>
         }
     </div>
-}
+                }
 
 @section styles {
     <link href="~/admin-lte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.css" rel="stylesheet" />
@@ -160,7 +164,7 @@
             $(".textarea").wysihtml5();
         });
     </script>
-    
+
     <script src="~/admin-lte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.js"></script>
 
     @Scripts.Render("~/bundles/jqueryval")

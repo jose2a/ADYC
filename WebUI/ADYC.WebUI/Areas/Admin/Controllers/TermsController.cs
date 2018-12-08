@@ -1,4 +1,5 @@
 ﻿using ADYC.API.ViewModels;
+using ADYC.WebUI.Attributes;
 using ADYC.WebUI.Controllers;
 using ADYC.WebUI.CustomAttributes;
 using ADYC.WebUI.Exceptions;
@@ -23,8 +24,6 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
         public TermsController()
         {
-            var user = ((CustomPrincipal)User);
-
             _termRepository = new TermRepository();
             _periodRepository = new PeriodRepository();
             _periodDateRepository = new PeriodDateRepository();
@@ -123,6 +122,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
         // GET: Admin/Terms/Delete
         [HttpGet]
+        [OnlyAjaxRequest]
         public async Task<ActionResult> Delete(int? id)
         {
             if (!id.HasValue)

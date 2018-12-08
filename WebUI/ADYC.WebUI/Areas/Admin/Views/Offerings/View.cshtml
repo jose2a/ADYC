@@ -33,7 +33,7 @@
             <dt>Enrollment Withdraw</dt>
             <dd>@Model.Term.EnrollmentDropDeadLine.ToString("MMMM dd, yyyy")</dd>
             <dt>Current Term</dt>
-            <dd>@(Model.IsCurrentTerm ? "Yes" : "No")</dd>
+            <dd>@Html.Raw(@Model.IsCurrentTerm ? "Yes" : "No")</dd>
         </dl>
     </div>
 </div>
@@ -85,6 +85,11 @@
     </div>
 </div>
 
+@section styles {
+    <link rel="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+    <link rel="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css" />
+}
+
 @section scripts
 {
     <script>
@@ -105,12 +110,13 @@
                     inputType: 'checkbox',
                     inputOptions: [
                         {
-                            text: 'Force deleting offering?',
+                            text: 'Force offering deletion?',
                             value: '1',
                         }
                     ],
                     callback: function (result) {
                         console.log(result);
+
                         if (result !== null) {
                             var href = link.attr("href");
 
@@ -124,9 +130,11 @@
                                 success: function (data) {
                                     tr.remove();
                                     addDeleteEvent();
+
+                                    UH$.showMsg("The offering has been successfully deleted.", UH$.MessageTypeEnum.SUCCESS, "msg-div");
                                 },
                                 error: function (data) {
-                                    bootbox.alert(data.statustext);
+                                    UH$.showMsg(data.statusText, UH$.MessageTypeEnum.ERROR, "msg-div");
                                 }
                             });
                         }
@@ -176,7 +184,8 @@
         });
     </script>
 
-    <script type="text/javascript" src="~/Scripts/adyc.table.utils.js"></script>
+    @Scripts.Render("~/bundles/datatables")
+
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
 }

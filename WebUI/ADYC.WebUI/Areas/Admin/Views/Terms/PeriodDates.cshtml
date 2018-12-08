@@ -76,6 +76,17 @@
                 <tbody>
                     @for (int i = 0; i < Model.Periods.Count(); i++)
                     {
+                        object htmlAttr = null;
+
+                        if (Model.IsCurrentTerm)
+                        {
+                            htmlAttr = new { @class = "form-control" };
+                        }
+                        else
+                        {
+                            htmlAttr = new { @class = "form-control", @disabled = "disabled" };
+                        }
+
                         <tr>
                             <td>
                                 @Html.HiddenFor(m => Model.PeriodDates[i].PeriodId)
@@ -83,26 +94,12 @@
                                 @Model.Periods.ElementAt(i).Name
                             </td>
                             <td>
-                                @if (Model.IsCurrentTerm)
-                                {
-                                    @Html.EditorFor(model => Model.PeriodDates[i].StartDate, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => Model.PeriodDates[i].StartDate, "", new { @class = "text-red" })
-                                }
-                                else
-                                {
-                                    @Html.EditorFor(model => Model.PeriodDates[i].StartDate, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
-                                }
+                                @Html.EditorFor(model => Model.PeriodDates[i].StartDate, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => Model.PeriodDates[i].StartDate, "", new { @class = "text-red" })
                             </td>
                             <td>
-                                @if (Model.IsCurrentTerm)
-                                {
-                                    @Html.EditorFor(model => Model.PeriodDates[i].EndDate, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => Model.PeriodDates[i].EndDate, "", new { @class = "text-red" })
-                                }
-                                else
-                                {
-                                    @Html.EditorFor(model => Model.PeriodDates[i].EndDate, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
-                                }
+                                @Html.EditorFor(model => Model.PeriodDates[i].EndDate, new { htmlAttributes = htmlAttr })
+                                @Html.ValidationMessageFor(model => Model.PeriodDates[i].EndDate, "", new { @class = "text-red" })
                             </td>
                         </tr>
                     }

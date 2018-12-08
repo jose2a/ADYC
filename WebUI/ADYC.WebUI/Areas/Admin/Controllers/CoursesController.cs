@@ -1,4 +1,5 @@
 ﻿using ADYC.API.ViewModels;
+using ADYC.WebUI.Attributes;
 using ADYC.WebUI.Controllers;
 using ADYC.WebUI.CustomAttributes;
 using ADYC.WebUI.Exceptions;
@@ -28,6 +29,11 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
         {
             var courses = await _courseRepository.GetCourses();
 
+            // Add properties to layout
+            AddPageHeader("Courses", "List of all courses");
+
+            AddBreadcrumb("Courses", "");
+
             return View(courses);
         }
 
@@ -39,6 +45,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                 IsNew = true,
                 CourseTypes = await _courseTypeRepository.GetCourseTypes()
             };
+
+            // Add properties to layout
+            AddPageHeader(viewModel.Title, "");
+
+            AddBreadcrumb("Courses", UrlHelper.Action("Index", "Courses", new { area = "Admin" }));
+            AddBreadcrumb(viewModel.Title, "");
 
             return View("CourseForm", viewModel);
         }
@@ -68,6 +80,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                 AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
             }
 
+            // Add properties to layout
+            AddPageHeader(viewModel.Title, "");
+
+            AddBreadcrumb("Courses", UrlHelper.Action("Index", "Courses", new { area = "Admin" }));
+            AddBreadcrumb(viewModel.Title, "");
+
             return View("CourseForm", viewModel);
         }
 
@@ -95,7 +113,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                         await _courseRepository.PutCourse(course.Id.Value, course);
                     }
 
-                    TempData["successMsg"] = "Your changes have been saved succesfully.";
+                    AddPageAlerts(ViewHelpers.PageAlertType.Success, "Your changes have been saved succesfully.");
 
                     return RedirectToAction("Index");
                 }
@@ -107,11 +125,18 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
             form.CourseTypes = await _courseTypeRepository.GetCourseTypes();
 
+            // Add properties to layout
+            AddPageHeader(form.Title, "");
+
+            AddBreadcrumb("Courses", UrlHelper.Action("Index", "Courses", new { area = "Admin" }));
+            AddBreadcrumb(form.Title, "");
+
             return View("CourseForm", form);
         }
 
         // GET: Admin/Courses/Delete
         [HttpGet]
+        [OnlyAjaxRequest]
         public async Task<ActionResult> Delete(int? id)
         {
             if (!id.HasValue)
@@ -140,6 +165,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
         // GET: Admin/Courses/Trash
         [HttpGet]
+        [OnlyAjaxRequest]
         public async Task<ActionResult> Trash(int? id)
         {
             if (!id.HasValue)
@@ -168,6 +194,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
         // GET: Admin/Courses/Restore
         [HttpGet]
+        [OnlyAjaxRequest]
         public async Task<ActionResult> Restore(int? id)
         {
             if (!id.HasValue)

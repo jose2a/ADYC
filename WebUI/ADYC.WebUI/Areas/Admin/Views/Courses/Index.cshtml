@@ -1,16 +1,16 @@
 ﻿@model IEnumerable<ADYC.API.ViewModels.CourseDto>
 
 @{
-    var title = "Courses";
-    ViewBag.Title = title;
-    ViewBag.PageHeader = title;
+//var title = "Courses";
+//ViewBag.Title = title;
+//ViewBag.PageHeader = title;
 
-    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
-    {
-        [title] = ""
-    };
+//ViewBag.BreadcrumbLinks = new Dictionary<string, string>
+//{
+//    [title] = ""
+//};
 
-    ViewBag.ActiveBreadcrumb = title;
+//ViewBag.ActiveBreadcrumb = title;
 }
 
 <div class="row">
@@ -64,7 +64,7 @@
 
             var tableHelper = TH$({
                 table: "courses",
-                messageDiv: "#msg-div",
+                messageDiv: "msg-div",
                 addTrashEvent: true,
                 addRestoreEvent: true,
                 addDeleteEvent: true
@@ -78,7 +78,6 @@
 
     @Scripts.Render("~/bundles/datatables")
 
-    <script type="text/javascript" src="~/Scripts/adyc.table.utils.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
 }

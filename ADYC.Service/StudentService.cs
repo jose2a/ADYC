@@ -11,22 +11,28 @@ namespace ADYC.Service
     public class StudentService : IStudentService
     {
         private IStudentRepository _studentRepository;
-        private IGradeService _gradeRepository;
+        private IGradeService _gradeService;
+        private IGroupService _groupService;
+        private IMajorService _majorService;
 
         public IGradeService GradeService { get; set; }
         public IGroupService GroupService { get; set; }
         public IMajorService MajorService { get; set; }
 
         public StudentService(IStudentRepository studentRepository,
-            IGradeService gradeService)
+            IGradeService gradeService,
+            IGroupService groupService,
+            IMajorService majorService)
         {
             _studentRepository = studentRepository;
-            _gradeRepository = gradeService;
+            _gradeService = gradeService;
+            _groupService = groupService;
+            _majorService = majorService;
         }
 
         public void Add(Student student)
         {
-            //SetStudentSchoolProperties(student);
+            SetStudentSchoolProperties(student);
 
             ValidateStudent(student);
             ValidateDuplicatedStudent(student);
@@ -41,7 +47,7 @@ namespace ADYC.Service
         {
             foreach (var student in students)
             {
-                //SetStudentSchoolProperties(student);
+                SetStudentSchoolProperties(student);
 
                 student.CreatedAt = DateTime.Today;
                 student.IsDeleted = false;
@@ -234,9 +240,9 @@ namespace ADYC.Service
 
         private void SetStudentSchoolProperties(Student student)
         {
-            student.Grade = _gradeRepository.Get(student.GradeId);
-            //student.Group = GroupService.Get(student.GroupId);
-            //student.Major = MajorService.Get(student.MajorId);
+            student.Grade = _gradeService.Get(student.GradeId);
+            student.Group = _groupService.Get(student.GroupId);
+            student.Major = _majorService.Get(student.MajorId);
         }
 
         private void ValidateStudentRange(IEnumerable<Student> students)
@@ -255,17 +261,17 @@ namespace ADYC.Service
                 throw new ArgumentNullException("student");
             }
 
-            if (student.Grade == null)
+            if (student.GradeId == 0)
             {
                 throw new ArgumentNullException("grade");
             }
 
-            if (student.Group == null)
+            if (student.GroupId == 0)
             {
                 throw new ArgumentNullException("group");
             }
 
-            if (student.Major == null)
+            if (student.MajorId == 0)
             {
                 throw new ArgumentNullException("major");
             }

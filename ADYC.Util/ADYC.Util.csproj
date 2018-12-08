@@ -69,6 +69,8 @@
     <Compile Include="Exceptions\ForeignKeyEntityException.cs" />
     <Compile Include="Exceptions\NonexistingEntityException.cs" />
     <Compile Include="Exceptions\PreexistingEntityException.cs" />
+    <Compile Include="Interfaces\IMessageService.cs" />
+    <Compile Include="Messages\EmailMesageService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RestUtils\UrlResoucesUtil.cs" />
   </ItemGroup>

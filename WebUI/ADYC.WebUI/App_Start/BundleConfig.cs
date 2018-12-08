@@ -29,6 +29,7 @@ namespace ADYC.WebUI
                       "~/Scripts/respond.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/datatables").Include(
+                "~/Scripts/adyc.utils.js",
                       "~/Scripts/adyc.table.utils.js",
                       "~/Scripts/bootbox.js"));
 

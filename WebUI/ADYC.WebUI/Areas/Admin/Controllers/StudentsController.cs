@@ -1,5 +1,6 @@
 ﻿using ADYC.API.Auth.Models;
 using ADYC.API.ViewModels;
+using ADYC.WebUI.Attributes;
 using ADYC.WebUI.Controllers;
 using ADYC.WebUI.CustomAttributes;
 using ADYC.WebUI.Exceptions;
@@ -113,7 +114,9 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                             Email = student.Email,
                             Password = "ChangeItAsap123!",
                             UserId = newStudent.Id,
-                            UserRole = "AppStudent"
+                            UserRole = "AppStudent",
+                            FirstName = student.FirstName,
+                            LastName = student.LastName
                         };
 
                         await _accountRepository.RegisterAccount(registerBindingModel);
@@ -145,6 +148,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
         // GET: Admin/Students/Delete
         [HttpGet]
+        [OnlyAjaxRequest]
         public async Task<ActionResult> Delete(Guid id)
         {
             try
@@ -177,6 +181,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
         // GET: Admin/Students/Trash
         [HttpGet]
+        [OnlyAjaxRequest]
         public async Task<ActionResult> Trash(Guid id)
         {
             try
@@ -200,6 +205,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
         // GET: Admin/Students/Restore
         [HttpGet]
+        [OnlyAjaxRequest]
         public async Task<ActionResult> Restore(Guid id)
         {
             try

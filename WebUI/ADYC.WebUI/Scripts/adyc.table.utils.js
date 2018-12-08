@@ -1,8 +1,12 @@
-﻿; (function (global, $) {
+﻿; (function (global, $, UH$) {
 
     var TableHelper = function (options) {
         if (!$) {
             throw 'jQuery was not loaded.';
+        }
+
+        if (!UH$) {
+            throw 'ADYC.Utils.Helper was not loaded.';
         }
 
         return new TableHelper.init(options);
@@ -75,9 +79,11 @@
                         success: function (data) {
                             tr.replaceWith(data);
                             self.isTableModified = true;
+
+                            UH$.showMsg("Your changes have been saved successfully.", UH$.MessageTypeEnum.SUCCESS, self.messageDiv);
                         },
                         error: function (data) {
-                            self.showErrorMsg(data.statusText, "warning");
+                            UH$.showMsg(data.statusText, UH$.MessageTypeEnum.WARNING, self.messageDiv);
                         }
                     });
                 }
@@ -96,9 +102,11 @@
                 success: function (data) {
                     tr.replaceWith(data);
                     self.isTableModified = true;
+
+                    UH$.showMsg("Your changes have been saved successfully.", UH$.MessageTypeEnum.SUCCESS, self.messageDiv);
                 },
                 error: function (data) {
-                    self.showErrorMsg(data.statusText, "warning");
+                    UH$.showMsg(data.statusText, UH$.MessageTypeEnum.WARNING, self.messageDiv);
                 }
             });
         },
@@ -118,23 +126,15 @@
                         success: function (data) {
                             tr.remove();
                             self.isTableModified = true;
+
+                            UH$.showMsg("Your changes have been saved successfully.", UH$.MessageTypeEnum.SUCCESS, self.messageDiv);
                         },
                         error: function (data) {
-                            self.showErrorMsg(data.statusText, "danger");
+                            UH$.showMsg(data.statusText, UH$.MessageTypeEnum.WARNING, self.messageDiv);
                         }
                     });
                 }
             });
-        },
-
-        showErrorMsg: function (text, type) {
-            var msgHtml = '<div id="Msg" class="alert alert-' + type + ' alert-dismissible">';
-            msgHtml += '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>';
-            msgHtml += '<h4><i class="icon fa fa-ban"></i> Error!</h4>';
-            msgHtml += '<span id="MsgTxt">' + text + '</span>';
-            msgHtml += '</div>';
-
-            $(this.messageDiv).html(msgHtml);
         },
 
         addAjaxStopListener: function () {
@@ -152,4 +152,4 @@
     TableHelper.init.prototype = TableHelper.prototype;
     global.TableHelper = global.TH$ = TableHelper;
 
-}(window, jQuery));
+}(window, jQuery, UH$));

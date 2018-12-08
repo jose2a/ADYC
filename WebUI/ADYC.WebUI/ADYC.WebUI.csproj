@@ -201,6 +201,8 @@
     <Compile Include="Repositories\ScheduleRepository.cs" />
     <Compile Include="Repositories\StudentRepository.cs" />
     <Compile Include="Repositories\TermRepository.cs" />
+    <Compile Include="ViewHelpers\Breadcrumb.cs" />
+    <Compile Include="ViewHelpers\PageAlert.cs" />
     <Compile Include="ViewModels\CourseViewModels.cs" />
     <Compile Include="ViewModels\CourseTypeViewModels.cs" />
     <Compile Include="ViewModels\EnrollmentViewModels.cs" />
@@ -459,6 +461,7 @@
     <Content Include="Images\bg_slide.png" />
     <Content Include="Images\parallax1.jpg" />
     <Content Include="Images\waves.gif" />
+    <Content Include="Scripts\adyc.utils.js" />
     <Content Include="Scripts\bootbox.js" />
     <Content Include="Areas\Professor\Views\web.config" />
     <Content Include="Areas\Professor\Views\_ViewStart.cshtml" />
@@ -499,6 +502,7 @@
     <Content Include="admin-lte\plugins\input-mask\phone-codes\phone-be.json" />
     <Content Include="admin-lte\plugins\input-mask\phone-codes\phone-codes.json" />
     <Content Include="NLog.config" />
+    <Content Include="Areas\Student\Views\Enrollments\ViewSchedules.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

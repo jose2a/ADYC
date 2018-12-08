@@ -1,0 +1,91 @@
+﻿@model ADYC.WebUI.ViewModels.ScheduleListViewModel
+
+<div class="row">
+    <div class="col-md-offset-3 col-md-6 col-sm-12">
+        <div class="box box-info collapsed-box">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-info-circle"></i> Offering</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <dl>
+                    <dt>Offering Title</dt>
+                    <dd>@Model.Offering.Title</dd>
+                    <dt>Location</dt>
+                    <dd>@Model.Offering.Location</dd>
+                    <dt>Course</dt>
+                    <dd>@Model.Offering.Course</dd>
+                    <dt>Professor</dt>
+                    <dd>@Model.Offering.Professor</dd>
+                    <dt>Term</dt>
+                    <dd>
+                        @Model.Offering.Term.Name&nbsp;
+                        @if (Model.IsCurrentTerm)
+                        {
+                            <span class="badge">Current</span>
+                        }
+                        &nbsp;@Model.Offering.Term
+                    </dd>
+                    <dt>Notes</dt>
+                    <dd>@Model.Offering.Notes</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    </div>
+<div class="row">
+    <div class="col-md-offset-3 col-md-6 col-sm-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Schedule</h3>
+
+                <div class="btn-toolbar pull-right">
+                    <div class="btn-group">
+                        <a href="@Url.Action("ViewEnrollment", new { termId = Model.Offering.TermId })" class="btn btn-default btn-sm"><i class="fa fa-arrow-circle-left"></i> Back to enrollment</a>
+                    </div>
+                </div>
+            </div>
+            <div class="box-body">
+                <table class="table table-bordered table-hover table-striped dataTable" role="grid">
+                    <thead>
+                        <tr>
+                            <th>
+                                Day
+                            </th>
+                            <th>
+                                Start Time
+                            </th>
+                            <th>
+                                End Time
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Days.Count(); i++)
+                        {
+                            <tr>
+                                <td>
+                                    @Model.Days.ElementAt(i).Name
+                                </td>
+                                <td>
+                                    @if (Model.Schedules[i].StartTime.HasValue)
+                                    {
+                                        @Model.Schedules[i].StartTime.Value.ToString("hh:mm tt")
+                                    }
+                                </td>
+                                <td>
+                                    @if (Model.Schedules[i].EndTime.HasValue)
+                                    {
+                                        @Model.Schedules[i].EndTime.Value.ToString("hh:mm tt")
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

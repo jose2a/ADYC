@@ -1,6 +1,7 @@
 ﻿using ADYC.API.ViewModels;
 using ADYC.Model;
 using ADYC.WebUI.Infrastructure;
+using ADYC.WebUI.ViewHelpers;
 using ADYC.WebUI.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,13 @@ namespace ADYC.WebUI.Controllers
 {
     public class ADYCBasedController : Controller
     {
+        protected UrlHelper UrlHelper {
+            get
+            {
+                return new UrlHelper(this.ControllerContext.RequestContext);
+            }
+        }
+
         protected void AddErrorsFromAdycHttpExceptionToModelState(AdycHttpRequestException ahre, ModelStateDictionary modelState)
         {
             foreach (var error in ahre.Errors)
@@ -60,6 +68,45 @@ namespace ADYC.WebUI.Controllers
         protected static List<DayEnumViewModel> GetDayEnumViewModelList()
         {
             return ((IEnumerable<Day>)Enum.GetValues(typeof(Day))).Select(c => new DayEnumViewModel() { Id = (byte)c, Name = c.ToString() }).ToList();
+        }
+
+        protected void AddBreadcrumb(string displayName, string urlPath)
+        {
+            List<Breadcrumb> breadcrumbs;
+
+            if (ViewBag.Breadcrumb == null)
+            {
+                breadcrumbs = new List<Breadcrumb>();
+            }
+            else
+            {
+                breadcrumbs = ViewBag.Breadcrumb as List<Breadcrumb>;
+            }
+
+            breadcrumbs.Add(new Breadcrumb { DisplayName = displayName, UrlPath = urlPath });
+            ViewBag.Breadcrumb = breadcrumbs;
+        }
+
+        internal void AddPageHeader(string pageHeader = "", string pageDescription = "")
+        {
+            ViewBag.PageHeader = Tuple.Create(pageHeader, pageDescription);
+        }
+
+        protected void AddPageAlerts(PageAlertType pageAlertType, string description)
+        {
+            List<PageAlert> pageAlerts;
+
+            if (TempData["PageAlerts"] == null)
+            {
+                pageAlerts = new List<PageAlert>();
+            }
+            else
+            {
+                pageAlerts = TempData["PageAlerts"] as List<PageAlert>;
+            }
+
+            pageAlerts.Add(new PageAlert { Type = pageAlertType.ToString().ToLower(), ShortDesc = description });
+            TempData["PageAlerts"] = pageAlerts;
         }
     }
 }

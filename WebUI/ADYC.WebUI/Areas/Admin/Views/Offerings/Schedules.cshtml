@@ -63,7 +63,19 @@
                         </thead>
                         <tbody>
                             @for (int i = 0; i < Model.Days.Count(); i++)
-                {
+                            {
+
+                                object htmlAttr = null;
+
+                                if (Model.IsCurrentTerm)
+                                {
+                                    htmlAttr = new { @class = "form-control", data_id = @Model.Days.ElementAt(i).Id };
+                                }
+                                else
+                                {
+                                    htmlAttr = new { @class = "form-control", data_id = @Model.Days.ElementAt(i).Id, disabled = "disabled" };
+                                }
+
                                 <tr>
                                     <td>
                                         @Html.HiddenFor(m => Model.Schedules[i].Id)
@@ -72,27 +84,13 @@
                                         @Model.Days.ElementAt(i).Name
                                     </td>
                                     <td>
-                                        @if (Model.IsCurrentTerm)
-                                        {
-                                            @Html.EditorFor(model => Model.Schedules[i].StartTime, new { htmlAttributes = new { @class = "form-control", data_id = @Model.Days.ElementAt(i).Id } })
-                                            @Html.ValidationMessageFor(model => Model.Schedules[i].StartTime, "", new { @class = "text-red" })
-                                        }
-                                        else
-                                        {
-                                            @Html.EditorFor(model => Model.Schedules[i].StartTime, new { htmlAttributes = new { @class = "form-control", data_id = @Model.Days.ElementAt(i).Id, disabled = "disabled" } })
-                                        }
+                                        @Html.EditorFor(model => Model.Schedules[i].StartTime, new { htmlAttributes = htmlAttr })
+                                        @Html.ValidationMessageFor(model => Model.Schedules[i].StartTime, "", new { @class = "text-red" })
                                     </td>
 
                                     <td>
-                                        @if (Model.IsCurrentTerm)
-                                        {
-                                            @Html.EditorFor(model => Model.Schedules[i].EndTime, new { htmlAttributes = new { @class = "form-control", data_id = @Model.Days.ElementAt(i).Id } })
-                                            @Html.ValidationMessageFor(model => Model.Schedules[i].EndTime, "", new { @class = "text-red" })
-                                        }
-                                        else
-                                        {
-                                            @Html.EditorFor(model => Model.Schedules[i].EndTime, new { htmlAttributes = new { @class = "form-control", data_id = @Model.Days.ElementAt(i).Id, disabled = "disabled" } })
-                                        }
+                                        @Html.EditorFor(model => Model.Schedules[i].EndTime, new { htmlAttributes = htmlAttr })
+                                        @Html.ValidationMessageFor(model => Model.Schedules[i].EndTime, "", new { @class = "text-red" })
                                     </td>
                                 </tr>
                             }

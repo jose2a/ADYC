@@ -19,7 +19,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>ADYC - @ViewBag.Title</title>
+    <title>ADYC v.1.0</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     @Styles.Render("~/Content/css")
@@ -75,9 +75,9 @@ desired effect
             <!-- Logo -->
             <a href="@Url.Action("Index", new { controller = "Dashboard", area = "" })" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini"><b>A</b>DYC</span>
+                <span class="logo-mini"><b>A</b>1.0</span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg"><b>ADYC</b>V1.0</span>
+                <span class="logo-lg"><b>ADYC</b>1.0</span>
             </a>
 
             <!-- Header Navbar -->
@@ -127,18 +127,6 @@ desired effect
 
             <!-- sidebar: style can be found in sidebar.less -->
             <section class="sidebar">
-
-                <!-- Sidebar user panel (optional) -->
-                <div class="user-panel">
-                    <div class="pull-left image">
-                        <img src="~/admin-lte/img/avatar5.png" class="img-circle" alt="User Image">
-                    </div>
-                    <div class="pull-left info">
-                        <p>@user.FirstName @user.LastName</p>
-                        <!-- Status -->
-                        <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-                    </div>
-                </div>
 
                 <!-- Sidebar Menu -->
                 <ul class="sidebar-menu" data-widget="tree">
@@ -300,66 +288,142 @@ desired effect
                     @ViewBag.PageHeader
                     <small>@ViewBag.PageDescription</small>
                 </h1>
-                <ol class="breadcrumb">
+
+                @*@{
+                    var pageInfo = (Tuple<string, string>)ViewBag.PageHeader;
+                    }
+                    <h1>
+                    @pageInfo.Item1
+                    <small>@pageInfo.Item2</small>
+                    </h1>*@
+                @*<ol class="breadcrumb">
                     <li><a href="../../Dashboard"><i class="fa fa-dashboard"></i> Dashboard</a></li>
 
                     @if (ViewBag.BreadcrumbLinks != null)
                     {
-                        foreach (KeyValuePair<string, string> entry in ViewBag.BreadcrumbLinks)
+                    foreach (KeyValuePair<string, string> entry in ViewBag.BreadcrumbLinks)
+                    {
+                    if (ViewBag.ActiveBreadcrumb == entry.Key)
+                    {
+                    <li><a class="active" href="@entry.Value">@entry.Key</a></li>
+                    }
+                    else
+                    {
+                    <li><a href="@entry.Value">@entry.Key</a></li>
+                    }
+                    }
+                    }
+                    </ol>*@
+
+                <ol class="breadcrumb">
+                    <li><a href="../../Dashboard"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+
+                    @if (ViewBag.Breadcrumb != null)
+                    {
+                        var breadcrumb = (List<ADYC.WebUI.ViewHelpers.Breadcrumb>)ViewBag.Breadcrumb;
+
+                        foreach (var b in breadcrumb)
                         {
-                            if (ViewBag.ActiveBreadcrumb == entry.Key)
+                            if (breadcrumb.Last() == b)
                             {
-                                <li><a class="active" href="@entry.Value">@entry.Key</a></li>
+                                <li class="active">@b.DisplayName</li>
                             }
                             else
                             {
-                                <li><a href="@entry.Value">@entry.Key</a></li>
+                                <li><a href="@b.UrlPath"> @b.DisplayName</a></li>
                             }
                         }
                     }
                 </ol>
+
+                <br />
+                <div id="msg-div">
+
+                    @{
+                        var pageAlerts = TempData["PageAlerts"] as List<ADYC.WebUI.ViewHelpers.PageAlert>;
+
+                        if (pageAlerts != null)
+                        {
+
+                            foreach (var item in pageAlerts)
+                            {
+                                if (item.Type == "error")
+                                {
+                                    <div class="alert alert-danger alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                        <b><i class="icon fa fa-ban"></i> Error!</b> @Html.Raw(@item.ShortDesc)
+                                    </div>
+                                }
+
+                                if (item.Type == "info")
+                                {
+                                    <div class="alert alert-info alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                        <b><i class="icon fa fa-info"></i> Info!</b> @Html.Raw(@item.ShortDesc)
+                                    </div>
+                                }
+
+                                if (item.Type == "warning")
+                                {
+                                    <div class="alert alert-warning alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                        <b><i class="icon fa fa-warning"></i> Warning!</b> @Html.Raw(@item.ShortDesc)
+                                    </div>
+                                }
+
+                                if (item.Type == "success")
+                                {
+                                    <div class="alert alert-success alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                        <b><i class="icon fa fa-check"></i> Success!</b> @Html.Raw(@item.ShortDesc)
+                                    </div>
+                                }
+                            }
+                        }
+                    }
+                </div>
             </section>
 
             <!-- Main content -->
             <section class="content container-fluid">
 
-                <div id="msg-div">
-                    @if (TempData["infoMsg"] != null)
-                    {
+                @*<div id="msg-div">
+                        @if (TempData["infoMsg"] != null)
+                        {
                         <div class="alert alert-info alert-dismissible">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                             <h4><i class="icon fa fa-info"></i> Info!</h4>
                             @TempData["infoMsg"].ToString()
                         </div>
-                    }
+                        }
 
-                    @if (TempData["warningMsg"] != null)
-                    {
+                        @if (TempData["warningMsg"] != null)
+                        {
 
                         <div class="alert alert-warning alert-dismissible">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                             <h4><i class="icon fa fa-warning"></i> Warning!</h4>
                             @TempData["warningMsg"].ToString();
                         </div>
-                    }
+                        }
 
-                    @if (TempData["successMsg"] != null)
-                    {
+                        @if (TempData["successMsg"] != null)
+                        {
                         <div class="alert alert-success alert-dismissible">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                             <h4><i class="icon fa fa-check"></i> Great!</h4>
                             @TempData["successMsg"].ToString()
                         </div>
-                    }
-                    @if (TempData["errorMsg"] != null)
-                    {
+                        }
+                        @if (TempData["errorMsg"] != null)
+                        {
                         <div class="alert alert-danger alert-dismissible">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                             <h4><i class="icon fa fa-ban"></i> Error!</h4>
                             @TempData["errorMsg"].ToString()
                         </div>
-                    }
-                </div>
+                        }
+                    </div>*@
                 <!--------------------------
                   | Your Page Content Here |
                   -------------------------->

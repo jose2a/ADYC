@@ -79,6 +79,11 @@
     </div>
 </div>
 
+@section styles {
+    <link rel="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+    <link rel="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css" />
+}
+
 @section scripts
 {
     <script>
@@ -86,29 +91,18 @@
 
             var tableHelper = TH$({
                 table: "terms",
-                messageDiv: "#msg-div",
+                messageDiv: "msg-div",
                 addDeleteEvent: true
             });
+
+            $('#terms').DataTable();
 
             $('[data-toggle="tooltip"]').tooltip();
 
             var periodDatesBtn = $("#periodDatesBtn");
             var editBtn = $("#editBtn");
             var deleteBtn = $("#deleteBtn");
-            var deleteBtnHref = deleteBtn.attr("href");
-
-            $('#terms').DataTable({
-                //"aaSorting": [[1, "asc"]],
-                //"aoColumns": [
-                //    { "bSortable": false },
-                //    { "bSortable": true },
-                //    { "bSortable": true },
-                //    { "bSortable": true },
-                //    { "bSortable": true },
-                //    { "bSortable": true },
-                //    { "bSortable": false }
-                //]
-            });
+            var deleteBtnHref = deleteBtn.attr("href");            
 
             periodDatesBtn.attr("disabled", true);
             editBtn.attr("disabled", true);
@@ -154,7 +148,8 @@
         });
     </script>
 
-    <script type="text/javascript" src="~/Scripts/adyc.table.utils.js"></script>
+    @Scripts.Render("~/bundles/datatables")
+
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
 }

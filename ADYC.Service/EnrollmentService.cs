@@ -121,9 +121,11 @@ namespace ADYC.Service
         {
             if (enrollments.Count() > 0)
             {
-                foreach (var enrollment in enrollments)
+                foreach (var enrollment in enrollments.ToList())
                 {
-                    _evaluationRepository.RemoveRange(enrollment.Evaluations);
+                    var evaluations = _evaluationRepository.Find(ev => ev.EnrollmentId == enrollment.Id);
+
+                    _evaluationRepository.RemoveRange(evaluations);
 
                     _enrollmentRepository.Remove(enrollment);
                 }

@@ -19,6 +19,7 @@
 /// <reference path="../admin-lte/plugins/pace/pace.js" />
 /// <reference path="../admin-lte/plugins/timepicker/bootstrap-timepicker.js" />
 /// <reference path="adyc.table.utils.js" />
+/// <reference path="adyc.utils.js" />
 /// <reference path="bootbox.js" />
 /// <reference path="bootstrap.min.js" />
 /// <reference path="jpages.min.js" />

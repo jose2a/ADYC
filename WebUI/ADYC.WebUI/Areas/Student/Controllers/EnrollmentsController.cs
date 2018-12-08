@@ -5,6 +5,7 @@ using ADYC.WebUI.Infrastructure;
 using ADYC.WebUI.Repositories;
 using ADYC.WebUI.ViewModels;
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -19,6 +20,7 @@ namespace ADYC.WebUI.Areas.Student.Controllers
         private EnrollmentRepository _enrollmentRepository;
         private EvaluationRepository _evaluationRepository;
         private OfferingRepository _offeringRepository;
+        private ScheduleRepository _scheduleRepository;
 
         public EnrollmentsController()
         {
@@ -26,12 +28,18 @@ namespace ADYC.WebUI.Areas.Student.Controllers
             _enrollmentRepository = new EnrollmentRepository();
             _evaluationRepository = new EvaluationRepository();
             _offeringRepository = new OfferingRepository();
+            _scheduleRepository = new ScheduleRepository();
         }
 
         // GET: Student/Enrollments
         public async Task<ActionResult> Index()
         {
             var terms = await _termRepository.GetTerms();
+
+            // Add properties to layout
+            AddPageHeader("Enrollments (Terms)", "");
+
+            AddBreadcrumb("Enrollments (Terms)", "");
 
             return View(terms);
         }
@@ -52,6 +60,12 @@ namespace ADYC.WebUI.Areas.Student.Controllers
 
                 var term = await _termRepository.GetTermById(termId.Value);
 
+                // Add properties to layout
+                AddPageHeader("Enrollment", "");
+
+                AddBreadcrumb("Enrollments (Terms)", UrlHelper.Action("Index", "Enrollments", new { area = "Student" }));
+                AddBreadcrumb("Enrollment", "");
+
                 return View(new EnrollmentDetailListViewModel
                 {
                     TermId = termId.Value,
@@ -62,6 +76,8 @@ namespace ADYC.WebUI.Areas.Student.Controllers
             }
             catch (BadRequestException bre)
             {
+                AddPageAlerts(ViewHelpers.PageAlertType.Error, GetErrorsFromAdycHttpExceptionToString(bre));
+
                 TempData["errorMsg"] = GetErrorsFromAdycHttpExceptionToString(bre);
             }
 
@@ -84,6 +100,13 @@ namespace ADYC.WebUI.Areas.Student.Controllers
             }
 
             var viewModel = new EnrollmentWithEvaluationsViewModel(enrollmentWithEvaluations);
+
+            // Add properties to layout
+            AddPageHeader("Your schedule", "Your schedule for this offering.");
+
+            AddBreadcrumb("Enrollments (Terms)", UrlHelper.Action("Index", "Enrollments", new { area = "Student" }));
+            AddBreadcrumb("Enrollment", UrlHelper.Action("ViewEnrollment", "Enrollments", new { area = "Student", termId = viewModel.Enrollment.Offering.TermId }));
+            AddBreadcrumb("Evaluations", "");
 
             return View(viewModel);
         }
@@ -115,6 +138,13 @@ namespace ADYC.WebUI.Areas.Student.Controllers
 
                 var enrollment = await _enrollmentRepository.GetById(enrollmentId.Value);
 
+                // Add properties to layout
+                AddPageHeader("Withdraw confirmed", "");
+
+                AddBreadcrumb("Enrollments (Terms)", UrlHelper.Action("Index", "Enrollments", new { area = "Student" }));
+                AddBreadcrumb("Enrollment", UrlHelper.Action("ViewEnrollment", "Enrollments", new { area = "Student", termId = termId.Value }));
+                AddBreadcrumb("Withdraw confirmed", "");
+
                 return View(enrollment.Offering);                
             }
             catch (BadRequestException bre)
@@ -123,6 +153,41 @@ namespace ADYC.WebUI.Areas.Student.Controllers
             }
 
             return RedirectToAction("ViewEnrollment", new { termId = termId });
+        }
+
+        // GET: Student/Enrollments/ViewSchedules
+        public async Task<ActionResult> ViewSchedules(int? offeringId)
+        {
+            if (!offeringId.HasValue)
+            {
+                return HttpNotFound();
+            }
+
+            ScheduleListViewModel viewModel = null;
+
+            try
+            {
+                var days = GetDayEnumViewModelList();
+
+                var scheduleList = await _scheduleRepository.GetSchedulesByOfferingId(offeringId.Value);
+                scheduleList.Schedules = GetScheduleList(offeringId.Value, scheduleList.Schedules.ToList(), days);
+
+                viewModel = new ScheduleListViewModel(scheduleList);
+                viewModel.Days = days;
+
+                // Add properties to layout
+                AddPageHeader("Your schedule", "Your schedule for this offering.");
+
+                AddBreadcrumb("Enrollments (Terms)", UrlHelper.Action("Index", "Enrollments", new { area = "Student" }));
+                AddBreadcrumb("Enrollment", UrlHelper.Action("ViewEnrollment", "Enrollments", new { area = "Student", termId = viewModel.Offering.TermId }));//$"/Student/Enrollments/ViewEnrollment?termId={viewModel.Offering.TermId}");
+                AddBreadcrumb("Your schedule", "");
+            }
+            catch (BadRequestException bre)
+            {
+                AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
+            }
+
+            return View(viewModel);
         }
     }
 }

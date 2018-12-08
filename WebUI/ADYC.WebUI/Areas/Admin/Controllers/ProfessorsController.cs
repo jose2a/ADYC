@@ -1,5 +1,6 @@
 ﻿using ADYC.API.Auth.Models;
 using ADYC.API.ViewModels;
+using ADYC.WebUI.Attributes;
 using ADYC.WebUI.Controllers;
 using ADYC.WebUI.CustomAttributes;
 using ADYC.WebUI.Exceptions;
@@ -130,6 +131,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
         // GET: Admin/Professors/Delete
         [HttpGet]
+        [OnlyAjaxRequest]
         public async Task<ActionResult> Delete(Guid id)
         {
             try
@@ -162,6 +164,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
         // GET: Admin/Professors/Trash
         [HttpGet]
+        [OnlyAjaxRequest]
         public async Task<ActionResult> Trash(Guid id)
         {
             try
@@ -185,6 +188,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
         // GET: Admin/Professors/Restore
         [HttpGet]
+        [OnlyAjaxRequest]
         public async Task<ActionResult> Restore(Guid id)
         {
             try

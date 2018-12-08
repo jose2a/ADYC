@@ -54,6 +54,9 @@ namespace ADYC.API.Auth.Models
 
         //[Required]
         public Guid UserId { get; set; }
+
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 
     public class RegisterExternalBindingModel

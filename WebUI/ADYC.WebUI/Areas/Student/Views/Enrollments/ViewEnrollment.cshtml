@@ -58,7 +58,7 @@
         else
         {
             <p>You were not enrolled during this term.</p>
-        }        
+        }
     </div>
 }
 else
@@ -73,11 +73,16 @@ else
                 </div>
             </div>
             <div class="box-header with-border">
-                <a href="@Url.Action("ViewEvaluations", new { enrollmentId = enrollment.Id })" class="btn btn-primary btn-sm"><i class="fa fa-list"></i> Evaluations</a>
-                @if (Model.IsCurrentTerm && !enrollment.WithdropDate.HasValue && (DateTime.UtcNow < Model.Term.EnrollmentDropDeadLine.AddDays(1)))
-                {
-                    <a id="btnWithdraw" href="@Url.Action("Withdraw", new { enrollmentId = enrollment.Id, termId = Model.TermId })" data-title="@enrollment.Offering.Title" class="btn btn-danger btn-sm js-withdraw"><i class="fa fa-remove"></i> Withdraw offering</a>
-                }
+                <div class="btn-group" role="group">
+                    <a href="@Url.Action("ViewEvaluations", new { enrollmentId = enrollment.Id })" class="btn btn-primary btn-sm"><i class="fa fa-list"></i> Evaluations</a>
+                    @if (Model.IsCurrentTerm && !enrollment.WithdropDate.HasValue && (DateTime.UtcNow < Model.Term.EnrollmentDropDeadLine.AddDays(1)))
+                    {
+                        <a id="btnWithdraw" href="@Url.Action("Withdraw", new { enrollmentId = enrollment.Id, termId = Model.TermId })" data-title="@enrollment.Offering.Title" class="btn btn-danger btn-sm js-withdraw"><i class="fa fa-remove"></i> Withdraw offering</a>
+                    }
+                </div>
+                <div class="btn-group" role="group">
+                    <a href="@Url.Action("ViewSchedules", new { offeringId = enrollment.OfferingId })" class="btn btn-sm btn-default"><i class="fa fa-calendar"></i> Your schedule</a>
+                </div>
             </div>
             <div class="box-body">
                 @if (enrollment.WithdropDate.HasValue)

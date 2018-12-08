@@ -5,6 +5,7 @@ using System.Linq;
 using ADYC.Model;
 using ADYC.IRepository;
 using ADYC.Util.Exceptions;
+using ADYC.Util.Messages;
 
 namespace ADYC.Service
 {
@@ -17,6 +18,7 @@ namespace ADYC.Service
         public IProfessorService ProfessorService { get; set; }
         public ITermService TermService { get; set; }
         public IScheduleService ScheduleService { get; set; }
+        public IStudentService StudentService { get; set; }
 
         public OfferingService(IOfferingRepository offeringRepository)
         {
@@ -213,6 +215,20 @@ namespace ADYC.Service
             }
 
             // Send an email to students currently enrolled in the offering that this will be removed
+            var emailMessage = new EmailMesageService();
+
+            foreach (var enrollment in offering.Enrollments)
+            {
+                var student = StudentService.Get(enrollment.StudentId);
+
+                string subject = "Offering removed!!!";
+                string body = $"{student.LastName}, {student.FirstName},\n" +
+                    $"{offering.Title} is not longer available.\n" +
+                    "You might want to enroll in a new one if you wish." +
+                    "Sorry for any incoveninence that this causes you.";
+
+                emailMessage.Sent(student.Email, subject, body);                
+            }            
 
             // Remove enrollment and evaluations
             EnrollmentService.RemoveRange(offering.Enrollments);            

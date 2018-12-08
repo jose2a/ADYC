@@ -1,4 +1,5 @@
 ﻿using ADYC.API.ViewModels;
+using ADYC.WebUI.Attributes;
 using ADYC.WebUI.Controllers;
 using ADYC.WebUI.CustomAttributes;
 using ADYC.WebUI.Exceptions;
@@ -161,6 +162,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
         // GET: Admin/Offerings/Delete
         [HttpGet]
+        [OnlyAjaxRequest]
         public async Task<ActionResult> Delete(int? id, bool force)
         {
             if (!id.HasValue)
