@@ -4,7 +4,6 @@ using ADYC.WebUI.Attributes;
 using ADYC.WebUI.Controllers;
 using ADYC.WebUI.CustomAttributes;
 using ADYC.WebUI.Exceptions;
-using ADYC.WebUI.Infrastructure;
 using ADYC.WebUI.Repositories;
 using ADYC.WebUI.ViewModels;
 using System;
@@ -38,6 +37,11 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
         {
             var students = await _studentRepository.GetStudents();
 
+            // Add properties to layout
+            AddPageHeader("Students", "List of all students");
+
+            AddBreadcrumb("Students", "");
+
             return View(students);
         }
 
@@ -50,6 +54,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
             };
 
             await SetStudentViewModelListsProperties(viewModel);
+
+            // Add properties to layout
+            AddPageHeader(viewModel.Title, "");
+
+            AddBreadcrumb("Students", Url.Action("Index", "Students", new { area = "Admin" }));
+            AddBreadcrumb(viewModel.Title, "");
 
             return View("StudentForm", viewModel);
         }
@@ -79,6 +89,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
             {
                 AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
             }
+
+            // Add properties to layout
+            AddPageHeader(viewModel.Title, "");
+
+            AddBreadcrumb("Students", Url.Action("Index", "Students", new { area = "Admin" }));
+            AddBreadcrumb(viewModel.Title, "");
 
             return View("StudentForm", viewModel);
         }
@@ -126,7 +142,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                         await _studentRepository.PutStudent(student.Id, student);
                     }
 
-                    TempData["successMsg"] = "Your changes have been saved succesfully.";
+                    AddPageAlerts(ViewHelpers.PageAlertType.Success, "Your changes have been saved succesfully.");
 
                     return RedirectToAction("Index");
                 }
@@ -142,6 +158,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
             }
 
             await SetStudentViewModelListsProperties(form);
+
+            // Add properties to layout
+            AddPageHeader(form.Title, "");
+
+            AddBreadcrumb("Students", Url.Action("Index", "Students", new { area = "Admin" }));
+            AddBreadcrumb(form.Title, "");
 
             return View("StudentForm", form);
         }

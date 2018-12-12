@@ -1,20 +1,5 @@
 ﻿@model ADYC.WebUI.ViewModels.ScheduleListViewModel
 
-@{
-    var title = "Schedules";
-
-    ViewBag.Title = title;
-    ViewBag.PageHeader = title;
-
-    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
-    {
-        ["Offerings"] = Url.Action("View", new { TermId = Model.Offering.TermId }),
-        [title] = "",
-    };
-
-    ViewBag.ActiveBreadcrumb = title;
-}
-
 @if (!Model.IsCurrentTerm)
 {
     <div class="callout callout-info">
@@ -23,7 +8,6 @@
         <p>This term is not the current term, you are not allowed to make changes at this time.</p>
     </div>
 }
-
 
 <div class="row">
     <div class="col-md-6 col-sm-12">

@@ -1,18 +1,5 @@
 ﻿@model ADYC.WebUI.ViewModels.PeriodDateListViewModel
 
-@{
-    ViewBag.Title = Model.Title;
-    ViewBag.PageHeader = Model.Title;
-
-    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
-    {
-        ["Terms"] = Url.Action("Index"),
-        [Model.Title] = "",
-    };
-
-    ViewBag.ActiveBreadcrumb = Model.Title;
-}
-
 @if (!Model.IsCurrentTerm)
 {
     <div class="callout callout-info">

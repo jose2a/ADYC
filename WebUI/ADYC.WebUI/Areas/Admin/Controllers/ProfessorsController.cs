@@ -32,6 +32,11 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
         {
             var professors = await _professorRepository.GetProfessors();
 
+            // Add properties to layout
+            AddPageHeader("Professors", "List of all professors");
+
+            AddBreadcrumb("Professors", "");
+
             return View(professors);
         }
 
@@ -42,6 +47,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
             {
                 IsNew = true
             };
+
+            // Add properties to layout
+            AddPageHeader(viewModel.Title, "");
+
+            AddBreadcrumb("Professors", Url.Action("Index", "Professors", new { area = "Admin" }));
+            AddBreadcrumb(viewModel.Title, "");
 
             return View("ProfessorForm", viewModel);
         }
@@ -69,6 +80,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
             {
                 AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
             }
+
+            // Add properties to layout
+            AddPageHeader(viewModel.Title, "");
+
+            AddBreadcrumb("Professors", Url.Action("Index", "Professors", new { area = "Admin" }));
+            AddBreadcrumb(viewModel.Title, "");
 
             return View("ProfessorForm", viewModel);
         }
@@ -111,7 +128,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                         await _professorRepository.PutProfessor(professor.Id, professor);
                     }
 
-                    TempData["successMsg"] = "Your changes have been saved succesfully.";
+                    AddPageAlerts(ViewHelpers.PageAlertType.Success, "Your changes have been saved succesfully.");
 
                     return RedirectToAction("Index");
                 }
@@ -125,6 +142,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                     }                    
                 }
             }
+
+            // Add properties to layout
+            AddPageHeader(form.Title, "");
+
+            AddBreadcrumb("Professors", Url.Action("Index", "Professors", new { area = "Admin" }));
+            AddBreadcrumb(form.Title, "");
 
             return View("ProfessorForm", form);
         }

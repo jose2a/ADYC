@@ -1,19 +1,5 @@
 ﻿@model ADYC.WebUI.ViewModels.ScheduleListViewModel
 
-@{
-    ViewBag.Title = Model.Title;
-    ViewBag.PageHeader = Model.Title;
-
-    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
-    {
-        ["Offerings (Terms)"] = Url.Action("Index"),
-        ["Offerings (List)"] = Url.Action("ViewOfferings", new { termId = Model.Offering.TermId }),
-        [Model.Title] = ""
-    };
-
-    ViewBag.ActiveBreadcrumb = Model.Title;
-}
-
 <div class="row">
     <div class="col-md-6">
         <div class="box box-info">
@@ -45,7 +31,7 @@
                         &nbsp;@Model.Offering.Term
                     </dd>
                     <dt>Notes</dt>
-                    <dd>@Model.Offering.Notes</dd>
+                    <dd>@Html.Raw(HttpUtility.HtmlDecode(Model.Offering.Notes))</dd>
                 </dl>
             </div>
         </div>

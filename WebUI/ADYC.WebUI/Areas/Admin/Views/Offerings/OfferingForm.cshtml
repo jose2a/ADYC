@@ -1,18 +1,5 @@
 ﻿@model ADYC.WebUI.ViewModels.OfferingFormViewModel
 
-@{
-    ViewBag.Title = Model.FormTitle;
-    ViewBag.PageHeader = Model.FormTitle;
-
-    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
-    {
-        ["Offerings"] = Url.Action("View", new { TermId = Model.TermId }),
-        [Model.FormTitle] = "",
-    };
-
-    ViewBag.ActiveBreadcrumb = Model.FormTitle;
-}
-
 @if (!Model.IsCurrentTerm)
 {
     <div class="callout callout-info">
@@ -49,14 +36,17 @@
 
             @{
                 object htmlAttributes = null;
+                object htmlAttrTextArea = null;
 
                 if (Model.IsCurrentTerm)
                 {
                     htmlAttributes = new { @class = "form-control" };
+                    htmlAttrTextArea = new { @class = "textarea", style = "width:100%", rows = 5 };
                 }
                 else
                 {
                     htmlAttributes = new { @class = "form-control", disabled = "disabled" };
+                    htmlAttrTextArea = new { @class = "textarea", style = "width:100%", @disabled = "disabled", rows = 5 };
                 }
             }
 
@@ -101,6 +91,13 @@
                 @Html.EditorFor(model => model.OfferingDays, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
                 @Html.ValidationMessageFor(model => model.OfferingDays, "", new { @class = "text-red" })
             </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Notes)
+
+                @Html.TextArea("Notes", htmlAttrTextArea)
+                @Html.ValidationMessageFor(model => Model.Notes, "", new { @class = "text-red" })
+            </div>
         </div>
 
         @if (Model.IsCurrentTerm)
@@ -113,6 +110,19 @@
     </div>
                 }
 
+@section styles {
+    <link href="~/admin-lte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.css" rel="stylesheet" />
+}
+
 @section Scripts {
+    <script>
+        $(document).ready(function () {
+            //bootstrap WYSIHTML5 - text editor
+            $(".textarea").wysihtml5();
+        });
+    </script>
+
+    <script src="~/admin-lte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.js"></script>
+
     @Scripts.Render("~/bundles/jqueryval")
 }

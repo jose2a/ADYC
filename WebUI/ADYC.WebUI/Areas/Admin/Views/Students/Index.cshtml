@@ -1,18 +1,5 @@
 ﻿@model IEnumerable<ADYC.API.ViewModels.StudentDto>
 
-@{
-    var title = "Students";
-    ViewBag.Title = title;
-    ViewBag.PageHeader = title;
-
-    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
-    {
-        [title] = ""
-    };
-
-    ViewBag.ActiveBreadcrumb = title;
-}
-
 <div class="row">
     <div class="col-xs-12">
         <div class="box">
@@ -53,8 +40,8 @@
                         @foreach (var student in Model)
                         {
                             @Html.Partial("pv_StudentRow", student)
-
                         }
+
                     </tbody>
                 </table>
             </div>

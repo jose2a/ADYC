@@ -1,4 +1,5 @@
 ﻿using ADYC.API.ViewModels;
+using ADYC.WebUI.Attributes;
 using ADYC.WebUI.Controllers;
 using ADYC.WebUI.CustomAttributes;
 using ADYC.WebUI.Exceptions;
@@ -38,7 +39,7 @@ namespace ADYC.WebUI.Areas.Student.Controllers
 
             if (currentTerm == null)
             {
-                TempData["errorMsg"] = "There are no current term or it has not been selected yet.";
+                AddPageAlerts(ViewHelpers.PageAlertType.Error, "There are no current term or it has not been selected yet.");
 
                 return RedirectToAction("Index", new { Controller = "Dashboard", Area = "" });
             }
@@ -53,6 +54,11 @@ namespace ADYC.WebUI.Areas.Student.Controllers
 
             var isCurrentlyEnrolled = currentEnrollments.Count(e => !e.WithdropDate.HasValue) > 0;
 
+            // Add properties to layout
+            AddPageHeader("Enroll (Offerings)", "Enroll in an offering");
+
+            AddBreadcrumb("Enroll (Offerings)", "");
+
             return View(new OfferingEnrollmentListViewModel
             {
                 Term = currentTerm,
@@ -62,6 +68,7 @@ namespace ADYC.WebUI.Areas.Student.Controllers
         }
 
         // GET: Student/OfferingEnrollments/ViewSchedules
+        [OnlyAjaxRequest]
         public async Task<ActionResult> ViewSchedules(int? offeringId)
         {
             if (!offeringId.HasValue)
@@ -111,11 +118,18 @@ namespace ADYC.WebUI.Areas.Student.Controllers
 
                 var offering = await _offeringRepository.GetOfferingById(offeringId.Value);
 
+                // Add properties to layout
+                AddPageHeader("Enrollment confirmed", "");
+
+                AddBreadcrumb("Enroll (Offerings)", "");
+                AddBreadcrumb("Enrollment confirmed", "");
+                //Enrollment confirmed
+
                 return View(offering);
             }
             catch (BadRequestException bre)
             {
-                TempData["errorMsg"] = GetErrorsFromAdycHttpExceptionToString(bre);
+                AddPageAlerts(ViewHelpers.PageAlertType.Error, GetErrorsFromAdycHttpExceptionToString(bre));
             }
 
             return RedirectToAction("Index");

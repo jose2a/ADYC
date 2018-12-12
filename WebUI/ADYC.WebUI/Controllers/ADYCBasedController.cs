@@ -12,13 +12,6 @@ namespace ADYC.WebUI.Controllers
 {
     public class ADYCBasedController : Controller
     {
-        protected UrlHelper UrlHelper {
-            get
-            {
-                return new UrlHelper(this.ControllerContext.RequestContext);
-            }
-        }
-
         protected void AddErrorsFromAdycHttpExceptionToModelState(AdycHttpRequestException ahre, ModelStateDictionary modelState)
         {
             foreach (var error in ahre.Errors)

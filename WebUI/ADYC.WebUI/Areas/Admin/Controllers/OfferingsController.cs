@@ -37,6 +37,11 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
         {
             var terms = await _termRepository.GetTerms();
 
+            // Add properties to layout
+            AddPageHeader("Offerings (Terms)", "List of terms");
+
+            AddBreadcrumb("Offerings (Terms)", "");
+
             return View(terms);
         }
 
@@ -56,6 +61,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
             }
 
             var offerings = _offeringRepository.GetOfferingsByTermId(termId.Value);
+
+            // Add properties to layout
+            AddPageHeader("Offerings (Terms)", "List of terms");
+
+            AddBreadcrumb("Offerings (Terms)", Url.Action("Index"));
+            AddBreadcrumb("Offerings (List)", "");
 
             return View(new OfferingListViewModel
             {
@@ -82,6 +93,13 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
             };
 
             await SetOfferingListProperties(viewModel);
+
+            // Add properties to layout
+            AddPageHeader(viewModel.FormTitle, "");
+
+            AddBreadcrumb("Offerings (Terms)", Url.Action("Index"));
+            AddBreadcrumb("Offerings (List)", Url.Action("View", new { TermId = form.TermId.Value }));
+            AddBreadcrumb(viewModel.FormTitle, "");
 
             return View("OfferingForm", viewModel);
         }
@@ -113,11 +131,18 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
             await SetOfferingListProperties(viewModel);
 
+            // Add properties to layout
+            AddPageHeader(viewModel.FormTitle, "");
+
+            AddBreadcrumb("Offerings (Terms)", Url.Action("Index"));
+            AddBreadcrumb("Offerings (List)", Url.Action("View", new { TermId = form.TermId.Value }));
+            AddBreadcrumb(viewModel.FormTitle, "");
+
             return View("OfferingForm", viewModel);
         }
 
         // POST: Admin/Offerings/Save
-        [HttpPost]
+        [HttpPost, ValidateInput(false)]
         public async Task<ActionResult> Save(OfferingFormViewModel form)
         {
             if (ModelState.IsValid)
@@ -145,7 +170,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                         await _offeringRepository.PutOffering(offering.Id, offering);
                     }
 
-                    TempData["successMsg"] = "Your changes have been saved succesfully.";
+                    AddPageAlerts(ViewHelpers.PageAlertType.Success, "Your changes have been saved succesfully.");
 
                     return RedirectToAction("View", new { termId = form.TermId });
                 }
@@ -156,6 +181,13 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
             }
 
             await SetOfferingListProperties(form);
+
+            // Add properties to layout
+            AddPageHeader(form.FormTitle, "");
+
+            AddBreadcrumb("Offerings (Terms)", Url.Action("Index"));
+            AddBreadcrumb("Offerings (List)", Url.Action("View", new { TermId = form.TermId }));
+            AddBreadcrumb(form.FormTitle, "");
 
             return View("OfferingForm", form);
         }
@@ -214,6 +246,13 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                 AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
             }
 
+            // Add properties to layout
+            AddPageHeader("Schedules", "Schedules for this offering");
+
+            AddBreadcrumb("Offerings (Terms)", Url.Action("Index"));
+            AddBreadcrumb("Offerings (List)", Url.Action("View", new { TermId = viewModel.Offering.TermId }));
+            AddBreadcrumb("Schedules", "");
+
             return View(viewModel);
         }
 
@@ -246,7 +285,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                         await _scheduleRepository.PutScheduleList(form.OfferingId, scheduleList);
                     }
 
-                    TempData["successMsg"] = "Your changes have been saved succesfully.";
+                    AddPageAlerts(ViewHelpers.PageAlertType.Success, "Your changes have been saved succesfully.");
 
                     return RedirectToAction("Schedules", new { offeringId = form.OfferingId });
                 }
@@ -261,6 +300,13 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
             form.Offering = await _offeringRepository.GetOfferingById(form.OfferingId);
             form.Schedules = GetScheduleList(form.OfferingId, form.Schedules.ToList(), days);
             form.Days = days;
+
+            // Add properties to layout
+            AddPageHeader("Schedules", "Schedules for this offering");
+
+            AddBreadcrumb("Offerings (Terms)", Url.Action("Index"));
+            AddBreadcrumb("Offerings (List)", Url.Action("View", new { TermId = form.Offering.TermId }));
+            AddBreadcrumb("Schedules", "");
 
             return View("Schedules", form);
         }

@@ -1,20 +1,5 @@
 ﻿@model ADYC.WebUI.ViewModels.OfferingListViewModel
 
-@{
-    var title = "Offerings (List)";
-
-    ViewBag.Title = title;
-    ViewBag.PageHeader = title;
-
-    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
-    {
-        ["Offerings (Terms)"] = Url.Action("Index"),
-        [title] = ""
-    };
-
-    ViewBag.ActiveBreadcrumb = title;
-}
-
 @Html.HiddenFor(m => Model.Term.Id)
 
 <div class="box box-info">

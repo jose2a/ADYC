@@ -28,6 +28,11 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
         {
             var groups = await _groupRepository.GetGroups();
 
+            // Add properties to layout
+            AddPageHeader("Groups", "List of all groups");
+
+            AddBreadcrumb("Groups", "");
+
             return View(groups);
         }
 
@@ -38,6 +43,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
             {
                 IsNew = true
             };
+
+            // Add properties to layout
+            AddPageHeader(viewModel.Title, "");
+
+            AddBreadcrumb("Groups", Url.Action("Index", "Groups", new { area = "Admin" }));
+            AddBreadcrumb(viewModel.Title, "");
 
             return View("GroupForm", viewModel);
         }
@@ -66,6 +77,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                 AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
             }
 
+            // Add properties to layout
+            AddPageHeader(viewModel.Title, "");
+
+            AddBreadcrumb("Groups", Url.Action("Index", "Groups", new { area = "Admin" }));
+            AddBreadcrumb(viewModel.Title, "");
+
             return View("GroupForm", viewModel);
         }
 
@@ -92,7 +109,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                         await _groupRepository.PutGroup(group.Id.Value, group);
                     }
 
-                    TempData["successMsg"] = "Your changes have been saved succesfully.";
+                    AddPageAlerts(ViewHelpers.PageAlertType.Success, "Your changes have been saved succesfully.");
 
                     return RedirectToAction("Index");
                 }
@@ -101,6 +118,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                     AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
                 }
             }
+
+            // Add properties to layout
+            AddPageHeader(form.Title, "");
+
+            AddBreadcrumb("Groups", Url.Action("Index", "Groups", new { area = "Admin" }));
+            AddBreadcrumb(form.Title, "");
 
             return View("GroupForm", form);
         }

@@ -1,20 +1,5 @@
 ﻿@model ADYC.API.ViewModels.OfferingDto
 
-@{
-    var title = "Enrollment confirmed";
-
-    ViewBag.Title = title;
-    ViewBag.PageHeader = title;
-
-    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
-    {
-        ["Enroll (Offerings)"] = Url.Action("Index"),
-        [title] = ""
-    };
-
-    ViewBag.ActiveBreadcrumb = title;
-}
-
 <div class="callout callout-success">
     <h4><i class="icon fa fa-check"></i>Congratulations!</h4>
 

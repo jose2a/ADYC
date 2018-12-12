@@ -1,19 +1,5 @@
 ﻿@model ADYC.WebUI.ViewModels.OfferingEnrollmentListViewModel
 
-@{
-    var title = "Enroll (Offerings)";
-
-    ViewBag.Title = title;
-    ViewBag.PageHeader = title;
-
-    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
-    {
-        [title] = ""
-    };
-
-    ViewBag.ActiveBreadcrumb = title;
-}
-
 <div class="box box-info">
     <div class="box-header with-border">
         <h3 class="box-title">Term</h3>
@@ -90,7 +76,7 @@ else
                                         <dt>Professor</dt>
                                         <dd>@offering.Professor</dd>
                                         <dt>Notes</dt>
-                                        <dd>@offering.Notes</dd>
+                                        <dd>@Html.Raw(HttpUtility.HtmlDecode(offering.Notes))</dd>
                                     </dl>
                                 </div>
 

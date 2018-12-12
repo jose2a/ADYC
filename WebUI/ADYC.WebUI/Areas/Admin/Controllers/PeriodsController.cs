@@ -22,6 +22,11 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
         {
             var periods = await _periodRepository.GetPeriods();
 
+            // Add properties to layout
+            AddPageHeader("Periods", "List of all periods");
+
+            AddBreadcrumb("Periods", "");
+
             return View(periods);
         }
     }

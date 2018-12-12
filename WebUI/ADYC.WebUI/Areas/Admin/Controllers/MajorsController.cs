@@ -3,7 +3,6 @@ using ADYC.WebUI.Attributes;
 using ADYC.WebUI.Controllers;
 using ADYC.WebUI.CustomAttributes;
 using ADYC.WebUI.Exceptions;
-using ADYC.WebUI.Infrastructure;
 using ADYC.WebUI.Repositories;
 using ADYC.WebUI.ViewModels;
 using System.Net;
@@ -28,6 +27,11 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
         {
             var majors = await _majorRepository.GetMajors();
 
+            // Add properties to layout
+            AddPageHeader("Majors", "List of all majors");
+
+            AddBreadcrumb("Majors", "");
+
             return View(majors);
         }
 
@@ -38,6 +42,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
             {
                 IsNew = true
             };
+
+            // Add properties to layout
+            AddPageHeader(viewModel.Title, "");
+
+            AddBreadcrumb("Majors", Url.Action("Index", "Majors", new { area = "Admin" }));
+            AddBreadcrumb(viewModel.Title, "");
 
             return View("MajorForm", viewModel);
         }
@@ -66,6 +76,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                 AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
             }
 
+            // Add properties to layout
+            AddPageHeader(viewModel.Title, "");
+
+            AddBreadcrumb("Majors", Url.Action("Index", "Majors", new { area = "Admin" }));
+            AddBreadcrumb(viewModel.Title, "");
+
             return View("MajorForm", viewModel);
         }
 
@@ -92,7 +108,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                         await _majorRepository.PutMajor(major.Id.Value, major);
                     }
 
-                    TempData["successMsg"] = "Your changes have been saved succesfully.";
+                    AddPageAlerts(ViewHelpers.PageAlertType.Success, "Your changes have been saved succesfully.");
 
                     return RedirectToAction("Index");
                 }
@@ -101,6 +117,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                     AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
                 }
             }
+
+            // Add properties to layout
+            AddPageHeader(form.Title, "");
+
+            AddBreadcrumb("Majors", Url.Action("Index", "Majors", new { area = "Admin" }));
+            AddBreadcrumb(form.Title, "");
 
             return View("MajorForm", form);
         }

@@ -49,7 +49,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
             // Add properties to layout
             AddPageHeader(viewModel.Title, "");
 
-            AddBreadcrumb("Courses", UrlHelper.Action("Index", "Courses", new { area = "Admin" }));
+            AddBreadcrumb("Courses", Url.Action("Index", "Courses", new { area = "Admin" }));
             AddBreadcrumb(viewModel.Title, "");
 
             return View("CourseForm", viewModel);
@@ -83,7 +83,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
             // Add properties to layout
             AddPageHeader(viewModel.Title, "");
 
-            AddBreadcrumb("Courses", UrlHelper.Action("Index", "Courses", new { area = "Admin" }));
+            AddBreadcrumb("Courses", Url.Action("Index", "Courses", new { area = "Admin" }));
             AddBreadcrumb(viewModel.Title, "");
 
             return View("CourseForm", viewModel);
@@ -128,7 +128,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
             // Add properties to layout
             AddPageHeader(form.Title, "");
 
-            AddBreadcrumb("Courses", UrlHelper.Action("Index", "Courses", new { area = "Admin" }));
+            AddBreadcrumb("Courses", Url.Action("Index", "Courses", new { area = "Admin" }));
             AddBreadcrumb(form.Title, "");
 
             return View("CourseForm", form);

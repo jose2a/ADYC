@@ -1,20 +1,5 @@
 ﻿@model ADYC.WebUI.ViewModels.EnrollmentDetailListViewModel
 
-@{
-    var title = "Enrollment";
-
-    ViewBag.Title = title;
-    ViewBag.PageHeader = title;
-
-    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
-    {
-        ["Enrollments (Terms)"] = Url.Action("Index"),
-        [title] = ""
-    };
-
-    ViewBag.ActiveBreadcrumb = title;
-}
-
 <div class="box box-info">
     <div class="box-header with-border">
         <h3 class="box-title">Term</h3>
@@ -103,7 +88,7 @@ else
                     <dt>Professor</dt>
                     <dd>@enrollment.Offering.Professor</dd>
                     <dt>Offering Notes</dt>
-                    <dd>@enrollment.Offering.Notes</dd>
+                    <dd>@Html.Raw(HttpUtility.HtmlDecode(enrollment.Offering.Notes))</dd>
                     <dt>Enrolled Date</dt>
                     <dd>@enrollment.EnrollmentDate.ToString("MMMM dd, yyyy")</dd>
                     @if (enrollment.WithdropDate.HasValue)
@@ -122,7 +107,7 @@ else
                         <dd>Enrollment has not been graded yet.</dd>
                     }
                     <dt>Enrollment Notes</dt>
-                    <dd>@enrollment.Notes</dd>
+                    <dd>@Html.Raw(HttpUtility.HtmlDecode(enrollment.Notes))</dd>
                 </dl>
             </div>
         </div>

@@ -1,19 +1,5 @@
 ﻿@model IEnumerable<ADYC.API.ViewModels.TermDto>
 
-@{
-    var title = "Enrollments (Terms)";
-
-    ViewBag.Title = title;
-    ViewBag.PageHeader = title;
-
-    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
-    {
-        [title] = ""
-    };
-
-    ViewBag.ActiveBreadcrumb = title;
-}
-
 <div class="row">
     <div class="col-md-3 col-xs-12">
         <div class="box box-info">
@@ -45,7 +31,7 @@
                                 <span class="w3-medium w3-opacity"> - Withdraw deadline: @term.EnrollmentDropDeadLine.ToString("MMMM dd, yyyy")</span>
                                 @if (term.IsCurrentTerm)
                                 {
-                                    <span class="label label-primary pull-right">Current</span>
+                                    <span class="label label-success pull-right">Current</span>
                                 }
                             </a>
                         </li>

@@ -34,6 +34,11 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
         {
             var terms = await _termRepository.GetTerms();
 
+            // Add properties to layout
+            AddPageHeader("Terms", "List of all terms");
+
+            AddBreadcrumb("Terms", "");
+
             return View(terms);
         }
 
@@ -48,6 +53,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                 EnrollmentDeadLine = null,
                 EnrollmentDropDeadLine = null
             };
+
+            // Add properties to layout
+            AddPageHeader(viewModel.Title, "");
+
+            AddBreadcrumb("Terms", Url.Action("Index", "Terms", new { area = "Admin" }));
+            AddBreadcrumb(viewModel.Title, "");
 
             return View("TermForm", viewModel);
         }
@@ -75,6 +86,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
             {
                 AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
             }
+
+            // Add properties to layout
+            AddPageHeader(viewModel.Title, "");
+
+            AddBreadcrumb("Terms", Url.Action("Index", "Terms", new { area = "Admin" }));
+            AddBreadcrumb(viewModel.Title, "");
 
             return View("TermForm", viewModel);
         }
@@ -107,7 +124,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                         await _termRepository.PutTerm(term.Id.Value, term);
                     }
 
-                    TempData["successMsg"] = "Your changes have been saved succesfully.";
+                    AddPageAlerts(ViewHelpers.PageAlertType.Success, "Your changes have been saved succesfully.");
 
                     return RedirectToAction("Index");
                 }
@@ -116,6 +133,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                     AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
                 }
             }
+
+            // Add properties to layout
+            AddPageHeader(form.Title, "");
+
+            AddBreadcrumb("Terms", Url.Action("Index", "Terms", new { area = "Admin" }));
+            AddBreadcrumb(form.Title, "");
 
             return View("TermForm", form);
         }
@@ -200,6 +223,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                 AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
             }
 
+            // Add properties to layout
+            AddPageHeader(viewModel.Title, "");
+
+            AddBreadcrumb("Terms", Url.Action("Index", "Terms", new { area = "Admin" }));
+            AddBreadcrumb(viewModel.Title, "");
+
             return View(viewModel);
         }
 
@@ -225,7 +254,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                         await _periodDateRepository.PutPeriodDateList(form.TermId, periodDateList);
                     }
 
-                    TempData["successMsg"] = "Your changes have been saved succesfully.";
+                    AddPageAlerts(ViewHelpers.PageAlertType.Success, "Your changes have been saved succesfully.");
 
                     return RedirectToAction("PeriodDates", new { termId = form.TermId });
                 }
@@ -237,6 +266,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
 
             form.Term = await _termRepository.GetTermById(form.TermId);
             form.Periods = await _periodRepository.GetPeriods();
+
+            // Add properties to layout
+            AddPageHeader(form.Title, "");
+
+            AddBreadcrumb("Terms", Url.Action("Index", "Terms", new { area = "Admin" }));
+            AddBreadcrumb(form.Title, "");
 
             return View("PeriodDates", form);
         }

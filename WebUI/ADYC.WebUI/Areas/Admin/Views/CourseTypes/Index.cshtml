@@ -1,18 +1,5 @@
 ﻿@model IEnumerable<ADYC.API.ViewModels.CourseTypeDto>
 
-@{
-    var title = "Course Types";
-    ViewBag.Title = title;
-    ViewBag.PageHeader = title;
-
-    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
-    {
-        [title] = ""
-    };
-
-    ViewBag.ActiveBreadcrumb = title;
-}
-
 <div class="row">
     <div class="col-xs-12">
         <div class="box">

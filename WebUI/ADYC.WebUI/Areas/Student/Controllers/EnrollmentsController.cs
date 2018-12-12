@@ -37,7 +37,7 @@ namespace ADYC.WebUI.Areas.Student.Controllers
             var terms = await _termRepository.GetTerms();
 
             // Add properties to layout
-            AddPageHeader("Enrollments (Terms)", "");
+            AddPageHeader("Enrollments (Terms)", "Enrollments by term");
 
             AddBreadcrumb("Enrollments (Terms)", "");
 
@@ -63,7 +63,7 @@ namespace ADYC.WebUI.Areas.Student.Controllers
                 // Add properties to layout
                 AddPageHeader("Enrollment", "");
 
-                AddBreadcrumb("Enrollments (Terms)", UrlHelper.Action("Index", "Enrollments", new { area = "Student" }));
+                AddBreadcrumb("Enrollments (Terms)", Url.Action("Index", "Enrollments", new { area = "Student" }));
                 AddBreadcrumb("Enrollment", "");
 
                 return View(new EnrollmentDetailListViewModel
@@ -77,8 +77,6 @@ namespace ADYC.WebUI.Areas.Student.Controllers
             catch (BadRequestException bre)
             {
                 AddPageAlerts(ViewHelpers.PageAlertType.Error, GetErrorsFromAdycHttpExceptionToString(bre));
-
-                TempData["errorMsg"] = GetErrorsFromAdycHttpExceptionToString(bre);
             }
 
             return RedirectToAction("Index");
@@ -102,11 +100,11 @@ namespace ADYC.WebUI.Areas.Student.Controllers
             var viewModel = new EnrollmentWithEvaluationsViewModel(enrollmentWithEvaluations);
 
             // Add properties to layout
-            AddPageHeader("Your schedule", "Your schedule for this offering.");
+            AddPageHeader("Your evaluations", "Your evaluations for this offering.");
 
-            AddBreadcrumb("Enrollments (Terms)", UrlHelper.Action("Index", "Enrollments", new { area = "Student" }));
-            AddBreadcrumb("Enrollment", UrlHelper.Action("ViewEnrollment", "Enrollments", new { area = "Student", termId = viewModel.Enrollment.Offering.TermId }));
-            AddBreadcrumb("Evaluations", "");
+            AddBreadcrumb("Enrollments (Terms)", Url.Action("Index", "Enrollments", new { area = "Student" }));
+            AddBreadcrumb("Enrollment", Url.Action("ViewEnrollment", "Enrollments", new { area = "Student", termId = viewModel.Enrollment.Offering.TermId }));
+            AddBreadcrumb("Your evaluations", "");
 
             return View(viewModel);
         }
@@ -128,12 +126,13 @@ namespace ADYC.WebUI.Areas.Student.Controllers
             {
                 var term = await _termRepository.GetTermById(termId.Value);
 
-                if (DateTime.Now < term.EnrollmentDropDeadLine.AddDays(1))
+                if (DateTime.Now > term.EnrollmentDropDeadLine.AddDays(1))
                 {
-                    TempData["warningMsg"] = "The period to withdraw has already ended. You cannot withdraw at this moment.";
+                    AddPageAlerts(ViewHelpers.PageAlertType.Warning, "The period to withdraw has already ended. You cannot withdraw at this moment.");
 
                     return RedirectToAction("ViewEnrollment", new { termId = termId.Value });
                 }
+
                 await _enrollmentRepository.Withdraw(enrollmentId.Value);
 
                 var enrollment = await _enrollmentRepository.GetById(enrollmentId.Value);
@@ -141,15 +140,15 @@ namespace ADYC.WebUI.Areas.Student.Controllers
                 // Add properties to layout
                 AddPageHeader("Withdraw confirmed", "");
 
-                AddBreadcrumb("Enrollments (Terms)", UrlHelper.Action("Index", "Enrollments", new { area = "Student" }));
-                AddBreadcrumb("Enrollment", UrlHelper.Action("ViewEnrollment", "Enrollments", new { area = "Student", termId = termId.Value }));
+                AddBreadcrumb("Enrollments (Terms)", Url.Action("Index", "Enrollments", new { area = "Student" }));
+                AddBreadcrumb("Enrollment", Url.Action("ViewEnrollment", "Enrollments", new { area = "Student", termId = termId.Value }));
                 AddBreadcrumb("Withdraw confirmed", "");
 
                 return View(enrollment.Offering);                
             }
             catch (BadRequestException bre)
             {
-                TempData["errorMsg"] = GetErrorsFromAdycHttpExceptionToString(bre);
+                AddPageAlerts(ViewHelpers.PageAlertType.Error, GetErrorsFromAdycHttpExceptionToString(bre));
             }
 
             return RedirectToAction("ViewEnrollment", new { termId = termId });
@@ -178,8 +177,8 @@ namespace ADYC.WebUI.Areas.Student.Controllers
                 // Add properties to layout
                 AddPageHeader("Your schedule", "Your schedule for this offering.");
 
-                AddBreadcrumb("Enrollments (Terms)", UrlHelper.Action("Index", "Enrollments", new { area = "Student" }));
-                AddBreadcrumb("Enrollment", UrlHelper.Action("ViewEnrollment", "Enrollments", new { area = "Student", termId = viewModel.Offering.TermId }));//$"/Student/Enrollments/ViewEnrollment?termId={viewModel.Offering.TermId}");
+                AddBreadcrumb("Enrollments (Terms)", Url.Action("Index", "Enrollments", new { area = "Student" }));
+                AddBreadcrumb("Enrollment", Url.Action("ViewEnrollment", "Enrollments", new { area = "Student", termId = viewModel.Offering.TermId }));//$"/Student/Enrollments/ViewEnrollment?termId={viewModel.Offering.TermId}");
                 AddBreadcrumb("Your schedule", "");
             }
             catch (BadRequestException bre)

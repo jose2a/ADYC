@@ -28,6 +28,11 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
         {
             var grades = await _gradeRepository.GetGrades();
 
+            // Add properties to layout
+            AddPageHeader("Grades", "List of all grades");
+
+            AddBreadcrumb("Grades", "");
+
             return View(grades);
         }
 
@@ -38,6 +43,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
             {
                 IsNew = true
             };
+
+            // Add properties to layout
+            AddPageHeader(viewModel.Title, "");
+
+            AddBreadcrumb("Grades", Url.Action("Index", "Grades", new { area = "Admin" }));
+            AddBreadcrumb(viewModel.Title, "");
 
             return View("GradeForm", viewModel);
         }
@@ -66,6 +77,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                 AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
             }
 
+            // Add properties to layout
+            AddPageHeader(viewModel.Title, "");
+
+            AddBreadcrumb("Grades", Url.Action("Index", "Grades", new { area = "Admin" }));
+            AddBreadcrumb(viewModel.Title, "");
+
             return View("GradeForm", viewModel);
         }
 
@@ -92,7 +109,7 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                         await _gradeRepository.PutGrade(grade.Id.Value, grade);
                     }
 
-                    TempData["successMsg"] = "Your changes have been saved succesfully.";
+                    AddPageAlerts(ViewHelpers.PageAlertType.Success, "Your changes have been saved succesfully.");
 
                     return RedirectToAction("Index");
                 }
@@ -101,6 +118,12 @@ namespace ADYC.WebUI.Areas.Admin.Controllers
                     AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
                 }
             }
+
+            // Add properties to layout
+            AddPageHeader(form.Title, "");
+
+            AddBreadcrumb("Grades", Url.Action("Index", "Grades", new { area = "Admin" }));
+            AddBreadcrumb(form.Title, "");
 
             return View("GradeForm", form);
         }

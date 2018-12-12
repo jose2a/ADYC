@@ -1,18 +1,22 @@
-﻿using System.Web.Mvc;
+﻿using ADYC.WebUI.Repositories;
+using System.Web.Mvc;
 
 namespace ADYC.WebUI.Controllers
 {
-    public class DashboardController : Controller
+    public class DashboardController : ADYCBasedController
     {
+        //private TermRepository _termRepository;
+
+        //public DashboardController()
+        //{
+        //    _termRepository = new TermRepository();
+        //}
+
         // GET: Dashboard
         public ActionResult Index()
         {
-            var title = "Dashboard";
-
-            ViewBag.Title = title;
-            ViewBag.PageHeader = title;
-
-            ViewBag.ActiveBreadcrumb = title;
+            // Add properties to layout
+            AddPageHeader("Dashboard", "");
 
             return View();
         }

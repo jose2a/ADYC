@@ -4,8 +4,8 @@
 
 @helper SelectedTabClass(string tabName)
 {
-if (tabName == ViewBag.SelectedTab)
-{
+    if (tabName == ViewBag.SelectedTab)
+    {
         @: active
 	}
 }
@@ -77,7 +77,7 @@ desired effect
                 <!-- mini logo for sidebar mini 50x50 pixels -->
                 <span class="logo-mini"><b>A</b>1.0</span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg"><b>ADYC</b>1.0</span>
+                <span class="logo-lg"><b>ADYC&nbsp;</b>1.0</span>
             </a>
 
             <!-- Header Navbar -->
@@ -140,139 +140,139 @@ desired effect
                     <!-- Optionally, you can add icons to the links -->
                     @if (User.IsInRole("AppAdmin"))
                     {
-                        <li class="treeview @SelectedTabClass("courses")">
-                            <a href="#">
-                                <i class="fa fa-link"></i> <span>Courses</span>
-                                <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="@Url.Action("Index", new { Controller = "Courses", Area = "Admin" })"><i class='fa fa-circle-o'></i>List courses</a></li>
-                                <li><a href="@Url.Action("New", new { Controller = "Courses", Area = "Admin" })"><i class="fa fa-circle-o"></i>New course</a></li>
-                            </ul>
-                        </li>
-                        <li class="treeview @SelectedTabClass("courseTypes")">
-                            <a href="#">
-                                <i class="fa fa-link"></i> <span>Course Types</span>
-                                <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="@Url.Action("Index", new { Controller = "CourseTypes", Area = "Admin" })"><i class='fa fa-circle-o'></i>List course types</a></li>
-                                <li><a href="@Url.Action("New", new { Controller = "CourseTypes", Area = "Admin" })"><i class="fa fa-circle-o"></i>New course type</a></li>
-                            </ul>
-                        </li>
-                        <li class="treeview @SelectedTabClass("grades")">
-                            <a href="#">
-                                <i class="fa fa-link"></i> <span>Grades</span>
-                                <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="@Url.Action("Index", new { Controller = "Grades", Area = "Admin" })"><i class='fa fa-circle-o'></i>List grades</a></li>
-                                <li><a href="@Url.Action("New", new { Controller = "Grades", Area = "Admin" })"><i class="fa fa-circle-o"></i>New grade</a></li>
-                            </ul>
-                        </li>
-                        <li class="treeview @SelectedTabClass("groups")">
-                            <a href="#">
-                                <i class="fa fa-link"></i> <span>Groups</span>
-                                <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="@Url.Action("Index", new { Controller = "Groups", Area = "Admin" })"><i class='fa fa-circle-o'></i>List groups</a></li>
-                                <li><a href="@Url.Action("New", new { Controller = "Groups", Area = "Admin" })"><i class="fa fa-circle-o"></i>New group</a></li>
-                            </ul>
-                        </li>
-                        <li class="treeview @SelectedTabClass("majors")">
-                            <a href="#">
-                                <i class="fa fa-link"></i> <span>Majors</span>
-                                <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="@Url.Action("Index", new { Controller = "Majors", Area = "Admin" })"><i class='fa fa-circle-o'></i>List majors</a></li>
-                                <li><a href="@Url.Action("New", new { Controller = "Majors", Area = "Admin" })"><i class="fa fa-circle-o"></i>New major</a></li>
-                            </ul>
-                        </li>
-                        <li class="treeview @SelectedTabClass("periods")">
-                            <a href="#">
-                                <i class="fa fa-link"></i> <span>Periods</span>
-                                <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="@Url.Action("Index", new { Controller = "Periods", Area = "Admin" })"><i class='fa fa-circle-o'></i>List periods</a></li>
-                            </ul>
-                        </li>
-                        <li class="treeview @SelectedTabClass("professors")">
-                            <a href="#">
-                                <i class="fa fa-link"></i> <span>Professors</span>
-                                <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="@Url.Action("Index", new { Controller = "Professors", Area = "Admin" })"><i class='fa fa-circle-o'></i>List professors</a></li>
-                                <li><a href="@Url.Action("New", new { Controller = "Professors", Area = "Admin" })"><i class="fa fa-circle-o"></i>New professor</a></li>
-                            </ul>
-                        </li>
-                        <li class="treeview @SelectedTabClass("students")">
-                            <a href="#">
-                                <i class="fa fa-link"></i> <span>Students</span>
-                                <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="@Url.Action("Index", new { Controller = "Students", Area = "Admin" })"><i class='fa fa-circle-o'></i>List students</a></li>
-                                <li><a href="@Url.Action("New", new { Controller = "Students", Area = "Admin" })"><i class="fa fa-circle-o"></i>New student</a></li>
-                            </ul>
-                        </li>
-                        <li class="treeview @SelectedTabClass("terms")">
-                            <a href="#">
-                                <i class="fa fa-link"></i> <span>Terms</span>
-                                <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="@Url.Action("Index", new { Controller = "Terms", Area = "Admin" })"><i class='fa fa-circle-o'></i>List terms</a></li>
-                                <li><a href="@Url.Action("New", new { Controller = "Terms", Area = "Admin" })"><i class="fa fa-circle-o"></i>New term</a></li>
-                            </ul>
-                        </li>
-                        <li class="@SelectedTabClass("offerings")">
-                            <a href="@Url.Action("Index", new { Controller = "Offerings", Area = "Admin" })">
-                                <i class="fa fa-link"></i> <span>Offerings</span>
-                            </a>
-                        </li>
+                    <li class="treeview @SelectedTabClass("courses")">
+                        <a href="#">
+                            <i class="fa fa-link"></i> <span>Courses</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="@Url.Action("Index", new { Controller = "Courses", Area = "Admin" })"><i class='fa fa-circle-o'></i>List courses</a></li>
+                            <li><a href="@Url.Action("New", new { Controller = "Courses", Area = "Admin" })"><i class="fa fa-circle-o"></i>New course</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview @SelectedTabClass("courseTypes")">
+                        <a href="#">
+                            <i class="fa fa-link"></i> <span>Course Types</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="@Url.Action("Index", new { Controller = "CourseTypes", Area = "Admin" })"><i class='fa fa-circle-o'></i>List course types</a></li>
+                            <li><a href="@Url.Action("New", new { Controller = "CourseTypes", Area = "Admin" })"><i class="fa fa-circle-o"></i>New course type</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview @SelectedTabClass("grades")">
+                        <a href="#">
+                            <i class="fa fa-link"></i> <span>Grades</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="@Url.Action("Index", new { Controller = "Grades", Area = "Admin" })"><i class='fa fa-circle-o'></i>List grades</a></li>
+                            <li><a href="@Url.Action("New", new { Controller = "Grades", Area = "Admin" })"><i class="fa fa-circle-o"></i>New grade</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview @SelectedTabClass("groups")">
+                        <a href="#">
+                            <i class="fa fa-link"></i> <span>Groups</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="@Url.Action("Index", new { Controller = "Groups", Area = "Admin" })"><i class='fa fa-circle-o'></i>List groups</a></li>
+                            <li><a href="@Url.Action("New", new { Controller = "Groups", Area = "Admin" })"><i class="fa fa-circle-o"></i>New group</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview @SelectedTabClass("majors")">
+                        <a href="#">
+                            <i class="fa fa-link"></i> <span>Majors</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="@Url.Action("Index", new { Controller = "Majors", Area = "Admin" })"><i class='fa fa-circle-o'></i>List majors</a></li>
+                            <li><a href="@Url.Action("New", new { Controller = "Majors", Area = "Admin" })"><i class="fa fa-circle-o"></i>New major</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview @SelectedTabClass("periods")">
+                        <a href="#">
+                            <i class="fa fa-link"></i> <span>Periods</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="@Url.Action("Index", new { Controller = "Periods", Area = "Admin" })"><i class='fa fa-circle-o'></i>List periods</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview @SelectedTabClass("professors")">
+                        <a href="#">
+                            <i class="fa fa-link"></i> <span>Professors</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="@Url.Action("Index", new { Controller = "Professors", Area = "Admin" })"><i class='fa fa-circle-o'></i>List professors</a></li>
+                            <li><a href="@Url.Action("New", new { Controller = "Professors", Area = "Admin" })"><i class="fa fa-circle-o"></i>New professor</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview @SelectedTabClass("students")">
+                        <a href="#">
+                            <i class="fa fa-link"></i> <span>Students</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="@Url.Action("Index", new { Controller = "Students", Area = "Admin" })"><i class='fa fa-circle-o'></i>List students</a></li>
+                            <li><a href="@Url.Action("New", new { Controller = "Students", Area = "Admin" })"><i class="fa fa-circle-o"></i>New student</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview @SelectedTabClass("terms")">
+                        <a href="#">
+                            <i class="fa fa-link"></i> <span>Terms</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="@Url.Action("Index", new { Controller = "Terms", Area = "Admin" })"><i class='fa fa-circle-o'></i>List terms</a></li>
+                            <li><a href="@Url.Action("New", new { Controller = "Terms", Area = "Admin" })"><i class="fa fa-circle-o"></i>New term</a></li>
+                        </ul>
+                    </li>
+                    <li class="@SelectedTabClass("offerings")">
+                        <a href="@Url.Action("Index", new { Controller = "Offerings", Area = "Admin" })">
+                            <i class="fa fa-link"></i> <span>Offerings</span>
+                        </a>
+                    </li>
                     }
                     @if (User.IsInRole("AppProfessor"))
                     {
-                        <li class="@SelectedTabClass("enrollments")">
-                            <a href="@Url.Action("Index", new { Controller = "Enrollments", Area = "Professor" })">
-                                <i class="fa fa-link"></i> <span>Offerings</span>
-                            </a>
-                        </li>
+                    <li class="@SelectedTabClass("enrollments")">
+                        <a href="@Url.Action("Index", new { Controller = "Enrollments", Area = "Professor" })">
+                            <i class="fa fa-link"></i> <span>Offerings</span>
+                        </a>
+                    </li>
                     }
                     @if (User.IsInRole("AppStudent"))
                     {
-                        <li class="@SelectedTabClass("enrollments")">
-                            <a href="@Url.Action("Index", new { Controller = "Enrollments", Area = "Student" })">
-                                <i class="fa fa-link"></i> <span>Your Enrollments</span>
-                            </a>
-                        </li>
-                        <li class="@SelectedTabClass("enroll")">
-                            <a href="@Url.Action("Index", new { Controller = "OfferingEnrollments", Area = "Student" })">
-                                <i class="fa fa-link"></i> <span>Enroll</span>
-                            </a>
-                        </li>
+                    <li class="@SelectedTabClass("enrollments")">
+                        <a href="@Url.Action("Index", new { Controller = "Enrollments", Area = "Student" })">
+                            <i class="fa fa-link"></i> <span>Your Enrollments</span>
+                        </a>
+                    </li>
+                    <li class="@SelectedTabClass("enroll")">
+                        <a href="@Url.Action("Index", new { Controller = "OfferingEnrollments", Area = "Student" })">
+                            <i class="fa fa-link"></i> <span>Enroll</span>
+                        </a>
+                    </li>
                     }
                 </ul>
                 <!-- /.sidebar-menu -->
@@ -284,36 +284,13 @@ desired effect
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
             <section class="content-header">
-                <h1>
-                    @ViewBag.PageHeader
-                    <small>@ViewBag.PageDescription</small>
-                </h1>
-
-                @*@{
+                @{
                     var pageInfo = (Tuple<string, string>)ViewBag.PageHeader;
-                    }
-                    <h1>
+                }
+                <h1>
                     @pageInfo.Item1
                     <small>@pageInfo.Item2</small>
-                    </h1>*@
-                @*<ol class="breadcrumb">
-                    <li><a href="../../Dashboard"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-
-                    @if (ViewBag.BreadcrumbLinks != null)
-                    {
-                    foreach (KeyValuePair<string, string> entry in ViewBag.BreadcrumbLinks)
-                    {
-                    if (ViewBag.ActiveBreadcrumb == entry.Key)
-                    {
-                    <li><a class="active" href="@entry.Value">@entry.Key</a></li>
-                    }
-                    else
-                    {
-                    <li><a href="@entry.Value">@entry.Key</a></li>
-                    }
-                    }
-                    }
-                    </ol>*@
+                </h1>
 
                 <ol class="breadcrumb">
                     <li><a href="../../Dashboard"><i class="fa fa-dashboard"></i> Dashboard</a></li>
@@ -386,44 +363,6 @@ desired effect
 
             <!-- Main content -->
             <section class="content container-fluid">
-
-                @*<div id="msg-div">
-                        @if (TempData["infoMsg"] != null)
-                        {
-                        <div class="alert alert-info alert-dismissible">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            <h4><i class="icon fa fa-info"></i> Info!</h4>
-                            @TempData["infoMsg"].ToString()
-                        </div>
-                        }
-
-                        @if (TempData["warningMsg"] != null)
-                        {
-
-                        <div class="alert alert-warning alert-dismissible">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            <h4><i class="icon fa fa-warning"></i> Warning!</h4>
-                            @TempData["warningMsg"].ToString();
-                        </div>
-                        }
-
-                        @if (TempData["successMsg"] != null)
-                        {
-                        <div class="alert alert-success alert-dismissible">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            <h4><i class="icon fa fa-check"></i> Great!</h4>
-                            @TempData["successMsg"].ToString()
-                        </div>
-                        }
-                        @if (TempData["errorMsg"] != null)
-                        {
-                        <div class="alert alert-danger alert-dismissible">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            <h4><i class="icon fa fa-ban"></i> Error!</h4>
-                            @TempData["errorMsg"].ToString()
-                        </div>
-                        }
-                    </div>*@
                 <!--------------------------
                   | Your Page Content Here |
                   -------------------------->

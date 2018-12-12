@@ -37,6 +37,11 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
         {
             var terms = await _termRepository.GetTerms();
 
+            // Add properties to layout
+            AddPageHeader("Offerings (Terms)", "List of terms");
+
+            AddBreadcrumb("Offerings (Terms)", "");
+
             return View(terms);
         }
 
@@ -58,6 +63,13 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
             var professorId = SessionHelper.User.UserId;
 
             var offerings = _offeringRepository.GetOfferingsByProfessorIdAndTermId(professorId, termId.Value);
+
+
+            // Add properties to layout
+            AddPageHeader("Offerings (List)", "List of terms");
+
+            AddBreadcrumb("Offerings (Terms)", Url.Action("Index"));
+            AddBreadcrumb("Offerings (List)", "");
 
             return View(new OfferingListViewModel
             {
@@ -82,6 +94,13 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
             }
 
             var enrollments = await _enrollmentRepository.GetEnrollmentsByOfferingId(offeringId.Value);
+
+            // Add properties to layout
+            AddPageHeader("Enrollments", "");
+
+            AddBreadcrumb("Offerings (Terms)", Url.Action("Index"));
+            AddBreadcrumb("Offerings (List)", Url.Action("View", new { TermId = offering.TermId }));
+            AddBreadcrumb("Enrollments", "");
 
             return View(
                 new EnrollmentListViewModel
@@ -108,6 +127,14 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
 
             var viewModel = new EnrollmentWithEvaluationsViewModel(enrollmentWithEvaluations);
 
+            // Add properties to layout
+            AddPageHeader("Evaluations", "");
+
+            AddBreadcrumb("Offerings (Terms)", Url.Action("Index"));
+            AddBreadcrumb("Offerings (List)", Url.Action("View", new { TermId = viewModel.Enrollment.Offering.TermId }));
+            AddBreadcrumb("Enrollments", Url.Action("ViewEnrollments", new { offeringId = viewModel.Enrollment.OfferingId }));
+            AddBreadcrumb("Evaluations", "");
+
             return View(viewModel);
         }
 
@@ -126,7 +153,7 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
                     // Update enrollment
                     await _evaluationRepository.PutEnrollmentWithEvaluations(form.Enrollment.Id, enrollmentWithEvaluations);
 
-                    TempData["msg"] = "Your changes have been saved sucessfully.";
+                    AddPageAlerts(ViewHelpers.PageAlertType.Success, "Your changes have been saved succesfully.");
 
                     return RedirectToAction("ViewEvaluations", new { enrollmentId = enrollmentWithEvaluations.Enrollment.Id });
                 }
@@ -142,6 +169,14 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
             {
                 evaluation.Period = await _periodRepository.GetPeriodById(evaluation.PeriodId);
             }
+
+            // Add properties to layout
+            AddPageHeader("Evaluations", "");
+
+            AddBreadcrumb("Offerings (Terms)", Url.Action("Index"));
+            AddBreadcrumb("Offerings (List)", Url.Action("View", new { TermId = form.Enrollment.Offering.TermId }));
+            AddBreadcrumb("Enrollments", Url.Action("ViewEnrollments", new { offeringId = form.Enrollment.OfferingId }));
+            AddBreadcrumb("Evaluations", "");
 
             return View("ViewEvaluations", form);
         }
@@ -170,6 +205,14 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
             {
                 AddErrorsFromAdycHttpExceptionToModelState(bre, ModelState);
             }
+
+            // Add properties to layout
+            AddPageHeader(viewModel.Title, "");
+
+            AddBreadcrumb("Offerings (Terms)", Url.Action("Index"));
+            AddBreadcrumb("Offerings (List)", Url.Action("View", new { TermId = viewModel.Offering.TermId }));
+            AddBreadcrumb("Enrollments", Url.Action("ViewEnrollments", new { offeringId = viewModel.OfferingId }));
+            AddBreadcrumb(viewModel.Title, "");
 
             return View(viewModel);
         }

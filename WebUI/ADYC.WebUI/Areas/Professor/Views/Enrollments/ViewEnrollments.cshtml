@@ -1,21 +1,5 @@
 ﻿@model ADYC.WebUI.ViewModels.EnrollmentListViewModel
 
-@{
-    var title = "Enrollments";
-
-    ViewBag.Title = title;
-    ViewBag.PageHeader = title;
-
-    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
-    {
-        ["Offerings (Terms)"] = Url.Action("Index"),
-        ["Offerings (List)"] = Url.Action("ViewOfferings", new { termId = Model.Offering.TermId }),
-        [title] = ""
-    };
-
-    ViewBag.ActiveBreadcrumb = title;
-}
-
 <div class="box box-info">
     <div class="box-header with-border">
         <h3 class="box-title"><i class="fa fa-info-circle"></i> Offering</h3>
@@ -42,7 +26,7 @@
             <dt>Current Term</dt>
             <dd>@((Model.IsCurrentTerm) ? "Yes" : "No")</dd>
             <dt>Notes</dt>
-            <dd>@Model.Offering.Notes</dd>
+            <dd>@Html.Raw(HttpUtility.HtmlDecode(Model.Offering.Notes))</dd>
         </dl>
     </div>
 </div>
@@ -106,7 +90,7 @@
                             }
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => enrollment.Notes)
+                            @Html.Raw(HttpUtility.HtmlDecode(enrollment.Notes))
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => enrollment.FinalGrade)

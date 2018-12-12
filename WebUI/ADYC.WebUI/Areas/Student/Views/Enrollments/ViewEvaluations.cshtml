@@ -1,21 +1,5 @@
 ﻿@model ADYC.WebUI.ViewModels.EnrollmentWithEvaluationsViewModel
 
-@{
-    var title = "Evaluations";
-
-    ViewBag.Title = title;
-    ViewBag.PageHeader = title;
-
-    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
-    {
-        ["Enrollments (Terms)"] = Url.Action("Index"),
-        ["Enrollment"] = Url.Action("ViewEnrollment", new { termId = Model.Enrollment.Offering.TermId }),
-        [title] = ""
-    };
-
-    ViewBag.ActiveBreadcrumb = title;
-}
-
 <!-- Begin: Information about enrollment -->
 <div class="box box-info">
     <div class="box-header with-border">
@@ -52,7 +36,7 @@
             <dt>Final Grade Letter</dt>
             <dd>@Model.Enrollment.FinalGradeLetter.ToString()</dd>
             <dt>Notes</dt>
-            <dd>@Model.Enrollment.Notes</dd>
+            <dd>@Html.Raw(HttpUtility.HtmlDecode(Model.Enrollment.Notes))</dd>
         </dl>
     </div>
 </div>

@@ -1,21 +1,5 @@
 ﻿@model ADYC.API.ViewModels.OfferingDto
 
-@{
-    var title = "Withdraw confirmed";
-
-    ViewBag.Title = title;
-    ViewBag.PageHeader = title;
-
-    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
-    {
-        ["Enrollments (Terms)"] = Url.Action("Index"),
-        ["Enrollment"] = Url.Action("ViewEnrollment", new { termId = Model.TermId }),
-        [title] = ""
-    };
-
-    ViewBag.ActiveBreadcrumb = title;
-}
-
 <div class="callout callout-success">
     <h4><i class="icon fa fa-check"></i>Congratulations!</h4>
 

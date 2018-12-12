@@ -1,18 +1,5 @@
 ﻿@model ADYC.WebUI.ViewModels.CourseFormViewModel
 
-@{
-    ViewBag.Title = Model.Title;
-    ViewBag.PageHeader = Model.Title;
-
-    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
-    {
-        ["Courses"] = Url.Action("Index"),
-        [Model.Title] = "",
-    };
-
-    ViewBag.ActiveBreadcrumb = Model.Title;
-}
-
 @using (Html.BeginForm("Save", "Courses", FormMethod.Post))
 {
     <div class="box box-primary">

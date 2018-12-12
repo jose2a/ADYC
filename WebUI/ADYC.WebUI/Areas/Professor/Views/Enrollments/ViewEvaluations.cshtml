@@ -1,22 +1,5 @@
 ﻿@model ADYC.WebUI.ViewModels.EnrollmentWithEvaluationsViewModel
 
-@{
-    var title = "Evaluations";
-
-    ViewBag.Title = title;
-    ViewBag.PageHeader = title;
-
-    ViewBag.BreadcrumbLinks = new Dictionary<string, string>
-    {
-        ["Offerings (Terms)"] = Url.Action("Index"),
-        ["Offerings (List)"] = Url.Action("ViewOfferings", new { termId = Model.Enrollment.Offering.TermId }),
-        ["Enrollments"] = Url.Action("ViewEnrollments", new { offeringId = Model.Enrollment.OfferingId }),
-        [title] = ""
-    };
-
-    ViewBag.ActiveBreadcrumb = title;
-}
-
 @if (!Model.IsCurrentTerm)
 {
     <div class="callout callout-info">
