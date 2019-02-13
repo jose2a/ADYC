@@ -99,7 +99,7 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
             AddPageHeader("Enrollments", "");
 
             AddBreadcrumb("Offerings (Terms)", Url.Action("Index"));
-            AddBreadcrumb("Offerings (List)", Url.Action("View", new { TermId = offering.TermId }));
+            AddBreadcrumb("Offerings (List)", Url.Action("ViewOfferings", new { TermId = offering.TermId }));
             AddBreadcrumb("Enrollments", "");
 
             return View(
@@ -131,7 +131,7 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
             AddPageHeader("Evaluations", "");
 
             AddBreadcrumb("Offerings (Terms)", Url.Action("Index"));
-            AddBreadcrumb("Offerings (List)", Url.Action("View", new { TermId = viewModel.Enrollment.Offering.TermId }));
+            AddBreadcrumb("Offerings (List)", Url.Action("ViewOfferings", new { TermId = viewModel.Enrollment.Offering.TermId }));
             AddBreadcrumb("Enrollments", Url.Action("ViewEnrollments", new { offeringId = viewModel.Enrollment.OfferingId }));
             AddBreadcrumb("Evaluations", "");
 
@@ -174,7 +174,7 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
             AddPageHeader("Evaluations", "");
 
             AddBreadcrumb("Offerings (Terms)", Url.Action("Index"));
-            AddBreadcrumb("Offerings (List)", Url.Action("View", new { TermId = form.Enrollment.Offering.TermId }));
+            AddBreadcrumb("Offerings (List)", Url.Action("ViewOfferings", new { TermId = form.Enrollment.Offering.TermId }));
             AddBreadcrumb("Enrollments", Url.Action("ViewEnrollments", new { offeringId = form.Enrollment.OfferingId }));
             AddBreadcrumb("Evaluations", "");
 
@@ -210,7 +210,7 @@ namespace ADYC.WebUI.Areas.Professor.Controllers
             AddPageHeader(viewModel.Title, "");
 
             AddBreadcrumb("Offerings (Terms)", Url.Action("Index"));
-            AddBreadcrumb("Offerings (List)", Url.Action("View", new { TermId = viewModel.Offering.TermId }));
+            AddBreadcrumb("Offerings (List)", Url.Action("ViewOfferings", new { TermId = viewModel.Offering.TermId }));
             AddBreadcrumb("Enrollments", Url.Action("ViewEnrollments", new { offeringId = viewModel.OfferingId }));
             AddBreadcrumb(viewModel.Title, "");
 
