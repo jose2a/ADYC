@@ -25,10 +25,10 @@ System to manage extracurricular classes for high school students at CECyTEG Cor
 ![ADYC](https://github.com/jose2a/ADYC/blob/master/WebUI/ADYC.WebUI/Screenshots/admin_dashboard.png)
 
 - Offering list of terms (Admin):
-![ADYC](https://github.com/jose2a/ADYC/blob/master/WebUI/ADYC.WebUI/Screenshots/admin_offering_term_list.png)
+![ADYC](https://github.com/jose2a/ADYC/blob/master/WebUI/ADYC.WebUI/Screenshots/admin_offering_list.png)
 
 - Offering list (Admin):
-![ADYC](https://github.com/jose2a/ADYC/blob/master/WebUI/ADYC.WebUI/Screenshots/admin_offering_list.png)
+![ADYC](https://github.com/jose2a/ADYC/blob/master/WebUI/ADYC.WebUI/Screenshots/admin_offering_term_list.png)
 
 - Offering add (Admin):
 ![ADYC](https://github.com/jose2a/ADYC/blob/master/WebUI/ADYC.WebUI/Screenshots/admin_offering_add.png)
