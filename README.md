@@ -19,7 +19,7 @@ System to manage extracurricular classes for high school students at CECyTEG Cor
 
 ### Screenshots
 
-[![ADYC](https://github.com/jose2a/ADYC/blob/master/WebUI/ADYC.WebUI/Screenshots/login.png)
+![ADYC](https://github.com/jose2a/ADYC/blob/master/WebUI/ADYC.WebUI/Screenshots/login.png)
 
 License
 ----
