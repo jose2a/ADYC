@@ -1,8 +1,5 @@
 # ADYC
 
-
-[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
-
 System to manage extracurricular classes for high school students at CECyTEG Cortazar, Guanajuato, Mex.
 
 ### Technologies stack!
@@ -19,6 +16,10 @@ System to manage extracurricular classes for high school students at CECyTEG Cor
 * Twitter Bootstrap
 * Admin LTE
 * SQL Server
+
+### Screenshots
+
+[![ADYC](https://github.com/jose2a/ADYC/blob/master/WebUI/ADYC.WebUI/Screenshots/login.png)
 
 License
 ----
