@@ -476,6 +476,9 @@
     <Content Include="Screenshots\admin_students_list.png" />
     <Content Include="Screenshots\admin_terms_list.png" />
     <Content Include="Screenshots\admi_term_add.png" />
+    <Content Include="Screenshots\ADYC admin workflow.png" />
+    <Content Include="Screenshots\ADYC professor workflow.png" />
+    <Content Include="Screenshots\ADYC student workflows.png" />
     <Content Include="Screenshots\login.png" />
     <Content Include="Screenshots\professor_dashboard.png" />
     <Content Include="Screenshots\professor_enrollments.png" />
