@@ -17,6 +17,17 @@ System to manage extracurricular classes for high school students at CECyTEG Cor
 * Admin LTE
 * SQL Server
 
+### Workflows
+- Administrator:
+![ADYC](https://github.com/jose2a/ADYC/blob/master/WebUI/ADYC.WebUI/Screenshots/ADYC%20admin%20workflow.png)
+
+- Professors:
+![ADYC](https://github.com/jose2a/ADYC/blob/master/WebUI/ADYC.WebUI/Screenshots/ADYC%20professor%20workflow.png)
+
+- Students:
+![ADYC](https://github.com/jose2a/ADYC/blob/master/WebUI/ADYC.WebUI/Screenshots/ADYC%20student%20workflows.png)
+
+
 ### Screenshots
 - Login:
 ![ADYC](https://github.com/jose2a/ADYC/blob/master/WebUI/ADYC.WebUI/Screenshots/login.png)
